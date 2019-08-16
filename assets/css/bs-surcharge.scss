@@ -1,0 +1,756 @@
+// BS-SURCHARGE.CSS
+
+// Contenu : 
+/* - - - COMMON - - - */
+    // CONTAINER / SECTIONS / BACKGROUNDS
+    // TITLES
+    // BUTTONS
+    // NAVBAR HEADER
+    // FOOTER
+    // BREADCRUMB
+/* - - - HOMEPAGE - - - */
+    // CAROUSEL
+    // EVENTS
+    // ACTIVITY
+/* - - - ADMIN - UCA GEST - - - */
+    // COLUMNS DATATABLES
+    // FORMS & DATATABLES
+
+
+/* - - - COMMON - - - */
+
+// CONTAINER / SECTIONS / BACKGROUNDS
+body {
+    letter-spacing: 1px;
+    color: $eerie-black;
+}
+.container-admin {
+    min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.75), rgba(255,255,255,1)) no-repeat center center fixed, 
+                url(../images/background-admin.jpg) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    padding-top: 110px;
+}
+.section-home {
+    border-bottom: 1px solid $blanc;
+}
+.container-fluid {
+    margin: 0 0 40px 0;
+    padding: 0;
+}
+.container {
+    max-width: 1200px;
+}
+.container-style {
+    padding: 50px;
+    padding-bottom: 50px;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+}
+.bg-dark {
+    border: 2px solid $blanc;
+}
+
+// TITLES
+h1,h2,h3,h4,h5,h6 {
+    margin-bottom: 1.5rem;
+}
+h1{
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 800;
+    padding: 25px;
+}
+h1.h1-light {
+    color: $blanc;
+}
+h1::after,
+h2::after {
+    content: '';
+    display: block;
+    width: 150px;
+    height: 10px;
+    background: $maximum-blue;
+    margin: 25px auto;
+}
+h2 {
+    color: $maximum-blue;
+    font-weight: 500;
+    margin-bottom: 25px;
+    letter-spacing: 2px;
+}
+h2.h2-light {
+    color: $blanc;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: 800;
+    padding: 25px;
+    padding-top: 50px;
+}
+h3 {
+    font-size: 1.3125rem;
+    font-weight: 800;
+}
+.hide-column {
+    display: none;
+}
+
+// BUTTONS
+.btn {
+    border-radius: 5px;
+    padding: 8px 17px;
+    margin: 5px 2px 10px 2px;
+    border: none;
+    text-transform: uppercase;
+    font-size: 0.875em;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: ease-in 0.25s;
+}
+.btn-primary {
+    box-shadow: 0 3px 0 $sea-blue;
+}
+.btn-primary:hover {
+    background: $cyan-cornflower-blue;
+}
+.btn-outline-primary {
+    background: $blanc;
+    color: $maximum-blue;
+    border: 2px solid $maximum-blue;
+}
+.btn-outline-primary:hover {
+    background: $blanc;
+    color: $cyan-cornflower-blue;
+    border: 2px solid $cyan-cornflower-blue;
+}
+.btn-secondary {
+    box-shadow: 0 3px 0 $gunmetal;
+}
+.btn-success {
+    box-shadow: 0 3px 0 $spanish-green;
+}
+.btn-success:hover {
+    background: $shamrock-green;
+}
+.btn-danger {
+    box-shadow: 0 3px 0 $dark-sienna;
+}
+.btn-danger:hover {
+    background: $burgundy;
+}
+.btn-warning {
+    box-shadow: 0 3px 0 $vivid-amber;
+}
+.btn-dark {
+    box-shadow: 0 3px 0 $eerie-black;
+}
+@include media-breakpoint-down(xs) { 
+    .btn-form {
+        padding: 7px 15px;
+        font-size: 0.75em;
+    }
+}
+
+// NAVBAR HEADER
+.main-nav * {
+    background: $eerie-black;
+}
+.navbar {
+    padding: 0 1rem;
+    height: 100px;
+}
+.navbar-collapse,
+.navbar-collapse ul,
+.navbar-collapse ul li,
+.navbar-collapse ul li .nav-link {
+    height: 100%;
+}
+ .nav-link:hover, a.dropdown-item:hover {
+    background-color: $eerie-black;
+    color: $blanc;
+}
+.navbar-brand {
+    padding: 0;
+}
+.navbar-brand img {
+    margin: 0 !important;
+}
+.navbar-dark .navbar-nav .nav-link.nav-home {
+    font-size: 1rem;
+    border-bottom: 5px solid transparent;
+}
+.navbar-dark .navbar-nav li .nav-link-border {
+    border-bottom: 5px solid rgba(70, 174, 216, 0);
+    transition: .15s ease-in;
+}
+.navbar-dark .navbar-nav li .nav-link-border:hover,
+.navbar-dark .navbar-nav li .nav-link-border.active {
+    border-bottom: 5px solid rgba(70, 174, 216, 1);
+}
+.navbar-dark .navbar-nav li:nth-child(1) {
+    display: none;
+}
+.navbar-dark .navbar-nav .nav-link,
+.navbar form a {
+    color: $blanc;
+    text-transform: uppercase;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    font-size: 0.9rem;
+}
+.dropdown-menu, .return-to-website {
+    font-size: 0.9rem;
+}
+.dropdown-menu {
+    background-color: $eerie-black;
+    border: none;
+}
+.dropdown-menu a {
+    color: $blanc;
+    padding: 0.5rem 0.75rem;
+}
+.dropdown-menu a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+.navbar-dark .navbar-nav .nav-link:hover {
+    background: initial;
+}
+.bg-primary {
+    background: $eerie-black !important;
+    padding: 0 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+a.return-to-website {
+    color: $blanc;
+    background-color: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    text-transform: uppercase;
+}
+.second-nav-header {
+    z-index: 9999;
+    position: fixed;
+    top: 0;
+    right: 25px;
+    padding: 28px 0;
+}
+.second-nav-header .nav-link {
+    padding: 0.5rem 0.75rem;
+    color: $blanc;
+}
+.second-nav-header a.profile,
+.second-nav-header a.disconnect,
+.second-nav-header a.connect,
+.second-nav-header a.flag-item {
+    padding: 5px 17px;
+}
+.second-nav-header a.flag-item {
+    width: auto;
+}
+.nav-menu-right {
+    position: relative;
+}
+.nav-menu-right .dropdown-menu {
+    right: 0;
+    left: initial;
+}
+.navbar-dark .navbar-toggler {
+    border: none;
+    padding: 0;
+}
+@include media-breakpoint-down(lg) {
+    .navbar-collapse,
+    .navbar-collapse ul, 
+    .navbar-collapse ul li, 
+    .navbar-collapse ul li .nav-link {
+        height: auto;
+    }
+    .navbar-dark .navbar-nav .nav-link {
+        padding: 10px;
+    }
+    .second-nav-header {
+        right: 75px;
+    }
+    .second-nav-header .nav-link {
+        padding: 0.5rem;
+    }
+}
+@include media-breakpoint-down(md) {
+    .second-nav-header {
+        right: 65px;
+    }
+    .second-nav-header .nav-link {
+        padding: 0.5rem 0.3rem;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .main-nav {
+        height: 75px;
+    }
+    .navbar-brand img {
+        width: 75%;
+    }
+    .second-nav-header {
+        padding: 18px 0;
+    }
+}
+
+// FOOTER
+.navbar-footer {
+    padding: 15px 25px;
+    width: 100%;
+    height: auto;
+    background: $eerie-black;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+.navbar-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.navbar-footer ul li a {
+    color: $blanc;
+    text-transform: uppercase;
+    font-size: 0.875rem;
+    padding: 0 10px;
+    text-decoration: none;
+    transition: 0.15s ease-in;
+}
+.navbar-footer ul li a:hover,
+footer form a:hover {
+    color: rgba(255, 255, 255, 0.75);
+}
+footer form p {
+    color: $blanc;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    margin: 0;
+}
+footer form a {
+    font-size: 1.5rem;
+    padding: 5px 12px;
+    color: $blanc;
+}
+@include media-breakpoint-down(lg) {
+    .navbar-footer {
+        justify-content: center;
+        flex-direction: column;
+    }
+    .navbar-footer .footer-logo-uca {
+        text-align: center;
+    }
+    .navbar-footer ul {
+        text-align: center;
+    }
+    .navbar-footer form {
+        margin-top: 25px;
+        text-align: center;
+    }
+}
+@include media-breakpoint-down(md) {
+    .navbar-footer ul {
+        flex-direction: column
+    }
+}
+@include media-breakpoint-down(sm) {
+    
+}
+@include media-breakpoint-down(xs) {
+    
+}
+
+// BREADCRUMB
+nav[aria-label="breadcrumb"] {
+    max-width: 1200px;
+    margin: 40px auto;
+    margin-top: 125px;
+}
+nav[aria-label="breadcrumb"] ol {
+    margin:0;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+}
+.breadcrumb, .breadcrumb a {
+    text-transform: uppercase;
+    color: $blanc;
+    font-weight: 400;
+    font-size: 0.75rem;
+}
+.breadcrumb a:hover {
+    text-decoration: none;
+}
+.breadcrumb-item.active {
+    color: $blanc;
+    font-weight: 500;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+    color: $blanc;
+}
+
+@include media-breakpoint-down(lg) { 
+    nav[aria-label="breadcrumb"] ol {
+        padding-left: 30px;
+    }
+}
+
+
+/* - - - HOMEPAGE - - - */
+
+// CAROUSEL
+.carousel {
+    height: 80vh;
+    min-height: 520px;
+    margin-top: 100px;
+}
+.carousel-inner,
+.carousel-item {
+    height: 100%;
+}
+.carousel-arrows {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 15;
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    margin-right: 15%;
+    margin-left: 15%;
+    list-style: none;
+}
+.carousel-arrows a {
+    box-sizing: content-box;
+    flex: 0 1 auto;
+    font-size: 3rem;
+    color: $blanc;
+    margin-right: 15px;
+    margin-left: 15px;
+    padding: 10px;
+    opacity: .5;
+    transition: opacity 0.6s ease;
+}
+.carousel-social-media {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    padding-left: 50px;
+    padding-right: 50px;
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    z-index: 999;
+}
+.carousel-social-media div {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+}
+.carousel-social-media a {
+    display: block;
+    width: 100%;
+    padding-bottom: 30px;
+    font-size: 1.5rem;
+    opacity: .5;
+    transition: opacity 0.6s ease;
+}
+.carousel-arrows a:hover,
+.carousel-social-media a:hover {
+    opacity: 1;
+}
+.carousel-logo-uca {
+    position: absolute;
+    right: 50px;
+    bottom: 50px;
+    z-index: 999;
+    opacity: .9;
+}
+.carousel-item div {
+    margin: auto;
+}
+.carousel-item div h2 {
+    text-align: left;
+    padding: 0;
+    font-size: 2.625rem;
+}
+.carousel-item div h2::after {
+    content: none;
+}
+.carousel-item div p {
+    font-size: 1.5rem;
+}
+@include media-breakpoint-down(md) { 
+    .carousel-social-media,
+    .carousel-logo-uca {
+        display: none;
+    }
+}
+@include media-breakpoint-down(sm) {
+    .carousel {
+        margin-top: 75px;
+    }
+}
+
+// EVENTS
+.event {
+    border-radius: 5px !important;
+    border: 2px solid $blanc;
+}
+.event,
+.events-link {
+    width: 48%;
+    margin: 8px;
+}
+.events-link a {
+    color: $blanc;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+}
+.event-date {
+    background: $blanc;
+    text-transform: uppercase;
+    padding: 5px;
+    font-weight: 800;
+    border-radius: 5px;
+}
+.event-info {
+    padding: 15px 20px;
+}
+.event-title {
+    text-transform: uppercase;
+}
+@include media-breakpoint-down(md) {
+    .event,
+    .events-link {
+        width: 48%;
+        margin: 5px;
+    }
+}
+@include media-breakpoint-down(sm) { 
+    .event,
+    .events-link {
+        width: 75%;
+        margin: 10px auto;
+    }
+    .events-link {
+        margin-top: 50px;
+    }
+}
+@include media-breakpoint-down(xs) {
+    .event,
+    .events-link {
+        width: 90%;
+    }
+}
+
+// ACTIVITY
+.activity-type {
+    border-radius: 5px;
+    border: 2px solid $blanc;
+    width: 32%;
+    min-height: 225px;
+    z-index: 0;
+    position: relative;
+    overflow: hidden;
+}
+.activity-type::before {
+    content: '';
+    border-radius: 5px;
+    background: rgba(70, 174, 216, 0);
+    width: 0%;
+    height: 0%;
+    z-index: 1;
+    position: absolute;
+    transition: 0.15s ease-in;
+}
+.activity-type:hover::before {
+    width: 100%;
+    height: 100%;
+    background: rgba(70, 174, 216, 0.5);
+}
+.activity-type a {
+    width: 100%;
+    height: 100%;
+    padding-top:25%;
+    text-transform: uppercase;
+    background: rgba(70, 174, 216, 0);
+    color: $blanc;
+    font-weight: 800;
+    font-size: 1.3125;
+    transition: 0.15s ease-in;
+    z-index: 2;
+}
+.activity-type a:hover {
+    text-decoration: none;
+    background: rgba(70, 174, 216, 0);
+}
+@include media-breakpoint-down(md) { 
+    .activity-type {
+        width: 48%;
+    }
+    .activity-type a {
+        padding-top:23%;
+    }
+}
+@include media-breakpoint-down(sm) { 
+    .activity-type {
+        width: 75%;
+    }
+    .activity-type a {
+        padding-top:20%;
+    }
+}
+@include media-breakpoint-down(xs) {
+    .activity-type a {
+        padding-top:25%;
+    }
+}
+
+/* - - - INSTALLATIONS SPORTIVES - - - */
+.card-install {
+    border-radius: 10px !important;
+    border: none;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
+}
+.card-install .card-header {
+    background: none;
+    border-bottom: 1px solid $pastel-gray;
+    padding: 0;
+}
+.card-install .card-header * {
+    background: none !important;
+    border: none !important;
+}
+.card-install .card-header a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    cursor: pointer;
+}
+.card-install .card-header p,
+.card-install .install-coordinates p,
+.card-install .install-opening-hours p,
+.card-install .install-activity h3 {
+    color: $eerie-black;
+}
+.card-install .card-header p svg {
+    color: $maximum-blue;
+}
+.card-install h2 {
+    font-size: 1.125rem;
+    font-weight: 800;
+}
+.card-install h2::after {
+    content: none;
+}
+.card-install .install-picture img {
+    border-radius: 10px;
+}
+.card-install h3 {
+    width: 100%;
+}
+.card-install .install-coordinates h3,
+.card-install .install-opening-hours h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+.card-install .install-activity h3 {
+    font-weight: 500;
+    font-size: 1rem;
+}
+.card-install .install-activity div {
+    background : rgba(70, 174, 216, 0.15);
+    padding: 5px 0;
+    width: 15%;
+    text-align: center;
+    font-weight: 500;
+}
+.card-install .install-activity div:first-child {
+    margin-left: 0;
+}
+
+
+/* - - - ADMIN - UCA GEST - - - */
+
+// COLUMNS DATATABLES
+@include media-breakpoint-down(xl) { 
+    .hide-column-xl {
+        display: none;
+    }
+}
+@include media-breakpoint-down(lg) { 
+    .hide-column-lg {
+        display: none;
+    }
+}
+@include media-breakpoint-down(md) { 
+    .hide-column-md {
+        display: none;
+    }
+}
+@include media-breakpoint-down(sm) { 
+    .hide-column-sm {
+        display: none;
+    }
+}
+@include media-breakpoint-down(xs) { 
+    .hide-column-xs {
+        display: none;
+    }
+}
+
+// FORMS & DATATABLES
+.form-connect {
+    padding: 20px;
+}
+.form-connect input.btn {
+    padding: 10px 25px;
+}
+input, .form-control {
+    border-radius: 5px;
+    border: none;
+    border: 2px solid $pastel-gray;
+    padding: 10px 15px;
+    min-height: 50px;
+}
+label, legend {
+    font-weight: 700;
+}
+.form-check {
+    display: flex;
+    align-items: center;
+}
+input[type="radio"],
+input[type="checkbox"] {
+    margin-top: -4px;
+    min-height: auto;
+}
+.dataTables_length label,
+.dataTables_filter label {
+    display: flex;
+    align-items: center;
+}
+.custom-select {
+    background: none;
+}
+.dataTables_length label .form-control,
+.dataTables_filter label input {
+    margin: 10px;
+}
+.dataTables_length label .form-control {
+    max-width: 100px;
+}
+select {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,6 @@
+parameters:
+    locale: fr
+
+framework:
+    translator: { fallbacks: ["%locale%"] }
+    default_locale: "%locale%"

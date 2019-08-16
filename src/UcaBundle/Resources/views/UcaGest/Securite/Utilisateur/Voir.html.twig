@@ -1,0 +1,46 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/Table.html.twig' as htmlTable %}
+{% block main %}
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('UtilisateurLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    <h1> {{ item.prenom }} {{ item.nom }} </h1>
+    {% if not item.enabled %}
+        <p>utilisateur bloqué</p>
+    {% endif %}
+    <h2>{{'common.infospersonnelles'|trans}}</h2>
+    <ul>
+        <li> {{'common.nom.utilisateur'|trans}} : {{ item.username }} </li>
+        <li> {{'common.naissance'|trans}} {{ item.dateNaissance|date('d/m/Y') }} </li>
+        <li> {{'utilisateur.adresse'|trans}} : {{ item.adresse }}, {{ item.codePostal }} {{ item.ville|upper }} </li>
+        <li> {{'common.telephone'|trans}} : {{ item.telephone }} </li>
+        <li> {{'common.email'|trans}} : {{ item.email }}  </li>
+        <li> {{'common.profil'|trans}} : {{ item.profil.libelle }} </li>
+        {% if not item.groups is empty %}
+            <li> {{'utilisateur.droits.de'|trans}} {{ item.prenom|title }} {{ item.nom|upper }}: </li>
+            <ul>
+                {% for groups in item.groups %}
+                    <li> {{ groups.name }} </li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </ul>
+
+    {% if encadrant %}
+        <h2> {{ 'utilisateur.description'|trans }} :</h2>
+        <p> {{ item.description }} </p>
+        <a class="btn btn-outline-primary" href="{{ path('UtilisateurScheduler', {'id': item.id}) }}">Voir calendrier</a>
+    {% endif %}
+
+    <h2>{{'common.autorisations'|trans}}</h2>
+    {% if item.autorisations is empty %}
+        <p> {{'utilisateur.autorisation.aucun'|trans}} </p>
+    {% else %}
+        <ul>
+            {% for i in item.autorisations %}
+                <li> {{ i.libelle }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <a class="btn btn-outline-primary" href="{{ path('UtilisateurAjouterAutorisation', {'id': item.id}) }}">{{'utilisateur.autorisation.modifier'|trans}}</a>
+{% endblock %}

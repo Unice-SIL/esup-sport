@@ -1,0 +1,42 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+
+    <a class="btn btn-primary" href="{{ path('ClasseActiviteLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+
+    {% if (null == item.id) %}
+        <h1>{{'classeactivite.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'classeactivite.modifier.title'|trans}}</h1>
+    {% endif %}
+
+    <div class="well">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                {{ form_row(form.libelle)}}
+            </div>
+            <div class="col-sm-12 col-md-6">
+                {{ form_label(form.typeActivite)}}
+                {{ form_widget(form.typeActivite)}}
+            </div>
+            <div class="col-sm-12 col-md-6">
+                {{ form_row(form.imageFile)}}
+                {{ ImagePreview.html(item.image, 'classe_activite_imageFile_file') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.save) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ ImagePreview.js }}
+{% endblock %}

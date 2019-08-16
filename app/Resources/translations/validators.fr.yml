@@ -1,0 +1,64 @@
+
+activite.classeactivite.notnull: Une classe d'activité doit être sélectionnée
+activite.description.notblank: La description de l'activité est obligatoire
+activite.image.format: 'L''image de l''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+activite.image.notnull: Une image doit être sélectionnée
+activite.libelle.notblank: Le libellé de l'activité est obligatoire
+activite.uniqueentity: Une activité existe déjà avec ce libellé
+classeactivite.image.format: 'L''image de la classe d''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+classeactivite.image.notnull: Une image doit être sélectionnée pour la classe d'activité
+classeactivite.libelle.notblank: Le libellé de la classe d'activité est obligatoire
+classeactivite.typeactivite.notnull: Un type d'activité doit être sélectionné
+classeactivite.uniqueentity: Une classe d'activité existe déjà avec ce libellé
+complement.capacite.notblank: Veuillez saisir une capacité 
+complement.encadrant.notblank: Pour un format encadré, au moins un encadrant doit être sélectionné
+complement.niveauxsportifs.notblank: Vous devez saisir au moins un niveau sportif
+complement.profilsutilisateurs.notblank: Vous devez saisir au moins un profil d'utilisateur
+complement.tarif.notblank: Pour un format payant, le tarif doit être sélectionné
+etablissement.adresse.notblank: L'adresse du campus est obligatoire
+etablissement.code.notblank: Le code du campus est obligatoire
+etablissement.codePostal.notblank: Le code postal du campus est obligatoire
+etablissement.email.invalide: Email Invalide
+etablissement.image.format: 'L''image n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+etablissement.image.notnull: Une image doit être sélectionnée
+etablissement.libelle.notblank: Le libellé du campus est obligatoire
+etablissement.telephone.invalide: Numéro de téléphone invalide
+etablissement.uniqueentity: Un établissment existe déjà avec ce libellé
+etablissement.ville.notblank: La ville du campus est obligatoire
+formatactivite.achatcarte.carte.notnull: Vous devez choisir une carte
+formatactivite.description.notblank: La description du format est obligatoire
+formatactivite.image.format: 'L''image du format n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+formatactivite.image.notnull: Une image doit être sélectionnée
+formatactivite.libelle.notblank: Le libellé du format est obligatoire
+formatactivite.lieu.notnull: Le lieu est obligatoire
+formatactivite.reservation.ressource.notnull: Veuillez sélectionner au moins une ressource
+formatactivite.uniqueentity: Un format d'activité existe déjà avec ce libellé
+imagefond.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
+imagefond.image.notnull: Une image doit être sélectionnée
+imagefond.titre.notnull: Le titre est obligatoire
+lieu.adresse.notblank: L'adresse du lieu est obligatoire
+lieu.codepostal.notblank: Le code postal du lieu est obligatoire
+lieu.libelle.notblank: Le libellé du lieu est obligatoire
+lieu.ville.notblank: La ville du lieu est obligatoire
+materiel.libelle.notblank: Le libellé du lieu est obligatoire
+materiel.quantite.notblank: Veuillez renseigner une quantité disponible
+message.erreur.datefin: La date de début ne peut être supérieure à la date de fin
+profilutilisateur.libelle.notblank: Le libellé du profil utilisateur est obligatoire
+profilutilisateur.uniqueentity: Un profil utilisateur existe déjà avec ce libellé
+ressource.image.format: 'L''image de la ressource n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+ressource.image.notnull: Une image doit être sélectionnée
+tarif.libelle.notblank: Le libellé du tarif est obligatoire
+tarif.montant.notnull: Veuillez saisir un montant
+tarif.uniqueentity: Un tarif existe déjà avec ce libellé
+typeactivite.libelle.notblank: Le libellé du type d'activité est obligatoire
+typeactivite.uniqueentity: Un type d'activité existe déjà avec ce libellé
+typeautorisation.comportement.notnull: Veuillez sélectionner un comportement
+typeautorisation.libelle.notblank: Le libellé du type d'autorisation est obligatoire
+typeautorisation.uniqueentity: Un type d'autorisation existe déjà avec ce libellé
+utilisateur.UserProfile.notnull: Veuillez selectionner un profil d'utilisateur
+utilisateur.firstname.notnull: Prénom est obligatoire
+utilisateur.mail.notnull: Mail est obligatoire
+utilisateur.name.notnull: Nom est obligatoire
+utilisateur.sexe.notnull: Civilité est obligatoire
+utilisateur.telephone.invalide: Numéro de téléphone invalide
+utilisateur.username.notnull: Le nom d'utilisateur est obligatoire

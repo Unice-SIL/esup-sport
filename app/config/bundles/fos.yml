@@ -1,0 +1,32 @@
+fos_user:
+    db_driver: orm
+    firewall_name: main
+    user_class: UcaBundle\Entity\Utilisateur
+    use_flash_notifications: true
+    group:
+        group_class: UcaBundle\Entity\Groupe
+        group_manager:  fos_user.group_manager.default
+        form:
+            type: UcaBundle\Form\GroupeType
+    from_email:
+        address: '%mailer_user%'
+        sender_name: '%mailer_name%'
+    service:
+        mailer: fos_user.mailer.twig_swift
+    registration:
+        confirmation: 
+            enabled: true
+            template:  "FOSUserBundle:Registration:email.txt.twig"
+        form:
+            type: UcaBundle\Form\UtilisateurType
+
+fos_ck_editor:
+    base_path: "build/ckeditor"
+    js_path:   "build/ckeditor/ckeditor.js"
+
+services: 
+    admin.form.user_roles_type:
+        class: UcaBundle\Form\GroupeType
+        arguments: ['@security.role_hierarchy']
+        tags:
+            - { name: form.type}

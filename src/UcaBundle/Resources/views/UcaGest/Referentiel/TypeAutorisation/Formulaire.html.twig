@@ -1,0 +1,43 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% block main %}
+    <a class="btn btn-primary" href="{{ path('TypeAutorisationLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+
+    {% if (null == item.id) %}
+        <h1>{{'typeautorisation.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'typeautorisation.modifier.title'|trans}}</h1>
+    {% endif %}
+
+    <div class="well">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_row(form.libelle)}}
+                {{ form_row(form.comportement)}}
+                {{ form_row(form.tarif)}}
+                {{ form_row(form.informationsComplementaires)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_row(form.save) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        $("#type_autorisation_comportement").change(function () {
+            val = $(this).val();
+            code = $(this).children('option[value=' + val + ']').first().data('code');
+            $(".form-group:has(." + code + "ToShow)").show();
+            $(".form-group:has(." + code + "ToHide)").hide();
+            $('.' + code + 'ToShow').prop('required', true);
+            $('.' + code + 'ToHide').prop('required', false);
+        });
+        $("#type_autorisation_comportement").change();
+    </script>
+{% endblock %}

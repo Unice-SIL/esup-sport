@@ -1,0 +1,108 @@
+/* book version (default) */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-book-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-book-opentype-webfont.woff') format('woff');
+    font-weight: 400; // 400 = normal 
+    font-style: normal;
+
+}
+/* book italic version (default) */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-bookitalic-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-bookitalic-opentype-webfont.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+
+}
+/* thin version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-thin-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-thin-opentype-webfont.woff') format('woff');
+    font-weight: 200;
+    font-style: normal;
+
+}
+/* thin italic version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-thinitalic-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-thinitalic-opentype-webfont.woff') format('woff');
+    font-weight: 200;
+    font-style: italic;
+
+}
+/* light version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-light-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-light-opentype-webfont.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+
+}
+/* medium version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-medium-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-medium-opentype-webfont.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+
+}
+/* medium italic version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-mediumitalic-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-mediumitalic-opentype-webfont.woff') format('woff');
+    font-weight: 500;
+    font-style: italic;
+
+}
+/* bold version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-bold-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-bold-opentype-webfont.woff') format('woff');
+    font-weight: 700; // 700 = bold
+    font-style: normal;
+
+}
+/* heavy version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-heavy-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-heavy-opentype-webfont.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+
+}
+/* heavy italic version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-heavyitalic-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-heavyitalic-opentype-webfont.woff') format('woff');
+    font-weight: 800;
+    font-style: italic;
+
+}
+/* ultra version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-ultra-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-ultra-opentype-webfont.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+
+}
+/* ultra italic version */
+@font-face {
+    font-family: 'Apex New Book';
+    src: url('../fonts/apexnew-ultraitalic-opentype-webfont.woff2') format('woff2'),
+         url('../fonts/apexnew-ultraitalic-opentype-webfont.woff') format('woff');
+    font-weight: 900;
+    font-style: italic;
+
+}

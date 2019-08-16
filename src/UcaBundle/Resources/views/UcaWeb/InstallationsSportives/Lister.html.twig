@@ -1,0 +1,71 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 100%),  url("{{ ImageAsset.imageFond('Installations') }}") no-repeat center center;
+            background-size: cover; 
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+
+<h1 class="h1-light">{{'installationsSportives.title'|trans}}</h1>
+
+    <section class="container">
+        <div class="accordion" id="accordionInstallations">            
+            {% for item in etablissements %}
+            <div class="card card-install bg-white mb-4">
+                {% set activities = [] %}
+                {% for ressource in item.ressources %}
+                    {% for act in ressource.formatsActivite %}
+                        {% set activities = activities|merge([act.activite]) %}
+                    {% endfor %}
+                {% endfor %}
+                <div class="card-header" id="heading{{loop.index}}">
+                    <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12 {% if not loop.first %}collapsed{% endif %}" data-target="#collapse{{loop.index}}" data-toggle="collapse">
+                        <div class="row text-left">
+                            <h2 class="mb-0 col-md-8 text-dark text-uppercase">{{ item.libelle }}</h2>
+                            <p class="m-0 p-0 col-md-2"><i class="fas fa-phone"></i> {{ item.telephone }}</p>
+                            <p class="m-0 p-0 col-md-2"><i class="far fa-envelope"></i> {{ item.email }}</p>
+                        </div>
+                    </a>
+                </div>
+                <div aria-labelledby="heading{{loop.index}}" class="card-body collapse {% if loop.first %}show{% endif %}" data-parent="#accordionInstallations" id="collapse{{loop.index}}">
+                    <div class="row">
+                        <div class="col-md-4 install-picture">
+                            <img class="img-fluid" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+                        </div>
+                        <div class="col-md-4 install-coordinates">
+                            <h3 class="text-uppercase"><i class="fas fa-map-marker-alt"></i> {{ "installationsSportives.coordonnees.title"|trans }}</h3>
+                            <p>
+                                {{ item.libelle }}
+                                <br/>{{ item.adresse }}
+                            </p>
+                        </div>
+                        <div class="col-md-4 install-opening-hours">
+                            <h3 class="text-uppercase"><i class="far fa-clock"></i> {{ "installationsSportives.horaireOuverture.title"|trans }}</h3>
+                            <p>{{ item.horairesOuverture|nl2br }}</p>
+                        </div>
+                    </div>
+                    <div class="row install-activity p-3 d-flex flex-wrap justify-content-start">
+                        <h3 class="text-uppercase">{{ "installationsSportives.activitePropose.title"|trans }}</h3>
+                        {% if activities is not empty %}
+                        {% for activity in activities %}
+                            <div class="mr-2 mb-2">{{ activity.libelle|upper }}</div>
+                        {% endfor %}
+                        {% else %}
+                        <p> {{'installationsSportives.activites.aucun'|trans }} </p>
+                        {% endif %}
+                    </div>
+                </div>
+            
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}

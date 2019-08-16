@@ -1,0 +1,9 @@
+function initSuppression(){
+    $("[data-target='#modalSuppression']").each(function () {
+        var href = $(this).attr('href');
+        $(this).attr('onClick', "showModal('" + href + "')");
+    });
+}
+
+
+   

@@ -1,0 +1,104 @@
+
+{% macro displayCalendarHtml() %}
+    <div id="load">
+        <img src="{{ asset('images/load.gif') }}" id="load-img">
+    </div>
+    <div class="dhx_cal_container" id="scheduler_here" style="width:100%; height:800px; padding:10px;">
+        <div class="dhx_cal_navline">
+            <div class="dhx_cal_prev_button">&nbsp;</div>
+            <div class="dhx_cal_next_button">&nbsp;</div>
+            <div class="dhx_cal_today_button"></div>
+            <div class="dhx_cal_date"></div>
+            <div class="dhx_minical_icon" id="dhx_minical_icon" onclick="show_minical()">&nbsp;</div>
+            <div class="dhx_cal_tab" name="day_tab" style="right: auto; left: 14px;"></div>
+            <div class="dhx_cal_tab" name="week_tab" style="right: auto; left: 75px;"></div>
+            <div class="dhx_cal_tab" name="month_tab" style="right: auto; left: 136px;"></div>
+        </div>
+        <div class="dhx_cal_header"></div>
+        <div class="dhx_cal_data"></div>
+    </div>
+    <div style="display:none;" class="dhx_form_repeat" id="myForm">
+    	<form>
+       <div class="dhx_repeat_left">
+                  <label><input class="dhx_repeat_radio" type="radio" name="repeat" value="week" checked/>Hebdomadaire</label><br />
+                  <!--<label><input class="dhx_repeat_radio" type="radio" name="repeat" value="year" />Annuelle</label>-->
+       </div>
+       <div class="dhx_repeat_divider"></div>
+       <div class="dhx_repeat_center">
+                  <div style="display:none;" id="dhx_repeat_day">
+                      <label><input class="dhx_repeat_radio" type="radio" name="day_type" checked value="d"/>Chaque</label><input class="dhx_repeat_text" type="text" name="day_count" value="1" />jour<br />
+                      <label><input class="dhx_repeat_radio" type="radio" name="day_type" value="w"/>Chaque journée de travail</label>
+                  </div>
+                  <div id="dhx_repeat_week">
+                      Répéter toutes les<input class="dhx_repeat_text" type="text" name="week_count" value="1" />semaine:<br />
+
+                      <table class="dhx_repeat_days">
+                          <tr>
+                              <td>
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="1" />Lundi</label><br />
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="4" />Jeudi</label>
+                              </td>
+                              <td>
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="2" />Mardi</label><br />
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="5" />Vendredi</label>
+                              </td>
+                              <td>
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="3" />Mercredi</label><br />
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="6" />Samedi</label>
+                              </td>
+                              <td>
+                                  <label><input class="dhx_repeat_checkbox" type="radio" name="week_day" value="0" />Dimanche</label><br /><br />
+                              </td>
+                          </tr>
+                      </table>
+
+                  </div>
+                  <div style="display:none;" id="dhx_repeat_month">
+                      <!--<label><input class="dhx_repeat_radio" type="radio" name="month_type" value="d"/>Répéter</label><input class="dhx_repeat_text" type="text" name="month_day" value="1" />jour  chaque<input class="dhx_repeat_text" type="text" name="month_count" value="1" />mois<br />-->
+                      <label><input class="dhx_repeat_radio" type="radio" name="month_type" checked value="w"/>Le</label><input class="dhx_repeat_text" type="text" name="month_week2" value="1" /><select name="month_day2"><option value="1" selected >Lundi<option value="2">Mardi<option value="3">Mercredi<option value="4">Jeudi<option value="5">Vendredi<option value="6">Samedi<option value="0">Dimanche</select>de chaque<input class="dhx_repeat_text" type="text" name="month_count2" value="1" />mois<br />
+                  </div>
+                  <!--<div style="display:none;" id="dhx_repeat_year">
+                      <label><input class="dhx_repeat_radio" type="radio" name="year_type" value="d"/>Chaque</label><input class="dhx_repeat_text" type="text" name="year_day" value="1" />jour<select name="year_month"><option value="0" selected >Janvier<option value="1">Février<option value="2">Mars<option value="3">Avril<option value="4">Mai<option value="5">Juin<option value="6">Juillet<option value="7">Août<option value="8">Septembre<option value="9">Octobre<option value="10">Novembre<option value="11">Décembre</select>mois<br />
+                      <label><input class="dhx_repeat_radio" type="radio" name="year_type" checked value="w"/>Le</label><input class="dhx_repeat_text" type="text" name="year_week2" value="1" /><select name="year_day2"><option value="1" selected >Lundi<option value="2">Mardi<option value="3">Mercredi<option value="4">Jeudi<option value="5">Vendredi<option value="6">Samedi<option value="0">Dimanche</select>du<select name="year_month2"><option value="0" selected >Janvier<option value="1">Février<option value="2">Mars<option value="3">Avril<option value="4">Mai<option value="5">Juin<option value="6">Juillet<option value="7">Août<option value="8">Septembre<option value="9">Octobre<option value="10">Novembre<option value="11">Décembre</select><br />
+                  </div> -->
+       </div>
+       <div class="dhx_repeat_divider"></div>
+       <div class="dhx_repeat_right">
+                  <label style="display:none;"><input class="dhx_repeat_radio" type="radio" name="end" />Pas de date de fin</label><br />
+                  <label><input class="dhx_repeat_radio" type="radio" name="end" />Répéter</label><input class="dhx_repeat_text" type="text" name="occurences_count" value="1" />fois<br />
+                  <label><input class="dhx_repeat_radio" type="radio" name="end" checked/>Répéter jusqu&#039;au</label><input id="dhx_end_date_minical_icon" class="dhx_repeat_date" type="text" name="date_of_end" value="'+scheduler.config.repeat_date_of_end+'" onclick="show_end_date_minical()"/><br />
+       </div>
+       </form>
+    </div>
+    <div id="my_form" class="custom_form" style="display: none; top: 156px; left: 544px;" aria-hidden="true">
+        <h3>{{"scheduler.message.send_mail"|trans}}</h3>
+        <textarea rows="9" class="textarea-mail"></textarea>
+        <button id="btn-mail-send" class="btn btn-primary btn-send">{{"scheduler.message.valider"|trans}}</button>
+        <button id="btn-mail-back" class="btn btn-primary btn-back">{{"scheduler.message.annuler"|trans}}</button>
+    </div>
+    <div id="register_form" class="custom_form" style="display: none; top: 156px; left: 544px;" aria-hidden="true">
+        <h3>{{"scheduler.message.inscrit_list"|trans}}</h3>
+        <ul id="list-person">
+            
+        </ul>
+        <button id="btn-register-send" class="btn btn-primary btn-send">{{"scheduler.message.valider"|trans}}</button>
+        <button id="btn-register-back" class="btn btn-primary btn-back">{{"scheduler.message.annuler"|trans}}</button>
+    </div>
+
+{% endmacro %}
+{% macro initCalendarJs(item = null) %}
+    <script>
+    var ITEM = {{ item|json_encode()|raw }};
+    var DHTMLXAPI = "{{ path('DhtmlxApi') }}";
+    var DATAAPI = "{{ path('DataApi') }}";
+
+    </script>
+        {{ encore_entry_script_tags('scheduler') }}
+
+{% endmacro %}
+
+{% macro debugSchedulerEvents() %}
+    {% endmacro %}
+
+{% macro initSchedulerData(item) %}
+{% endmacro %}

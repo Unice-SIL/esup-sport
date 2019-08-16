@@ -1,0 +1,52 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block title %}
+    Détail de l'activité
+{% endblock %}
+
+{% block main %}
+    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    
+    <a class="btn btn-primary" href="{{ path('ActiviteLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+    <h1> {{ item.libelle }} </h1>
+    {{ flashBag.showAll }}
+    <p>
+        <span class="badge badge-dark">{{ item.classeActivite.typeActivite.libelle }}</span>
+        <span class="badge badge-primary">{{ item.classeActivite.libelle }}</span>
+    </p>
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="image_activite" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+        </div>
+        <div class="col-md-8">
+            <h2> {{'common.description'|trans}} </h2>
+            <p> {{ item.description }} </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+            <h2> {{ 'activite.format.ajouter'|trans }} </h2>
+            <a class="btn btn-primary" href="{{ url('FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecCreneau'}) }}">
+                {{ 'activite.formataveccreneau.ajouter'|trans }}</a>
+            <a class="btn btn-primary" href="{{ url('FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecReservation'}) }}">
+                {{ 'activite.formatavecreservation.ajouter'|trans }}</a>
+            <a class="btn btn-primary" href="{{ url('FormatActiviteAjouter', { idActivite: item.id, format: 'FormatSimple'}) }}">
+                {{ 'activite.formatsimple.ajouter'|trans }}</a>
+            <a class="btn btn-primary" href="{{ url('FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAchatCarte'}) }}">
+                {{ 'activite.formatachatcarte.ajouter'|trans }}</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+            <h2> {{ 'activite.format.disponible'|trans }} </h2>
+            {{ sg_datatables_render_html(datatable) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ sg_datatables_render_js(datatable) }}
+{% endblock %}

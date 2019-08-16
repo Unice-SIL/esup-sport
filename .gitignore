@@ -1,0 +1,12 @@
+*.lock
+*~
+.vscode
+assets/bundles
+node_modules
+var
+vendor
+web/build
+web/bundles
+web/media
+web/upload/private/*
+web/upload/public/*

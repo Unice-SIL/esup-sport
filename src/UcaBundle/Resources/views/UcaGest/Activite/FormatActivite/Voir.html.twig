@@ -1,0 +1,147 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Table.html.twig' as htmlTable %}
+{% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+
+{% block main %}
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('ActiviteVoir', {'id' : item.activite.id}) }}">
+        <i class="fas fa-chevron-left"></i>
+        {{ 'bouton.retour' | trans }}
+    </a>
+    <h1>{{ item.libelle }}</h1>
+    <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <p>
+                <span class="badge badge-dark">
+                    {{ item.activite.classeActivite.libelle }}</span>
+                <span class="badge badge-primary">
+                    {{ item.activite.libelle }}</span>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <p>
+                {% for niveau in item.niveauxSportifs %}
+                    <span class="badge badge-info">
+                        {{ niveau.libelle }}</span>
+                {% endfor %}
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="image_format_activité" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+        </div>
+        <div class="col-md-4">
+            <h2>
+                {{'common.description'|trans}}
+            </h2>
+            <p>{{ item.description }}</p>
+            {% if item.estEncadre %}
+                <h2>
+                    {{'common.encadrants'|trans}}
+                </h2>
+                <ul>
+                    {% for encadrant in item.encadrants %}
+                        <li>{{ encadrant.prenom }}
+                            {{ encadrant.nom }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <p>
+                {{'format.publication.date.debut'|trans}}
+                {{ item.dateDebutPublication|date('d/m/Y H:i') }}
+                {{'format.publication.date.fin'|trans}}
+                {{item.dateFinPublication|date('d/m/Y H:i')}}</p>
+            <p>
+            <p>
+                {{'format.inscription.date.debut'|trans}}
+                {{ item.dateDebutInscription|date('d/m/Y H:i') }}
+                {{'format.inscription.date.fin'|trans}}
+                {{item.dateFinInscription|date('d/m/Y H:i')}}</p>
+            <p>
+                {{'format.date.debut'|trans}}
+                {{ item.dateDebutEffective|date('d/m/Y H:i') }}
+                {{'format.date.fin'|trans}}
+                {{item.dateFinEffective|date('d/m/Y H:i')}}</p>
+            {% if not item.lieu is empty %}
+                <h2> {{'format.lieu'|trans}} </h2>
+                <ul>
+                    {% for lieu in item.lieu %}
+                        <li> {{lieu.libelle}} </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            {% if format == "FormatSimple" %}
+                {% if item.promouvoir == 0 %}
+                    <p> {{'format.promouvoir'|trans}} : {{'common.non'|trans}} </p>
+                {% else %}
+                    <p> {{'format.promouvoir'|trans}} : {{'common.oui'|trans}} </p>
+                {% endif %}
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            {% if item.estPAyant %}
+                <h2>
+                    {{'common.tarif'|trans}}
+                </h2>
+                <p>{{item.tarif}}</p>
+            {% endif %}
+
+            <h2>
+                {{'common.profils.autorises'|trans}}
+            </h2>
+            {% if item.profilsUtilisateurs is empty %}
+                <p> {{'formatactivite.profil.utilisateur.aucun'|trans}} </p>
+            {% else %}
+                <ul>
+                    {% for profil in item.profilsUtilisateurs %}
+                        <li>{{ profil.libelle }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <h2> {{'format.autorisations'|trans}} </h2>
+            {% if item.autorisations is empty %}
+                <p> {{'formatactivite.autorisation.aucune'|trans}} </p>
+            {% else %}
+                <ul>
+                    {% for autorisation in item.autorisations %}
+                        <li>{{ autorisation.libelle }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if format == "FormatAvecReservation" %}
+                <h2> {{'common.ressources.reservees'|trans}} </h2>
+                <ul>
+                    {% for ressource in item.ressource %}
+                        <li>{{ ressource.libelle }}</li>
+                    {% endfor %}
+                </ul>            
+            {% endif %}
+        </div>
+    </div>
+
+    {% if Scheduler %}
+        <h2>{{ 'common.creneaux' | trans }}</h2>
+        {{ dhtmlxCalendar.displayCalendarHtml }}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {% if Scheduler %}
+        <script type="text/javascript">
+            var typeA = "{{ type }}";
+            var role = "{{ role }}";
+
+            // scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }</script>
+            {{ dhtmlxCalendar.initSchedulerData(item) }}
+            {{ dhtmlxCalendar.debugSchedulerEvents() }}
+            {{ dhtmlxCalendar.initCalendarJs(item) }}
+        </script>
+    {% endif %}
+{% endblock %}

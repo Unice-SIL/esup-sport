@@ -1,0 +1,483 @@
+
+acceuil.evenements.liste: See all events
+acceuil.prochainement.consulter: Read more
+accueil.classeActivite.title: 'Sports activities'
+accueil.connexion: Log in
+accueil.cotisations.infos: More about fees
+accueil.demander.inscription: Ask for a registration
+accueil.inscription.title: Registration
+accueil.prochainement.title: 'Comming soon'
+activite.ajouter.succes: Activity successfully added 
+activite.ajouter.title: Add an activity
+activite.classeactivite.placeholder: '- Select an activity class -'
+activite.creneau.ajouter: Add activity with time slots
+activite.format.ajouter: Add a format
+activite.format.disponible: Available format
+activite.formatachatcarte.ajouter: Card Purchase
+activite.formataveccreneau.ajouter: Time slots reservation
+activite.formatavecreservation.ajouter: Resource reservation
+activite.formats.disponibles.aucun: No format available
+activite.formats.disponibles: Available formats
+activite.formatsimple.ajouter: Event
+activite.gestion: Activities management
+activite.image.libelle: Select a picture
+activite.libelle: Activity 
+activite.list.title: Activities
+activite.modifier.succes: Activity successfully modified 
+activite.modifier.title: Edit an activity
+activite.reservation.ajouter: Add activity with reservation
+activite.simple.ajouter: Add simple activity
+activite.supprimer.erreur: 'Cannot delete activity, activities format are assigned'
+activite.supprimer.succes: Activity successfully deleted
+activites.sportives: Sports activities
+actualite.ajouter.succes: News successfully added
+actualite.image.libelle: Select an image
+actualite.list.title: News
+actualite.modifier.succes: News successfully modified
+actualite.supprimer.erreur: Cannot delete news
+actualite.supprimer.succes: News successfully deleted
+bouton.ajouter: Add
+bouton.bloquer: Block
+bouton.debloquer: Unblock
+bouton.enregistrer: Save
+bouton.log: Log
+bouton.modifier: Edit
+bouton.panier.ajouter: Add to cart
+bouton.reinitialiser: Delete
+bouton.reset: Reset the form
+bouton.retour: Back
+bouton.save: Save
+bouton.supprimer: Delete
+bouton.voir: See
+classeActivite.list.title: List of activity classes
+classeactivite.ajouter.succes: Activity class successfully added
+classeactivite.ajouter.title: Add an activity class
+classeactivite.gestion: Activity class management
+classeactivite.image.libelle: Select a picture
+classeactivite.libelle: Activity class
+classeactivite.list.title: Activity class management
+classeactivite.modifier.succes: Activity class successfully modified
+classeactivite.modifier.title: Edit an activity class
+classeactivite.supprimer.erreur: Cannot delete activity class, activities are assigned
+classeactivite.supprimer.succes: Activity class successfully deleted
+classeactivite.typeactivite.placeholder: '- Select an activity type -'
+column.champ: Field
+column.ckeditor: Rich text
+column.entite: Entity
+column.entityid: Entity Id
+column.valen: English
+column.valfr: French
+column.valit: Italian
+common.aucun: '- None -'
+common.autorisations: Authorizations
+common.capacite: Capacity
+common.coordonnees: Coordinates
+common.creneaux: Time slots
+common.date.debut: Starting on
+common.date.fin: Ending on
+common.date.naissance: Date of Birth
+common.date: Date
+common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
+common.description: Description
+common.email: Email
+common.emplacement: Location
+common.encadrants: Managers
+common.evenement: Event
+common.friday: Friday
+common.groups: Groups
+common.horaires.ouverture: Opening hours
+common.horaires: Schedules
+common.infospersonnelles: Personal Information
+common.infossupplementaires: Additional information
+common.inscrire: Register
+common.libelle: Label
+common.lieu: Place
+common.mobile: Mobile
+common.modifications: Changes
+common.monday: Monday
+common.montants: Amounts
+common.naissance: Born on
+common.niveauSportif: Sport level
+common.nom.utilisateur: Username
+common.nom: Name
+common.non: 'No'
+common.ordre: Order
+common.oui: 'Yes'
+common.prenom: First name
+common.profil: Profile
+common.profils.autorises: Authorized profiles
+common.profils: Profiles
+common.reservabilites: Availabilities
+common.ressources.reservee: Reserved ressource 
+common.ressources: Resources
+common.role: Role
+common.saturday: Saturday
+common.sunday: Sunday
+common.tarif: Price
+common.telephone.placeholder: XXXXXXXXXX
+common.telephone: Phone
+common.texte: Text
+common.thursday: Thursday
+common.titre: Title
+common.tuesday: Tuesday
+common.type.activite: Type of activity
+common.type: Type
+common.username: Login
+common.utilisateur: User
+common.wednesday: Wednesday
+creneau.ajouter: Add a time slot
+creneau.list.complet: "Full"
+creneau.list.indisponible: "Unavailable"
+creneau.list.prochainCours: "Next lesson"
+creneau.list.reserver: "Subscribe"
+creneau.liste.titre: List of time slots
+erreur.403: Error 403. You don't have permission to access.
+erreur.404: Error 404. he page you're trying to access was not found.
+erreur.500: Error 500. An internal error occured. Please contact us if it happens again.
+erreur.formulaire.champ.incorrect: One or more fields are incorrects
+erreur.generale: An error occured. Please contact us if it happens again.
+etablissement.ajouter.succes: Campus successfully added 
+etablissement.ajouter.title: Add a Campus
+etablissement.code: Campus code
+etablissement.email.libelle: Contact email
+etablissement.gestion: Campus management
+etablissement.horaires.ouverture.libelle: Opening hours
+etablissement.image.libelle: Select a picture
+etablissement.libelle: Campus
+etablissement.list.title: Campus Management
+etablissement.modifier.succes: Campus successfully modified 
+etablissement.modifier.title: Modify a Campus
+etablissement.supprimer.erreur: Cannot delete Campus, resources are assigned
+etablissement.supprimer.succes: Campus successfully deleted 
+etablissement.telephone.libelle: Contact Phone Number
+evenements.title: Events
+footer.accessibilite: "Accessibility"
+footer.cgu: "Conditions of Use"
+footer.cgv: "Conditions of Sale"
+footer.contact: "Contact us"
+footer.mentionsLegales: "Legal notices"
+footer.planDuSite: "Site map"
+footer.reseauxSociaux: "Find us on : "
+format.achat.carte.autorisation: Select the card to buy
+format.autorisations.placeholder: '- No authorization selected -'
+format.autorisations: Required authorizations
+format.date.debut: Activity from
+format.date.effective.debut: Actual start date
+format.date.effective.fin: Actual end date
+format.date.fin: to
+format.date.inscription.debut: Start date of registration
+format.date.inscription.fin: End date of registration
+format.date.publication.debut: Publication start date
+format.date.publication.fin: Publication end date
+format.encadrants.placeholder: '- Select a manager -'
+format.encadrants: Managers
+format.encadre: Is this activity managed?
+format.image.libelle: Select a picture
+format.inscription.date.debut: Registration from
+format.inscription.date.fin: to 
+format.lieu.placeholder: '- Select a place -'
+format.lieu: Place
+format.niveau.sportif: Sporting level required
+format.payant: Is this activity a fee-based activity?
+format.profils.utilisateur: Authorized users profiles
+format.promouvoir: Show the event on the home page
+format.publication.date.debut: Publish from
+format.publication.date.fin: to
+format.reservation.ressource: Resources to be reserved
+format.statut.brouillon: Draft
+format.statut.publie: Published
+format.statut: Status
+format.tarif.placeholder: '- Select a Rate -'
+format.tarif: Price
+formatachatcarte.ajouter.succes: Card purchase format successfully added
+formatachatcarte.carte.placeholder: '- Choose a card -'
+formatachatcarte.modalites: Modality
+formatachatcarte.modifier.succes: Card purchase format successfully modified 
+formatachatcarte.supprimer.succes: Card purchase format successfully deleted
+formatachatcarte.title: Card Purchase
+formatachatcarte.validite: Valid until
+formatactivite.autorisation.aucune: No authorization required 
+formatactivite.carte.ajouter.title: Add a format with card purchase
+formatactivite.carte.modifier.title: Edit a format with card purchase
+formatactivite.creneau.ajouter.title: Add a format with time slots
+formatactivite.creneau.modifier.title: Edit a format with time slots
+formatactivite.horaires: Schedules
+formatactivite.libelle: Activity format
+formatactivite.lieu.aucun: No place defined
+formatactivite.profil.utilisateur.aucun: No authorized profile
+formatactivite.reservation.ajouter.title: Add a format with resource reservation
+formatactivite.reservation.modifier.title: Edit a format with resource reservation
+formatactivite.simple.ajouter.title: Add an event
+formatactivite.simple.modifier.title: Edit an event
+formataveccreneau.ajouter.succes: Format with time slot successfully added 
+formataveccreneau.modifier.succes: Format with time slot successfully modified
+formataveccreneau.supprimer.succes: Format with time slot successfully deleted
+formataveccreneau.title: Time slot reservation
+formatavecreservation.ajouter.succes: Format with reservation successfully added
+formatavecreservation.modifier.succes: Format with reservation successfully modified
+formatavecreservation.supprimer.succes: Format with reservation successfully deleted
+formatavecreservation.title: Resource reservation
+formatsimple.ajouter.succes: Event successfully added
+formatsimple.modifier.succes: Event successfully modified
+formatsimple.supprimer.succes: Event successfully deleted
+formatsimple.title: Event
+groupe.ajouter.succes: Group successfully added
+groupe.ajouter.title: 'Add a group'
+groupe.libelle: Group
+groupe.list.title: Rights management
+groupe.modifier.succes: Group successfully modified
+groupe.modifier.title: 'Modify a group'
+groupe.roles.placeholder: '- Select one or more rights -'
+groupe.supprimer.succes: Group successfully deleted
+image.alt.ressource.type.lieu: Place type resource
+image.alt.ressource.type.materiel: Equipement type resource
+imagefond.image.libelle: Select a picture
+imagefond.list.title: Background pictures management
+imagefond.modifier.succes: Background picture successfully modified
+inscription.aucun.inscrit: No subscribers
+inscription.confirmation: Added to the basket
+inscription.continuer: Continue on the website
+inscription.panier.voir: See the basket
+installationsSportives.activitePropose.title: Proposed activities
+installationsSportives.coordonnees.title: contact information
+installationsSportives.horaireOuverture.title: Oppening hours
+installationsSportives.title: Sports installations
+langues.gestion: Language management
+lieu.ajouter.succes: Location successfully added
+lieu.ajouter.title: Add a place
+lieu.ajouter: Add room
+lieu.modifier.succes: Location successfully modified 
+lieu.modifier.title: Modify a place
+lieu.supprimer.erreur: Cannot delete this place, reservations are assigned
+lieu.supprimer.succes: Location successfully deleted
+log.libelle: Log
+log.list.title: Log Management
+materiel.ajouter.succes: Equipment successfully added
+materiel.ajouter.title: Add a material
+materiel.ajouter: Add material
+materiel.modifier.succes: Equipment successfully modified
+materiel.modifier.title: Modify a material
+materiel.supprimer.erreur: Cannot delete this material, reservations are assigned
+materiel.supprimer.succes: Equipment successfully deleted
+message.confirmation.suppression.titre: "Confirm deletion"
+message.confirmation.suppression: "Delete entry ?"
+outils.libelle: Tools
+panier.libelle: Shopping Basket
+profilutilisateur.ajouter.succes: User profile successfully added
+profilutilisateur.ajouter.title: Add a user profile
+profilutilisateur.gestion: User profile management
+profilutilisateur.libelle: User profile
+profilutilisateur.list.title: User profile management
+profilutilisateur.modifier.succes: User profile successfully modified
+profilutilisateur.modifier.title: Modify a user profile
+profilutilisateur.supprimer.erreur.formatactivite: Activities format use this profile 
+profilutilisateur.supprimer.erreur.montants: Rates are assigned to this profile
+profilutilisateur.supprimer.erreur.utilisateurs: Users use this profile
+profilutilisateur.supprimer.erreur: Cannot delete profile
+profilutilisateur.supprimer.succes: User profile successfully deleted
+referentiel.bouton.maj: Update the repository
+referentiel.libelle.maj: Select a file to update the repository
+referentiel.libelle: Referential
+ressource.ajouter.succes: Resource added
+ressource.capacite: Capacity
+ressource.code.rus: RUS code
+ressource.etablissement: Campus
+ressource.image.libelle: Select a picture
+ressource.latitude: Latitude
+ressource.libelle: Resource
+ressource.lieu.ajouter: Add Location
+ressource.list.subTitle: Resource List
+ressource.list.title: Resource Management
+ressource.longitude: Longitude
+ressource.modifier.succes: Resource modified
+ressource.quantite: Quantity
+ressource.referentiel.success: The real estate repository has been successfully updated
+ressource.superficie: Surface area
+ressource.supprimer.succes: Resource deleted
+ressource.tarif: Price
+role.liste: Rights
+scheduler.action.delete: delete
+scheduler.action.save: sauvegarder
+scheduler.action.update: update
+scheduler.message.action.debut: Do you wan't to
+scheduler.message.action.occurence: occurence
+scheduler.message.action.serie: all the series ?
+scheduler.message.annuler: Cancel
+scheduler.message.inscrit_list: Subscribers list
+scheduler.message.send_mail: Send a mail to the subscribers
+scheduler.message.valider: Save
+securite.libelle: Security
+security.roles.ROLE_ADMIN: Accèss UcaGest
+security.roles.ROLE_GESTION_ACTIVITE_ECRITURE: Manage activity (Read/Write)
+security.roles.ROLE_GESTION_ACTIVITE_LECTURE: Manage activity (Read only)
+security.roles.ROLE_GESTION_ACTUALITE_ECRITURE: Gestion des actualités (Lecture/Ecriture) [A traduire]
+security.roles.ROLE_GESTION_ACTUALITE_LECTURE: Gestion des actualités (Lecture seule) [A traduire]
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE: Manage activity Categories (Read/Write)
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_LECTURE: Manage activity Categories (Read only)
+security.roles.ROLE_GESTION_CRENEAU_ECRITURE: Manage time slots (Read/Write)
+security.roles.ROLE_GESTION_CRENEAU_LECTURE: Manage time slots (Read only)
+security.roles.ROLE_GESTION_ETABLISSEMENT_ECRITURE: Manage campus (Read/Write)
+security.roles.ROLE_GESTION_ETABLISSEMENT_LECTURE: Manage campus (Read only)
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE: Manage activity Formats (Read/Write)
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_LECTURE: Manage activity Formats (Read only)
+security.roles.ROLE_GESTION_GROUPE_ECRITURE: Access Rights (Read/Write)
+security.roles.ROLE_GESTION_GROUPE_LECTURE: Access Rigths (Read only)
+security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Manage Background pictures (Read/Write)
+security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Manage Background pictures (Read only)
+security.roles.ROLE_GESTION_LOG_LECTURE: Manage Logs (Read only)
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Manage profils (Read/Write)
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_LECTURE: Manage profils (Read only)
+security.roles.ROLE_GESTION_RESSOURCE_ECRITURE: Manage resources (Read/Write)
+security.roles.ROLE_GESTION_RESSOURCE_LECTURE: Manage resources (Read only)
+security.roles.ROLE_GESTION_SCHEDULER_LECTURE: Scheduler (Read)
+security.roles.ROLE_GESTION_TARIF_ECRITURE: Manage prices (Read/Write)
+security.roles.ROLE_GESTION_TARIF_LECTURE: Manage prices (Read only)
+security.roles.ROLE_GESTION_TEXTE_ECRITURE: Manage texts (Read/Write)
+security.roles.ROLE_GESTION_TEXTE_LECTURE:  Manage texts (Read only)
+security.roles.ROLE_GESTION_TRADUCTION_ECRITURE: Manage Translation (Read/Write)
+security.roles.ROLE_GESTION_TRADUCTION_LECTURE: Manage Translation (Read only)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_ECRITURE: Manage activity types (Read/Write)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_LECTURE: Manage activity types (Read only)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_ECRITURE: Manage authorization type (Read/Write)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_LECTURE: Manage authorization type (Read only)
+security.roles.ROLE_GESTION_UTILISATEUR_ECRITURE: Manage users (Read/Write)
+security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Manage users (Read/Write)
+security.roles.ROLE_SUPER_ADMIN: Accèss UcaGest (Advaanced)
+security.roles.ROLE_USER: Accèss UcaWeb
+sitemap.activite.libelle: Activities
+sitemap.activites.libelle: Activities
+sitemap.actualite.libelle: News
+sitemap.ajouter: Add
+sitemap.classe_activite.libelle: Activity classes
+sitemap.connexion: Login
+sitemap.en: Translate to english
+sitemap.etablissement.libelle: Campus
+sitemap.evenements.libelle: Events
+sitemap.format.ajouter: Add format
+sitemap.format.carte.ajouter: Add card purchase format
+sitemap.format.creneau.ajouter: Add time slot format
+sitemap.format.reservation.ajouter: Add time slot format
+sitemap.format.simple.ajouter: Add event
+sitemap.fr: Traduire en français
+sitemap.groupe.libelle: Groups 
+sitemap.imagefond.libelle: Background pictures 
+sitemap.infospratiques.libelle: Practical information
+sitemap.installations.libelle: Installations
+sitemap.it: Tradurre in italiano
+sitemap.langue: Language
+sitemap.log.libelle: Logs
+sitemap.menu: Menu
+sitemap.modifier: Edit
+sitemap.moncompte.libelle: My Account
+sitemap.outils.libelle: Tools
+sitemap.panier.libelle: Basket
+sitemap.parametrage: Settings
+sitemap.profil_utilisateur.libelle: User profiles
+sitemap.referentiel.libelle: Referential
+sitemap.ressource.libelle: Resources
+sitemap.ressource.lieu.ajouter: Add location
+sitemap.ressource.materiel.ajouter: Add equipment
+sitemap.securite.libelle: Security
+sitemap.sporthautniveau.libelle: High-level sport
+sitemap.supprimer: Delete
+sitemap.tarif.libelle: Prices
+sitemap.texte.libelle: Texts
+sitemap.traduction.libelle: Translations
+sitemap.type_activite.libelle: Types of activities
+sitemap.type_autorisation.libelle: Types of authorizations
+sitemap.ucagest.libelle: Uca Gest
+sitemap.ucasport.libelle: Uca Sport
+sitemap.utilisateur.libelle : Users 
+sitemap.utilisateur.verification: Check Email
+sitemap.voir: See
+tarif.ajouter.succes: Price successfully added
+tarif.ajouter.title: Add a price
+tarif.gestion: Prices management
+tarif.libelle: Price list
+tarif.list.title: Prices
+tarif.mettre.jour: Please update all the prices affected by this user profile
+tarif.modifier.succes: Price successfully modified
+tarif.modifier.title: Modify a price
+tarif.montants: Amounts
+tarif.supprimer.erreur.autorisations: Permissions use this price
+tarif.supprimer.erreur.creneaux: Time slots use this price
+tarif.supprimer.erreur.formatsactivite: Activity format use this price
+tarif.supprimer.erreur.ressources: Resources use this price
+tarif.supprimer.erreur: Unable to remove the price
+tarif.supprimer.succes: Price successfully deleted
+texte.ajouter.succes: Text successfully added
+texte.emplacement: Location
+texte.emplacements.indisponibles: All locations are used. Please update existing texts.
+texte.libelle: Text management
+texte.list.title: Text management
+texte.mobile: This text will be displayed on mobile phones
+texte.modifier.succes: Text successfully modified 
+texte.ordre: Display order
+texte.supprimer.succes: Text successfully deleted
+texte.titre: Title
+traduction.deja.traduit: Allready translated
+traduction.libelle: Translation
+traduction.list.title: Translations
+traduction.pas.encore.traduit: Without translation
+traduction.tous: All
+translation.modifier.succes: Translation successfully modified
+typeactivite.ajouter.succes: Type of activity successfully added
+typeactivite.ajouter.title: Add a type of activity
+typeactivite.gestion: Activity type management
+typeactivite.libelle: Type of activity
+typeactivite.list.title: Activity type management
+typeactivite.modifier.succes: Type of activity successfully modified
+typeactivite.modifier.title: Edit an activity type
+typeactivite.supprimer.erreur: Cannot delete this Activity type
+typeactivite.supprimer.succes: Type of activity successfully deleted
+typeautorisation.ajouter.succes: Authorization successfully added
+typeautorisation.ajouter.title: Add an authorization type
+typeautorisation.comportement: Behaviour
+typeautorisation.gestion: Authorization types management
+typeautorisation.informations.complementaires: Additional information
+typeautorisation.libelle: Type of authorization
+typeautorisation.list.title: Authorization Management
+typeautorisation.modifier.succes: Authorization successfully modified
+typeautorisation.modifier.title: Modify an authorization type
+typeautorisation.supprimer.erreur: Cannot delete authorization, activities format are assigned
+typeautorisation.supprimer.succes: Authorization successfully deleted
+typeautorisation.tarif: Price
+ucagest.libelle: Uca Gest
+ucasport.libelle: Uca Sport
+utilisateur.activite.souscrite: Subscribed activity
+utilisateur.adresse: Address
+utilisateur.ajouter.succes: User successfully added
+utilisateur.ajouter.title: Add user
+utilisateur.autorisation.ajouter.success: Authorization successfully modified
+utilisateur.autorisation.aucun: No authorization registered
+utilisateur.autorisation.modifier: Modify authorizations
+utilisateur.autorisations: Authorizations
+utilisateur.civilite: Civility
+utilisateur.codePostal.invalide: Zip Code invalid
+utilisateur.codePostal: Zip Code
+utilisateur.commande: Order
+utilisateur.date.naissance: Date of Birth
+utilisateur.description: Manager description
+utilisateur.droits.de: Rights of
+utilisateur.droits: User rights
+utilisateur.gestion: Users management
+utilisateur.insciption.information.connexion: Login Information
+utilisateur.insciption.information.personnelle: Personal Information
+utilisateur.inscription.libelle: Registration process
+utilisateur.libelle: User
+utilisateur.list.title: Users management
+utilisateur.matricule: Personnel number
+utilisateur.modifier.succes: User successfully modified 
+utilisateur.modifier.title: Edit user
+utilisateur.nom: Name
+utilisateur.numero.nfc: NFC number
+utilisateur.planning: Scheduler
+utilisateur.prenom: First name
+utilisateur.profil: User profile
+utilisateur.select.profilutilisateur: '- Select a user profile -'
+utilisateur.sexe.madame: Female
+utilisateur.sexe.monsieur: Male
+utilisateur.supprimer.succes: User successfully deleted
+utilisateur.telephone: Telephone number
+utilisateur.ville: City
+installationsSportives.activites.aucun: no activities proposed

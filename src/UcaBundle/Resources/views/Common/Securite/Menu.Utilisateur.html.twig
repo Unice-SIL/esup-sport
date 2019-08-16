@@ -1,0 +1,38 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% if app.user  %}
+    {# On affiche le panier si l'utilisateur est connecté #}
+    <div>
+        <a aria-expanded="false" aria-haspopup="false" class="nav-link" href="{{ path('UcaWeb_Panier') }}" id="navbarlink" role="button">
+            <i class="fas fa-shopping-basket"></i>
+        </a>
+    </div>
+    <div class="nav-menu-right">
+        {# Temporaire : cela pointera vers el profil UCaWeb #}
+        <a aria-expanded="false" aria-haspopup="false" class="nav-link profile dropdown-toggle" data-toggle="dropdown" href="" id="navbarlink" role="button">
+            <i class="fas fa-user-circle"></i>
+        </a>
+        <div aria-expanded="false" class="dropdown-menu" role="menu">
+        <a aria-expanded="false" aria-haspopup="false" class="nav-link disconnect" href="{{ path('UcaWeb_UtilisateurVoir', {id : app.user.id}) }}" id="navbarlink" role="menuitem">
+            <i class="fas fa-user-circle"></i>
+            {{ app.user.prenom|lower|capitalize ~"  "~ app.user.nom|lower|capitalize }}
+        </a>
+        {# On affiche l'accès à UcaGestion si utilisateur a des groupes affectés #}
+        {% if app.user.groups is not empty %}
+            <a aria-expanded="false" aria-haspopup="false" class="dropdown-item disconnect" href="{{ path('Accueil') }}" id="navbarlink" role="menuitem">
+                <i class="fas fa-cog"></i>
+                {{ 'sitemap.ucagest.libelle' | trans }}
+            </a>
+        {% endif %}
+        <a aria-expanded="false" aria-haspopup="false" class="nav-link disconnect" href="{{ path('UcaWeb_AppLogout') }}" id="navbarlink" role="menuitem">
+            <i class="fas fa-sign-out-alt"></i>
+            {{ 'layout.logout'|trans }}
+        </a>
+        </div>
+    </div>
+{% else %}
+    <div>
+        <a aria-expanded="false" aria-haspopup="false" class="nav-link connect" href="{{ path('fos_user_security_login') }}" id="navbarlink" role="menuitem">
+            {{ 'security.login.submit'|trans }}
+        </a>
+    </div>
+{% endif %}

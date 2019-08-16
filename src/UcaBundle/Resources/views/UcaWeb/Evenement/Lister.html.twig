@@ -1,0 +1,69 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(255, 255, 255, 1)), url("{{ ImageAsset.imageFond('Evenements') }}") no-repeat center center;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="h1-light">{{ 'evenements.title'|trans }}</h1>
+
+    <section class="section-home py-5">
+        <div class="container">
+            {% for item in evenements %}
+                <div class="row mb-5 bg-white">
+                    <div class="w-100 d-flex flex-wrap justify-content-between">
+                        <div class="w-25 d-flex justify-content-center event-img" style="background: url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <p class="event-date align-self-center text-center">
+                                {{ item.dateDebutEffective | dateFormat('dd') }}<br/>
+                                {{ item.dateDebutEffective | dateFormat('MMM') }}<br/>
+                                {{ item.dateDebutEffective | dateFormat('Y') }}
+                            </p>
+                        </div>
+                        <div class="w-75 event-info">
+                            <div class="row">
+                                <h3>{{ item.libelle }}</h3>
+                            </div>
+                            <div class="row">
+                                <p>{{ item.description|slice(0, 300) ~ '...' }}</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-3">
+                                    <h3>{{ 'common.lieu' | trans }}</h3>
+                                    {% if item.lieu is not empty %}
+                                        {% for l in item.lieu %}
+                                            <p>{{ l.libelle }}</p>
+                                        {% endfor %}
+                                    {% else %}
+                                        <p>{{ 'formatactivite.lieu.aucun' | trans }}</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3">
+                                    <h3>{{ 'common.horaires' | trans }}</h3>
+                                    <p>{{ item.dateDebutEffective|date("H:i") }}</p>
+                                </div>
+                                <div class="col-3">
+                                    <h3>{{ 'common.tarif' | trans }}</h3>
+                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                        <p>{{ item.getMontant(app.user) | number_format }}€</p>
+                                    {% endif %}
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-primary">{{ 'common.inscrire' | trans }}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            {% include "@Uca/Common/Pagination/Pagination.html.twig" %}
+        </div>
+    </section>
+{% endblock %}

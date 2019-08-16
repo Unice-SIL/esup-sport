@@ -1,0 +1,29 @@
+{% if not app.request.attributes.get('_route') %}
+    {% set route = "Accueil" %}
+{% else %}
+    {% set route = app.request.attributes.get('_route') %}
+{% endif %}
+
+{% if not app.request.attributes.get('_route_params') %}
+    {% set route_params = [app.request.locale] %}
+{% else %}
+    {% set route_params = app.request.attributes.get('_route_params') %}
+{% endif %}
+
+{% if lang_all is not null %}
+<div class="nav-menu-right">
+    <a aria-expanded="false" aria-haspopup="false" class="nav-link lang dropdown-toggle" data-toggle="dropdown" href="" id="navbarlang" role="menuitem">
+        {% if app.request.locale == 'fr' %}
+            <img src="{{ asset('images/fr-flag.png') }}" alt="version française"> 
+        {% else %}
+            <img src="{{ asset('images/en-flag.png') }}" alt="english version">
+        {% endif %}
+    </a>
+    <div aria-expanded="false" class="dropdown-menu" role="menu">
+        {% for lang in lang_all|split('|') %}
+            <a class="dropdown-item flag-item" id="navbarlang" href="{{ path(route, route_params|merge(app.request.query)|merge({'_locale': lang })) }}">
+                <img src="{{ asset('images/' ~ lang ~ '-flag.png') }}" alt="{{'sitemap.'~ lang}}"></a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}

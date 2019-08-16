@@ -1,0 +1,17 @@
+{% extends '@Uca/Common/Main/Structure.Application.html.twig' %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('cssWeb') }}
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        {% include('@Uca/Common/Main/Structure.Menu.html.twig') %}
+        {% if app.request.attributes.get('_route') != 'UcaWeb_Accueil' %}
+            {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
+        {% endif %}
+    </div>
+    {% block main %}{% endblock %}
+{% endblock %}
+
+{% block footer %}
+    {% include '@Uca/Common/Main/footer.html.twig' %}
+{% endblock %}

@@ -1,0 +1,483 @@
+
+acceuil.evenements.liste: 'Voir tous les évènements'
+acceuil.prochainement.consulter: 'Consulter'
+accueil.classeActivite.title: 'Activités sportives'
+accueil.connexion: 'Se connecter'
+accueil.cotisations.infos: 'En savoir plus sur les cotisations'
+accueil.demander.inscription: "Faire une demande d'inscription"
+accueil.inscription.title: 'Inscription'
+accueil.prochainement.title: 'Prochainement'
+activite.ajouter.succes: 'Activité ajoutée avec succès'
+activite.ajouter.title: Ajouter une activite
+activite.classeactivite.placeholder: '- Sélectionner une classe d''activité -'
+activite.creneau.ajouter: 'Ajouter Activité avec Créneaux'
+activite.format.ajouter: 'Ajouter un format'
+activite.format.disponible: Format(s) disponible(s)
+activite.formatachatcarte.ajouter: 'Achat de Carte'
+activite.formataveccreneau.ajouter: 'Réservation de créneaux'
+activite.formatavecreservation.ajouter: 'Réservation de ressource'
+activite.formats.disponibles.aucun: 'Aucun format disponible'
+activite.formats.disponibles: 'Formats disponibles'
+activite.formatsimple.ajouter: Evènement
+activite.gestion: 'Gestion des activités'
+activite.image.libelle: 'Sélectionner une image'
+activite.libelle: Activité
+activite.list.title: Activités
+activite.modifier.succes: 'Activité modifiée avec succès'
+activite.modifier.title: Modifier une activite
+activite.reservation.ajouter: 'Ajouter Activité avec Réservation'
+activite.simple.ajouter: 'Ajouter Activité Simple'
+activite.supprimer.erreur: Impossible de supprimer cette activité, des formats d'activités y sont affectés
+activite.supprimer.succes: 'Activité supprimée avec succès'
+activites.sportives: 'Activités Sportives'
+actualite.ajouter.succes: Actualité ajoutée avec succès
+actualite.image.libelle: Sélectionner une image
+actualite.list.title: Actualités
+actualite.modifier.succes: Actualité modifiée avec succès
+actualite.supprimer.erreur: Impossible de supprimer cette activité
+actualite.supprimer.succes: Actualité supprimée avec succès
+bouton.ajouter: Ajouter
+bouton.bloquer: Bloquer
+bouton.debloquer: Débloquer
+bouton.enregistrer: Enregistrer
+bouton.log: Historique
+bouton.modifier: Modifier
+bouton.panier.ajouter: Ajouter au panier
+bouton.reinitialiser: Effacer
+bouton.reset: Réinitialiser le formulaire
+bouton.retour: Retour
+bouton.save: Enregistrer
+bouton.supprimer: Supprimer
+bouton.voir: Voir
+classeActivite.list.title: 'Liste des classes d''Activité'
+classeactivite.ajouter.succes: 'Classe d''activité ajoutée avec succès'
+classeactivite.ajouter.title: Ajouter une classe d'activite
+classeactivite.gestion: 'Gestion des classes d''activité'
+classeactivite.image.libelle: 'Sélectionner une image'
+classeactivite.libelle: 'Classe d''activité'
+classeactivite.list.title: 'Gestion des classes d''activité'
+classeactivite.modifier.succes: 'Classe d''activité modifiée avec succès'
+classeactivite.modifier.title: Modifier une classe d'activite
+classeactivite.supprimer.erreur: Impossible de supprimer cette classe, des activités y sont affectées
+classeactivite.supprimer.succes: 'Classe d''activité supprimée avec succès'
+classeactivite.typeactivite.placeholder: '- Sélectionner un type d''activité -'
+column.champ: Champ
+column.ckeditor: 'Champ Enrichi'
+column.entite: Entité
+column.entityid: 'Id de l''entité'
+column.valen: Anglais
+column.valfr: Français
+column.valit: Italien
+common.aucun: '- Aucun -'
+common.autorisations: Autorisations
+common.capacite: Capacité
+common.coordonnees: Coordonnées
+common.creneaux: Créneaux
+common.date.debut: Date de début
+common.date.fin: Date de fin
+common.date.naissance: 'Date de Naissance'
+common.date: Date
+common.deconnexion: 'Vous avez été deconnecté de l''application. Merci de fermer votre navigateur pour fermer totalement la session.'
+common.description: Description
+common.email: Email
+common.emplacement: Emplacement
+common.encadrants: Encadrants
+common.evenement: Evènement
+common.friday: Vendredi
+common.groups: Groupes
+common.horaires.ouverture: "Horaires d'ouverture"
+common.horaires: Horaires
+common.infospersonnelles: 'Informations Personnelles'
+common.infossupplementaires: Informations supplémentaires
+common.inscrire: S'inscrire
+common.libelle: Libellé
+common.lieu: Lieu
+common.mobile: Mobile
+common.modifications: Modifications
+common.monday: Lundi
+common.montants: Montants
+common.naissance: Né(e) le
+common.niveauSportif: Niveau sportif
+common.nom.utilisateur: Nom d'utilisateur
+common.nom: Nom
+common.non: 'Non'
+common.ordre: Ordre
+common.oui: 'Oui'
+common.prenom: Prénom
+common.profil: Profil
+common.profils.autorises: 'Profils autorisés'
+common.profils: Profils
+common.reservabilites: Réservabilités
+common.ressources.reservees: Ressources réservées
+common.ressources: Ressources
+common.role: Rôle
+common.saturday: Samedi
+common.sunday: Dimanche
+common.tarif: Tarif
+common.telephone.placeholder: XXXXXXXXXX
+common.telephone: Téléphone
+common.texte: Texte
+common.thursday: Jeudi
+common.titre: Titre
+common.tuesday: Mardi
+common.type.activite: 'Type d''activité'
+common.type: Type
+common.username: Login
+common.utilisateur: Utilisateur
+common.wednesday: Mercredi
+creneau.ajouter: 'Ajouter un créneau'
+creneau.list.complet: "Complet"
+creneau.list.indisponible: "Indisponible"
+creneau.list.prochainCours: "Prochain cours"
+creneau.list.reserver: "S'inscrire"
+creneau.liste.titre: 'Liste des créneaux'
+erreur.403: "Erreur 403. Vous n'êtes pas autorisé à accéder à cette page"
+erreur.404: "Erreur 404. La page demandée est introuvable"
+erreur.500: "Erreur 500. Une erreur interne s'est produite."
+erreur.formulaire.champ.incorrect: 'Un ou plusieurs champs est (sont) incorrect(s)'
+erreur.generale: "Une erreur s'est produite. Si cela se reproduit, veuillez nous contacter"
+etablissement.ajouter.succes: 'Campus ajouté avec succès'
+etablissement.ajouter.title: Ajouter un Campus
+etablissement.code: Code du campus (référentiel immobilier)
+etablissement.email.libelle: Email de contact
+etablissement.gestion: 'Gestion des campus'
+etablissement.horaires.ouverture.libelle: Horaires d'ouverture
+etablissement.image.libelle: 'Sélectionner une image'
+etablissement.libelle: Campus
+etablissement.list.title: 'Gestion des Campus'
+etablissement.modifier.succes: 'Campus modifié avec succès'
+etablissement.modifier.title: Modifier un campus
+etablissement.supprimer.erreur: Impossible de supprimer le campus, des ressources y sont affectées
+etablissement.supprimer.succes: 'Campus supprimé avec succès'
+etablissement.telephone.libelle: Numéro de téléphone de contact
+evenements.title: événements
+footer.accessibilite: "Accessibilité"
+footer.cgu: "CGU"
+footer.cgv: "CGV"
+footer.contact: "Contact"
+footer.mentionsLegales: "Mentions légales"
+footer.planDuSite: "Plan du site"
+footer.reseauxSociaux: "Retrouvez-nous sur : "
+format.achat.carte.autorisation: Sélectionner la carte à acheter
+format.autorisations.placeholder: '- Aucune autorisation sélectionnée -'
+format.autorisations: Autorisations requises
+format.date.debut: 'Activité du'
+format.date.effective.debut: Date de début effective
+format.date.effective.fin: Date de fin effective
+format.date.fin: au
+format.date.inscription.debut: Date de début des inscriptions
+format.date.inscription.fin: Date de fin des inscriptions
+format.date.publication.debut: Date de début de publication
+format.date.publication.fin: Date de fin de publication
+format.encadrants.placeholder: '- Sélectionnez au moins un encadrant -'
+format.encadrants: Encadrants
+format.encadre: Ce format est-il encadré ?
+format.image.libelle: Sélectionner une image
+format.inscription.date.debut: 'Inscriptions à partir du'
+format.inscription.date.fin: au
+format.lieu.placeholder: '- Sélectionner un lieu -'
+format.lieu: Lieu où se déroule l'activité
+format.niveau.sportif: Niveau sportif requis
+format.payant: Ce format est-il payant ?
+format.profils.utilisateur: Profils d'utilisateurs autorisés
+format.promouvoir: Faire apparaître l'évènement sur la page d'accueil
+format.publication.date.debut: Publication du
+format.publication.date.fin: au
+format.reservation.ressource: Ressources à réserver
+format.statut.brouillon: En cours de saisie
+format.statut.publie: Publié
+format.statut: Statut
+format.tarif.placeholder: '- Sélectionner un Tarif -'
+format.tarif: Tarif
+formatachatcarte.ajouter.succes: 'Format achat de carte ajouté avec succès'
+formatachatcarte.carte.placeholder: '- Sélectionner une carte -'
+formatachatcarte.modalites: Modalités
+formatachatcarte.modifier.succes: 'Format achat de carte modifié avec succès'
+formatachatcarte.supprimer.succes: 'Format achat de carte supprimé avec succès'
+formatachatcarte.title: 'Achat de Carte'
+formatachatcarte.validite: Valable jusqu'au
+formatactivite.autorisation.aucune: Pas d'autorisation requise
+formatactivite.carte.ajouter.title: Ajouter un format avec achat de carte
+formatactivite.carte.modifier.title: Modifier un format avec achat de carte
+formatactivite.creneau.ajouter.title: Ajouter un format avec créneaux
+formatactivite.creneau.modifier.title: Modifier un format avec créneaux
+formatactivite.horaires: Horaires
+formatactivite.libelle: 'Format d''activité'
+formatactivite.lieu.aucun: Aucun lieu défini
+formatactivite.profil.utilisateur.aucun: Aucun profil autorisé
+formatactivite.reservation.ajouter.title: Ajouter un format avec réservation de ressource
+formatactivite.reservation.modifier.title: Modifier un format avec réservation de ressource
+formatactivite.simple.ajouter.title: Ajouter un évènement
+formatactivite.simple.modifier.title: Modifier un évènement 
+formataveccreneau.ajouter.succes: 'Format avec créneau ajouté avec succès'
+formataveccreneau.modifier.succes: 'Format avec créneau modifié avec succès'
+formataveccreneau.supprimer.succes: 'Format avec créneau supprimé avec succès'
+formataveccreneau.title: 'Réservation de créneaux'
+formatavecreservation.ajouter.succes: 'Format avec réservation ajouté avec succès'
+formatavecreservation.modifier.succes: 'Format avec réservation modifié avec succès'
+formatavecreservation.supprimer.succes: 'Format avec réservation supprimé avec succès'
+formatavecreservation.title: 'Réservation de ressource'
+formatsimple.ajouter.succes: 'Evènement ajouté avec succès'
+formatsimple.modifier.succes: 'Evènement modifié avec succès'
+formatsimple.supprimer.succes: 'Evènement supprimé avec succès'
+formatsimple.title: Evènement
+groupe.ajouter.succes: Groupe ajouté avec succès
+groupe.ajouter.title: 'Ajouter un groupe'
+groupe.libelle: Groupe
+groupe.list.title: 'Gestion des groupes de droits'
+groupe.modifier.succes: Groupe modifié avec succès
+groupe.modifier.title: 'Modifier un groupe'
+groupe.roles.placeholder: '- Sélectionnez un ou plusieurs rôles -'
+groupe.supprimer.succes: Groupe supprimé avec succès
+image.alt.ressource.type.lieu: Ressource de type lieu
+image.alt.ressource.type.materiel: Ressource de type matériel
+imagefond.image.libelle: Sélectionner une image
+imagefond.list.title: Gestion des images de fond
+imagefond.modifier.succes: L'image de fond a été modifiée avec succès
+inscription.aucun.inscrit: Auncun Inscrit
+inscription.confirmation: Ajouté au panier
+inscription.continuer: Continuer sur le site
+inscription.panier.voir: Voir le panier
+installationsSportives.activitePropose.title: Activités proposées
+installationsSportives.coordonnees.title: Coordonnées
+installationsSportives.horaireOuverture.title: Horaires d'ouvertures
+installationsSportives.title: Installations sportives
+langues.gestion: 'Gestion des langues'
+lieu.ajouter.succes: 'Lieu ajouté avec succès'
+lieu.ajouter.title: Ajouter un lieu
+lieu.ajouter: 'Ajouter salle'
+lieu.modifier.succes: 'Lieu modifié avec succès'
+lieu.modifier.title: Modifier un lieu
+lieu.supprimer.erreur: Impossible de supprimer le lieu, des réservations y sont affectées
+lieu.supprimer.succes: 'Lieu supprimé avec succès'
+log.libelle: Log
+log.list.title: 'Gestion des Logs'
+materiel.ajouter.succes: 'Matériel ajouté avec succès'
+materiel.ajouter.title: Ajouter un matériel
+materiel.ajouter: 'Ajouter materiel'
+materiel.modifier.succes: 'Matériel modifié avec succès'
+materiel.modifier.title: Modifier un matériel
+materiel.supprimer.erreur: Impossible de supprimer le matériel, des réservations y sont affectées
+materiel.supprimer.succes: 'Matériel supprimé avec succès'
+message.confirmation.suppression.titre: "Confirmez la suppression"
+message.confirmation.suppression: "Supprmier l'enregistrement ?"
+outils.libelle: Outils
+panier.libelle: Panier
+profilutilisateur.ajouter.succes: 'Profil d''usager ajouté avec succès'
+profilutilisateur.ajouter.title: Ajouter un profil d''usagers
+profilutilisateur.gestion: 'Gestion des profils d''usagers'
+profilutilisateur.libelle: 'Profil d''usagers'
+profilutilisateur.list.title: 'Gestion des profils d''usagers'
+profilutilisateur.modifier.succes: 'Profil d''usager modifié avec succès'
+profilutilisateur.modifier.title: Modifier un profil d''usager'
+profilutilisateur.supprimer.erreur.formatactivite: Des formats d'activités utilisent ce profil
+profilutilisateur.supprimer.erreur.montants: Des tarifs sont associés à ce profil
+profilutilisateur.supprimer.erreur.utilisateurs: Des utilisateurs utilisent ce profil 
+profilutilisateur.supprimer.erreur: Impossible de supprimer le profil
+profilutilisateur.supprimer.succes: 'Profil d''usager supprimé avec succès'
+referentiel.bouton.maj: Mettre à jour le référentiel
+referentiel.libelle.maj: Sélectionnez un fichier pour mettre à jour le référentiel
+referentiel.libelle: Referentiel
+ressource.ajouter.succes: 'Resource ajoutée'
+ressource.capacite: Capacité
+ressource.code.rus: Code RUS
+ressource.etablissement: Campus
+ressource.image.libelle: 'Sélectionner une image'
+ressource.latitude: Latitude
+ressource.libelle: Ressource
+ressource.lieu.ajouter: 'Ajouter Lieu'
+ressource.list.subTitle: Liste des ressources
+ressource.list.title: 'Gestion des ressources'
+ressource.longitude: Longitude
+ressource.modifier.succes: 'Resource modifée'
+ressource.quantite: Quantite
+ressource.referentiel.success: 'Le référentiel immobilier a été mis à jour avec succès'
+ressource.superficie: Superficie
+ressource.supprimer.succes: 'Resource supprimée'
+ressource.tarif: Tarif
+role.liste: Roles
+scheduler.action.delete: supprimer
+scheduler.action.save: enregistrer
+scheduler.action.update: mettre à jour
+scheduler.message.action.debut: Voulez vous
+scheduler.message.action.occurence: l’occurence
+scheduler.message.action.serie: toute la série ?
+scheduler.message.annuler: Annuler
+scheduler.message.inscrit_list: Liste des inscrits
+scheduler.message.send_mail: Envoyer un mail à tous les inscrits de ce créneau
+scheduler.message.valider: Enregistrer
+securite.libelle: Sécurité
+security.roles.ROLE_ADMIN: Accès UcaGest
+security.roles.ROLE_GESTION_ACTIVITE_ECRITURE: Gestion des activites (Lecture/Ecriture)
+security.roles.ROLE_GESTION_ACTIVITE_LECTURE: Gestion des activites (Lecture seule)
+security.roles.ROLE_GESTION_ACTUALITE_ECRITURE: Gestion des actualités (Lecture/Ecriture)
+security.roles.ROLE_GESTION_ACTUALITE_LECTURE: Gestion des actualités (Lecture seule)
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE: Gestion des classes d'activité (Lecture/Ecriture)
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_LECTURE: Gestion des classes d'activité (Lecture seule)
+security.roles.ROLE_GESTION_CRENEAU_ECRITURE: Gestion des créneaux (Lecture/Ecriture)
+security.roles.ROLE_GESTION_CRENEAU_LECTURE: Gestion des créneaux (Lecture seule)
+security.roles.ROLE_GESTION_ETABLISSEMENT_ECRITURE: Gestion des campus (Lecture/Ecriture)
+security.roles.ROLE_GESTION_ETABLISSEMENT_LECTURE: Gestion des campus (Lecture seule)
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE: Gestion des formats d'activité (Lecture/Ecriture)
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_LECTURE: Gestion des formats d'activité (Lecture seule)
+security.roles.ROLE_GESTION_GROUPE_ECRITURE: Gestion des droits (Lecture/Ecriture)
+security.roles.ROLE_GESTION_GROUPE_LECTURE: Gestion des droits (Lecture seule)
+security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Gestion des images de fond (Lecture/Ecriture)
+security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Gestion des images de fond (Lecture seule)
+security.roles.ROLE_GESTION_LOG_LECTURE: Gestion des Logs (Lecture seule)
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Gestion des profils (Lecture/Ecriture)
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_LECTURE: Gestion des profils (Lecture seule)
+security.roles.ROLE_GESTION_RESSOURCE_ECRITURE: Gestion des ressources (Lecture/Ecriture)
+security.roles.ROLE_GESTION_RESSOURCE_LECTURE: Gestion des ressources (Lecture seule)
+security.roles.ROLE_GESTION_SCHEDULER_LECTURE: Calendrier (Lecture)
+security.roles.ROLE_GESTION_TARIF_ECRITURE: Gestion des tarifs (Lecture/Ecriture)
+security.roles.ROLE_GESTION_TARIF_LECTURE: Gestion des tarifs (Lecture seule)
+security.roles.ROLE_GESTION_TEXTE_ECRITURE: Gestion des textes (Lecture/Ecriture)
+security.roles.ROLE_GESTION_TEXTE_LECTURE: Gestion des textes (Lecture seule)
+security.roles.ROLE_GESTION_TRADUCTION_ECRITURE: Gestion des Traductions (Lecture/Ecriture)
+security.roles.ROLE_GESTION_TRADUCTION_LECTURE: Gestion des Traductions (Lecture seule)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_ECRITURE: Gestion des types d'activité (Lecture/Ecriture)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_LECTURE: Gestion des types d'activité (Lecture seule)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_ECRITURE: Gestion des types d'autorisation (Lecture/Ecriture)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_LECTURE: Gestion des types d'autorisation (Lecture seule)
+security.roles.ROLE_GESTION_UTILISATEUR_ECRITURE: Gestion des utilisateurs (Lecture/Ecriture)
+security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Gestion des utilisateurs (Lecture seule)
+security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
+security.roles.ROLE_USER: Accès UcaWeb
+sitemap.activite.libelle: Activités
+sitemap.activites.libelle: Activités
+sitemap.actualite.libelle: Actualités
+sitemap.ajouter: Ajouter
+sitemap.classe_activite.libelle: Classes d'activités
+sitemap.connexion: Connexion
+sitemap.en: Translate to english
+sitemap.etablissement.libelle: Campus
+sitemap.evenements.libelle: Evènements
+sitemap.format.ajouter: Ajouter un format 
+sitemap.format.carte.ajouter: Ajouter format achat de carte
+sitemap.format.creneau.ajouter: Ajouter format avec créneau
+sitemap.format.reservation.ajouter: Ajouter format avec créneau
+sitemap.format.simple.ajouter: Ajouter évènement
+sitemap.fr: Traduire en français
+sitemap.groupe.libelle: Groupes
+sitemap.imagefond.libelle: Images de fond
+sitemap.infospratiques.libelle: Infos pratiques
+sitemap.installations.libelle: Installations
+sitemap.it: Tradurre in italiano
+sitemap.langue: Langue
+sitemap.log.libelle: Logs
+sitemap.menu: Menu
+sitemap.modifier: Modifier
+sitemap.moncompte.libelle: Mon Compte
+sitemap.outils.libelle: Outils
+sitemap.panier.libelle: Panier
+sitemap.parametrage: Paramétrage
+sitemap.profil_utilisateur.libelle: Profils d'usagers
+sitemap.referentiel.libelle: Réferentiel
+sitemap.ressource.libelle: Ressources
+sitemap.ressource.lieu.ajouter: Ajouter lieu
+sitemap.ressource.materiel.ajouter: Ajouter matériel
+sitemap.securite.libelle: Securite
+sitemap.sporthautniveau.libelle: Sport de haut niveau
+sitemap.supprimer: Supprimer
+sitemap.tarif.libelle: Tarifs
+sitemap.texte.libelle: Textes
+sitemap.traduction.libelle: Traductions
+sitemap.type_activite.libelle: Types d'activités
+sitemap.type_autorisation.libelle: Types d'autorisations
+sitemap.ucagest.libelle: Uca Gestion
+sitemap.ucasport.libelle: Uca Sport
+sitemap.utilisateur.libelle : Utilisateurs
+sitemap.utilisateur.verification: Vérification Email
+sitemap.voir: Voir
+tarif.ajouter.succes: 'Tarif ajouté avec succès'
+tarif.ajouter.title: Ajouter un tarif
+tarif.gestion: 'Gestion des tarifs'
+tarif.libelle: Tarif
+tarif.list.title: Tarifs
+tarif.mettre.jour: 'Merci de mettre à jour tous les tarifs concernés par ce profil d''usager'
+tarif.modifier.succes: 'Tarif modifié avec succès'
+tarif.modifier.title: Modifier un tarif
+tarif.montants: montants
+tarif.supprimer.erreur.autorisations: Des autorisations utilisent ce tarif
+tarif.supprimer.erreur.creneaux: Des créneaux utilisent ce tarif
+tarif.supprimer.erreur.formatsactivite: "Des formats d'activités utilisent ce tarif"
+tarif.supprimer.erreur.ressources: Des ressources utilisent ce tarif
+tarif.supprimer.erreur: 'Impossible de supprimer le tarif'
+tarif.supprimer.succes: 'Tarif supprimé avec succès'
+texte.ajouter.succes: 'Texte ajouté avec succès'
+texte.emplacement: Emplacement
+texte.emplacements.indisponibles: 'Tous les emplacements sont utilises. Merci de mettre e jour les textes existants.'
+texte.libelle: 'Gestion des textes'
+texte.list.title: 'Gestion des textes'
+texte.mobile: Ce texte sera affiché sur mobile
+texte.modifier.succes: 'Texte modifié avec succès'
+texte.ordre: Ordre d'affichage
+texte.supprimer.succes: 'Texte supprimé avec succès'
+texte.titre: Titre
+traduction.deja.traduit: 'Déjà traduit'
+traduction.libelle: Traduction
+traduction.list.title: 'Traductions'
+traduction.pas.encore.traduit: 'Sans traduction'
+traduction.tous: 'Tout'
+translation.modifier.succes: 'Traduction modifiée avec succès'
+typeactivite.ajouter.succes: 'Type d''activité ajouté avec succès'
+typeactivite.ajouter.title: Ajouter un type d'activite
+typeactivite.gestion: 'Gestion des types d''activité'
+typeactivite.libelle: 'Type d''activité'
+typeactivite.list.title: 'Gestion des types d''activité'
+typeactivite.modifier.succes: 'Type d''activité modifié avec succès'
+typeactivite.modifier.title: Modifier un type d'activite
+typeactivite.supprimer.erreur: Impossible de supprimer le type d'activité
+typeactivite.supprimer.succes: 'Type d''activité supprimé avec succès'
+typeautorisation.ajouter.succes: 'Autorisation ajoutée avec succès'
+typeautorisation.ajouter.title: Ajouter un type d'autorisation
+typeautorisation.comportement: Comportement
+typeautorisation.gestion: 'Gestion des types d''autorisation'
+typeautorisation.informations.complementaires: Informations complémentaires
+typeautorisation.libelle: 'Type d''autorisation'
+typeautorisation.list.title: 'Gestion des Autorisations'
+typeautorisation.modifier.succes: 'Autorisation modifiée avec succès'
+typeautorisation.modifier.title: Modifier un type d'autorisation
+typeautorisation.supprimer.erreur: Impossible de supprimer cette autorisation, des formats d'activités y sont affectés
+typeautorisation.supprimer.succes: 'Autorisation supprimée avec succès'
+typeautorisation.tarif: Tarif
+ucagest.libelle: 'Uca Gest'
+ucasport.libelle: 'Uca Sport'
+utilisateur.activite.souscrite: Activité souscrite
+utilisateur.adresse: Adresse
+utilisateur.ajouter.succes: 'Utilisateur ajouté avec succès'
+utilisateur.ajouter.title: Ajout d'un utilisateur
+utilisateur.autorisation.ajouter.success: Autorisation modifiée avec succès
+utilisateur.autorisation.aucun: Pas d'autorisation enregistrée
+utilisateur.autorisation.modifier: Modifier les autorisations
+utilisateur.autorisations: Autorisations
+utilisateur.civilite: Civilité
+utilisateur.codePostal.invalide: 'Code Postal incorrect'
+utilisateur.codePostal: 'Code Postal'
+utilisateur.commande: Commande
+utilisateur.date.naissance: 'Date de Naissance'
+utilisateur.description: Description de l'encadrant
+utilisateur.droits.de: Droits de
+utilisateur.droits: Droits de l'utilisateur
+utilisateur.gestion: 'Gestion des utilisateurs'
+utilisateur.insciption.information.connexion: 'Informations de connexion'
+utilisateur.insciption.information.personnelle: 'Informations personnelles'
+utilisateur.inscription.libelle: Inscription
+utilisateur.libelle: Utilisateur
+utilisateur.list.title: 'Gestion des utilisateurs'
+utilisateur.matricule: Matricule
+utilisateur.modifier.succes: 'Utilisateur modifié avec succès'
+utilisateur.modifier.title: Modifier un utilisateur
+utilisateur.nom: Nom
+utilisateur.numero.nfc: 'Numéro NFC'
+utilisateur.planning: Planning
+utilisateur.prenom: Prénom
+utilisateur.profil: Profil d''usager
+utilisateur.select.profilutilisateur: '- Sélectionner un profil utilisateur -'
+utilisateur.sexe.madame: Madame
+utilisateur.sexe.monsieur: Monsieur
+utilisateur.supprimer.succes: 'Utilisateur supprimé avec succès'
+utilisateur.telephone: 'Numéro de téléphone'
+utilisateur.ville: 'Ville'
+installationsSportives.activites.aucun: Aucune activité proposée

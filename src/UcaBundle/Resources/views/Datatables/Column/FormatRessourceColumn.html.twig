@@ -1,0 +1,7 @@
+
+{% if row.format == 'Lieu' %} 
+   <span class="fas fa-building" alt="{{ 'image.alt.ressource.type.lieu' | trans }}"></span>
+{% else %}
+   <span class="fas fa-toolbox" alt="{{ 'image.alt.ressource.type.materiel' | trans }}"></span>
+{% endif %}
+

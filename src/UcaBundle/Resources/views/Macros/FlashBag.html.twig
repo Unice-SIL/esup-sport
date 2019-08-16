@@ -1,0 +1,10 @@
+{# type:  primary, secondary, success, danger, warning, info, light, dark #}
+{% macro showAll() %}
+    {% for type, messages in app.session.flashbag.all() %}
+        {% for text in messages %}
+            <div class="alert alert-{{ type }}" role="alert">
+                {{ text|trans }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}

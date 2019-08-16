@@ -1,0 +1,132 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
+
+{% block title %}
+    Uca Web
+{% endblock %}
+
+
+{% block main %}
+    <h1>{{ item.libelle }}</h1>
+
+    <div class="container">
+        <div class="row">
+            {% for day in days %}
+                {% if currentDay == loop.index %}
+                    {% set active = "active" %}
+                {% else %}
+                    {% set active = "" %}
+                {% endif %}
+
+                <div class="col-2">
+                    <a href="{{ path('UcaWeb_FormatActiviteDetailJour', {'day': loop.index, 'idCa': idCa, 'idA': idA, 'id': id}) }}">
+                        <button class="btn {{ active }}">{{ ("common."~day)|lower|trans }}</button>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% for evenement in Evenements %}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-2">
+                    {{ evenement.dateDebut|date("H:i") }}
+                    -
+                    {{ evenement.dateFin|date("H:i") }}
+                </div>
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>{{ "format.lieu"|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div
+                            class="col-12">{#   #}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>{{ "common.encadrants"|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            {% for encadrant in evenement.serie.creneau.encadrants %}
+                                <p>{{ encadrant.nom }}
+                                    {{ encadrant.prenom }}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>{{ "common.tarif"|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                {% if evenement.serie.creneau.tarif is not null %}
+                                    {{ evenement.serie.creneau.tarif.getUserMontant(app.user.profil.id).montant }}€
+                                {% endif %}
+                            {% else %}
+                                ---
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            <p>{{ "creneau.list.prochainCours"|trans }}</p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+
+                            {{ nextCreneaux[loop.index-1].dateDebut|dateFormat('dd MMM Y H:mm')  }}
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-2">
+                    <div class="row">
+                        <div class="col-12">
+                            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                                {% if(evenement.serie.creneau.hasProfil(app.user.profil) and evenement.serie.creneau.dateInscriptionValid())  %}
+                                    {% if evenement.serie.creneau.isFull() %}
+                                    <button class="btn btn-primary js-inscription" data-type="UcaBundle:Creneau" data-id="{{ evenement.serie.creneau.id }}">{{ "creneau.list.reserver"|trans }}</button>
+                                    {% else %}
+                                    <button class="btn btn-secondary">{{ "creneau.list.complet"|trans }}</button>
+                                    {% endif %}
+                                {% else %}
+                                    <button class="btn btn-secondary">{{ "creneau.list.indisponible"|trans }}</button>
+                                {% endif %}
+
+                            {% else %}
+                                <button class="btn btn-secondary">{{ "creneau.list.indisponible"|trans }}</button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% endfor %}
+    {{ Inscription.HtmlModal }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ Inscription.Js }}
+{% endblock %}

@@ -1,0 +1,5 @@
+{% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
+  with {'action': 'ajouter', 'formPath': 'fos_user_registration_register', 'formClass': 'fos_user_registration_register'} %}
+{% block javascripts %}
+    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
+{% endblock %}

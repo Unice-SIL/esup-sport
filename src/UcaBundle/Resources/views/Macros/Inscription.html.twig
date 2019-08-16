@@ -1,0 +1,46 @@
+{% macro HtmlModal() %}
+<!-- Modal -->
+<div class="modal fade" id="modalInscription" tabindex="-1" role="dialog" aria-labelledby="modalInscriptionTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalInscriptionTitle"> {{ 'inscription.confirmation' | trans }} </h2>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Ici mettre ce qui vient d'être ajouter ou les messages d'erreur</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ 'inscription.continuer'|trans }}</button>
+        <a class="btn btn-primary">{{ 'inscription.panier.voir'|trans }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+
+{% macro Js() %}
+    <script>
+        $('.js-inscription').each(function () {
+            $(this).click(function () {
+                var type = $(this).data('type');
+                var id = $(this).data('id');
+
+                $.ajax({
+                    method: "POST",
+                    url: Routing.generate('UcaWeb_Inscription', null, true),
+                    data: {
+                        type: type,
+                        id: id
+                    }
+                }).done(function (data) {
+                    $('#modalInscription').modal();
+                    $('#modalInscription .modal-body').html('<pre>' + JSON.stringify(data) + '</pre>');
+                });
+            });
+        });
+    </script>
+{% endmacro %}

@@ -1,0 +1,35 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
+
+{% block title %}
+    Uca Web
+{% endblock %}
+
+{% block main %}
+    <h1>{{ item.libelle }}</h1>
+    <div class="container">
+        <h2>{{ item.libelle }}</h2>
+        <p>{{ item.description }}</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>{{ 'formatachatcarte.modalites' | trans }}</h3>
+                <p>{{ 'formatachatcarte.validite' | trans }}
+                    {{ item.dateFinEffective|date('d/m/Y') }}</p>
+            </div>
+            <div class="col-md-6">
+                <h3>{{ 'common.tarif' | trans }}</h3>
+                <p>{{ item.tarif.getUserMontant(app.user.profil.id).montant | number_format }}
+                    €</p>
+            </div>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatAchatCarte" data-id="{{ item.id }}">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
+        </div>
+    </div>
+    {{ Inscription.HtmlModal }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ Inscription.Js }}
+{% endblock %}

@@ -1,0 +1,65 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block title %}
+    Uca Web
+{% endblock %}
+
+{% block main %}
+    <h1>{{ item.libelle }}</h1>
+    <div class="row">
+        <div class="offset-lg-3 col-lg-6 col-md-12">
+            <div class="calandar">
+                <div id="header-calendar">
+                    <div class="row">
+                    {% for day in  0..6 %}
+                        <div class="week">
+                            {{ ("common."~days[day])|lower|trans }}
+                            {% set start_date = '+' ~ day ~ ' day' %}
+                            <p>{{ start_date|date("d M y") }}</p>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="row line-separator"></div>
+
+                <div class="row">
+                    {% set actualDay = 0 %}
+                    
+
+                    {% for ressources in ressourcesSort %}
+                        <div class="week">
+                        {% for ressource in ressources %}
+                            {% if ressource.reservabilite.isFull() %}
+                                {% set statut =  "full" %}
+                                {% set available =  "" %}
+                            {% else %}
+                                {% set statut =  "notFull" %}
+                                {% set available =  "available" %}
+                            {% endif %}
+
+                            <div class="calandar-element {{ statut }}" elId="{{ ressource.id }}">
+                                <div> <div class="{{ available }}"></div> <p class="hours">{{ ressource.dateDebut|date("H:i") }} - {{ ressource.dateFin|date("H:i") }}</p> </div>
+                            </div>
+                        {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="row"> 
+                    <div class="offset-5 col-2 ">
+                        <button url="" id="inscription" class="btn btn-primary">{{ "creneau.list.reserver"|trans }}</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('calandar') }}
+    
+{% endblock %}

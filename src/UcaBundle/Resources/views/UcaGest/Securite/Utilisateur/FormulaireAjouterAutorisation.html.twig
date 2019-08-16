@@ -1,0 +1,16 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+  <a class="btn btn-primary" href="{{ path('UtilisateurVoir', {'id' : item.id}) }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+  <h1> {{'utilisateur.autorisation.modifier'|trans}} </h1>
+  <div class="well">
+    {{ form_start(form) }}
+    {{ form_widget(form.autorisations, {'label': 'Autorisations'}) }}
+    {{ form_widget(form.save) }}
+    <div class="d-none">
+      {{ form_rest(form) }}
+    </div>
+    {{ form_end(form) }}
+  </div>
+
+{% endblock %}

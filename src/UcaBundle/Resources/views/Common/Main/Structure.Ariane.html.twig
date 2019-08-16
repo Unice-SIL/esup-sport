@@ -1,0 +1,25 @@
+{% set item = item is defined ? item : null %}
+{% if sitemap.getAriane %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% for itemAriane in sitemap.getAriane %}
+                {# {{ dump(itemAriane) }} #}
+                {% if itemAriane.route and loop.last %}
+                    <li aria-current="page" class="breadcrumb-item active">
+                        <span>{{ sitemap.getTitre(itemAriane, item) }}</span>
+                    </li>
+                {% elseif itemAriane.route %}
+                    <li class="breadcrumb-item">
+                        <a href="{{ sitemap.getUrl(itemAriane) }}">{{ sitemap.getTitre(itemAriane, item) }}</a>
+                    </li>
+                {% else %}
+                    <li class="breadcrumb-item">
+                        <span>{{ sitemap.getTitre(itemAriane, item) }}</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </nav>
+{% elseif app.environment == 'dev' %}
+<nav aria-label="breadcrumb" style="background-color:red">Il faut configurer le sitemap pour faire apparaitre le fil d'ariane !</nav>
+{% endif %}

@@ -1,0 +1,12 @@
+layout.logout: Déconnexion
+security.login.username: Nom d'utilisateur
+security.login.password: Mot de passe
+security.login.submit: Connexion
+security.login.not.register: Pas encore de compte
+common.username: Login
+common.password: Mot de passe
+registration.email.message: "Bonjour %username% !\n\nPour valider votre compte utilisateur, merci de vous rendre sur %confirmationUrl%\n\nCe lien ne peut \u00eatre utilis\u00e9 qu'une seule fois pour valider votre compte.\n"
+registration.email.greatings: "Cordialement,\nL'\u00e9quipe\n"
+security.shibboleth.login.submit: 'Connexion Shibboleth'
+utilisateur.verification.title: 'Vérification du courriel'
+sitemap.ucagest.libelle: Uca Gestion

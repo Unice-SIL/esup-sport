@@ -1,0 +1,3 @@
+{% macro thumb(url, type) %}{{ asset('/upload/public/image/' ~  url) | imagine_filter(type) }}{% endmacro %}
+
+{% macro imageFond(emplacement) %}{{ _self.thumb(emplacementImageFond(emplacement).image, 'thumb_background') }}{% endmacro %}

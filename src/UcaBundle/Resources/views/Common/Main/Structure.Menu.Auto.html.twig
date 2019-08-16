@@ -1,0 +1,34 @@
+{% set item = item is defined ? item : null %}
+{% set menu = sitemap.getCurrentMenu %}
+    <li aria-expanded="false" class="nav-item dropdown" role="menu">
+        <a role="option" class="nav-link nav-home d-flex align-items-center" href="{{url('UcaWeb_Accueil')}}">
+            <i class="fas fa-home"></i>
+        </a>
+    </li>
+{% for itemMenu in menu.items %}
+    <li aria-expanded="false" class="nav-item dropdown" role="menu">
+        {% set current = (sitemap.isCurrentAncestor(itemMenu.route) ? 'active' : '') %}
+        {% if not itemMenu.items is defined and not itemMenu.route is empty %}
+            {% if itemMenu.param is defined %}
+                {% set url = url(itemMenu.route, itemMenu.param) %}
+            {% else %}
+                {% set url = url(itemMenu.route)  %}
+            {% endif %}
+            <a role="option" class="nav-link nav-link-border d-flex align-items-center {{ current }}" href="{{ url }}">
+                <span>{{ sitemap.getTitre(itemMenu, item) }}</span>
+            </a>
+        {% elseif not itemMenu.items is empty %}
+            <a role="button" aria-haspopup="true" id="{{'menu'~sitemap.getTitre(itemMenu, item)}}" class=" d-flex align-items-center nav-link dropdown-toggle {{ current }}" data-toggle="dropdown" href="#" id="{{sitemap.getTitre(itemMenu, item)}}" role="button">
+                {{ sitemap.getTitre(itemMenu, item) }}
+            </a>
+            <div aria-expanded="false" aria-labelledby="{{'menu'~sitemap.getTitre(itemMenu, item)}}" class="dropdown-menu" role="menu">
+                {% for itemSubMenu in itemMenu.items %}
+                    {% set current = (sitemap.isCurrentAncestor(itemSubMenu.route) ? 'active' : '') %}
+                    <a role="menuitem" class="dropdown-item  {{ current }}" href="{{ url(itemSubMenu.route) }}">
+                        {{ sitemap.getTitre(itemSubMenu, item) }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </li>
+{% endfor %}

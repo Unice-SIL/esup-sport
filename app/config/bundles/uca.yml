@@ -1,0 +1,22 @@
+parameters:
+    lang.all: fr|en
+    lang.default: fr
+
+services:
+    uca.tools:
+        class: UcaBundle\Service\Common\Tools
+    uca.sitemap:
+        class: UcaBundle\Service\Common\SiteMap
+        arguments: ['%kernel.root_dir%', '@request_stack', '@router', '@translator', '@security.authorization_checker']
+    uca.translatable:
+        class: UcaBundle\Service\Common\Translatable
+        arguments: ['@doctrine.orm.entity_manager', '@request_stack']
+    uca.annotation.tools:
+        class: UcaBundle\Service\Common\Annotation
+        arguments: ['@doctrine.orm.entity_manager']
+    uca.flashbag:
+        class: UcaBundle\Service\Common\FlashBag
+        arguments: ['@translator', '@request_stack']
+    uca.shibboleth.provider:
+        class: UcaBundle\Service\Securite\GestionnaireUtilisateurShibboleth
+        arguments: ['@doctrine.orm.entity_manager','@fos_user.user_manager']

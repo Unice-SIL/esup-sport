@@ -1,0 +1,100 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+    {# Carousel - Actualités #}
+
+    {% include "@Uca/UcaWeb/Accueil/Carousel.html.twig" %}
+
+    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Prochainement') }}') no-repeat center center;background-size: cover;">
+        <div class="container">
+            <div class="row d-block">
+                <h2 class="text-center h2-light">{{ "accueil.prochainement.title"|trans }}</h2>
+            </div>
+            <div class="row mb-5">
+                <div class="w-100 d-flex flex-wrap justify-content-between">
+                    {% for item in item_format_activite %}
+                        <div class="event d-flex bg-white">
+                            <div
+                                class="w-25 d-flex justify-content-center event-img" style="background: url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                {# <p class="event-date align-self-center text-center">{{ item.dateDebutEffective | dateFormat('dd MMM Y') }}</p> #}
+                                <p class="event-date align-self-center text-center">
+                                    {{ item.dateDebutEffective | dateFormat('dd') }}<br/>
+                                    {{ item.dateDebutEffective | dateFormat('MMM') }}<br/>
+                                    {{ item.dateDebutEffective | dateFormat('Y') }}
+                                </p>
+                            </div>
+                            <div class="w-75 event-info">
+                                <h3 class="event-title">{{ item.libelle }}</h3>
+                                <p class="event-text">{{ item.libelle }}</p>
+                                <p class="text-right mb-0">
+                                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "acceuil.prochainement.consulter"|trans }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="events-link d-flex justify-content-center align-items-center">
+                        <a href="{{ url('UcaWeb_Evenement', { page: 1} ) }}">
+                            <span>{{ "acceuil.evenements.liste"|trans }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
+        <div class="container">
+            <div class="row d-block">
+                <h2 class="text-center h2-light">{{ "accueil.classeActivite.title"|trans }}</h2>
+            </div>
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                {% for item in item_class_activite %}
+                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                        <a class="align-self-center text-center" href="#">{{ item.libelle }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center;background-size: cover;">
+        <div class="container mb-5">
+            <div class="row d-block">
+                <h2 class="text-center h2-light">{{ "accueil.inscription.title"|trans }}</h2>
+            </div>
+            {% if emplacement("inscription", "title") is not empty %}
+                <div class="container container-style bg-white mb-5 text-center">
+                    <h3>{{ emplacement("inscription", "title")|raw }}</h3>
+                    {{ emplacement("inscription")|raw }}
+                    <div class="row ">
+                        <div class="col text-center">
+                            <button class="btn btn-primary">{{'accueil.connexion' | trans | upper}}</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="btn btn-outline-primary">{{'accueil.cotisations.infos' | trans | upper}}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if emplacement("inscription enregistrement", "title") is not empty %}
+                <div class="container container-style bg-dark text-center">
+                    <h3 class="text-white">{{ emplacement("inscription enregistrement", "title")|raw }}</h3>
+                    {{ emplacement("inscription enregistrement")|raw }}
+                    <div class="row">
+                        <div class="col text-center">
+                            <button class="btn btn-primary ">{{'accueil.demander.inscription' | trans | upper}}</button>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        $('.carousel').carousel({interval: false})
+    </script>
+{% endblock %}

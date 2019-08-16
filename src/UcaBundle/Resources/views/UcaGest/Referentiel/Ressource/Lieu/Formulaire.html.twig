@@ -1,0 +1,56 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+    <a class="btn btn-primary" href="{{ path('RessourceLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+
+    {% if (null == item.id) %}
+        <h1>{{'lieu.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'lieu.modifier.title'|trans}}</h1>
+    {% endif %}
+
+    <div class="well">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                {{ form_row(form.libelle)}}
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-5">{{ form_row(form.adresse)}}</div>
+                    <div class="col-sm-12 col-md-5 col-lg-3">{{ form_row(form.codePostal)}}</div>
+                    <div class="col-sm-12 col-md-7 col-lg-4">{{ form_row(form.ville)}}</div>
+                </div>
+                {{ form_row(form.description)}}
+            </div>
+            <div class="col-sm-12 col-md-6">
+                {{ form_row(form.imageFile)}}
+                {{ ImagePreview.html(item.image, 'ucabundle_lieu_imageFile_file') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-6">
+                {{ form_row(form.tarif)}}
+                {{ form_row(form.etablissement)}}
+                {{ form_row(form.nomenclatureRus)}}
+                {{ form_row(form.capacite)}}
+                {{ form_row(form.superficie)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-3">{{ form_row(form.latitude)}}</div>
+            <div class="col-sm-12 col-md-3">{{ form_row(form.longitude)}}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.save) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ ImagePreview.js }}
+{% endblock %}

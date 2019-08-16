@@ -1,0 +1,63 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+
+{% block main %}
+    <script> var typeA = "{{ type }}"; </script>
+    <script> var role = "{{ role }}"; </script>
+
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('RessourceLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    <h1>{{ item.libelle }}</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="image_ressource" src="{{'/Uca/upload/public/image/' ~ item.image }}">
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2> {{'common.description'|trans}} </h2>
+                    <p> {{ item.description }} </p>
+                </div>
+                {% if item.tarif != null %}
+                    <div class="col-md-6">
+                        <h2> {{'common.tarif'|trans}} </h2>
+                        <p> {{ item.tarif }} </p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if format  == 'Lieu' %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2> {{'common.coordonnees'|trans}} </h2>
+                        <p> {{ item.etablissement.libelle }} <br>
+                            {{ item.adresse }} <br>
+                            {{ item.codePostal }} {{ item.ville }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2> {{'common.infossupplementaires'|trans}} </h2>
+                        <li> {{'ressource.capacite'|trans}} : {{ item.capacite }} </li>
+                        <li> {{'ressource.superficie'|trans}} : {{ item.superficie }} </li>
+                        <li> {{'ressource.code.rus'|trans}} : {{ item.nomenclatureRus }} </li>
+                        <li> {{'ressource.latitude'|trans}} / {{'ressource.longitude'|trans}} : {{ item.latitude }} / {{ item.longitude }} </li>
+                    </div>
+                </div>  
+            {% elseif format == 'Materiel' %}
+                <p> {{'ressource.quantite'|trans}} : {{ item.quantiteDisponible }} </p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h2>{{'common.reservabilites'|trans}}</h2>
+    {{ dhtmlxCalendar.displayCalendarHtml }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        //scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }
+    </script>
+    {{ dhtmlxCalendar.initSchedulerData(item) }}
+    {{ dhtmlxCalendar.initCalendarJs(item) }}
+    {{ dhtmlxCalendar.debugSchedulerEvents() }}
+{% endblock %}

@@ -1,0 +1,27 @@
+<script>
+    'use strict';
+
+    let requiredInput = document.querySelectorAll("input[required]");
+    requiredInput.forEach(function (element) {
+        element.setAttribute("aria-required", "true");
+    });
+    let errors = document.getElementsByClassName('form-error-message');
+    for (let i = 0; i < errors.length; i++) {
+        errors[i].setAttribute("aria-invalid", "true");
+    }
+
+
+    var descriptionEncadrant = document.querySelector("#descriptionEncadrant");
+    var checkboxEncadrant = document.querySelector("#{{ checkboxEncadrantHtmlId }}");
+    var toggleDescriptionEncadrant = function () {
+        if (checkboxEncadrant.checked) {
+            descriptionEncadrant.style.display = "block";
+        } else {
+            descriptionEncadrant.style.display = "none";
+        }
+    }
+    checkboxEncadrant.addEventListener("click", toggleDescriptionEncadrant);
+    toggleDescriptionEncadrant();
+
+    let tabLabels = document.getElementsByTagName('label');
+</script>

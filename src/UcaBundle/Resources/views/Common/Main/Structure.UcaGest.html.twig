@@ -1,0 +1,15 @@
+{% extends '@Uca/Common/Main/Structure.Application.html.twig' %}
+{% block stylesheets %}
+{{ encore_entry_link_tags('cssGest') }}
+{% endblock %}
+{% block body %}
+<div class="container-admin">
+    <div class="container-fluid">
+        {% include('@Uca/Common/Main/Structure.Menu.html.twig') %}
+        {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
+    </div>
+    <div class="container container-style bg-white">
+        {% block main %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+
+<a class="btn btn-primary" href="{{ path('GroupeLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+
+<h1>{{'groupe.modifier.title'|trans}}</h1>
+<div class="well">
+  <div class="row">
+    <div class="col-sm-12 col-lg-6"> 
+       {{ form_start(form, { 'action': path('fos_user_group_edit', {'groupName': group_name}), 'attr': { 'class': 'fos_user_group_edit' } }) }}
+       {{ form_widget(form) }}
+       {{ form_end(form) }}
+     </div>
+  </div>
+</div>

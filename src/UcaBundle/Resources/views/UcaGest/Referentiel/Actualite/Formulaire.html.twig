@@ -1,0 +1,19 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+    <a class="btn btn-primary" href="{{ path('ActualiteLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{ 'bouton.retour' | trans }}</a>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_row(form.titre) }}
+    {{ form_row(form.texte) }}
+    {{ form_row(form.imageFile) }}
+    {{ ImagePreview.html(item.image, 'ucabundle_actualite_imageFile_file') }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ ImagePreview.js }}
+{% endblock %}

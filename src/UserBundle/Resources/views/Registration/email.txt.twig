@@ -1,0 +1,15 @@
+{% trans_default_domain 'FOSUserBundle' %}
+{% block subject %}
+{{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+{% endblock %}
+
+{% block body_text %}{% endblock %}
+{% block body_html %}
+{{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl})|nl2br }}<br /><br />
+
+{{ "common.username"|trans }} : {{ user.getUsername() }}<br />
+{{ "common.password"|trans }} : {{ user.getPlainPassword() }}<br /><br />
+
+{{ 'registration.email.greatings'|trans }}<br />
+
+{% endblock %}

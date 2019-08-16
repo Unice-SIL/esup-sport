@@ -1,0 +1,11 @@
+
+{% for montant in row.montants %}
+    <div id="{{montant.profil.libelle}}">
+        <span> {{montant.profil.libelle}} : </span>
+        {% if (montant.montant == -1) %}
+            <span class="badge badge-dark"> Non défini </span>
+        {% else %}
+            <span class="badge badge-dark"> {{ montant.montant~" €"}} </span>
+        {% endif %}
+    </div>
+{% endfor %}

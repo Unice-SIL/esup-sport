@@ -1,0 +1,43 @@
+* Commandes utilisées pour la création du projet.
+> php symfony new Uca 3.4
+> composer require paragonie/random_compat ^2
+> composer require friendsofsymfony/user-bundle ~2.0
+> composer require onurb/doctrine-yuml-bundle
+> composer require stof/doctrine-extensions-bundle
+> composer require symfony/webpack-encore-bundle
+> php bin/console generate:bundle
+<!-- Modification du composer.json : "psr-4": { "": "src/" }, -->
+<!-- Modification de la config.yml -->
+<!-- Suppression des scripts : buildBootstrap, installAssets que composer execute en fin d'update  -->
+> composer update
+> yarn add @symfony/webpack-encore --dev
+> yarn add jquery --dev
+
+* Commandes utiles
+> php bin/console cache:clear
+> php bin/console debug:container > sevices.txt~
+> php bin/console debug:event-dispatcher > envent-dispacher.txt~
+> php bin/console doctrine:generate:entities UcaBundle --no-backup
+> php bin/console doctrine:generate:entities UcaBundle:ClasseActivite
+> php bin/console doctrine:generate:form UcaBundle:ClasseActivite
+> php bin/console doctrine:schema:update --dump-sql
+> php bin/console doctrine:schema:update --force
+> php bin/console doctrine:schema:validate > doctrine-analysis.txt~
+> php bin/console translation:update --force --no-backup fr UcaBundle
+> php bin/console uca:datatables:fixLang
+> php bin/console uca:sql:load InitData.sql
+> php bin/console uca:table:annotation:load
+> php bin/console yuml:mappings
+> update_js.bat
+> yarn encore dev
+> yarn encore dev --watch
+> yarn encore production
+> yarn install
+
+* Urls
+> http://suapsweb.unice.fr
+> http://univ-cotedazur.fr/
+> http://localhost/Uca/web/app_dev.php
+> http://www1.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/appel-page-paiement/
+> https://services.renater.fr/federation/docs/shibboleth#la_brique_fournisseur_d_identites_idp
+> http://activelamp.com/blog/development/shibboleth-authentication-in-symfony/

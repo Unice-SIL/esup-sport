@@ -1,0 +1,20 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% block main %}
+    <script> var typeA = "{{ type }}"; </script>
+    <script> var role = "{{ role }}"; </script>
+
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('UtilisateurVoir', {'id' : item.id}) }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+        <h2>Réservabilités</h2>
+        {{ dhtmlxCalendar.displayCalendarHtml }}
+{% endblock %}
+{% block javascripts %}
+    <script type="text/javascript">
+        //scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }
+    </script>
+    {{ dhtmlxCalendar.initSchedulerData(item) }}
+    {{ dhtmlxCalendar.initCalendarJs(item) }}
+    {{ dhtmlxCalendar.debugSchedulerEvents() }}
+{% endblock %}

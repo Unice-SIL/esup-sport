@@ -1,0 +1,271 @@
+# sitemap.yml
+# arborescence de pages qui sert à générer le fil d'ariane en fonction de la page sur laquelle on se trouve
+# chaque page contient les élements suivants :
+# - titre : libelle qui sera affiché (si on spécifie un tableau, le Service SiteMap generera le libelle en fonction de l'item courant de la page en fonction de la classe de l'item)
+# - route : permet au Service SiteMap d'identifier sur quelle page on se trouve et de générer les urls du fil d'ariane
+# - items : liste des routes faisant partie de la route courante.
+
+# Branche sans menu
+- titre: "trans('sitemap.ucasport.libelle')"
+  route: null
+  items:
+    - titre: "trans('sitemap.connexion')"
+      route: fos_user_security_login
+    - titre: "trans('sitemap.panier.libelle')"
+      route: UcaWeb_Panier
+
+# Branche Uca Web
+- titre: "trans('sitemap.ucasport.libelle')"
+  menuLevel: 1
+  route: UcaWeb_Accueil
+  items:
+    - titre: "trans('sitemap.activites.libelle')"
+      route: UcaWeb_ClasseActiviteLister
+      items:
+        - titre: "item.getClasseActiviteLibelle()"
+          route: UcaWeb_ActiviteLister
+          params: { id: idCa }
+          items:
+            - titre: "item.getActiviteLibelle()"
+              route: UcaWeb_FormatActiviteLister
+              params: { idCa: idCa, id: idA }
+              items:
+                - titre: "item.getLibelle()"
+                  route: UcaWeb_FormatActiviteDetail
+                  params: null
+    - titre: "trans('sitemap.installations.libelle')"
+      route: UcaWeb_InstallationsSportives 
+
+    - titre: "trans('sitemap.evenements.libelle')"
+      route: UcaWeb_Evenement
+      param: { page: '1' }
+    - titre: "trans('sitemap.sporthautniveau.libelle')"
+      route: UcaWeb_SportVoir
+
+    - titre: "trans('sitemap.infospratiques.libelle')"
+      route: UcaWeb_InfosPratiques
+
+    - titre: "trans('sitemap.moncompte.libelle')"
+      route: UcaWeb_UtilisateurVoir
+      param: { id: id }
+
+
+# Branche Uca Gest
+- titre: "trans('sitemap.ucagest.libelle')"
+  menuLevel: 2
+  route: Accueil
+  items:
+    - titre: "trans('sitemap.activite.libelle')"
+      route: null
+      items:
+        - titre: "trans('sitemap.type_activite.libelle')"
+          route: TypeActiviteLister
+        
+          droit: ROLE_GESTION_TYPE_ACTIVITE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: TypeActiviteAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: TypeActiviteModifier
+  
+        - titre: "trans('sitemap.classe_activite.libelle')"
+          route: ClasseActiviteLister
+
+          droit: ROLE_GESTION_CLASSE_ACTIVITE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: ClasseActiviteAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: ClasseActiviteModifier
+
+        - titre: "trans('sitemap.activite.libelle')"
+          route: ActiviteLister
+
+          droit: ROLE_GESTION_ACTIVITE_LECTURE
+          items:
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: ActiviteModifier
+
+            - titre: "item.getActiviteLibelle()"
+              route: ActiviteVoir
+
+              params: { id: idActivite }
+              items:
+              - titre: "item.getLibelle()"
+                route: FormatActiviteVoir
+
+                params: { id: id }
+              - titre: "trans('sitemap.format.ajouter')"
+                route: FormatActiviteAjouter
+
+                params: { id: id }
+              - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+                route: FormatActiviteModifier
+
+                params: { id: id }
+            - titre: "trans('sitemap.ajouter')"
+              route: ActiviteAjouter
+
+              items:
+                - titre: "item.getLibelle()"
+                  route: FormatActiviteVoir
+
+                  params: { id: id }
+                - titre: "trans('sitemap.modifier')"
+                  route: ActiviteModifier
+
+    - titre: "trans('sitemap.outils.libelle')"
+      route: null
+
+      items:
+        - titre: "trans('sitemap.log.libelle')"
+          route: LogLister
+
+          droit: ROLE_GESTION_LOG_LECTURE
+        - titre: "trans('sitemap.traduction.libelle')"
+          route: TraductionLister
+
+          droit: ROLE_GESTION_TRADUCTION_LECTURE
+          items:
+            - titre: "trans('sitemap.modifier')"
+              route: TraductionModifier
+
+    - titre: "trans('sitemap.referentiel.libelle')"
+      route: null
+
+      items:
+        - titre: "trans('sitemap.profil_utilisateur.libelle')"
+          route: ProfilUtilisateurLister
+
+          droit: ROLE_GESTION_PROFIL_UTILISATEUR_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: ProfilUtilisateurAjouter
+
+            - titre: "trans('sitemap.modifier')"
+              route: ProfilUtilisateurModifier
+
+        - titre: "trans('sitemap.tarif.libelle')"
+          route: TarifLister
+
+          droit: ROLE_GESTION_TARIF_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: TarifAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: TarifModifier
+
+        - titre: "trans('sitemap.type_autorisation.libelle')"
+          route: TypeAutorisationLister
+
+          droit: ROLE_GESTION_TYPE_AUTORISATION_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: TypeAutorisationAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: TypeAutorisationModifier
+
+        - titre: "trans('sitemap.etablissement.libelle')"
+          route: EtablissementLister
+
+          droit: ROLE_GESTION_ETABLISSEMENT_LECTURE
+          items:
+            - titre: "item.getLibelle()"
+              route: EtablissementVoir
+
+            - titre: "trans('sitemap.ajouter')"
+              route: EtablissementAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: EtablissementModifier
+
+        - titre: "trans('sitemap.ressource.libelle')"
+          route: RessourceLister
+
+          droit: ROLE_GESTION_RESSOURCE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: RessourceAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
+              route: RessourceModifier
+
+            - titre: "item.getLibelle()"
+              route: RessourceVoir
+
+        - titre: "trans('sitemap.texte.libelle')"
+          route: TexteLister
+
+          droit: ROLE_GESTION_TEXTE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: TexteAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
+              route: TexteModifier
+
+        - titre: "trans('sitemap.actualite.libelle')"
+          route: ActualiteLister
+
+          droit: ROLE_GESTION_TEXTE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: ActualiteAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
+              route: ActualiteModifier
+
+        - titre: "trans('sitemap.imagefond.libelle')"
+          route: ImageFondLister
+
+          droit: ROLE_GESTION_IMAGEFOND_LECTURE
+          items:
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
+              route: ImageFondModifier
+
+    - titre: "trans('sitemap.securite.libelle')"
+      route: null
+
+      items:
+        - titre: "trans('sitemap.utilisateur.libelle')"
+          route: UtilisateurLister
+
+          droit: ROLE_GESTION_UTILISATEUR_LECTURE
+          items:
+            - titre: "item.getPrenom() ~ ' ' ~ item.getNom()"
+              route: UtilisateurVoir
+
+              params: { id: id }
+              items:
+                - titre: "trans('sitemap.modifier')"
+                  route: UtilisateurAjouterAutorisation
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getPrenom() ~ ' ' ~ item.getNom()"
+              route: UtilisateurModifier
+
+            - titre: "trans('sitemap.ajouter')"
+              route: fos_user_registration_register
+
+              items:
+                - titre: "trans('sitemap.utilisateur.verification')"
+                  route: fos_user_registration_check_email
+
+        - titre: "trans('sitemap.groupe.libelle')"
+          route: GroupeLister
+
+          droit: ROLE_GESTION_GROUPE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: fos_user_group_new
+
+            - titre: "trans('sitemap.modifier')"
+              route: fos_user_group_edit
+
+            - titre: "trans('sitemap.voir')"
+              route: fos_user_group_show
+
+        

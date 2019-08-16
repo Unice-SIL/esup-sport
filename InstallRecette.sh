@@ -1,0 +1,1 @@
+mount.cifs //acatusdc/Echanges_Lyon/UNICE/Code /mnt/depot_unice -o user=dgueudre,password=Ac@tusdg1905

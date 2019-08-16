@@ -1,0 +1,12 @@
+
+<a class="btn btn-primary" href="{{ path('GroupeLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+<h1>  {{ group.getName() }}</p></h1>
+<p> 
+  <ul>
+{% for role in group.getRoles() %}
+      <li> {{ ('security.roles.'~role) | trans }}</li>
+    {% endfor %}
+  <ul> 
+</p>
+
+

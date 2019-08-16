@@ -1,0 +1,56 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% if app.request.attributes.get('_route') == 'UcaWeb_ClasseActiviteLister' %}
+    {% set imageFond = emplacementImageFond('Activités') %}
+    {% set route = 'UcaWeb_ActiviteLister' %}
+    {% set params = {} %}
+    {% set description = '' %}
+    {% set title = 'accueil.classeActivite.title' | trans %}
+{% elseif app.request.attributes.get('_route') == 'UcaWeb_ActiviteLister' %}
+    {% set imageFond = item %}
+    {% set route = 'UcaWeb_FormatActiviteLister' %}
+    {% set params = {idCa: item.id} %}
+    {% set title = item.libelle %}
+    {% set description = '' %}
+{% elseif app.request.attributes.get('_route') == 'UcaWeb_FormatActiviteLister' %}
+    {% set imageFond = item %}
+    {% set route = 'UcaWeb_FormatActiviteDetail' %}
+    {% set params = {idCa: idCa, idA: item.id} %}
+    {% set title = item.libelle %}
+    {% set description = item.description %}
+{% endif %}
+
+{% block title %}
+    Uca Web
+{% endblock %}
+
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 100%),  url("{{ ImageAsset.thumb(imageFond.image, 'thumb_background') }}") no-repeat center center;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
+
+
+{% block main %}
+    <h1 class="h1-light">{{ title }}</h1>
+    {% if description is not empty %}
+        <section class="container container-style bg-white mb-5">
+            {{ description }}
+        </section>
+    {% endif %}
+        <section class="container">
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+            {% for dataItem in data %}
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                </div>
+            {% endfor %}
+            </div>
+        </section>
+{% endblock %}

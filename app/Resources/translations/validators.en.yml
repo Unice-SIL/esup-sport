@@ -1,0 +1,63 @@
+activite.classeactivite.notnull: An activity class must be selected
+activite.description.notblank: The description of the activity is required
+activite.image.format: 'The picture of the activity is not in the right format. (Expected: PNG|JPEG|TIFF)'
+activite.image.notnull: A picture must be selected
+activite.libelle.notblank: The activity's label is required
+activite.uniqueentity: An activity already exists with this label
+classeactivite.image.format: 'The activity class picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+classeactivite.image.notnull: A picture must be selected for the activity class
+classeactivite.libelle.notblank: The activity class label is required
+classeactivite.typeactivite.notnull: An activity type must be selected
+classeactivite.uniqueentity: An activity class already exists with this label
+complement.capacite.notblank: Please enter a capacity 
+complement.encadrant.notblank: For a framed format, at least one supervisor must be selected
+complement.niveauxsportifs.notblank: You must enter at least one sport level
+complement.profilsutilisateurs.notblank: You must enter at least one user profile
+complement.tarif.notblank: For a paid format, the rate must be selected
+etablissement.adresse.notblank: The campus address is required
+etablissement.code.notblank: The campus code is required
+etablissement.codePostal.notblank: The campus postal code is required
+etablissement.email.invalide: Invalid email
+etablissement.image.format: 'The campus picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+etablissement.image.notnull: A picture must be selected
+etablissement.libelle.notblank: The campus label is required
+etablissement.telephone.invalide: Invalid phone number
+etablissement.uniqueentity: A campus already exists with this label
+etablissement.ville.notblank: The campus city is required
+formatactivite.achatcarte.carte.notnull: You must choose a card
+formatactivite.description.notblank: The format description is required
+formatactivite.image.format: 'The format picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+formatactivite.image.notnull: A picture must be selected
+formatactivite.libelle.notblank: The format label is required
+formatactivite.lieu.notnull: The place is required
+formatactivite.reservation.ressource.notnull: Please select at least one resource
+formatactivite.uniqueentity: An activity format already exists with this label
+imagefond.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+imagefond.image.notnull: A picture must be selected
+imagefond.titre.notnull: The title is required
+lieu.adresse.notblank: The place's address is required
+lieu.codepostal.notblank: The place's postal code is required
+lieu.libelle.notblank: The place's label is required
+lieu.ville.notblank: The place's city is required
+materiel.libelle.notblank: The material label is required
+materiel.quantite.notblank: Please enter an available quantity
+message.erreur.datefin: The start date can not be greater than the end date
+profilutilisateur.libelle.notblank: The user profile label is required
+profilutilisateur.uniqueentity: A user profile already exists with this label
+ressource.image.format: 'The resource picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+ressource.image.notnull: A picture must be selected
+tarif.libelle.notblank: The price list label is required
+tarif.montant.notnull: Please enter an amount
+tarif.uniqueentity: A price already exists with this label
+typeactivite.libelle.notblank: The activity type label is required
+typeactivite.uniqueentity: An activity type already exists with this label
+typeautorisation.comportement.notnull: Please select a behaviour
+typeautorisation.libelle.notblank: The authorization type label is required
+typeautorisation.uniqueentity: An authorization type already exists with this label
+utilisateur.UserProfile.notnull: Please select an user profil
+utilisateur.firstname.notnull: First name is required
+utilisateur.mail.notnull: Mail is required
+utilisateur.name.notnull: Name is required
+utilisateur.sexe.notnull: Civility is required
+utilisateur.telephone.invalide: Invalid telephone number
+utilisateur.username.notnull: Username is required

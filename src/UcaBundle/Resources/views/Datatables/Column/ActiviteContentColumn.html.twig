@@ -1,0 +1,39 @@
+<div class="row">
+    <div class="col-xs">
+        <img height="200" src="{{ asset('../upload/public/image/' ~ row.image.name) }}"/>
+    </div>
+    <div class="col-auto">
+        <h3>
+            {{ row.libelle }}
+        </h3>
+        <h5>
+            {% for niveauSportif in row.niveauxSportifs %}
+                <span class="badge badge-info">
+                    {{ niveauSportif.libelle }}</span>
+            {% endfor %}
+            <h5>
+                <span>
+                    {{ row.description }}</span>
+                <span class="badge badge-dark">
+                    {{ row.activite.classeActivite.typeActivite.libelle }}</span>
+                <span class="badge badge-primary">
+                    {{ row.activite.classeActivite.libelle }}</span>
+                <span class="badge badge-secondary">
+                    {{ row.activite.libelle }}</span>
+                <span class="badge badge-warning">{{ twig_tools.getActiviteFormat(row) }}</span>
+            </br>
+            {% for profil in row.profilsUtilisateurs %}
+                {% if loop.last %}
+                    <span>
+                        {{ profil.libelle }}
+                    </span>
+                {% else %}
+                    <span>
+                        {{ profil.libelle }}
+                        /
+                    </span>
+                {% endif %}
+            {% endfor %}
+        </div>
+
+    </div>

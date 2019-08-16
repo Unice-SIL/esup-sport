@@ -1,0 +1,11 @@
+{% extends "@Uca/Common/Liste/Datatable.html.twig" %}
+
+{% block DatatableHeader%}
+    {% if not noAddButton is defined %}
+        <div class="row">
+            <div class="col-lg-6">
+                <a href="{{ path('fos_user_group_new') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
