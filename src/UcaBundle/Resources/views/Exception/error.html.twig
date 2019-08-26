@@ -1,7 +1,16 @@
 {# Template générique des erreurs #}
 {# Parametres pour les erreurs #}
-{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 
 {% block main %}
-{{textError|trans}} 
+
+    <section class="container mb-5 pt-5 pb-3">
+        <h1 class="h1-light mt-5 mb-2">{{textError|trans}}</h1>
+        <div class="d-flex flex-wrap justify-content-center mb-4 p-4">
+            <p class="text-center w-100 fs-30 mb-4 color-red"><i class="{{errorIcon|trans}}"></i></p>
+            <p class="text-center w-100 fs-21 mb-4">{{errorMessage|trans}}</p>
+            <a href="{{url('UcaWeb_Accueil')}}" class="btn btn-primary">{{errorButton|trans}}</a>
+        </div>
+    </section>
+    
 {% endblock %}

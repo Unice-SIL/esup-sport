@@ -1,0 +1,11 @@
+{% macro showDatatable(table) %}
+    <div class="row">
+        <div class="col-sm-12 datatable-responsive">
+            {{ sg_datatables_render_html(table) }}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro renderDatatable(table) %}
+    {{ sg_datatables_render_js(table) }}
+{% endmacro %}

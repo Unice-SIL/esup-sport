@@ -7,10 +7,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use UcaBundle\Entity\Article;
-use UcaBundle\Entity\Creneau;
-use UcaBundle\Entity\FormatActivite;
-use UcaBundle\Entity\TypeAutorisation;
+use UcaBundle\Entity\Inscription;
+use UcaBundle\Form\InscriptionType;
 
 /**
  * @Route("UcaWeb")
@@ -21,70 +19,75 @@ class InscriptionController extends Controller
      * @Route("/Inscription", name="UcaWeb_Inscription", options={"expose"=true})
      * @Method("POST")
      */
-    public function Inscription(Request $request)
+    public function inscriptionAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $this->get('uca.timeout')->nettoyageCommandeEtInscription();
+        $inscriptionService = $this->get('uca.inscription');
         $id = $request->get("id");
         $type = $request->get("type");
+        $idFormat = $request->get("idFormat");
+
         $item = $em->getRepository($type)->find($id);
-        $ctrl = $this->executeControles($item);
 
-        if ($ctrl['statut'] == 'KO') {
-            return new JsonResponse($ctrl);
-        } elseif ($ctrl['statut'] == 'Autorisations manquantes') {
+        $result = $inscriptionService->controlePrevisualisation($item);
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+        $result = $inscriptionService->controleDejaInscrit($item);
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+        $result = $inscriptionService->controleMaxInscriptionCreneau($item, $type);
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+        $result = $inscriptionService->controleMaxCapacite($item, $type);
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
 
-            $ctrl['articles'] = [];
+        $format = null;
+        if (!empty($idFormat))
+            $format = $em->getRepository('UcaBundle:FormatAvecReservation')->find($idFormat);
 
-            $panier = $this->getUser()->getPanier();
-            $article = new Article($panier, $type, $item, $this->getUser());
-            $em->persist($article);
+        $inscription = new Inscription($item, $this->getUser(), $format);
+        $form = $this->get('form.factory')->create(InscriptionType::class, $inscription);
+        $form->handleRequest($request);
+        $inscription->updateStatut();
+
+        $inscriptionService->setInscription($inscription);
+
+        $result = $inscriptionService->controleDateInscription($item, $type);
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+
+        $result = $inscriptionService->controleMontantItem($this->getUser());
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+
+        $result = $inscriptionService->controleMontantAutorisations($this->getUser());
+        if ($result['statut'] == '-1')
+            return new JsonResponse($result);
+
+        if ($inscription->getStatut() == 'initialise') {
+            $result = $inscriptionService->getFormulaire($form);
+            return new JsonResponse($result);
+        } elseif (in_array($inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
+            $em->persist($inscription);
+            $result = $inscriptionService->getMessagePreInscription();
             $em->flush();
-            array_push($ctrl['articles'], $article);
-            return new JsonResponse($ctrl);
-        } elseif ($ctrl['statut'] == 'OK') {
 
-            $ctrl['articles'] = [];
-            $panier = $this->getUser()->getPanier();
-            $article = new Article($panier, $type, $item, $this->getUser());
-            $em->persist($article);
+            $inscriptionService->envoyerMailInscriptionNecessitantValidation();
+            
+            $response = new JsonResponse($result);
+            $response->headers->set('Content-Type', 'text/plain');
+            return $response;
+        } elseif ($inscription->getStatut() == 'attentepaiement') {
+            $em->persist($inscription);
+            $articles = $inscriptionService->ajoutPanier();
+            $result = $inscriptionService->getComfirmationPanier($articles);
             $em->flush();
-            array_push($ctrl['articles'], $article);
-            return new JsonResponse($ctrl);
+            return new JsonResponse($result);
+        } else {
+            dump($inscription);
+            die;
         }
-    }
-
-    // public function getColumnFilter($item)
-    // {
-    //     if (is_a($item, FormatActivite::class)) {
-    //         return ['formatsActivite' => $item];
-    //     } else if (is_a($item, Creneau::class)) {
-    //         return ['formatActivite' => $item->getFormatActivite()];
-    //     } elseif (is_a($item, TypeAutorisation::class)) {
-    //         return ['typeAutorisation' => $item];
-    //     }
-    // }
-
-    public function executeControles($item)
-    {
-        $res = [];
-        $em = $this->getDoctrine()->getManager();
-        $autorisations = $item->getAutorisations();
-        foreach ($autorisations as $autorisation) {
-            if ($autorisation->getComportement()->getCodeComportement() == 'cotisation') {
-                // 
-            } elseif ($autorisation->getComportement()->getCodeComportement() == 'justificatif') {
-                //
-            } elseif ($autorisation->getComportement()->getCodeComportement() == 'case') {
-                // 
-            } elseif ($autorisation->getComportement()->getCodeComportement() == 'carte') {
-                // 
-            } elseif ($autorisation->getComportement()->getCodeComportement() == 'validation_encadrant') {
-                //
-            } else {
-                dump($autorisation);
-                die;
-            }
-        }
-        return ['statut' => 'OK', 'informations' => []];
     }
 }

@@ -36,11 +36,10 @@ class SiteMap
     public function clean($table, $level)
     {
         if (isset($table['items'])) {
-            if ($level == 0) unset($table['items']);
+            if ($level == 0 ) unset($table['items']);
             else {
                 foreach ($table['items'] as $k => $v) {
-
-                    if (!isset($v['droit']) || $this->authorizationChecker->isGranted($v['droit'])) {
+                    if ((!isset($v['menu']) || $v['menu'] != 0) && (!isset($v['droit']) || $this->authorizationChecker->isGranted($v['droit'])) )  {
                         $table['items'][$k] = $this->clean($v, $level - 1);
                     } else {
                         unset($table['items'][$k]);
@@ -54,8 +53,8 @@ class SiteMap
     public function getCurrentMenu()
     {
         $currentRequest = $this->requestStack->getCurrentRequest()->get('_route');
-        $menuName = 'Accueil';
-        if (strpos($currentRequest, 'UcaWeb') !== false) $menuName = 'UcaWeb_Accueil';
+        $menuName = 'UcaWeb_Accueil';
+        if (strpos($currentRequest, 'UcaGest') !== false) $menuName = 'UcaGest_Accueil';
         $key = array_search($menuName, array_column($this->sitemapOriginal, 'route'));
         $res = $this->sitemapOriginal[$key];
         $res = $this->clean($res, $res['menuLevel']);
@@ -94,7 +93,7 @@ class SiteMap
         return $url;
     }
 
-    public function getTitre($itemAriane, $item)
+    public function getTitre($itemAriane, $context = [])
     {
         $instruction = $itemAriane['titre'];
         // dump($instruction); die;
@@ -104,7 +103,7 @@ class SiteMap
         }, function ($arguments, $str) {
             return $this->translator->trans($str);
         });
-        $titre = $el->evaluate($instruction, ['item' => $item]);
+        $titre = $el->evaluate($instruction, $context);
         return strip_tags($titre);
     }
 
@@ -125,5 +124,9 @@ class SiteMap
                 $res = $res + $this->getSitemapByRoute($itemOriginal['items'], $itemAriane);
         }
         return $res;
+    }
+
+    public function getSitemapOriginal(){
+        return $this->sitemapOriginal;
     }
 }

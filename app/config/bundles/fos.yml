@@ -3,11 +3,13 @@ fos_user:
     firewall_name: main
     user_class: UcaBundle\Entity\Utilisateur
     use_flash_notifications: true
+    use_listener: true
     group:
         group_class: UcaBundle\Entity\Groupe
         group_manager:  fos_user.group_manager.default
         form:
             type: UcaBundle\Form\GroupeType
+            validation_groups: [Default]
     from_email:
         address: '%mailer_user%'
         sender_name: '%mailer_name%'
@@ -19,6 +21,7 @@ fos_user:
             template:  "FOSUserBundle:Registration:email.txt.twig"
         form:
             type: UcaBundle\Form\UtilisateurType
+            validation_groups: [Default]
 
 fos_ck_editor:
     base_path: "build/ckeditor"
@@ -30,3 +33,13 @@ services:
         arguments: ['@security.role_hierarchy']
         tags:
             - { name: form.type}
+    user.registration.controller:
+        class: UserBundle\Controller\Utilisateur\RegistrationController
+        arguments: ['@event_dispatcher', '@fos_user.registration.form.factory', '@fos_user.user_manager', '@security.token_storage']
+        calls:
+            - [setContainer, ['@service_container']]
+    group.controller:
+        class: UserBundle\Controller\Groupe\GroupController
+        arguments: ['@event_dispatcher', '@fos_user.group.form.factory', '@fos_user.group_manager']
+        calls:
+            - [setContainer, ['@service_container']]

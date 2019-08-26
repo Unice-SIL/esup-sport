@@ -1,46 +1,152 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 {% import '@Uca/Macros/Table.html.twig' as htmlTable %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
 {% block main %}
+    {% include "@Uca/Common/Modal/Modal.Confirmation.html.twig" %}
     {{ flashBag.showAll }}
-    <a class="btn btn-primary" href="{{ path('UtilisateurLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
-    <h1> {{ item.prenom }} {{ item.nom }} </h1>
+    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{ 'bouton.retour' | trans }}</a>
+    <h1>
+        {{ item.prenom }}
+        {{ item.nom }}
+    </h1>
+
+    <!-- Utilisateur Bloqué -->
     {% if not item.enabled %}
-        <p>utilisateur bloqué</p>
+        <div class='row'>
+            <div class='col-sm-12'>
+                <div class="alert alert-danger" role="alert">
+                    {{ 'utilisateur.bloquer.message' | trans }}
+                </div>
+            </div>
+            {% if not noEditButton is defined and not validation is defined %}
+                <div class='col-sm-12'>
+                    <a class="btn btn-success" href="{{ path('UcaGest_UtilisateurBloquer', {'id': item.id} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+                        {{ 'bouton.debloquer' | trans }}
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     {% endif %}
-    <h2>{{'common.infospersonnelles'|trans}}</h2>
+
+    <!-- Utilisateur Refusé-->
+    {% if not noEditButton is defined %}
+        {% if refus is defined %}
+            <div class='row'>
+                <div class='col-sm-12'>
+                    <div class="alert alert-danger" role="alert">
+                        {{'utilisateur.refus.message' | trans }}
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col-sm-12'>
+                        <a class="btn btn-primary" href="{{ path('UcaGest_UtilsateurPreInscriptionTelechargerJustificatif', {'id': item.id}) }}">
+                            {{ 'utilisateur.document.afficher' | trans }}
+                        </a>
+                        <a class="btn btn-success" href="{{ path('UcaGest_UtilisateurValiderPreInscription', {'id': item.id, 'action': 'valider'} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+                            {{ 'utilisateur.preinscription.valider' | trans }}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        <!-- Utilisateur en attente de validation -->
+        {% if validation is defined %}
+            <div class='row'>
+                <div class='col-sm-12'>
+                    <div class="alert alert-primary" role="alert">
+                        {{'utilisateur.preinscription.message' | trans }}
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-sm-12'>
+                    <a class="btn btn-primary" href="{{ path('UcaGest_UtilsateurPreInscriptionTelechargerJustificatif', {'id': item.id}) }}">
+                        {{ 'utilisateur.document.afficher' | trans }}
+                    </a>
+                    <a class="btn btn-success" href="{{ path('UcaGest_UtilisateurValiderPreInscription', {'id': item.id, 'action': 'valider'} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+                        {{ 'utilisateur.preinscription.valider' | trans }}
+                    </a>
+                    <a class="btn btn-danger" href="{{ path('UcaGest_UtilisateurValiderPreInscription', {'id': item.id, 'action': 'refuser'} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+                        {{'utilisateur.preinscription.refuser' | trans }}
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    {% endif %}
+    <h2 class="hide-border-title">{{ 'common.infospersonnelles' | trans }}</h2>
     <ul>
-        <li> {{'common.nom.utilisateur'|trans}} : {{ item.username }} </li>
-        <li> {{'common.naissance'|trans}} {{ item.dateNaissance|date('d/m/Y') }} </li>
-        <li> {{'utilisateur.adresse'|trans}} : {{ item.adresse }}, {{ item.codePostal }} {{ item.ville|upper }} </li>
-        <li> {{'common.telephone'|trans}} : {{ item.telephone }} </li>
-        <li> {{'common.email'|trans}} : {{ item.email }}  </li>
-        <li> {{'common.profil'|trans}} : {{ item.profil.libelle }} </li>
+        <li>
+            {{'common.nom.utilisateur'|trans}}:{{ item.username }}
+        </li>
+        <li>{{'common.naissance'|trans}}:{{ item.dateNaissance|date('d/m/Y') }}</li>
+        <li>
+            {{'utilisateur.adresse'|trans}}:
+            {{ item.adresse }},
+            {{ item.codePostal }}
+            {{ item.ville|upper }}</li>
+        <li>
+            {{'common.telephone'|trans}}:{{ item.telephone }}</li>
+        <li>
+            {{'common.email'|trans}}:{{ item.email }}</li>
+        <li>
+            {{'common.profil'|trans}}:
+            {{ item.profil.libelle }}</li>
         {% if not item.groups is empty %}
-            <li> {{'utilisateur.droits.de'|trans}} {{ item.prenom|title }} {{ item.nom|upper }}: </li>
+            <li>{{'utilisateur.droits.de'|trans}}:
+                {{ item.prenom|title }}
+                {{ item.nom|upper }}:</li>
             <ul>
                 {% for groups in item.groups %}
-                    <li> {{ groups.name }} </li>
-            {% endfor %}
+                    <li>{{ groups.libelle }}</li>
+                {% endfor %}
             </ul>
         {% endif %}
     </ul>
 
     {% if encadrant %}
-        <h2> {{ 'utilisateur.description'|trans }} :</h2>
-        <p> {{ item.description }} </p>
-        <a class="btn btn-outline-primary" href="{{ path('UtilisateurScheduler', {'id': item.id}) }}">Voir calendrier</a>
+        <h2 class="hide-border-title">
+            {{ 'utilisateur.description' | trans }}:
+        </h2>
+        <p>{{ item.description|nl2br }}</p>
+        <a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurScheduler', {'id': item.id}) }}">{{ 'utilisateur.calendrier.voir' | trans }}r</a>
     {% endif %}
 
-    <h2>{{'common.autorisations'|trans}}</h2>
+    <h2 class="hide-border-title">
+        {{ 'common.autorisations' | trans }}</h2>
     {% if item.autorisations is empty %}
-        <p> {{'utilisateur.autorisation.aucun'|trans}} </p>
+        <p>
+            {{'utilisateur.autorisation.aucun'|trans}}
+        </p>
     {% else %}
         <ul>
             {% for i in item.autorisations %}
-                <li> {{ i.libelle }}</li>
+                <li>
+                    {{ i.libelle }}</li>
             {% endfor %}
         </ul>
     {% endif %}
-    <a class="btn btn-outline-primary" href="{{ path('UtilisateurAjouterAutorisation', {'id': item.id}) }}">{{'utilisateur.autorisation.modifier'|trans}}</a>
+    <div class='row'>
+        <div class='col-sm-6'>
+            <a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurAjouterAutorisation', {'id': item.id}) }}">{{'utilisateur.autorisation.modifier'|trans}}</a>
+        </div>
+
+        {% if (not noEditButton is defined) and (item.enabled) %}
+            <div class='col-sm-6'>
+                <a class="btn btn-success" href="{{ path('UcaGest_UtilisateurBloquer', {'id': item.id} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+                    {{ 'bouton.bloquer' | trans }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}
+</script>
 {% endblock %}

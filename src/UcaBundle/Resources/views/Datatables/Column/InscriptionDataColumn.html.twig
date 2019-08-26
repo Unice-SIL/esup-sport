@@ -1,0 +1,15 @@
+{% if row.reservabilite != null %}
+    <span> {{ row.formatActivite.activite.libelle }} - {{ row.reservabilite.ressource.libelle }} [{{ row.reservabilite.evenement.dateDebut|date("d/m/y") }} {{ row.reservabilite.evenement.dateDebut|date("H:i") }}-{{ row.reservabilite.evenement.dateFin|date("H:i") }}] </span> 
+{% elseif (row.formatActivite == null or row.creneau != null) and row.reservabilite == null %}
+    {% for eve in row.creneau.serie.evenements %}
+        {% if loop.first %}
+            <span>
+            {% if row.creneau.formatActivite.activite is defined %}
+                {{ row.creneau.formatActivite.activite.libelle }} -
+            {% endif %}
+            {{ row.creneau.formatActivite.libelle }} [{{ ("common."~eve.dateDebut|date("l")|lower)|trans }} {{ eve.dateDebut|date("H:i") }}-{{ eve.dateFin|date("H:i") }}]</span>
+        {% endif %}
+    {% endfor %}
+{% elseif row.creneau == null and row.reservabilite == null %}
+    <span> {{ row.formatActivite.activite.libelle }} - {{ row.formatActivite.libelle }} </span>
+{% endif %}

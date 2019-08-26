@@ -1,9 +1,7 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
-{% trans_default_domain 'FOSUserBundle' %}
-
 {% block fos_user_content %}
-    <a class="btn btn-primary" href="{{ path('UtilisateurLister') }}"><i class="fas fa-chevron-left"></i> Retour</a>
+    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurLister') }}"><i class="fas fa-chevron-left"></i> Retour</a>
     <h1>{{'utilisateur.verification.title'|trans}}</h1>
     <p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
 {% endblock fos_user_content %}

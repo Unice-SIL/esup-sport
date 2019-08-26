@@ -11,7 +11,7 @@ import "./Dhtmlx/ACL.js";
 import "./Dhtmlx/handleEvent.js";
 
 
-
+import "./Dhtmlx/More.js";
 import "./Dhtmlx/Mail.js";
 import "./Dhtmlx/Registered.js";
 import "./Dhtmlx/Serie.js";

@@ -6,6 +6,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 use Twig\TwigFilter;
 use UcaBundle\UcaBundle;
+use UcaBundle\Service\Common\Parametrage;
 
 class TwigExtensions extends AbstractExtension
 {
@@ -21,6 +22,9 @@ class TwigExtensions extends AbstractExtension
         return [
             new TwigFunction('emplacement', [$this, 'getTexte']),
             new TwigFunction('emplacementImageFond', [$this, 'getImageFond']),
+            new TwigFunction('parametrage', [$this, 'getParametrage']),
+            new TwigFunction('isPrevisualisation', [$this, 'isPrevisualisation']),
+            new TwigFunction('urlRetourPrevisualisation', [$this, 'urlRetourPrevisualisation']),
         ];
     }
 
@@ -56,10 +60,23 @@ class TwigExtensions extends AbstractExtension
         return $this->em->getRepository('UcaBundle:ImageFond')->findOneByEmplacement($name);
     }
 
+    public function getParametrage()
+    {
+        return Parametrage::get();
+    }
+
     public function dateFormat($date, $type = null)
     {
         // Liste des formats autorisé
         // http://userguide.icu-project.org/formatparse/datetime
         return (new \IntlDateFormatter($this->requestStack->getCurrentRequest()->getLocale(), \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, null, null, $type))->format($date);
+    }
+
+    public function isPrevisualisation(){
+        return Previsualisation::$IS_ACTIVE;
+    }
+
+    public function urlRetourPrevisualisation(){
+        return Previsualisation::$BACK_URL;
     }
 }

@@ -15,17 +15,17 @@
 
 * Commandes utiles
 > php bin/console cache:clear
-> php bin/console debug:container > sevices.txt~
-> php bin/console debug:event-dispatcher > envent-dispacher.txt~
 > php bin/console doctrine:generate:entities UcaBundle --no-backup
 > php bin/console doctrine:generate:entities UcaBundle:ClasseActivite
 > php bin/console doctrine:generate:form UcaBundle:ClasseActivite
 > php bin/console doctrine:schema:update --dump-sql
 > php bin/console doctrine:schema:update --force
-> php bin/console doctrine:schema:validate > doctrine-analysis.txt~
 > php bin/console translation:update --force --no-backup fr UcaBundle
 > php bin/console uca:datatables:fixLang
-> php bin/console uca:sql:load InitData.sql
+> bin\batch database:dump
+> bin\batch database:load
+> bin\batch image:export
+> bin\batch image:import
 > php bin/console uca:table:annotation:load
 > php bin/console yuml:mappings
 > update_js.bat
@@ -34,10 +34,19 @@
 > yarn encore production
 > yarn install
 
+* Utilitaires de debugage Symfony
+> php bin/console debug:container > ~debug_sevices.txt
+> php bin/console debug:event-dispatcher > ~debug_envent-dispacher.txt
+> php bin/console debug:router > ~debug_routes.txt
+> php bin/console doctrine:schema:validate > ~debug_doctrine-analysis.txt
+> composer list > ~debug_composer-command.txt
+
 * Urls
 > http://suapsweb.unice.fr
 > http://univ-cotedazur.fr/
 > http://localhost/Uca/web/app_dev.php
-> http://www1.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/appel-page-paiement/
 > https://services.renater.fr/federation/docs/shibboleth#la_brique_fournisseur_d_identites_idp
 > http://activelamp.com/blog/development/shibboleth-authentication-in-symfony/
+
+> http://www1.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/appel-page-paiement/
+> https://preprod-admin.paybox.com  ===== 199988843 / 1999888I

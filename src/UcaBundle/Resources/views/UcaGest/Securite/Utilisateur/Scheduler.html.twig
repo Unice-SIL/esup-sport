@@ -6,7 +6,7 @@
     <script> var role = "{{ role }}"; </script>
 
     {{ flashBag.showAll }}
-    <a class="btn btn-primary" href="{{ path('UtilisateurVoir', {'id' : item.id}) }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurVoir', {'id' : item.id}) }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
         <h2>Réservabilités</h2>
         {{ dhtmlxCalendar.displayCalendarHtml }}
 {% endblock %}

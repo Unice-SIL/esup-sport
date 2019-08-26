@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\PercentType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -26,12 +27,21 @@ class TarifType extends AbstractType
         $builder->add('libelle', TextType::class, [
             'label_format' => 'common.libelle'
         ]);
+
+        
         $builder->add('montants', CollectionType::class, [
             'entry_type' => MontantTarifProfilUtilisateurType::class,
             'label_format' => 'tarif.montants',
             'allow_add' => false,
             'prototype' => true
         ]);
+            
+        $builder->add('pourcentageTVA', PercentType::class, [
+            'label' => 'common.tva',
+            'type' => 'integer',
+            'empty_data' => '0'
+        ]);
+      
         $builder->add('save', SubmitType::class, [
             'label_format' => 'bouton.save',
         ]);

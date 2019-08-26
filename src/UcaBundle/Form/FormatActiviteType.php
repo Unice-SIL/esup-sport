@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use UcaBundle\Entity\FormatAchatCarte;
+use UcaBundle\Entity\Lieu;
 
 class FormatActiviteType extends AbstractType
 {
@@ -32,32 +33,58 @@ class FormatActiviteType extends AbstractType
             ->add('dateDebutPublication', DateTimeType::class, [
                 'label_format' => 'format.date.publication.debut',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                )
             ])
             ->add('dateFinPublication', DateTimeType::class, [
                 'label_format' => 'format.date.publication.fin',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                )
             ])
             ->add('dateDebutInscription', DateTimeType::class, [
                 'label_format' => 'format.date.inscription.debut',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                )
             ])
             ->add('dateFinInscription', DateTimeType::class, [
                 'label_format' => 'format.date.inscription.fin',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                )
             ])
             ->add('dateDebutEffective', DateTimeType::class, [
                 'label_format' => 'format.date.effective.debut',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                    'data-datetimepicker-step' => '15',
+                )
             ])
             ->add('dateFinEffective', DateTimeType::class, [
                 'label_format' => 'format.date.effective.fin',
                 'widget' => 'single_text',
-                'format' => 'dd/MM/yyyy  H:m'
+                'format' => 'dd/MM/yyyy HH:mm',
+                'attr' => array(
+                    'class' => 'datetimepicker',
+                    'data-datetimepicker-format' => 'd/m/Y H:i',
+                    'data-datetimepicker-step' => '15',
+                )
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => true,
@@ -102,7 +129,13 @@ class FormatActiviteType extends AbstractType
         $builder->add('autorisations', EntityType::class, $autorisationsOptions)
             ->add('lieu', EntityType::class, [
                 'class' => 'UcaBundle:Lieu',
-                'choice_label' => 'libelle',
+                'choice_label' => function (Lieu $lieu) {
+                    if($lieu->getEtablissement() != null){
+                        return $lieu->getEtablissement()->getLibelle() . " - " . $lieu->getLibelle();
+                    } else{
+                        return $lieu->getLibelle();
+                    }
+                },
                 'label_format' => 'format.lieu',
                 'multiple' => true,
                 'expanded' => false,
@@ -125,7 +158,7 @@ class FormatActiviteType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('u')
                         ->innerJoin('u.groups', 'g')
-                        ->andWhere('g.id=3')
+                        ->andWhere('g.roles like \'%ROLE_ENCADRANT%\'')
                         ->orderBy('u.nom', 'ASC');
                 },
                 'choice_label' => function ($encadrant) {

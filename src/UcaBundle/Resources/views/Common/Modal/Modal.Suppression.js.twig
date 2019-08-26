@@ -1,9 +1,6 @@
-function initSuppression(){
-    $("[data-target='#modalSuppression']").each(function () {
-        var href = $(this).attr('href');
-        $(this).attr('onClick', "showModal('" + href + "')");
-    });
-}
-
-
-   
+{% extends "@Uca/Common/Modal/Modal.Information.js.twig" %}
+{% block modalJs %}
+    function() {
+    {{ parent() }}
+    }
+{% endblock %}

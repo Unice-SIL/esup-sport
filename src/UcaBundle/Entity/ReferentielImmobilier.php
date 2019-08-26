@@ -42,7 +42,7 @@ class ReferentielImmobilier
     private $nomCampus;
 
     /** 
-     * @ORM\Column(type="decimal", nullable=true) 
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) 
      */
     private $superficie;
 
@@ -55,6 +55,11 @@ class ReferentielImmobilier
      * @ORM\Column(type="string", nullable=true) 
      */
     private $longitude;
+
+    /** 
+     * @ORM\Column(type="integer", nullable=true) 
+     */
+    private $capacite;
 
     #endregion
 
@@ -236,5 +241,29 @@ class ReferentielImmobilier
     public function getLongitude()
     {
         return $this->longitude;
+    }
+
+    /**
+     * Set capacite.
+     *
+     * @param int|null $capacite
+     *
+     * @return ReferentielImmobilier
+     */
+    public function setCapacite($capacite = null)
+    {
+        $this->capacite = $capacite;
+
+        return $this;
+    }
+
+    /**
+     * Get capacite.
+     *
+     * @return int|null
+     */
+    public function getCapacite()
+    {
+        return $this->capacite;
     }
 }

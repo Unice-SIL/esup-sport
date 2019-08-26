@@ -2,6 +2,7 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
@@ -34,7 +35,9 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $libelle;
 
-    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="tarif", cascade={"persist", "remove"}, fetch="EAGER") */
+    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="tarif", cascade={"persist", "remove"}, fetch="EAGER")
+     * @Assert\Valid()
+     */
     protected $montants;
 
     /** @ORM\OneToMany(targetEntity="TypeAutorisation", mappedBy="tarif") */
@@ -48,6 +51,12 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\OneToMany(targetEntity="Ressource",mappedBy="tarif") */
     private $ressources;
+
+    /** @ORM\Column(type="decimal", precision=3, scale=1,options={"default":0})
+     * @Assert\NotBlank(message="tarif.tva.notnull")
+     * @Assert\Expression("this.getPourcentageTVA() < 100 && this.getPourcentageTVA() >= 0", message="tarif.tva.invalid")
+     */
+    protected $pourcentageTVA;
 
     /** 
      * @Gedmo\Versioned
@@ -77,17 +86,25 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
         $this->modificationMontants = '';
     }
 
-    public function getUserMontant($profilUtilisateurId){
-        foreach($this->montants as $key => $montant){
-            if($montant->getProfil()->getId() == $profilUtilisateurId){
-                return $montant;
-            }
+    public function getMontantUtilisateur($utilisateur)
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profil', $utilisateur->getProfil()));
+        $resultat = $this->montants->matching($criteria);
+        if (!$resultat->isEmpty()) {
+            return $resultat->first()->getMontant();
+        } else {
+            return -1;
         }
-        return null;
+    }
+
+    public function getTvaUtilisateur($utilisateur)
+    {
+        $montant = $this->getMontantUtilisateur($utilisateur);
+        $coefTva = $this->getPourcentageTva() / 100;
+        return $montant * $coefTva / (1 + $coefTva);
     }
 
     #endregion
-
 
     /**
      * Constructor
@@ -98,7 +115,6 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
         $this->typesAutorisation = new \Doctrine\Common\Collections\ArrayCollection();
         $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
         $this->creneaux = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->articles = new \Doctrine\Common\Collections\ArrayCollection();
         $this->ressources = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -305,42 +321,6 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Add article.
-     *
-     * @param \UcaBundle\Entity\Article $article
-     *
-     * @return Tarif
-     */
-    public function addArticle(\UcaBundle\Entity\Article $article)
-    {
-        $this->articles[] = $article;
-
-        return $this;
-    }
-
-    /**
-     * Remove article.
-     *
-     * @param \UcaBundle\Entity\Article $article
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeArticle(\UcaBundle\Entity\Article $article)
-    {
-        return $this->articles->removeElement($article);
-    }
-
-    /**
-     * Get articles.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getArticles()
-    {
-        return $this->articles;
-    }
-
-    /**
      * Add ressource.
      *
      * @param \UcaBundle\Entity\Ressource $ressource
@@ -374,5 +354,29 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function getRessources()
     {
         return $this->ressources;
+    }
+
+    /**
+     * Set pourcentageTVA.
+     *
+     * @param string $pourcentageTVA
+     *
+     * @return Tarif
+     */
+    public function setPourcentageTVA($pourcentageTVA)
+    {
+        $this->pourcentageTVA = $pourcentageTVA;
+
+        return $this;
+    }
+
+    /**
+     * Get pourcentageTVA.
+     *
+     * @return string
+     */
+    public function getPourcentageTVA()
+    {
+        return $this->pourcentageTVA;
     }
 }

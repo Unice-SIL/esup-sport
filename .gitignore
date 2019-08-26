@@ -1,5 +1,6 @@
 *.lock
 *~
+~*
 .vscode
 assets/bundles
 node_modules

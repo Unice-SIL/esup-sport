@@ -1,7 +1,0 @@
-common.username: Login
-common.password: Password
-registration.email.message: "Hello %username%!\n\nTo finish activating your account - please visit %confirmationUrl%\n\nThis link can only be used once to validate your account.\n"
-registration.email.greatings: "Regards,\nthe Team.\n"
-security.shibboleth.login.submit: Shibboleth connection
-utilisateur.verification.title: Mail Checking
-sitemap.ucagest.libelle: Uca Gestion

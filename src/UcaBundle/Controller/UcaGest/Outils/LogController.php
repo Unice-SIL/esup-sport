@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 class LogController extends Controller
 {
     /**
-     * @Route("/Lister/{objectClass}/{objectId}", name="LogLister")
+     * @Route("/Lister/{objectClass}/{objectId}", name="UcaGest_LogLister")
      */
     public function listerAction(Request $request, $objectClass = null, $objectId = null)
     {
@@ -55,7 +55,7 @@ class LogController extends Controller
     }
 
     /**
-     * @Route("/Revenir/{id}", name="LogRevenir")
+     * @Route("/Revenir/{id}", name="UcaGest_LogRevenir")
      */
     public function revenirAction(Request $request, LogEntry $item)
     {
@@ -65,6 +65,6 @@ class LogController extends Controller
         $repo->revert($logs, $item->getVersion());
         $em->persist($logs);
         $em->flush();
-        return $this->redirectToRoute('LogLister');
+        return $this->redirectToRoute('UcaGest_LogLister');
     }
 }

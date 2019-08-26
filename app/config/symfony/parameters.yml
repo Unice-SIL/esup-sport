@@ -1,14 +1,16 @@
 # This file is auto-generated during the composer install
 parameters:
-    base_url: 'http://localhost/'
     database_host: localhost
     database_port: null
     database_name: uca
     database_user: root
-    database_password: null
-    mailer_transport: gmail
+    database_password: --
+    mailer_transport: smtp
     mailer_host: mail.laynis.com
-    mailer_user: ucasporttest@gmail.com
-    mailer_password: Atimic2019
+    mailer_port: 587
+    mailer_encryption: tls
+    mailer_user: noreply@acatus.fr
+    mailer_password: '--'
+    mailer_auth_mode: login
     mailer_name: 'Uca Sport'
     secret: 98e78e48892642ddbe22ca2cdb74ac607130daa8

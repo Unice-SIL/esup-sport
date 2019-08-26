@@ -13,6 +13,7 @@ use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\Tarif;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Entity\NiveauSportif;
+use UcaBundle\Entity\Lieu;
 
 class DhtmlxCommand
 {
@@ -61,6 +62,7 @@ class DhtmlxCommand
                 $this->getReferenceItem()->setCapacite($this->data['capacite']);
             }
             $this->updateTarif();
+            $this->updateLieu();
             $this->updateProfils();
             $this->updateNiveauSportif();
             $this->updateEncadrants();
@@ -144,7 +146,7 @@ class DhtmlxCommand
             $this->item->setCreneau($c);
         } elseif ($this->isRessourceEvent()) {
             $r = new Reservabilite();
-            $r->addRessource($this->em->getReference(Ressource::class, $this->data['reference_id']));
+            $r->setRessource($this->em->getReference(Ressource::class, $this->data['reference_id']));
             $this->item->setReservabilite($r);
         }
     }
@@ -158,10 +160,20 @@ class DhtmlxCommand
         }
     }
 
+    private function updateLieu()
+    {
+        $item = $this->getReferenceItem();
+        if (!empty($item) && $this->isCreneauEvent() && isset($this->data['lieu_id'])) {
+            $item->setLieu($this->em->getReference(Lieu::class, $this->data['lieu_id']));
+            $this->em->persist($item);
+        }
+    }
+
     private function updateProfils()
     {
         $item = $this->getReferenceItem();
-        if (!empty($item) && property_exists($item, 'profilsUtilisateurs')) {
+        if (!empty($item) && method_exists($item, 'getProfilsUtilisateurs')) {
+
             if ($item->getProfilsUtilisateurs() !== null) {
                 foreach ($item->getProfilsUtilisateurs() as $key => $profil) {
                     $item->removeProfilsUtilisateur($profil);

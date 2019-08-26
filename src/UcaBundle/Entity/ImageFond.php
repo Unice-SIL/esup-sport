@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="image_fond")
  * @ORM\Entity
  * @Vich\Uploadable
+ * @Gedmo\Loggable
  */
 class ImageFond
 {
@@ -51,7 +52,8 @@ class ImageFond
      */
     private $imageFile;
 
-    /** @ORM\Column(type="datetime", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="datetime", nullable=true) */
     private $updatedAt;
     #endregion
 

@@ -9,23 +9,38 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
+ * @Gedmo\Loggable
  */
 class Lieu extends Ressource
 {
     #region Propriétés
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true) */
     private $nomenclatureRus;
 
-    /** @ORM\Column(type="decimal", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
+     * @Assert\Type(type="double", message="message.typeinvalide.double")
+     */
     private $superficie;
 
-    /** @ORM\Column(type="integer", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
+     * @Assert\GreaterThanOrEqual(value = 0)
+     */
     private $capacite;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type(type="double", message="message.typeinvalide.double")
+     */
     private $latitude;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\Type(type="double", message="message.typeinvalide.double")
+     */
     private $longitude;
     
 
@@ -34,17 +49,21 @@ class Lieu extends Ressource
     */
      private $formatsActivite;
     
-    /** @ORM\Column(type="string", nullable=true) 
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true) 
      * @Assert\NotBlank(message="lieu.adresse.notblank") 
     */
     private $adresse;
 
-    /** @ORM\Column(type="string", nullable=true ,length=5) 
-     * @Assert\NotBlank(message="lieu.codepostal.notblank") 
-    */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true ,length=5) 
+     * @Assert\NotBlank(message="lieu.codepostal.notblank")
+     * @Assert\Regex(pattern="/^[0-9]{5}$/", message="lieu.codepostal.invalide")
+     */
     private $codePostal;
 
-    /** @ORM\Column(type="string", nullable=true) 
+    /**  @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true) 
      * @Assert\NotBlank(message="lieu.ville.notblank") 
     */
     private $ville;
@@ -286,4 +305,13 @@ class Lieu extends Ressource
     {
         return $this->ville;
     }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
 }

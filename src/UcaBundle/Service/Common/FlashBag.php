@@ -24,7 +24,7 @@ class FlashBag
 
     public function addActionFlashBag($item, $action)
     {
-        $this->addFlashBag($item, $action . '.succes', $action == 'Supprimer' ? 'warning' : 'success');
+        $this->addFlashBag($item, $action . '.succes', 'success');
     }
 
     public function addActionErrorFlashBag($item, $action)

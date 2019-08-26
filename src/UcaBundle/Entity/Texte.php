@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 use UcaBundle\Annotations\CKEditor;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 /**
@@ -13,6 +14,7 @@ use UcaBundle\Annotations\CKEditor;
  *
  * @ORM\Table(name="texte")
  * @ORM\Entity
+ * @Gedmo\Loggable   
  */
 class Texte
 {
@@ -32,26 +34,36 @@ class Texte
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="texte.titre.notblank")
      */
     private $titre;
 
     /**
      * @Gedmo\Translatable
-     * @ORM\Column(type="text")
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text", nullable=true)
      * @CKEditor
+     * @Assert\Expression("this.getMobile() !== 1 || this.getTexte() !== null", message="texte.texte.notblank")
      */
     private $texte;
 
     /**
      * @ORM\Column(type="integer")
+     * @Gedmo\Versioned
      */
     private $mobile;
+    /* valeurs : 0=>Textes identiques sur Desktop et Mobile
+                 1=>Textes différents sur Desktop et Mobile
+                 2=>Texte à afficher seulement sur Desktop*/
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="text", nullable=true)
      * @CKEditor
+     * @Assert\Expression("this.getMobile() !== 1 || this.getTexteMobile() !== null", message="texte.textemobile.notblank")
      */
     private $texteMobile;
 

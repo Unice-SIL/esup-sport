@@ -18,7 +18,7 @@ use UcaBundle\Form\ClasseActiviteType;
 class ClasseActiviteController extends Controller
 {
     /**
-     * @Route("/", name="ClasseActiviteLister")
+     * @Route("/", name="UcaGest_ClasseActiviteLister")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_LECTURE")
      */
     public function listerAction(Request $request)
@@ -55,7 +55,7 @@ class ClasseActiviteController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="ClasseActiviteAjouter")
+     * @Route("/Ajouter", name="UcaGest_ClasseActiviteAjouter")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
      */
     public function ajouterAction(Request $request)
@@ -67,7 +67,7 @@ class ClasseActiviteController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -75,7 +75,7 @@ class ClasseActiviteController extends Controller
     }
 
     /**
-     * @Route("/Modifier/{id}", name="ClasseActiviteModifier")
+     * @Route("/Modifier/{id}", name="UcaGest_ClasseActiviteModifier")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
      */
     public function modifierAction(Request $request, ClasseActivite $item)
@@ -85,7 +85,7 @@ class ClasseActiviteController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -93,7 +93,7 @@ class ClasseActiviteController extends Controller
     }
 
     /**
-     * @Route("/Supprimer/{id}", name="ClasseActiviteSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_ClasseActiviteSupprimer")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
     */
     public function supprimerAction(Request $request, ClasseActivite $item)
@@ -102,11 +102,11 @@ class ClasseActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$item->getActivites()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-        return $this->redirectToRoute('ClasseActiviteLister');
+        return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale|split('_')[0] }}">
+<html lang="{{ app.request.locale|split('_')[0] }}" data-env="{{ app.environment }}" data-base="{{ app.request.baseUrl }}" data-host="{{ app.request.server.get('HTTP_HOST') }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,7 +10,6 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <span id="ENV" data-value="{{ app.environment }}"></span>
         {% block body %}{% endblock %}
         {% block footer %}{% endblock %}
         {{ encore_entry_script_tags('uca') }}

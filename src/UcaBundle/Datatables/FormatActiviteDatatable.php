@@ -6,6 +6,10 @@ use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use UcaBundle\Datatables\Column\TwigDataColumn;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
+use UcaBundle\Datatables\Button\VoirButton;
 
 class FormatActiviteDatatable extends AbstractTranslatedDatatable
 {
@@ -22,7 +26,8 @@ class FormatActiviteDatatable extends AbstractTranslatedDatatable
                 'title' => 'Image',
                 'imagine_filter' => 'thumb_small',
                 'relative_path' => 'upload/public/image',
-                'class_name' => 'hide-column-md'
+                'class_name' => 'hide-column-md',
+                'orderable' => false,
             ))
             ->add('libelle', Column::class, array(
                 'title' => $this->translator->trans('formatactivite.libelle'),
@@ -67,10 +72,10 @@ class FormatActiviteDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Voir', 'FormatActiviteVoir', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_LECTURE'),
-                    $this->getActionBoutonConfig('Modifier', 'FormatActiviteModifier', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'FormatActiviteSupprimer',  ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'FormatActivite', 'objectId' => 'id']),
+                    (new VoirButton($this, 'UcaGest_FormatActiviteVoir', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_LECTURE'))->getConfig(),
+                    (new ModifierButton($this, 'UcaGest_FormatActiviteModifier', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_FormatActiviteSupprimer', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'FormatActivite', 'objectId' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

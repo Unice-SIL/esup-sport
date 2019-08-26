@@ -5,6 +5,12 @@ namespace UcaBundle\Datatables;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
+use Sg\DatatablesBundle\Datatable\Style;
+use UcaBundle\Datatables\Button\DescendreButton;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\MonterButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
 
 class ActualiteDatatable extends AbstractTranslatedDatatable
 {
@@ -17,10 +23,17 @@ class ActualiteDatatable extends AbstractTranslatedDatatable
                 'title' => 'Id',
                 'visible' => false,
             ))
-            ->add('ordre', Column::class, array(
+            ->add(null, ActionColumn::class, [
+                'title' => '',
+                'actions' =>  [
+                    (new MonterButton($this, null, ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
+                    (new DescendreButton($this, null, ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
+                ]
+            ])
+            ->add('ordre', Column::class, [
                 'title' => $this->translator->trans('common.ordre'),
-                'visible' => true,
-            ))
+                'orderable' => true
+            ])
             ->add('titre', Column::class, array(
                 'title' => $this->translator->trans('common.titre'),
                 'searchable' => true,
@@ -35,14 +48,24 @@ class ActualiteDatatable extends AbstractTranslatedDatatable
                 'title' => 'Image',
                 'imagine_filter' => 'thumb_small',
                 'relative_path' => 'upload/public/image',
+                'orderable' => false,
             ))
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Modifier', 'ActualiteModifier', ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'ActualiteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'),
-                ]
+                    (new ModifierButton($this, 'UcaGest_ActualiteModifier', ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_ActualiteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Actualite', 'objectId' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
+                ],
             ]);
+
+        $this->options->set(array(
+            'classes' => '',
+            'row_id' => 'id',
+            'order' => array(array(2, 'asc')),
+            'classes' => Style::BOOTSTRAP_4_STYLE,
+            'search_in_non_visible_columns' => true,
+        ));
     }
 
     public function getEntity()

@@ -249,6 +249,7 @@ return true;
 
 scheduler.attachEvent("onBeforeLightbox", function (id) {
 if (scheduler.isNewEvent(id)) {
+
     scheduler._events[id].text = scheduler.data.item.description;
     scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.new);
 } else {
@@ -257,11 +258,15 @@ if (scheduler.isNewEvent(id)) {
 return true;
 });
 
-
 scheduler.attachEvent("onEventDeleted", function (id, ev) {
 scheduler.unactivateCopie();
 });
 
+scheduler.attachEvent("onLightbox", function (id) {
+    let day = scheduler._events[id].start_date.getDay();
+    $('.dhx_repeat_days input[value="'+day+'"]')[0].checked = true
+
+});
 
 scheduler.attachEvent("onEventCopied", function (ev) {
 for(var el in scheduler._events){
@@ -292,47 +297,80 @@ var lastEventClickTimeStamp = 0;
 //for click and double click
 // because onDblClick and onClick are not compatible together
 scheduler.attachEvent("onClick", function (id, e){
-changeColor(id);
+    changeColor(id);
 
-//double click
-if(e.timeStamp - lastEventClickTimeStamp < 200){
-    scheduler.showLightbox(id);
-}
+    if(role == "user")
+    window.location = PATH_SEE_MORE+id;
+    
+    //double click
+    if(e.timeStamp - lastEventClickTimeStamp < 200){
+        scheduler.showLightbox(id);
+    }
+    checkEvents(scheduler._events[id]);
+    lastEventClickTimeStamp = e.timeStamp;
 
-lastEventClickTimeStamp = e.timeStamp;
-
-return true;
+    return true;
 });
 
-scheduler.attachEvent("onBeforeDrag", function (id, e){
-changeColor(id);
 
-return true;
+var checkEvents = function(el){
+    let email = scheduler.config.icons_select.indexOf("icon_email");
+    let registered = scheduler.config.icons_select.indexOf("icon_register");
+    let more = scheduler.config.icons_select.indexOf("icon_more");
+    if(email != -1 ){
+        scheduler.config.icons_select.splice(email, 1);
+    }
+    if(registered != -1 ){
+        scheduler.config.icons_select.splice(email, 1);
+    }
+    if(more != -1 ){
+        scheduler.config.icons_select.splice(more, 1);
+    }
+
+
+    if(el.evenement.evenementType == "creneau"){
+        if(el.encadrant_ids.split(",").indexOf(USERID)){
+/*             scheduler.config.icons_select.splice(2,0,"icon_email")
+            scheduler.config.icons_select.splice(3,0,"icon_register") */
+            scheduler.config.icons_select.splice(1,0, "icon_more");
+            scheduler.locale.labels.icon_more = "See more";
+
+        }
+    }
+}
+
+
+scheduler.attachEvent("onBeforeDrag", function (id, e){
+    changeColor(id);
+
+    return true;
 });
 
 
 var changeColor = function(id){
 let eventDhtmlx = scheduler._events[id];
-if(eventDhtmlx == null){
-    return false;
-}
-for(var s in scheduler._series){
-    let serie = scheduler._series[s];
-    serie.defaultColor();
-}
-for(var ev in scheduler._events){
-    let evnt = scheduler._events[ev];
-    evnt.defaultColor();
+    if(eventDhtmlx == null){
+        return false;
+    }
+    for(var s in scheduler._series){
+        let serie = scheduler._series[s];
+        serie.defaultColor();
+    }
+    for(var ev in scheduler._events){
+        let evnt = scheduler._events[ev];
+        evnt.defaultColor();
+    }
+
+    if(eventDhtmlx.getParent() != "undefined"){
+        eventDhtmlx.getParent().color();
+    }
+    else{
+        eventDhtmlx.color = scheduler.config.activeColor;
+    }
+
+    scheduler.updateView();
 }
 
-if(eventDhtmlx.getParent() != "undefined"){
-    eventDhtmlx.getParent().color();
-}
-else{
-    eventDhtmlx.color = scheduler.config.activeColor;
-}
 
-scheduler.updateView();
-}
 
 export {changeColor}

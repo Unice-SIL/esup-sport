@@ -1,12 +1,20 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 
 {% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ShowDatatable.html.twig' as Datatable %}
 
 {% block main %}
-    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    {% block modal %}{% endblock %}
+    {% if app.request.attributes.get("_route") == "UcaWeb_MesInscriptions" %}
+        {% include "@Uca/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
+    {% else %}
+        {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    {% endif %}
 
     {% if retourBouton is defined %}
-        <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+        <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
+            <i class="fas fa-chevron-left"></i>
+            {{'bouton.retour'|trans}}</a>
     {% endif %}
 
     <h1>{{ (codeListe|lower ~ '.list.title')|trans }}</h1>
@@ -14,18 +22,15 @@
     {% block DatatableHeader%}
         {% if not noAddButton is defined %}
             <div class="row">
-                <a href="{{ url(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+                <a href="{{ url('UcaGest_' ~ codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
             </div>
         {% endif %}
     {% endblock %}
-    <div class="row">
-        <div class="col-sm-12 table-responsive">
-            {{ sg_datatables_render_html(datatable) }}
-        </div>
-    </div>
+
+    {{ Datatable.showDatatable(datatable) }}
 
 {% endblock %}
 
 {% block javascripts %}
-    {{ sg_datatables_render_js(datatable) }}
+    {{ Datatable.renderDatatable(datatable) }}
 {% endblock %}

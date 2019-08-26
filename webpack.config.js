@@ -1,17 +1,38 @@
+getArgs = function () {
+    var myArgs = {};
+    process.argv.forEach(function (val, index, array) {
+        let myVal;
+        if (val.startsWith("--")) {
+            myVal = val.substring(2).split('=');
+            myArgs[myVal[0]] = myVal[1];
+        }
+    });
+    return myArgs;
+}
+
 var Encore = require('@symfony/webpack-encore');
 var path = require("path");
-var base_url = '';
+var scriptArgs = getArgs();
+if (!scriptArgs.ucaEnv)
+    scriptArgs.ucaEnv = 'dev';
+var scriptEnvs = {
+    dev: { publicPath: '/Uca/web/build' },
+    recette: { publicPath: '/Uca/web/build' },
+    preProd: { publicPath: '/UcaPreProd/web/build' },
+    prod: { publicPath: '/build' },
+}
+var scriptEnv = scriptEnvs[scriptArgs.ucaEnv];
 
-if (!Encore.isProduction())
-    base_url = '/Uca/web';
+console.log('ucaEnv: ' + scriptArgs.ucaEnv);
 
 Encore
     .setOutputPath('web/build/')
-    .setPublicPath(base_url + '/build')
+    .setPublicPath(scriptEnv.publicPath)
     .addEntry('uca', './assets/uca.js')
     .addEntry('onReady', './assets/js/onReady.js')
     .addEntry('scheduler', './assets/js/scheduler/scheduler.js')
-    .addEntry('calandar', './assets/js/calandar/main.js')
+    .addEntry('calendar', './assets/js/calendar/main.js')
+    .addEntry('creneau', './assets/js/creneau/main.js')
     .addEntry('cssGest', './assets/css/globalGest.scss')
     .addEntry('cssWeb', './assets/css/globalWeb.scss')
     .cleanupOutputBeforeBuild()

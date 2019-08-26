@@ -4,7 +4,8 @@
     {% endif %}
     <div>
         {% if tableData %}
-            <table class="table datatable">
+            <table class="table table-responsive">
+            <table class="table table-responsive datatable">
                 <thead>
                     <tr>
                         {% for key, val in params.cols %}
@@ -43,6 +44,7 @@
                         </tr>
                     {% endfor %}
                 </tbody>
+            </table>
             </table>
             {% else %}
             <div>Aucune donnée</div>

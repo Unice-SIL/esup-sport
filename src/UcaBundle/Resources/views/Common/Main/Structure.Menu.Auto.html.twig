@@ -15,17 +15,17 @@
                 {% set url = url(itemMenu.route)  %}
             {% endif %}
             <a role="option" class="nav-link nav-link-border d-flex align-items-center {{ current }}" href="{{ url }}">
-                <span>{{ sitemap.getTitre(itemMenu, item) }}</span>
+                <span>{{ sitemap.getTitre(itemMenu, _context) }}</span>
             </a>
         {% elseif not itemMenu.items is empty %}
-            <a role="button" aria-haspopup="true" id="{{'menu'~sitemap.getTitre(itemMenu, item)}}" class=" d-flex align-items-center nav-link dropdown-toggle {{ current }}" data-toggle="dropdown" href="#" id="{{sitemap.getTitre(itemMenu, item)}}" role="button">
-                {{ sitemap.getTitre(itemMenu, item) }}
+            <a role="button" aria-haspopup="true" id="{{'menu'~sitemap.getTitre(itemMenu, _context)}}" class=" d-flex align-items-center nav-link dropdown-toggle {{ current }}" data-toggle="dropdown" href="#" id="{{sitemap.getTitre(itemMenu, _context)}}" role="button">
+                {{ sitemap.getTitre(itemMenu, _context) }}
             </a>
-            <div aria-expanded="false" aria-labelledby="{{'menu'~sitemap.getTitre(itemMenu, item)}}" class="dropdown-menu" role="menu">
+            <div aria-expanded="false" aria-labelledby="{{'menu'~sitemap.getTitre(itemMenu, _context)}}" class="dropdown-menu" role="menu">
                 {% for itemSubMenu in itemMenu.items %}
                     {% set current = (sitemap.isCurrentAncestor(itemSubMenu.route) ? 'active' : '') %}
                     <a role="menuitem" class="dropdown-item  {{ current }}" href="{{ url(itemSubMenu.route) }}">
-                        {{ sitemap.getTitre(itemSubMenu, item) }}
+                        {{ sitemap.getTitre(itemSubMenu, _context) }}
                     </a>
                 {% endfor %}
             </div>

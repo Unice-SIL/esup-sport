@@ -2,9 +2,14 @@
 
 namespace UcaBundle\Datatables;
 
-use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
+use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
+use UcaBundle\Datatables\Button\VoirButton;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Entity\Activite;
 
 class ActiviteDatatable extends AbstractTranslatedDatatable
 {
@@ -12,20 +17,18 @@ class ActiviteDatatable extends AbstractTranslatedDatatable
     {
         $this->setUcaDefault();
 
+        $this->addInvisibleColumns([
+            'id',
+            'classeActivite.id',
+        ]);
+
         $this->columnBuilder
-            ->add('id', Column::class, array(
-                'title' => 'Id',
-                'visible' => false,
-            ))
             ->add('image', ImageColumn::class, array(
                 'title' => 'Image',
                 'imagine_filter' => 'thumb_small',
                 'relative_path' => 'upload/public/image',
-                'class_name' => 'hide-column-sm'
-            ))
-            ->add('classeActivite.id', Column::class, array(
-                'title' => 'ClasseActivite Id',
-                'visible' => false
+                'class_name' => 'hide-column-sm',
+                'orderable' => false,
             ))
             ->add('libelle', Column::class, array(
                 'title' => $this->translator->trans('common.libelle'),
@@ -37,11 +40,6 @@ class ActiviteDatatable extends AbstractTranslatedDatatable
                 'searchable' => true,
                 'class_name' => 'hide-column'
             ))
-            // ->add('image', ImageColumn::class, array(
-            //     'title' => 'Image',
-            //     'imagine_filter' => 'thumb_small',
-            //     'relative_path' => 'upload/public/image',
-            // ))
             ->add('classeActivite.libelle', Column::class, array(
                 'title' => $this->translator->trans('classeactivite.libelle'),
                 'class_name' => 'hide-column-md'
@@ -49,17 +47,17 @@ class ActiviteDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
-                    $this->getActionBoutonConfig('Voir', 'ActiviteVoir', ['id' => 'id']),
-                    $this->getActionBoutonConfig('Modifier', 'ActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'ActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'Activite', 'objectId' => 'id']),
+                    (new VoirButton($this, 'UcaGest_ActiviteVoir', ['id' => 'id']))->getConfig(),
+                    (new ModifierButton($this, 'UcaGest_ActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_ActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Activite', 'objectId' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'))->getConfig(),
                 ]
             ]);
     }
 
     public function getEntity()
     {
-        return 'UcaBundle\Entity\Activite';
+        return Activite::class;
     }
 
     public function getName()

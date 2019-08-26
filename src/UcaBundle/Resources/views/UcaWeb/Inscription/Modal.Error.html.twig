@@ -1,0 +1,9 @@
+{% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalInscription' %}
+{% block modalTitle title %}
+{% block modalBody message | trans %}
+{% block modalFooter %}
+    <button class="btn btn-primary" data-dismiss="modal" type="button">
+        <span aria-hidden="true">Ok</span>
+    </button>
+{% endblock %}

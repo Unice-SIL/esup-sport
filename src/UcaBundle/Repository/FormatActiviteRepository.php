@@ -2,6 +2,8 @@
 
 namespace UcaBundle\Repository;
 
+use UcaBundle\Service\Common\Previsualisation;
+
 /**
  * ActiviteRepository
  *
@@ -10,18 +12,38 @@ namespace UcaBundle\Repository;
  */
 class FormatActiviteRepository extends \Doctrine\ORM\EntityRepository
 {
-    public function findFormatPublie($activite)
-    {
-        return $this
-            ->createQueryBuilder('f')
-            ->where('f.activite = :activite')
-            ->andWhere('f.statut = 1')
-            ->andWhere('f.dateDebutPublication <= :today')
-            ->andWhere('f.dateFinPublication >= :today')
-            ->setParameter('activite', $activite)
-            ->setParameter('today', new \Datetime('now'))
-            ->getQuery()
-            ->getResult();
+    public function enCoursPublication($qb, $alias='f'){
+        $qb->andWhere($alias . '.statut = 1')
+            ->andWhere($alias . '.dateDebutPublication <= :today')
+            ->andWhere($alias . '.dateFinPublication >= :today')
+            ->setParameter('today', new \Datetime('now'));
+        
     }
 
+
+
+    public function findFormatPublie($activite = null, $user)
+    {
+        $qb = $this
+            ->createQueryBuilder('f');
+
+        if($user !== null){
+            $qb
+            ->leftJoin("f.profilsUtilisateurs", "p")
+            ->leftJoin("p.utilisateur", "u")
+            ->andWhere("u.id = :idUtilisateur")
+            ->setParameter("idUtilisateur", $user->getId());
+        }
+
+
+        if(!Previsualisation::$IS_ACTIVE)
+            $this->enCoursPublication($qb);
+
+        if (!empty($activite)) {
+            $qb->andWhere('f.activite = :activite')
+                ->setParameter('activite', $activite);
+        }
+        return $qb->getQuery()
+            ->getResult();
+    }
 }

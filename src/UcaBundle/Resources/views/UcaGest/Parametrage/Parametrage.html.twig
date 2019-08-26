@@ -1,0 +1,33 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block main %}
+    <h1>
+        {{ 'parametrage.title' | trans }}
+    </h1>
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('UcaGest_ParametrageModifier', {'id' : '1'}) }}">
+        {{'bouton.modifier'|trans}}
+    </a>
+    <a class="btn btn-warning" href="{{ path('UcaGest_LogLister', {'objectClass' : 'Parametrage', 'objectId' : item.id}) }}">
+        {{'bouton.log'|trans}}
+    </a>
+
+    <div class="container mt-4">
+        <h2 class="hide-border-title">{{'parametrage.mailcontact'|trans}}</h2>
+        <p>{{item.mailContact}}</p>
+        <h2 class="hide-border-title">{{'parametrage.reseauxsociaux'|trans}}</h2>
+        <p>Facebook : {{item.lienFacebook}}</p>
+        <p>Instagram : {{item.lienInstagram}}</p>
+        <p>Youtube : {{item.lienYoutube}}</p>
+        <h2 class="hide-border-title">{{'parametrage.timers'|trans}}</h2>
+        <ul>
+            <li>{{'parametrage.timerpanier'|trans}} : {{item.timerPanier}} min</li>
+            <li>{{'parametrage.timerpanierapresvalidation'|trans}} : {{item.timerPanierApresValidation}} h</li>
+            <li>{{'parametrage.timerbds'|trans}} : {{item.timerBds}} h</li>
+            <li>{{'parametrage.timercb'|trans}} : {{item.timerCb}} min</li>
+            <li>{{'parametrage.timerpaybox'|trans}} : {{item.timerPaybox}} min</li>
+        </ul>
+    </div>
+
+{% endblock %}

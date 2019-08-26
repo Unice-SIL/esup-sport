@@ -3,54 +3,33 @@
 {% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
 
 {% block title %}
-    Uca Web
+    {{ item.libelle }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Evenements') }}
 {% endblock %}
 
 {% block main %}
-    <h1>{{ item.libelle }}</h1>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <img class="col-md-12 rounded" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
-                <p>{{ item.dateDebutEffective|date("d M Y") }}</p>
-            </div>
-            <div class="col-md-8">
-                <h2>{{ item.libelle }}</h2>
-                <p>{{ item.description }}</p>
-                <div class="row">
-                    <div class="col-md-3">
-                        <h2>{{'common.lieu' | trans}}</h2>
-                        {% if item.lieu %}
-                            {% for l in item.lieu %}
-                                <p>{{ l.libelle }}</p>
-                            {% endfor %}
-                        {% else %}
-                            <p>{{ 'formatactivite.lieu.aucun' | trans }}</p>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-3">
-                        <h2>{{ 'common.horaires' | trans }}</h2>
-                        <p>{{item.dateDebutEffective|date("d/m/Y")}}
-                            {{item.dateDebutEffective|date("H:i")}}</p>
-                    </div>
-                    <div class="col-md-3">
-                        <h2>{{'common.tarif' | trans}}</h2>
-                        {% if item.estPayant %}
-                            <p>{{ item.tarif.getUserMontant(app.user.profil.id).montant }}
-                                €</p>
-                        {% else %}
-                            <p>{{'common.tarif.gratuit' | trans}}</p>
-                        {% endif %}
-                    </div>
-                    <div class="col-md-3">
-                        <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatSimple" data-id="{{ item.id }}">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
-                    </div>
-                </div>
+    <div class="container p-0 pl-4 pl-xl-0">
+        <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteLister', {idCa : item.activite.classeActivite.id, id : item.activite.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.activite.libelle}) }}</a>
+    </div>
 
-            </div>
+    <h1 class="h1-light">{{ item.libelle }}</h1>
+    <section class="container mb-5">
+        {% include '@Uca/UcaWeb/Activite/CarteEvenement.html.twig' %}
+    </section>
+
+    {{ Inscription.HtmlModal }}
+    {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}
+
+    <div class="d-none" id="js-text-inscrit-clone">
+        <div class="color-blue">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ "creneau.list.inscrit"|trans|upper }}</span>
         </div>
     </div>
-    {{ Inscription.HtmlModal }}
 {% endblock %}
 
 

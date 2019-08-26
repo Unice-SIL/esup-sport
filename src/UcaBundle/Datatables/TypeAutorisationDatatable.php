@@ -4,6 +4,9 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
 
 class TypeAutorisationDatatable extends AbstractTranslatedDatatable
 {
@@ -26,9 +29,9 @@ class TypeAutorisationDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Modifier', 'TypeAutorisationModifier', ['id' => 'id'], 'ROLE_GESTION_TYPE_AUTORISATION_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'TypeAutorisationSupprimer', ['id' => 'id'], 'ROLE_GESTION_TYPE_AUTORISATION_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'TypeAutorisation', 'objectId' => 'id']),
+                    (new ModifierButton($this, 'UcaGest_TypeAutorisationModifier', ['id' => 'id'], 'ROLE_GESTION_TYPE_AUTORISATION_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_TypeAutorisationSupprimer', ['id' => 'id'], 'ROLE_GESTION_TYPE_AUTORISATION_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'TypeAutorisation', 'objectId' => 'id'], 'ROLE_GESTION_TYPE_AUTORISATION_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

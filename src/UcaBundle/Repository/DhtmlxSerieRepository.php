@@ -22,24 +22,31 @@ class DhtmlxSerieRepository extends \Doctrine\ORM\EntityRepository
             $query->join("d.evenements", "e")
                 ->join("e.reservabilite", "re")
                 ->join("re.ressource", "r")
-                ->where("r.id = :id");
-        }
-        elseif ($type == 'FormatActivite') {
+                ->where("r.id = :id")
+                ->addSelect("e, re");
+        } elseif ($type == 'FormatActivite') {
             $query->join("d.creneau", "c")
                 ->join("c.formatActivite", "f")
-                ->where("f.id = :id");
+                ->where("f.id = :id")
+                ->addSelect("c");
         }
         $query->setParameter("id", $id);
         return $query->getQuery()->getResult();
-    }    
+    }
 
-    public function findByDhtmlxDateByDay($day, $formatActiviteId, $depSerie = true){
+    public function findByDhtmlxDateByDay($day, $formatActiviteId, $depSerie = true, $date = null)
+    {
         $rsm = new ResultSetMappingBuilder($this->getEntityManager());
         $rsm->addRootEntityFromClassMetadata('UcaBundle:DhtmlxEvenement', 'alias');
 
         $andWhere = "";
-        if($depSerie){
-            $andWhere = "and d1.dependance_serie = true";
+        if ($depSerie) {
+            $andWhere = "and d1.dependance_serie = true ";
+        }
+
+        $andDate = "";
+        if (!is_null($date)) {
+            $andDate = 'and d1.date_debut > "' . $date->format('Y-m-d H:i:s') . '"';
         }
 
         $SQL = "
@@ -47,24 +54,50 @@ class DhtmlxSerieRepository extends \Doctrine\ORM\EntityRepository
             From (
             select d1.*
                 FROM dhtmlx_date as d1
-                LEFT JOIN dhtmlx_date d
-                ON d.id = d1.serie_id
+                LEFT JOIN dhtmlx_date serie
+                ON serie.id = d1.serie_id
 
                 LEFT JOIN creneau c
-                ON c.id = d.creneau_id
+                ON c.id = serie.creneau_id
 
                 Where DATE_FORMAT(d1.date_debut, '%W') = ?
                 and c.format_activite_id = ?
                 $andWhere
+                $andDate
                 order BY d1.date_debut
                 ) dhtmlx1
             GROUP BY serie_id
             ORDER BY dhtmlx1.date_debut
         ";
+
         $query = $this->_em->createNativeQuery($SQL, $rsm);
         $query->setParameter('1', $day);
         $query->setParameter('2', $formatActiviteId);
-    
+
         return $query->getResult();
+    }
+
+    public function findDhtmlxCreneauByUser($user)
+    {
+        return $this->createQueryBuilder("d")
+            ->join("d.creneau", "c")
+            ->join("c.inscriptions", "i")
+            ->andWhere("i.utilisateur = :user")
+            ->setParameter("user", $user)
+            ->andWhere("i.statut = :statut")
+            ->setParameter("statut", 'valide')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findDhtmlxCreneauByEncadrant($user)
+    {
+        return $this->createQueryBuilder("d")
+            ->join("d.creneau", "c")
+            ->join("c.encadrants", "e")
+            ->andWhere("e.id = :userid")
+            ->setParameter("userid", $user->getId())
+            ->getQuery()
+            ->getResult();
     }
 }

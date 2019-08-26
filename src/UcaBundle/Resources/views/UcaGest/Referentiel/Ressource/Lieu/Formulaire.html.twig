@@ -2,7 +2,7 @@
 {% import '@Uca/Macros/ImagePreview.html.twig' as ImagePreview %}
 
 {% block main %}
-    <a class="btn btn-primary" href="{{ path('RessourceLister') }}">
+    <a class="btn btn-primary" href="{{ path('UcaGest_RessourceLister') }}">
         <i class="fas fa-chevron-left"></i>
         {{'bouton.retour'|trans}}</a>
 
@@ -10,6 +10,13 @@
         <h1>{{'lieu.ajouter.title'|trans}}</h1>
     {% else %}
         <h1>{{'lieu.modifier.title'|trans}}</h1>
+    {% endif %}
+
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
     {% endif %}
 
     <div class="well">

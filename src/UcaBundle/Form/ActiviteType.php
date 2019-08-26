@@ -44,9 +44,6 @@ class ActiviteType extends AbstractType
         $builder->add('save', SubmitType::class, [
             'label_format' => 'bouton.save'
         ]);
-        // $builder->add('reset', ResetType::class, [
-        //     'label_format' => 'bouton.reset',
-        // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

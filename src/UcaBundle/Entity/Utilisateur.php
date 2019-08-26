@@ -4,13 +4,21 @@ namespace UcaBundle\Entity;
 
 use FOS\UserBundle\Model\User as FOSUser;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Doctrine\Common\Collections\Criteria;
+use Proxies\__CG__\UcaBundle\Entity\Inscription;
+use UcaBundle\Repository\CommandeRepository;
+use UcaBundle\Repository\CommandeDetailRepository;
+use UcaBundle\Service\Common\Previsualisation;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\UtilisateurRepository")
- * 
+ * @Vich\Uploadable
+ * @UniqueEntity("username", message="utilisateur.username.existant")
+ * @UniqueEntity("email", message="utilisateur.mail.existant")
  */
 class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
@@ -24,11 +32,25 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
      */
     protected $id;
 
+    /**
+     * @Assert\NotNull(message="utilisateur.username.notnull")
+     * @Assert\Length(min = 2, max = 180, minMessage = "utilisateur.username.tropPetit", maxMessage = "utilisateur.username.tropLong")
+     */
+    protected $username;
+    /**
+     * @Assert\NotNull(message="utilisateur.mail.notnull")
+     * @Assert\Length(min = 2, max = 180, minMessage = "utilisateur.mail.tropPetit", maxMessage = "utilisateur.mail.tropLong")
+     * @Assert\Email(message = "utilisateur.mail.invalide")
+     */
+    protected $email;
+    /**
+     * @Assert\Length(min = 2, max = 4096, minMessage = "utilisateur.password.tropPetit")
+     * @Assert\Expression("this.getId() !== null || this.getPlainPassword() !== null", message="utilisateur.password.notnull")
+     */
+    protected $plainPassword;
+
     /** @ORM\Column(type="text", nullable=true) */
     private $description;
-
-    /* @Assert\NotNull(message="utilisateur.mail.notnull") */
-    protected $email;
 
     /** @ORM\ManyToMany(targetEntity="UcaBundle\Entity\Groupe", inversedBy="utilisateurs") */
     protected $groups;
@@ -38,7 +60,6 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     /** @ORM\Column(type="string", nullable=true) */
     private $numeroNfc;
-
 
     /** @ORM\Column(type="string", nullable=true) 
      * @Assert\NotNull(message="utilisateur.firstname.notnull") */
@@ -55,7 +76,9 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /** @ORM\Column(type="string", nullable=true) */
     private $adresse;
 
-    /** @ORM\Column(type="string", nullable=true ,length=5) */
+    /** @ORM\Column(type="string", nullable=true ,length=5) 
+     *  @Assert\Regex(pattern="/^[0-9]{5}$/", message="lieu.codepostal.invalide")
+    */
     private $codePostal;
 
     /** @ORM\Column(type="string", nullable=true) */
@@ -73,18 +96,12 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /** @ORM\OneToMany(targetEntity="Inscription", mappedBy="utilisateur") */
     protected $inscriptions;
 
-    /** @ORM\OneToMany(targetEntity="Reservation", mappedBy="utilisateur") */
-    protected $reservations;
-
-    /** @ORM\ManyToMany(targetEntity="TypeAutorisation", cascade={"persist"}) */
+    /** @ORM\ManyToMany(targetEntity="TypeAutorisation", cascade={"persist"}, fetch="EAGER") */
     protected $autorisations;
 
     /** @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="utilisateur", cascade={"persist"}) 
      * @Assert\NotNull(message="utilisateur.UserProfile.notnull") */
     protected $profil;
-
-    /** @ORM\OneToOne(targetEntity="Panier", mappedBy="utilisateur") */
-    protected $panier;
 
     /** @ORM\OneToMany(targetEntity="Commande", mappedBy="utilisateur") */
     protected $commandes;
@@ -97,6 +114,30 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     /** @ORM\Column(type="boolean", options={"default":"0"}) */
     protected $shibboleth = false;
+
+    /** @ORM\ManyToMany(targetEntity="Inscription", mappedBy="encadrants") */
+    private $inscriptionsAValider;
+
+    /** @ORM\Column(type="string", length=255, nullable=true, options={"default": NULL}) */
+    private $document;
+
+    /** @Vich\UploadableField(mapping="utilisateur_document", fileNameProperty="document")
+     * @Assert\File(
+     *     mimeTypes = {"image/png", "image/jpeg", "image/tiff", "application/pdf"},
+     *     mimeTypesMessage = "utilisateur.document.format.erreur"
+     * )
+     */
+    private $documentFile;
+
+    /** @ORM\Column(type="datetime",nullable=true) */
+    private $updatedAt;
+
+    /** @ORM\ManyToOne(targetEntity="StatutUtilisateur", inversedBy="utilisateur", cascade={"persist"}) */
+    protected $statut;
+
+    /** @ORM\OneToMany(targetEntity="Appel", mappedBy="utilisateur") */
+    private $appels;
+
     #endregion
 
     #region Méthodes
@@ -125,9 +166,109 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     public function getPanier()
     {
-        if (empty($this->panier))
-            $this->panier = new Panier($this);
-        return $this->panier;
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('statut', 'panier'));
+        $panier = $this->commandes->matching($criteria)->first();
+        if (empty($panier))
+            $panier = new Commande($this);
+        return $panier;
+    }
+
+    public function getCommandesByStatut($statut)
+    {
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq('statut', $statut));
+        return $this->commandes->matching($criteria);
+    }
+
+    public function movePanierToCommande()
+    {
+        if (!empty($this->panier)) {
+            $this->addCommande($this->panier);
+            $this->panier = null;
+        }
+    }
+
+    public function hasInscription($item)
+    {
+        if(Previsualisation::$IS_ACTIVE)
+            return false;
+
+        $criteria = Criteria::create()
+            ->andWhere(Criteria::expr()->eq(Inscription::getItemColumn($item), $item))
+            ->andWhere(Criteria::expr()->neq('statut', 'annule'));
+        return !$this->inscriptions->matching($criteria)->isEmpty();
+    }
+
+    public function hasAutorisation($typeAutorisation)
+    {
+        // $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('id', $typeAutorisation->getId()));
+        // return !$this->autorisations->matching($criteria)->isEmpty();
+        return $this->autorisations->contains($typeAutorisation);
+    }
+
+    public function hasGroup($group)
+    {
+        if(Previsualisation::$IS_ACTIVE)
+            return true;
+            
+        return $this->groups->contains($group);
+    }
+
+    public function isMaxInscription()
+    {
+        if(Previsualisation::$IS_ACTIVE)
+            return false;
+
+        $inscriptions = $this->inscriptions->filter(function ($inscription) {
+            return !is_null($inscription->getCreneau()) && $inscription->getStatut() != "annule";
+        });
+        return count($inscriptions) >= $this->getProfil()->getNbMaxInscriptions();
+    }
+
+    public function setDocumentFile(File $document = null)
+    {
+        $this->documentFile = $document;
+        if ($document)
+            $this->updatedAt = new \DateTime('now');
+    }
+
+    public function getDocumentFile()
+    {
+        return $this->documentFile;
+    }
+
+    public function addAutorisation(\UcaBundle\Entity\TypeAutorisation $autorisation)
+    {
+        $this->autorisations[] = $autorisation;
+        $commandesEnCours = $this->getCommandes()
+            ->matching(CommandeRepository::criteriaByStatut(['panier', 'apayer']))
+            ->filter(function ($commande) {
+                return $commande->getStatut() != 'termine';
+            });
+
+        foreach ($commandesEnCours->getIterator() as $commande) {
+            $commande->getCommandeDetails()
+                ->matching(CommandeDetailRepository::criteriaByAutorisation($autorisation))
+                ->map(function ($cd) {
+                    $cd->remove();
+                });
+        }
+
+        return $this;
+    }
+
+    public function isEncadrantEvenement(DhtmlxEvenement $dhtmlxEvenement)
+    {
+        if($dhtmlxEvenement->getSerie() != null){
+            if($dhtmlxEvenement->getSerie()->getCreneau() != null){
+                return $dhtmlxEvenement->getSerie()->getCreneau()->getEncadrants()->contains($this);
+            }
+        }
+        if($dhtmlxEvenement->getFormatSimple()){
+            return $dhtmlxEvenement->getFormatSimple()->getEncadrants()->contains($this);
+        }
+        return false;
     }
 
     #endregion
@@ -423,6 +564,54 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     }
 
     /**
+     * Set document.
+     *
+     * @param string|null $document
+     *
+     * @return Utilisateur
+     */
+    public function setDocument($document = null)
+    {
+        $this->document = $document;
+
+        return $this;
+    }
+
+    /**
+     * Get document.
+     *
+     * @return string|null
+     */
+    public function getDocument()
+    {
+        return $this->document;
+    }
+
+    /**
+     * Set updatedAt.
+     *
+     * @param \DateTime|null $updatedAt
+     *
+     * @return Utilisateur
+     */
+    public function setUpdatedAt($updatedAt = null)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Get updatedAt.
+     *
+     * @return \DateTime|null
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
      * Add inscription.
      *
      * @param \UcaBundle\Entity\Inscription $inscription
@@ -456,56 +645,6 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getInscriptions()
     {
         return $this->inscriptions;
-    }
-
-    /**
-     * Add reservation.
-     *
-     * @param \UcaBundle\Entity\Reservation $reservation
-     *
-     * @return Utilisateur
-     */
-    public function addReservation(\UcaBundle\Entity\Reservation $reservation)
-    {
-        $this->reservations[] = $reservation;
-
-        return $this;
-    }
-
-    /**
-     * Remove reservation.
-     *
-     * @param \UcaBundle\Entity\Reservation $reservation
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeReservation(\UcaBundle\Entity\Reservation $reservation)
-    {
-        return $this->reservations->removeElement($reservation);
-    }
-
-    /**
-     * Get reservations.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getReservations()
-    {
-        return $this->reservations;
-    }
-
-    /**
-     * Add autorisation.
-     *
-     * @param \UcaBundle\Entity\TypeAutorisation $autorisation
-     *
-     * @return Utilisateur
-     */
-    public function addAutorisation(\UcaBundle\Entity\TypeAutorisation $autorisation)
-    {
-        $this->autorisations[] = $autorisation;
-
-        return $this;
     }
 
     /**
@@ -552,20 +691,6 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getProfil()
     {
         return $this->profil;
-    }
-
-    /**
-     * Set panier.
-     *
-     * @param \UcaBundle\Entity\Panier|null $panier
-     *
-     * @return Utilisateur
-     */
-    public function setPanier(\UcaBundle\Entity\Panier $panier = null)
-    {
-        $this->panier = $panier;
-
-        return $this;
     }
 
     /**
@@ -674,5 +799,89 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getCreneaux()
     {
         return $this->creneaux;
+    }
+
+    /**
+     * Add inscriptionsAValider.
+     *
+     * @param \UcaBundle\Entity\Inscription $inscriptionsAValider
+     *
+     * @return Utilisateur
+     */
+    public function addInscriptionsAValider(\UcaBundle\Entity\Inscription $inscriptionsAValider)
+    {
+        $this->inscriptionsAValider[] = $inscriptionsAValider;
+
+        return $this;
+    }
+
+    /**
+     * Remove inscriptionsAValider.
+     *
+     * @param \UcaBundle\Entity\Inscription $inscriptionsAValider
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeInscriptionsAValider(\UcaBundle\Entity\Inscription $inscriptionsAValider)
+    {
+        return $this->inscriptionsAValider->removeElement($inscriptionsAValider);
+    }
+
+    /**
+     * Get inscriptionsAValider.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInscriptionsAValider()
+    {
+        return $this->inscriptionsAValider;
+    }
+
+    /**
+     * Set statut.
+     *
+     * @param \UcaBundle\Entity\StatutUtilisateur|null $statut
+     *
+     * @return Utilisateur
+     */
+    public function setStatut(\UcaBundle\Entity\StatutUtilisateur $statut = null)
+    {
+        $this->statut = $statut;
+
+        return $this;
+    }
+
+    /**
+     * Get statut.
+     *
+     * @return \UcaBundle\Entity\StatutUtilisateur|null
+     */
+    public function getStatut()
+    {
+        return $this->statut;
+    }
+
+    /**
+     * Set appels.
+     *
+     * @param \UcaBundle\Entity\Appel|null $appels
+     *
+     * @return Utilisateur
+     */
+    public function setAppels(\UcaBundle\Entity\Appel $appels = null)
+    {
+        $this->appels = $appels;
+
+        return $this;
+    }
+
+    /**
+     * Get appels.
+     *
+     * @return \UcaBundle\Entity\Appel|null
+     */
+    public function getAppels()
+    {
+        return $this->appels;
     }
 }

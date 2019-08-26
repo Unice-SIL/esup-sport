@@ -1,0 +1,45 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+    {# include "@Uca/Common/Modal/Modal.PreInscription.html.twig" #}
+    <h1 class="h1-light">
+        {{'utilisateur.preInscription.title'|trans}}
+    </h1>
+    <section class="container mb-5">
+        <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
+            {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
+                with {'action': 'preInscription', 'formPath': '', 'formClass': ''} %}
+        </div>
+    </section>
+
+    <div class="js-user-rating" data-is-error=""></div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
+    <script type="text/javascript">
+
+        let isError;
+        isError = $('.js-user-rating').data('isError');
+        let id = document.getElementsByName('ucaSport_Utilisateur');
+        id[0].id = 'myForm';
+
+        if (myForm.checkValidity()) { // $('#myForm').on('submit',function(e){
+            $("#ModalPreInscription").modal('show');
+            // e.preventDefault();
+            // });
+            /*$(window).on('shown.bs.modal', function() { 
+    $('#ModalPreInscriptio').modal('show');
+    alert('shown');*/
+        });
+    }
+    </script>
+{% endblock %}

@@ -2,12 +2,13 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\InscriptionRepository")
  * @Gedmo\Loggable
  */
 class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
@@ -29,24 +30,49 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /** @ORM\ManyToOne(targetEntity="Creneau", inversedBy="inscriptions") */
     private $creneau;
 
+    /** @ORM\ManyToOne(targetEntity="Reservabilite", inversedBy="inscriptions") */
+    private $reservabilite;
+
     /** @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="inscriptions", cascade={"persist"}) */
     private $utilisateur;
 
     /** @ORM\Column(type="datetime") */
     private $date;
 
+    /** @ORM\Column(type="datetime", nullable=true) */
+    private $dateValidation;
+
     /** @ORM\Column(type="string") */
     private $statut;
+    /* valeurs : initialise, attentevalidationencadrant, attentevalidationgestionnaire, attenteajoutpanier, attentepaiement, valide, annule */
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $motifAnnulation;
+    /* valeurs : refusencadrant, refusgestionnaire, annulationutilisateur, timeout */
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $commentaireAnnulation;
+
+    /** @ORM\OneToMany(targetEntity="Autorisation", mappedBy="inscription", cascade={"persist"}, orphanRemoval=true) */
+    private $autorisations;
+
+    /** @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="inscriptionsAValider") */
+    private $encadrants;
     #endregion
 
     #region Méthodes
 
-    public function __construct($item, $user, $statut)
+    public function __construct(\UcaBundle\Entity\Interfaces\Article $item, $user, $format = null)
     {
         $this->setUtilisateur($user);
-        $this->setItem($item);
+        $this->setItem($item, $format);
+        foreach ($this->getItem()->getEncadrants()->getIterator() as $encadrant) {
+            $this->addEncadrant($encadrant);
+            $encadrant->addInscriptionsAValider($this);
+        }
         $this->setDate(new \DateTime());
-        $this->setStatut($statut);
+        $this->initAutorisations();
+        $this->updateStatut();
         $user->addInscription($this);
     }
 
@@ -55,26 +81,140 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         return [];
     }
 
-    public function setItem($item)
+    public function getAutorisationTypes()
     {
-        if (is_a($item, FormatActivite::class)) {
-            $this->setFormatActivite($item);
-        } else if (is_a($item, Creneau::class)) {
+        return $this->getItem()->getArticleAutorisations();
+    }
+
+    public static function getItemColumn($item)
+    {
+        if (is_a($item, Creneau::class)) {
+            return 'creneau';
+        } elseif (is_a($item, Reservabilite::class)) {
+            return 'reservabilite';
+        } elseif (is_a($item, FormatActivite::class)) {
+            return 'formatActivite';
+        }
+    }
+
+    private function setItem($item, $format)
+    {
+        if (is_a($item, Creneau::class)) {
             $this->setCreneau($item);
+        } elseif (is_a($item, Reservabilite::class)) {
+            $this->setReservabilite($item);
+            $this->setFormatActivite($format);
+        } elseif (is_a($item, FormatActivite::class)) {
+            $this->setFormatActivite($item);
         }
     }
 
     public function getItem()
     {
-        if (!empty($this->formatActivite)) {
+        if (!empty($this->creneau)) {
+            return $this->creneau;
+        } elseif (!empty($this->reservabilite)) {
+            $this->reservabilite->setFormatActivite($this->formatActivite);
+            return $this->reservabilite;
+        } elseif (!empty($this->formatActivite)) {
+            return $this->formatActivite;
+        }
+    }
+
+    public function getItemId()
+    {
+        return $this->getItem()->getId();
+    }
+
+    public function getItemType()
+    {
+        if (!empty($this->reservabilite)) {
+            return 'UcaBundle:Reservabilite';
+        } elseif (!empty($this->formatActivite)) {
+            return 'UcaBundle:FormatActivite';
+        } elseif (!empty($this->creneau)) {
+            return 'UcaBundle:Creneau';
+        }
+    }
+    public function getAutorisationsByComportement($arrayComportement, $statut = 'all')
+    {
+        return $this->autorisations->filter(function ($autorisation) use ($arrayComportement, $statut) {
+            if (!in_array($autorisation->getCodeComportement(), $arrayComportement))
+                return false;
+            if ($statut == 'all') return true;
+            return $autorisation->getStatut() == $statut;
+        });
+    }
+
+    public function hasCodeComportementByStatut($arrayComportement, $statut = 'all')
+    {
+        return !$this->getAutorisationsByComportement($arrayComportement, $statut)->isEmpty();
+    }
+
+    public function setStatut($statut, $options = [])
+    {
+        $this->statut = $statut;
+        if (isset($options['motifAnnulation']))
+            $this->motifAnnulation = $options['motifAnnulation'];
+        if (isset($options['commentaireAnnulation']))
+            $this->commentaireAnnulation = $options['commentaireAnnulation'];
+        return $this;
+    }
+
+    public function updateStatut()
+    {
+        foreach ($this->autorisations->getIterator() as $autorisation) {
+            $autorisation->updateStatut();
+        }
+        if ($this->statut == 'annule' || $this->statut == 'valide') {
+            //
+        } elseif ($this->hasCodeComportementByStatut(['case', 'justificatif'], 'invalide')) {
+            $this->statut = 'initialise';
+        } elseif ($this->hasCodeComportementByStatut(['validationencadrant'], 'invalide')) {
+            $this->statut = 'attentevalidationencadrant';
+        } elseif ($this->hasCodeComportementByStatut(['validationgestionnaire'], 'invalide')) {
+            $this->statut = 'attentevalidationgestionnaire';
+        } elseif ($this->hasCodeComportementByStatut(['validationencadrant', 'validationgestionnaire'], 'valide')) {
+            $this->statut = 'attenteajoutpanier';
+            $this->setDateValidation(new \DateTime());
+        } else {
+            $this->statut = 'attentepaiement';
+        }
+    }
+
+    public function initAutorisations()
+    {
+        $this->autorisations = new ArrayCollection();
+        foreach ($this->getAutorisationTypes()->getIterator() as $typeAutorisation) {
+            $autorisation = new Autorisation($this, $typeAutorisation);
+            // dump($autorisation);
+            if ($autorisation->getStatut() != 'valide')
+                $this->addAutorisation($autorisation);
+        }
+    }
+
+    public function removeAllAutorisations()
+    {
+        foreach ($this->autorisations->getIterator() as $autorisation) {
+            $this->autorisations->removeElement($autorisation);
+            // not needed for persistence, just keeping both sides in sync
+            $autorisation->setInscription(null);
+            // $autorisation->delete
+        }
+    }
+
+    public function getFormatActivite()
+    {
+        if (!empty($this->reservabilite)) {
+            return $this->formatActivite;
+        } elseif (!empty($this->formatActivite)) {
             return $this->formatActivite;
         } elseif (!empty($this->creneau)) {
-            return $this->creneau;
+            return $this->creneau->getFormatActivite();
         }
     }
 
     #endregion
-
 
     /**
      * Get id.
@@ -111,17 +251,27 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Set statut.
+     * Set dateValidation.
      *
-     * @param string $statut
+     * @param \DateTime $dateValidation
      *
      * @return Inscription
      */
-    public function setStatut($statut)
+    public function setDateValidation($dateValidation)
     {
-        $this->statut = $statut;
+        $this->dateValidation = $dateValidation;
 
         return $this;
+    }
+
+    /**
+     * Get dateValidation.
+     *
+     * @return \DateTime
+     */
+    public function getDateValidation()
+    {
+        return $this->dateValidation;
     }
 
     /**
@@ -135,27 +285,65 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Set activite.
+     * Set motifAnnulation.
      *
-     * @param \UcaBundle\Entity\Activite|null $activite
+     * @param string|null $motifAnnulation
      *
      * @return Inscription
      */
-    public function setActivite(\UcaBundle\Entity\Activite $activite = null)
+    public function setMotifAnnulation($motifAnnulation = null)
     {
-        $this->activite = $activite;
+        $this->motifAnnulation = $motifAnnulation;
 
         return $this;
     }
 
     /**
-     * Get activite.
+     * Get motifAnnulation.
      *
-     * @return \UcaBundle\Entity\Activite|null
+     * @return string|null
      */
-    public function getActivite()
+    public function getMotifAnnulation()
     {
-        return $this->activite;
+        return $this->motifAnnulation;
+    }
+
+    /**
+     * Set commentaireAnnulation.
+     *
+     * @param string|null $commentaireAnnulation
+     *
+     * @return Inscription
+     */
+    public function setCommentaireAnnulation($commentaireAnnulation = null)
+    {
+        $this->commentaireAnnulation = $commentaireAnnulation;
+
+        return $this;
+    }
+
+    /**
+     * Get commentaireAnnulation.
+     *
+     * @return string|null
+     */
+    public function getCommentaireAnnulation()
+    {
+        return $this->commentaireAnnulation;
+    }
+
+    /**
+     * Set formatActivite.
+     *
+     * @param \UcaBundle\Entity\FormatActivite|null $formatActivite
+     *
+     * @return Inscription
+     */
+    public function setFormatActivite(\UcaBundle\Entity\FormatActivite $formatActivite = null)
+    {
+        $this->formatActivite = $formatActivite;
+
+        return $this;
     }
 
     /**
@@ -183,6 +371,30 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
+     * Set reservabilite.
+     *
+     * @param \UcaBundle\Entity\Reservabilite|null $reservabilite
+     *
+     * @return Inscription
+     */
+    public function setReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite = null)
+    {
+        $this->reservabilite = $reservabilite;
+
+        return $this;
+    }
+
+    /**
+     * Get reservabilite.
+     *
+     * @return \UcaBundle\Entity\Reservabilite|null
+     */
+    public function getReservabilite()
+    {
+        return $this->reservabilite;
+    }
+
+    /**
      * Set utilisateur.
      *
      * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
@@ -207,26 +419,74 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Set formatActivite.
+     * Add autorisation.
      *
-     * @param \UcaBundle\Entity\FormatActivite|null $formatActivite
+     * @param \UcaBundle\Entity\Autorisation $autorisation
      *
      * @return Inscription
      */
-    public function setFormatActivite(\UcaBundle\Entity\FormatActivite $formatActivite = null)
+    public function addAutorisation(\UcaBundle\Entity\Autorisation $autorisation)
     {
-        $this->formatActivite = $formatActivite;
+        $this->autorisations[] = $autorisation;
 
         return $this;
     }
 
     /**
-     * Get formatActivite.
+     * Remove autorisation.
      *
-     * @return \UcaBundle\Entity\FormatActivite|null
+     * @param \UcaBundle\Entity\Autorisation $autorisation
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function getFormatActivite()
+    public function removeAutorisation(\UcaBundle\Entity\Autorisation $autorisation)
     {
-        return $this->formatActivite;
+        return $this->autorisations->removeElement($autorisation);
+    }
+
+    /**
+     * Get autorisations.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAutorisations()
+    {
+        return $this->autorisations;
+    }
+
+    /**
+     * Add encadrant.
+     *
+     * @param \UcaBundle\Entity\Utilisateur $encadrant
+     *
+     * @return Inscription
+     */
+    public function addEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    {
+        $this->encadrants[] = $encadrant;
+
+        return $this;
+    }
+
+    /**
+     * Remove encadrant.
+     *
+     * @param \UcaBundle\Entity\Utilisateur $encadrant
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    {
+        return $this->encadrants->removeElement($encadrant);
+    }
+
+    /**
+     * Get encadrants.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getEncadrants()
+    {
+        return $this->encadrants;
     }
 }

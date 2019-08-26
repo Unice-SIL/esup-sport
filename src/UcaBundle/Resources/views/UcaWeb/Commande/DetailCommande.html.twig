@@ -1,0 +1,81 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+
+{% import 'LexikPayboxBundle:Macro:paybox.html.twig' as paybox %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Commande.html.twig' as MacroCommande %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+
+    {{ flashBag.showAll }}
+    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    {% if source == 'monpanier' %}
+        <h1 class="h1-light">{{ 'panier.libelle' | trans}}</h1>
+    {% else %}
+        <h1 class="h1-light">{{ 'commande.libelle' | trans}}</h1>
+    {% endif %}
+    <section class="container">
+
+        <div class="row">
+            <div class="col-12 mb-4 pl-3 p-xl-0">
+                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
+                    <i class="fas fa-chevron-left"></i>
+                    {{'bouton.retour'|trans}}
+                </a>
+            </div>
+        </div>
+
+        <div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+            <div class="col-12 col-sm-8">
+                {% if source != 'monpanier' %}
+                    <p class="p-0 m-0">
+                        <strong>Date de la commande :</strong>
+                        {{ commande.dateCommande | dateFormat('dd MMM Y HH:mm') }}</p>
+                {% endif %}
+                <p class="p-0 m-0">
+                    <strong>Utilisateur :</strong>
+                    {{ commande.utilisateur.prenom }}
+                    {{ commande.utilisateur.nom }}
+                </p>
+                {% if commande.timeout and commande.commandeDetails is not empty %}
+                    <p class="p-0 m-0">
+                        {# <strong>Timeout :</strong>
+                        <span id='commande-timer'/> #}
+                    {% set temps = ('common.temps.heure' | transchoice(commande.timeout.d * 24 + commande.timeout.h)) ~ ' ' ~ ('common.et' | transchoice(commande.timeout.h and commande.timeout.i)) ~ ' ' ~ ('common.temps.minute' | transchoice(commande.timeout.i)) %}
+                    {% if source == 'monpanier' %}
+                        {% set typeCommande = 'panier' %}
+                    {% else %}
+                        {% set typeCommande = 'commande' %}
+                    {% endif %}
+                    {{ 'commande.timeout.timer' | trans({ '%temps%': temps, '%typecommande%': typeCommande }) }}
+                    {{ ('commande.timeout.' ~ typeCommande ~ '.expiration') | trans }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if commande.id and commande.commandeDetails is not empty %}
+            {{ MacroCommande.affiche(commande, source) }}
+        {% else %}
+            <div class="row mb-4 p-5 container-style bg-white container-style-border-none">
+                <div class="col-12">
+                    <p class="p-0 m-0 text-center">{{ 'panier.vide' | trans }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}
+        _uca.timer.init('commande-timer', {{ commande.timeout | json_encode | raw }});
+    </script>
+{% endblock %}

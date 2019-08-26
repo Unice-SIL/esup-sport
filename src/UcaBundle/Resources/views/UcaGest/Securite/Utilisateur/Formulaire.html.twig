@@ -1,5 +1,9 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% block main %}
+    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+    <h1>{{ ('utilisateur.modifier.title') | trans }}</h1>
     {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" with {'action': 'modifier', 'formPath': '', 'formClass': ''} %}
 {% endblock %}
 {% block javascripts %}

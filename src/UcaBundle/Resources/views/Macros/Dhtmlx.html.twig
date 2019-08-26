@@ -91,6 +91,8 @@
     var ITEM = {{ item|json_encode()|raw }};
     var DHTMLXAPI = "{{ path('DhtmlxApi') }}";
     var DATAAPI = "{{ path('DataApi') }}";
+    var USERID = "{{ app.user.id }}";
+    var PATH_SEE_MORE = "{{ path("UcaWeb_PlanningMore_NoId") }}"
 
     </script>
         {{ encore_entry_script_tags('scheduler') }}

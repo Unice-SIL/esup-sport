@@ -1,32 +1,74 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 {% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
 
 {% block title %}
-    Uca Web
+    {{ item.libelle }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Accueil - Inscription') }}
 {% endblock %}
 
 {% block main %}
-    <h1>{{ item.libelle }}</h1>
-    <div class="container">
-        <h2>{{ item.libelle }}</h2>
-        <p>{{ item.description }}</p>
-        <div class="row">
-            <div class="col-md-6">
-                <h3>{{ 'formatachatcarte.modalites' | trans }}</h3>
-                <p>{{ 'formatachatcarte.validite' | trans }}
-                    {{ item.dateFinEffective|date('d/m/Y') }}</p>
-            </div>
-            <div class="col-md-6">
-                <h3>{{ 'common.tarif' | trans }}</h3>
-                <p>{{ item.tarif.getUserMontant(app.user.profil.id).montant | number_format }}
-                    €</p>
+    <div class="container p-0 pl-4 pl-xl-0">
+        <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteLister', {idCa : item.activite.classeActivite.id, id : item.activite.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.activite.libelle}) }}</a>
+    </div>
+
+    <h1 class="h1-light">{{ item.libelle }}</h1>
+    <section class="mb-5">
+        <div class="container mb-5">
+            <div class="suscribe-card bg-white shadow rounded-lg mb-5 p-5">
+                <h2 class="text-white hide-border-title suscribe-card-title">{{ item.libelle }}</h2>
+                <p class="pb-3">{{ item.description|nl2br }}</p>
+                <div class="row d-flex flex-wrap justify-content-center pb-3">
+                    <div class="col-6 p-0">
+                        <h3 class="mb-2">
+                            <i class="far fa-file-alt"></i>
+                            {{ 'formatachatcarte.modalites' | trans }}</h3>
+                        <p>{{ 'formatachatcarte.validite' | trans }}
+                            {{ item.dateFinEffective|date('d/m/Y') }}</p>
+                    </div>
+                    <div class="col-6 p-0 pl-3">
+                        <h3 class="mb-2">
+                            <i class="fas fa-euro-sign"></i>
+                            {{ 'common.tarif' | trans }}</h3>
+                        {% if item.getArticleMontant(app.user) < 0 %}
+                            <p>{{ "common.tarif.inconnu"|trans }}</p>
+                        {% else %}
+                            <p>{{ item.getArticleMontant(app.user) | number_format }}
+                                €</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    {% if isPrevisualisation() %}
+                        <button class="btn btn-primary disabled">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
+                    {% elseif item.isDisponible(app.user) %}
+                        {% if item.userIsInscrit(app.user) %}
+                            <p class="m-0 fs-14 fw-500 color-blue w-100 text-center">
+                                <i class="fas fa-check-circle"></i>
+                                {{ "formatSimple.list.inscrit"|trans|upper }}</p>
+                        {% else %}
+                            <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatAchatCarte" data-id="{{ item.id }}" callback="changeStatut">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
+                        {% endif %}
+                    {% else %}
+                        <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">{{ 'bouton.panier.indisponible' | trans | upper }}</p>
+                    {% endif %}
+                </div>
             </div>
         </div>
-        <div class="row">
-            <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatAchatCarte" data-id="{{ item.id }}">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
+    </section>
+    {{ Inscription.HtmlModal }}
+    <div class="d-none" id="js-text-inscrit-clone">
+        <div class="offset-4 color-blue col-4 text-center">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ "creneau.list.inscrit"|trans|upper }}</span>
         </div>
     </div>
-    {{ Inscription.HtmlModal }}
+    {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}
+
 {% endblock %}
 
 

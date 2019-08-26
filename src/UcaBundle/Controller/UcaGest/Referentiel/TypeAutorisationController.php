@@ -19,7 +19,7 @@ use UcaBundle\Form\TypeAutorisationType;
 class TypeAutorisationController extends Controller
 {
     /**
-     * @Route("/", name="TypeAutorisationLister")
+     * @Route("/", name="UcaGest_TypeAutorisationLister")
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_LECTURE")
     */
     public function listerAction(Request $request)
@@ -45,7 +45,7 @@ class TypeAutorisationController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="TypeAutorisationAjouter")
+     * @Route("/Ajouter", name="UcaGest_TypeAutorisationAjouter")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
      */
@@ -58,7 +58,7 @@ class TypeAutorisationController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('TypeAutorisationLister');
+            return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -66,7 +66,7 @@ class TypeAutorisationController extends Controller
     }
 
     /**
-     * @Route("/Modifier/{id}", name="TypeAutorisationModifier")
+     * @Route("/Modifier/{id}", name="UcaGest_TypeAutorisationModifier")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
     */
@@ -77,7 +77,7 @@ class TypeAutorisationController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('TypeAutorisationLister');
+            return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -85,7 +85,7 @@ class TypeAutorisationController extends Controller
     }
 
     /**
-     * @Route("/Supprimer/{id}", name="TypeAutorisationSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_TypeAutorisationSupprimer")
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
      */
     public function supprimerAction(Request $request, TypeAutorisation $item)
@@ -94,6 +94,6 @@ class TypeAutorisationController extends Controller
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-        return $this->redirectToRoute('TypeAutorisationLister');
+        return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
     }
 }

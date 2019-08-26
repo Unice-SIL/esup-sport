@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
@@ -32,10 +33,9 @@ class LieuType extends AbstractType
             'disabled' => $options['data']->getSourceReferentiel(),
             'placeholder' => 'common.aucun',
         ]);
-        $builder ->add('capacite', NumberType::class, [
+        $builder ->add('capacite', TextType::class, [
             'required' => false,
-            'label_format' => 'ressource.capacite',
-            'disabled' => $options['data']->getSourceReferentiel()
+            'label_format' => 'ressource.capacite'
         ]);
         $builder ->add('superficie', NumberType::class, [
             'required' => false,
@@ -57,7 +57,7 @@ class LieuType extends AbstractType
             'label_format' => 'utilisateur.adresse'
         ]);
         $builder->add('codePostal',TextType::class,[
-            'label_format' => 'utilisateur.codePostal'
+            'label_format' => 'utilisateur.codepostal'
         ]);
         $builder->add('ville',TextType::class,[
             'label_format' => 'utilisateur.ville'

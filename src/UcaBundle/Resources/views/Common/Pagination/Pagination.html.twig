@@ -1,51 +1,40 @@
-<div class="row">
-    <div class="col-6 offset-3">
-        <div class="row">
-            {% if pagination.nbPages > 0 %}
-                    
-                    
-                    
-                    {% if pagination.page > 1 %}
-                        <div class="col-3">
-                            <a href="{{ path(pagination.nomRoute,
-                            pagination.paramsRoute|merge({'page': pagination.page-1})) }}">
-                                <button class="btn btn-primary ">PRÉCÉDENT</button>
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="col-3">
-                            <button class="btn btn-primary disabled ">PRÉCÉDENT</button>
-                        </div>                    
-                    {% endif %}
+<div class="row d-flex flex-wrap justify-content-center align-items-center pagination">
+    {% if pagination.nbPages > 0 %}            
+        {% if pagination.page > 1 %}
+            <div class="">
+                <a href="{{ path(pagination.nomRoute,
+                pagination.paramsRoute|merge({'page': pagination.page-1})) }}">
+                    <button class="btn btn-info ">PRÉCÉDENT</button>
+                </a>
+            </div>
+        {% else %}
+            <div class="">
+                <button class="btn btn-info disabled ">PRÉCÉDENT</button>
+            </div>                    
+        {% endif %}
 
-
-
-                    <div class="col-4 text-center">
-                        {# Affichage de toutes les pages entre p-4 et p+4 sauf si < 1 ou > nbPages #}
-                        {% for p in range(max(pagination.page-4, 1), min(pagination.page+4, pagination.nbPages)) %}
-                                <a href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': p})) }}">
-                                    <span {% if p == pagination.page %}class="active"{% endif %}>
-                                        {{ p }}
-                                    </span>
-                                </a>
-                        {% endfor %}
-                    </div>
-
-
-
-                    {% if pagination.page < pagination.nbPages %}
-                        <div class="col-3">
-                            <a href="{{ path(pagination.nomRoute,
-                            pagination.paramsRoute|merge({'page': pagination.page+1})) }}">
-                                <button class="btn btn-primary">SUIVANT</button>
-                            </a>
-                        </div>
-                    {% else %}
-                        <div class="col-3">
-                            <button class="btn btn-primary disabled ">SUIVANT</button>
-                        </div>
-                    {% endif %}
-            {% endif %}
+        <div class="text-center pl-3 pr-3">
+            {# Affichage de toutes les pages entre p-4 et p+4 sauf si < 1 ou > nbPages #}
+            {% for p in range(max(pagination.page-4, 1), min(pagination.page+4, pagination.nbPages)) %}
+                    <a class="p-2 pagination-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': p})) }}">
+                        <span {% if p == pagination.page %}class="active"{% endif %}>
+                            {{ p }}
+                        </span>
+                    </a>
+            {% endfor %}
         </div>
-    </div>
+
+        {% if pagination.page < pagination.nbPages %}
+            <div class="">
+                <a href="{{ path(pagination.nomRoute,
+                pagination.paramsRoute|merge({'page': pagination.page+1})) }}">
+                    <button class="btn btn-primary">SUIVANT</button>
+                </a>
+            </div>
+        {% else %}
+            <div class="">
+                <button class="btn btn-primary disabled ">SUIVANT</button>
+            </div>
+        {% endif %}
+    {% endif %}
 </div>

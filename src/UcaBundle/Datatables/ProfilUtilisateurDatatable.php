@@ -4,6 +4,9 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
 
 class ProfilUtilisateurDatatable extends AbstractTranslatedDatatable
 {
@@ -19,11 +22,15 @@ class ProfilUtilisateurDatatable extends AbstractTranslatedDatatable
             ->add('libelle', Column::class, array(
                 'title' => $this->translator->trans('common.libelle'),
             ))
+            ->add('nbMaxInscriptions', Column::class, array(
+                'title' => $this->translator->trans('profilutilisateur.nbmaxinscriptions.libelle'),
+            ))
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Modifier', 'ProfilUtilisateurModifier', ['id' => 'id'], 'ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'ProfilUtilisateurSupprimer', ['id' => 'id'], 'ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE'),
+                    (new ModifierButton($this, 'UcaGest_ProfilUtilisateurModifier', ['id' => 'id'], 'ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_ProfilUtilisateurSupprimer', ['id' => 'id'], 'ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'ProfilUtilisateur', 'objectId' => 'id'], 'ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

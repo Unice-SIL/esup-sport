@@ -10,6 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @Gedmo\Loggable   
  * @UniqueEntity(fields="libelle", message="profilutilisateur.uniqueentity")
  */
 class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
@@ -26,10 +27,19 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="profilutilisateur.libelle.notblank")
      */
     protected $libelle;
+
+    /** @ORM\Column(type="integer")
+     * @Gedmo\Versioned
+     * @Assert\GreaterThanOrEqual(value = 0)
+     * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
+     * @Assert\NotBlank(message="profilutilisateur.nbMaxinscriptions.notblank")
+     */
+    protected $nbMaxInscriptions;
 
     /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="profil", cascade={"persist", "remove"}) */
     protected $montants;
@@ -42,8 +52,15 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\OneToMany(targetEntity="Utilisateur", mappedBy="profil") */
     protected $utilisateur;
-    #endregion
+ 
+    /** 
+     * @ORM\Column(type="boolean") 
+     * @Assert\NotBlank(message="profilutilisateur.preinscription.notblank")
+    */
+    protected $preinscription;
 
+    #endregion
+    
     #region Méthodes
 
     public function jsonSerializeProperties()
@@ -97,6 +114,54 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function getLibelle()
     {
         return $this->libelle;
+    }
+
+    /**
+     * Set nbMaxInscriptions.
+     *
+     * @param int $nbMaxInscriptions
+     *
+     * @return ProfilUtilisateur
+     */
+    public function setNbMaxInscriptions($nbMaxInscriptions)
+    {
+        $this->nbMaxInscriptions = $nbMaxInscriptions;
+
+        return $this;
+    }
+
+    /**
+     * Get nbMaxInscriptions.
+     *
+     * @return int
+     */
+    public function getNbMaxInscriptions()
+    {
+        return $this->nbMaxInscriptions;
+    }
+
+    /**
+     * Set preinscription.
+     *
+     * @param bool $preinscription
+     *
+     * @return ProfilUtilisateur
+     */
+    public function setPreinscription($preinscription)
+    {
+        $this->preinscription = $preinscription;
+
+        return $this;
+    }
+
+    /**
+     * Get preinscription.
+     *
+     * @return bool
+     */
+    public function getPreinscription()
+    {
+        return $this->preinscription;
     }
 
     /**

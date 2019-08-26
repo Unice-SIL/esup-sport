@@ -1,0 +1,32 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Sport de haut niveau') }}
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="h1-light">{{'sportdehautniveau.title'|trans}}</h1>
+
+    {% if emplacement("Sport de haut niveau - Introduction") is not empty %}
+    <section class="container container-style bg-white mb-5">
+        {{ emplacement("Sport de haut niveau - Introduction")|raw }}
+    </section>
+    {% endif %}
+
+    <section class="container">
+        <div class="accordion" id="accordionSportHautNiveau">
+            {% for i in 1..5 %}
+                {% set emplacementName = "Sport de haut niveau - %02d"|format(i) %}
+                {% set titre = emplacement(emplacementName, "title") %}
+                {% set texte = emplacement(emplacementName) %}
+                {% if titre is not empty %}
+                    {{ Bootstrap.accordionItem(i, loop.first, titre, texte, 'accordionSportHautNiveau') }}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}

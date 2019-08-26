@@ -24,7 +24,7 @@ use UcaBundle\Service\Common\FlashBag;
 class ActiviteController extends Controller
 {
     /**
-     * @Route("/", name="ActiviteLister", options = {"expose" = true} , requirements={"id"="\d+"})
+     * @Route("/", name="UcaGest_ActiviteLister", options = {"expose" = true} , requirements={"id"="\d+"})
      * @Method("GET")
      * @Isgranted("ROLE_GESTION_ACTIVITE_LECTURE")
      */
@@ -50,7 +50,7 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
-     * @Route("/Ajouter", name="ActiviteAjouter")
+     * @Route("/Ajouter", name="UcaGest_ActiviteAjouter")
      * @Method({"GET", "POST"})
      */
     public function ajouterAction(Request $request)
@@ -64,7 +64,7 @@ class ActiviteController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('ActiviteLister');
+            return $this->redirectToRoute('UcaGest_ActiviteLister');
         }
 
         $twigConfig['item'] = $item;
@@ -74,7 +74,7 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
-     * @Route("/{id}/Modifier", name="ActiviteModifier")
+     * @Route("/{id}/Modifier", name="UcaGest_ActiviteModifier")
      * @Method({"GET", "POST"})
      */
     public function modifierAction(Request $request, Activite $activite)
@@ -86,7 +86,7 @@ class ActiviteController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid() && $request->isMethod('POST')) {
             $this->get('uca.flashbag')->addActionFlashBag($activite, 'Modifier');
             $em->flush();
-            return $this->redirectToRoute('ActiviteLister');
+            return $this->redirectToRoute('UcaGest_ActiviteLister');
         }
 
         $twigConfig["item"] = $activite;
@@ -96,24 +96,24 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
-     * @Route("/{id}/Supprimer", name="ActiviteSupprimer")
+     * @Route("/{id}/Supprimer", name="UcaGest_ActiviteSupprimer")
      */
     public function supprimerAction(Request $request, Activite $activite)
     {
         $em = $this->getDoctrine()->getManager();
         if (!$activite->getFormatsActivite()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($activite, 'Supprimer');
-            return $this->redirectToRoute('ActiviteLister');
+            return $this->redirectToRoute('UcaGest_ActiviteLister');
         }
         $em->remove($activite);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($activite, 'Supprimer');
-        return $this->redirectToRoute('ActiviteLister');
+        return $this->redirectToRoute('UcaGest_ActiviteLister');
     }
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_LECTURE")
-     * @Route("/{id}", name="ActiviteVoir")
+     * @Route("/{id}", name="UcaGest_ActiviteVoir")
      * @Method("GET")
      */
     public function voirAction(Request $request, Activite $activite)

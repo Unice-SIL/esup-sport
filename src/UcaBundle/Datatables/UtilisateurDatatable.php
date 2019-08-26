@@ -4,22 +4,33 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
+use UcaBundle\Datatables\Button\UtilisateurBloquerButton;
+use UcaBundle\Datatables\Button\UtilisateurDebloquerButton;
+use UcaBundle\Datatables\Button\VoirButton;
 
 class UtilisateurDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
-        $this->setUcaDefault();
+        $this->setUcaDefault([
+            'options' => [
+                'individual_filtering' => true,
+                'individual_filtering_position' => 'head',
+                'order_cells_top' => true
+            ]
+        ]);
+
+        $this->addInvisibleColumns([
+            'id',
+            'statut.id',
+            // 'username',
+            'enabled'
+        ]);
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
-                'title' => 'Id',
-                'visible' => false,
-            ))
-            ->add('username', Column::class, array(
-                'title' => $this->translator->trans('common.utilisateur'),
-                'class_name' => 'hide-column-sm'
-            ))
             ->add('nom', Column::class, array(
                 'title' => $this->translator->trans('common.nom'),
             ))
@@ -30,20 +41,37 @@ class UtilisateurDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('common.email'),
                 'class_name' => 'hide-column-md'
             ))
-            ->add('groups.name', Column::class, array(
+            ->add('groups.libelle', Column::class, array(
                 'title' => $this->translator->trans('common.groups'),
-                'data' => 'groups[,].name',
-                'class_name' => 'hide-column-xs'
+                'data' => 'groups[, ].libelle',
+                'class_name' => 'hide-column-xs',
+                'orderable' => false,
             ))
+            ->add('statut.libelle', Column::class, [
+                'title' => $this->translator->trans('utilisateur.statut.datatable'),
+                'class_name' => 'hide-column-xs',
+                'default_content' => '',
+                'filter' => [
+                    SelectFilter::class, [
+                        'search_type' => 'eq',
+                        'select_options' =>
+                        ['' => $this->translator->trans('common.all')]
+                            + $this->getStatutUtilisateur()
+                    ]
+                ]
+            ])
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
-                    $this->getActionBoutonConfig('Voir', 'UtilisateurVoir', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_LECTURE'),
-                    $this->getActionBoutonConfig('Modifier', 'UtilisateurModifier', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'UtilisateurSupprimer', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_ECRITURE')
+                    (new VoirButton($this, 'UcaGest_UtilisateurVoir', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_LECTURE'))->getConfig(),
+                    (new ModifierButton($this, 'UcaGest_UtilisateurModifier', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_UtilisateurSupprimer', ['id' => 'id'], 'ROLE_GESTION_UTILISATEUR_ECRITURE'))->getConfig(),
+                    (new UtilisateurBloquerButton($this, 'UcaGest_UtilisateurBloquer', ['id' => 'id']))->getConfig(),
+                    (new UtilisateurDebloquerButton($this, 'UcaGest_UtilisateurBloquer', ['id' => 'id']))->getConfig(),
                 ]
             ]);
     }
+
 
     public function getEntity()
     {
@@ -53,5 +81,16 @@ class UtilisateurDatatable extends AbstractTranslatedDatatable
     public function getName()
     {
         return 'Utilisateur_datatable';
+    }
+
+    public function getStatutUtilisateur($id = 'id', $libelle = 'libelle')
+    {
+        $em = $this->getEntityManager();
+        $statuts = $em->getRepository('UcaBundle:StatutUtilisateur')->findAll();
+        $tab = $this->getOptionsArrayFromEntities($statuts, $id, $libelle);
+        foreach ($tab as $key => $value) {
+            $selectOptions[$value] = $value;
+        }
+        return $selectOptions;
     }
 }

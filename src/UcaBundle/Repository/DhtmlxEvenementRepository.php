@@ -29,23 +29,37 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         }
     }
     
-    public function findByDhtmlxDateByWeek($idRessource, $YearWeek){
-        $dateA = new \DateTime($YearWeek);
-        $dateB = new \DateTime($YearWeek);
-        $dateB = $dateB->modify("+7 day");
-        $data = $this->createQueryBuilder("e")
-        ->leftJoin("e.reservabilite", "re")
-        ->leftJoin("re.ressource", "r")
-        ->where("r.id = :id")
-        ->andWhere("e.serie is null")
-        ->andWhere("e.dateDebut BETWEEN :dateA and :dateB")
-        ->orderBy("e.dateDebut")
-        ->setParameter("id", $idRessource)
-        ->setParameter("dateA", $dateA)
-        ->setParameter("dateB", $dateB)
+    public function findDhtmlxReservabiliteByUser($user){
+        return  $this->createQueryBuilder("d")
+        ->join("d.reservabilite", "r")
+        ->join("r.inscriptions", "i")
+        ->where("i.utilisateur = :user")
+        ->setParameter("user", $user)
+        ->andWhere("i.statut = :statut")
+        ->setParameter("statut", 'valide')
         ->getQuery()
-        ->getResult(); 
+        ->getResult();
+    }
     
-        return $data;
+    public function findDhtmlxFormatSimpleByUser($user){
+        return  $this->createQueryBuilder("d")
+        ->join("d.formatSimple", "fs")
+        ->join("fs.inscriptions", "i")
+        ->where("i.utilisateur = :user")
+        ->setParameter("user", $user)
+        ->andWhere("i.statut = :statut")
+        ->setParameter("statut", 'valide')
+        ->getQuery()
+        ->getResult();
+    }
+    
+    public function findDhtmlxFormatSimpleByEncadrant($user){
+        return  $this->createQueryBuilder("d")
+        ->join("d.formatSimple", "fs")
+        ->join("fs.encadrants", "e")
+        ->andWhere("e.id = :userid")
+        ->setParameter("userid", $user->getId())
+        ->getQuery()
+        ->getResult();
     }
 }

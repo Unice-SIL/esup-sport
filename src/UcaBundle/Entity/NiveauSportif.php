@@ -28,7 +28,9 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $libelle;
 
-    
+    /** @ORM\ManyToMany(targetEntity="Creneau", mappedBy="niveauxSportifs") */
+    protected $creneaux;
+
     #endregion
 
     #region Méthodes
@@ -40,6 +42,14 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
 
     #endregion
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->creneaux = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id.
@@ -74,83 +84,40 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
     {
         return $this->libelle;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->activites = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
-     * Add activite.
+     * Add creneaux.
      *
-     * @param \UcaBundle\Entity\Activite $activite
+     * @param \UcaBundle\Entity\Creneau $creneaux
      *
      * @return NiveauSportif
      */
-    public function addActivite(\UcaBundle\Entity\Activite $activite)
+    public function addCreneaux(\UcaBundle\Entity\Creneau $creneaux)
     {
-        $this->activites[] = $activite;
+        $this->creneaux[] = $creneaux;
 
         return $this;
     }
 
     /**
-     * Remove activite.
+     * Remove creneaux.
      *
-     * @param \UcaBundle\Entity\Activite $activite
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeActivite(\UcaBundle\Entity\Activite $activite)
-    {
-        return $this->activites->removeElement($activite);
-    }
-
-    /**
-     * Get activites.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getActivites()
-    {
-        return $this->activites;
-    }
-
-    /**
-     * Add formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
-     *
-     * @return NiveauSportif
-     */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
-    {
-        $this->formatsActivite[] = $formatsActivite;
-
-        return $this;
-    }
-
-    /**
-     * Remove formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
+     * @param \UcaBundle\Entity\Creneau $creneaux
      *
      * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function removeCreneaux(\UcaBundle\Entity\Creneau $creneaux)
     {
-        return $this->formatsActivite->removeElement($formatsActivite);
+        return $this->creneaux->removeElement($creneaux);
     }
 
     /**
-     * Get formatsActivite.
+     * Get creneaux.
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getFormatsActivite()
+    public function getCreneaux()
     {
-        return $this->formatsActivite;
+        return $this->creneaux;
     }
 }

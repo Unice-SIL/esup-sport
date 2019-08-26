@@ -1,4 +1,5 @@
 <?php
+
 namespace UcaBundle\Datatables\Column;
 
 use Sg\DatatablesBundle\Datatable\Column\VirtualColumn;
@@ -17,10 +18,12 @@ class TwigVirtualColumn extends VirtualColumn
 
     public function renderSingleField(array &$row)
     {
+        $data = $this->field != '' ? $row[$this->field] : '';
         $twigConfig = [
             'entityClassName' => $this->entityClassName,
             'row' => $row,
-            'field' => $this->field
+            'field' => $this->field,
+            'data' => $data
         ];
         $row[$this->data] = $this->twig->render($this->getCellContentTemplate(), $twigConfig);
     }
@@ -35,21 +38,23 @@ class TwigVirtualColumn extends VirtualColumn
         return $this;
     }
 
-    public function setTwigTemplate($twigTemplate) {
+    public function setTwigTemplate($twigTemplate)
+    {
         $this->twigTemplate = $twigTemplate;
         return $this;
     }
-    public function getTwigTemplate() {
+    public function getTwigTemplate()
+    {
         return $this->twigTemplate;
     }
 
-    public function setField($field) {
+    public function setField($field)
+    {
         $this->field = $field;
         return $this;
     }
-    public function getField() {
+    public function getField()
+    {
         return $this->field;
     }
 }
-
- 

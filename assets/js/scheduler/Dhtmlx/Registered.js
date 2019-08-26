@@ -13,7 +13,7 @@ var Registered = {
                 
             
             // set the label of the new button
-            scheduler.locale.labels.icon_email = "Register";
+            scheduler.locale.labels.icon_register = "Registered";
 
         },
 

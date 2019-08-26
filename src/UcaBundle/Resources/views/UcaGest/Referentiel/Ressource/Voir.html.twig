@@ -1,27 +1,28 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 {% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
 {% block main %}
     <script> var typeA = "{{ type }}"; </script>
     <script> var role = "{{ role }}"; </script>
 
     {{ flashBag.showAll }}
-    <a class="btn btn-primary" href="{{ path('RessourceLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    <a class="btn btn-primary" href="{{ path('UcaGest_RessourceLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
     <h1>{{ item.libelle }}</h1>
     <div class="row">
         <div class="col-md-4">
-            <img class="img-fluid rounded mb-4" alt="image_ressource" src="{{'/Uca/upload/public/image/' ~ item.image }}">
+            <img class="img-fluid rounded mb-4" alt="" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
         </div>
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-6">
-                    <h2> {{'common.description'|trans}} </h2>
-                    <p> {{ item.description }} </p>
+                    <h2 class="hide-border-title"> {{'common.description'|trans}} </h2>
+                    <p> {{ item.description|nl2br }} </p>
                 </div>
                 {% if item.tarif != null %}
                     <div class="col-md-6">
-                        <h2> {{'common.tarif'|trans}} </h2>
+                        <h2 class="hide-border-title"> {{'common.tarif'|trans}} </h2>
                         <p> {{ item.tarif }} </p>
                     </div>
                 {% endif %}
@@ -29,14 +30,14 @@
             {% if format  == 'Lieu' %}
                 <div class="row">
                     <div class="col-md-6">
-                        <h2> {{'common.coordonnees'|trans}} </h2>
+                        <h2 class="hide-border-title"> {{'common.coordonnees'|trans}} </h2>
                         <p> {{ item.etablissement.libelle }} <br>
                             {{ item.adresse }} <br>
                             {{ item.codePostal }} {{ item.ville }}
                         </p>
                     </div>
                     <div class="col-md-6">
-                        <h2> {{'common.infossupplementaires'|trans}} </h2>
+                        <h2 class="hide-border-title"> {{'common.infossupplementaires'|trans}} </h2>
                         <li> {{'ressource.capacite'|trans}} : {{ item.capacite }} </li>
                         <li> {{'ressource.superficie'|trans}} : {{ item.superficie }} </li>
                         <li> {{'ressource.code.rus'|trans}} : {{ item.nomenclatureRus }} </li>
@@ -49,7 +50,7 @@
         </div>
     </div>
     
-    <h2>{{'common.reservabilites'|trans}}</h2>
+    <h2 class="hide-border-title">{{'common.reservabilites'|trans}}</h2>
     {{ dhtmlxCalendar.displayCalendarHtml }}
 {% endblock %}
 

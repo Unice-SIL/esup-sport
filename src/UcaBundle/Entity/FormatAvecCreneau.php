@@ -8,6 +8,7 @@ use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity
+ * @Gedmo\Loggable
  */
 class FormatAvecCreneau extends FormatActivite
 {
@@ -15,7 +16,6 @@ class FormatAvecCreneau extends FormatActivite
     /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="formatActivite") */
     private $creneaux;
 
-    protected $type = "creneau";
     #endregion
 
     #region Méthodes
@@ -26,6 +26,7 @@ class FormatAvecCreneau extends FormatActivite
      */
     public function __construct()
     {
+        parent::__construct();
         $this->creneaux = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

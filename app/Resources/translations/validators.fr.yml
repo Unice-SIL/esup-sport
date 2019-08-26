@@ -5,6 +5,8 @@ activite.image.format: 'L''image de l''activité n''est pas au bon format. (Atte
 activite.image.notnull: Une image doit être sélectionnée
 activite.libelle.notblank: Le libellé de l'activité est obligatoire
 activite.uniqueentity: Une activité existe déjà avec ce libellé
+actualite.texte.notblank: Le texte du l'actualité est obligatoire
+actualite.titre.notblank: Le titre du l'actualité est obligatoire
 classeactivite.image.format: 'L''image de la classe d''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
 classeactivite.image.notnull: Une image doit être sélectionnée pour la classe d'activité
 classeactivite.libelle.notblank: Le libellé de la classe d'activité est obligatoire
@@ -15,8 +17,13 @@ complement.encadrant.notblank: Pour un format encadré, au moins un encadrant do
 complement.niveauxsportifs.notblank: Vous devez saisir au moins un niveau sportif
 complement.profilsutilisateurs.notblank: Vous devez saisir au moins un profil d'utilisateur
 complement.tarif.notblank: Pour un format payant, le tarif doit être sélectionné
+contact.email.invalide: Il ne s'agit pas d'une adresse email valide
+contact.email.notblank: Une adresse email doit être renseignée
+contact.message.notblank: Un message doit être renseigné
+contact.objet.notblank: Un object de mail doit être renseigné
 etablissement.adresse.notblank: L'adresse du campus est obligatoire
 etablissement.code.notblank: Le code du campus est obligatoire
+etablissement.codePostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
 etablissement.codePostal.notblank: Le code postal du campus est obligatoire
 etablissement.email.invalide: Email Invalide
 etablissement.image.format: 'L''image n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
@@ -26,6 +33,12 @@ etablissement.telephone.invalide: Numéro de téléphone invalide
 etablissement.uniqueentity: Un établissment existe déjà avec ce libellé
 etablissement.ville.notblank: La ville du campus est obligatoire
 formatactivite.achatcarte.carte.notnull: Vous devez choisir une carte
+formatactivite.dateDebutEffective.notblank: La date de début effective est obligatoire
+formatactivite.dateDebutInscription.notblank: La date de début d'inscription est obligatoire
+formatactivite.dateDebutPublication.notblank: La date de début de publication est obligatoire
+formatactivite.dateFinEffective.notblank: La date de fin effective est obligatoire
+formatactivite.dateFinInscription.notblank: La date de fin d'inscription est obligatoire
+formatactivite.dateFinPublication.notblank: La date de fin de publication est obligatoire
 formatactivite.description.notblank: La description du format est obligatoire
 formatactivite.image.format: 'L''image du format n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
 formatactivite.image.notnull: Une image doit être sélectionnée
@@ -33,32 +46,75 @@ formatactivite.libelle.notblank: Le libellé du format est obligatoire
 formatactivite.lieu.notnull: Le lieu est obligatoire
 formatactivite.reservation.ressource.notnull: Veuillez sélectionner au moins une ressource
 formatactivite.uniqueentity: Un format d'activité existe déjà avec ce libellé
+groupe.name.notnull: Le nom du groupe est obligatoire
+groupe.name.tropLong: Le nom du groupe est trop long
+groupe.name.tropPetit: Le nom du groupe est trop petit
+groupe.roles.notnull: Le rôle est obligatoire
+groupe.uniqueentity: Un groupe existe déjà avec ce nom
 imagefond.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
 imagefond.image.notnull: Une image doit être sélectionnée
 imagefond.titre.notnull: Le titre est obligatoire
 lieu.adresse.notblank: L'adresse du lieu est obligatoire
+lieu.codepostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
 lieu.codepostal.notblank: Le code postal du lieu est obligatoire
 lieu.libelle.notblank: Le libellé du lieu est obligatoire
 lieu.ville.notblank: La ville du lieu est obligatoire
 materiel.libelle.notblank: Le libellé du lieu est obligatoire
 materiel.quantite.notblank: Veuillez renseigner une quantité disponible
-message.erreur.datefin: La date de début ne peut être supérieure à la date de fin
+message.erreur.datedebut: La date de début doit être inférieure à la date de fin
+message.erreur.datefin: La date de fin doit être supérieure à la date de début
+message.parametrage.timercb.timerpaybox: Le délai de paiement par CB doit être supérieur au délai de paiement Paybox
+message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être inférieur au délai de paiement par CB
+message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
+message.typeinvalide.entier: La valeur {{ value }} n'est pas un entier valide
+parametrage.facebook.notblank: Un lien Facebook doit être renseigné
+parametrage.instagram.notblank: Un lien Instagram doit être renseigné
+parametrage.lien.noturl: Il ne s'agit pas d'une URL valide
+parametrage.mailcontact.notblank: Une adresse email doit être renseignée
+parametrage.mailcontact.notemail: Il ne s'agit pas d'une adresse email valide
+parametrage.timer.type: Cette valeur doit être un nombre
+parametrage.timer.zero: Cette valeur doit être supérieure à 0
+parametrage.timerbds.notblank: Le délai de paiement au Bureau des sports doit être renseigné
+parametrage.timercb.notblank: Le délai de paiement par CB doit être renseigné
+parametrage.timerpanier.notblank: Le délai de validation du panier doit être renseigné
+parametrage.timerpanierapresvalidation.notblank: Le délai de mise au panier après validation doit être renseigné
+parametrage.timerpaybox.notblank: Le délai de paiement Paybox doit être renseigné
+parametrage.youtube.notblank: Un lien Youtube doit être renseigné
 profilutilisateur.libelle.notblank: Le libellé du profil utilisateur est obligatoire
+profilutilisateur.nbMaxinscriptions.notblank: Le nombre maximum d'inscriptions du profil utilisateur est obligatoire
+profilutilisateur.preinscription.notblank: La prreinscription ne doit pas être vide
 profilutilisateur.uniqueentity: Un profil utilisateur existe déjà avec ce libellé
 ressource.image.format: 'L''image de la ressource n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
 ressource.image.notnull: Une image doit être sélectionnée
 tarif.libelle.notblank: Le libellé du tarif est obligatoire
 tarif.montant.notnull: Veuillez saisir un montant
+tarif.tva.invalid: La TVA est comprise entre 0 et 100
+tarif.tva.notnull: La TVA ne doit pas être vide
 tarif.uniqueentity: Un tarif existe déjà avec ce libellé
+texte.texte.notblank: Le texte est obligatoire
+texte.textemobile.notblank: Le texte mobile est obligatoire
+texte.titre.notblank: Le titre du texte est obligatoire
+traduction.texte.notblank: La traduction dans cette langue est obligatoire
 typeactivite.libelle.notblank: Le libellé du type d'activité est obligatoire
 typeactivite.uniqueentity: Un type d'activité existe déjà avec ce libellé
 typeautorisation.comportement.notnull: Veuillez sélectionner un comportement
 typeautorisation.libelle.notblank: Le libellé du type d'autorisation est obligatoire
 typeautorisation.uniqueentity: Un type d'autorisation existe déjà avec ce libellé
 utilisateur.UserProfile.notnull: Veuillez selectionner un profil d'utilisateur
-utilisateur.firstname.notnull: Prénom est obligatoire
-utilisateur.mail.notnull: Mail est obligatoire
-utilisateur.name.notnull: Nom est obligatoire
-utilisateur.sexe.notnull: Civilité est obligatoire
-utilisateur.telephone.invalide: Numéro de téléphone invalide
+utilisateur.document.format.erreur: Format du document invalide
+utilisateur.document.notBlank : Pièce justificative manquante
+utilisateur.firstname.notnull: Le prénom est obligatoire
+utilisateur.mail.existant: L'adresse e-mail est déjà utilisée
+utilisateur.mail.invalide: L'adresse e-mail est invalide
+utilisateur.mail.notnull: L'adresse e-mail est obligatoire
+utilisateur.mail.tropLong: L'adresse e-mail trop long
+utilisateur.mail.tropPetit: L'adresse e-mail trop court
+utilisateur.name.notnull: Le nom est obligatoire
+utilisateur.password.notnull: Le mot de passe est obligatoire
+utilisateur.password.tropPetit: Le mot de passe est trop court
+utilisateur.sexe.notnull: La civilité est obligatoire
+utilisateur.telephone.invalide: Le numéro de téléphone invalide
+utilisateur.username.existant: Le nom d'utilisateur est déjà utilisé
 utilisateur.username.notnull: Le nom d'utilisateur est obligatoire
+utilisateur.username.tropLong: Le nom d'utilisateur est trop long
+utilisateur.username.tropPetit: Le nom d'utilisateur est trop court

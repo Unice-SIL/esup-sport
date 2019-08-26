@@ -8,7 +8,6 @@ use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity
- * @Gedmo\Loggable
  */
 class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
@@ -24,13 +23,17 @@ class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSeria
 
     /**
      * @Gedmo\Translatable
-     * @Gedmo\Versioned
      * @ORM\Column(type="string")
      */
     protected $libelle;
 
     /** @ORM\Column(type="string", nullable=false) */
     protected $codeComportement;
+
+    /** 
+     * @Gedmo\Translatable
+     * @ORM\Column(type="string", nullable=true) */
+    protected $descriptionComportement;
     #endregion
 
     #region Méthodes
@@ -98,5 +101,29 @@ class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSeria
     public function getCodeComportement()
     {
         return $this->codeComportement;
+    }
+
+    /**
+     * Set descriptionComportement.
+     *
+     * @param string|null $descriptionComportement
+     *
+     * @return ComportementAutorisation
+     */
+    public function setDescriptionComportement($descriptionComportement = null)
+    {
+        $this->descriptionComportement = $descriptionComportement;
+
+        return $this;
+    }
+
+    /**
+     * Get descriptionComportement.
+     *
+     * @return string|null
+     */
+    public function getDescriptionComportement()
+    {
+        return $this->descriptionComportement;
     }
 }

@@ -38,7 +38,7 @@ class ClasseActiviteType extends AbstractType
                 'label_format' => 'typeactivite.libelle',
                 'multiple' => false,
                 'expanded' => false,
-                'placeholder' => '- Sélectionner un type d\'activité -'])
+                'placeholder' => 'classeactivite.typeactivite.placeholder'])
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.save'
             ]);

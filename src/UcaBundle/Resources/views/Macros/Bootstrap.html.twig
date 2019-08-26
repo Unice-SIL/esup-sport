@@ -1,0 +1,19 @@
+{% macro accordionItem(id, expanded, title, text, parent) %}
+    <div class="card card-install custom-card bg-white mb-4">
+        <div class="card-header" id="heading{{id}}">
+            <a aria-controls="collapse{{id}}" aria-expanded="{{expanded ? 'true' : 'false'}}" class="col-12 {{expanded ? '' : 'collapsed'}}" data-target="#collapse{{id}}" data-toggle="collapse">
+                <div class="row text-left d-flex flex-wrap">
+                    <h2 class="mb-0 col-11 text-dark text-uppercase">{{ title | raw }}</h2>
+                    <p class="m-0 p-0 pr-3 col-1 text-right">
+                        <i class="fas fa-chevron-down"></i>
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div aria-labelledby="heading{{id}}" class="card-body collapse {{expanded ? 'show' : ''}}" data-parent="#{{parent}}" id="collapse{{id}}">
+            <div class="install-activity p-3 color-dark-gray">
+                {{ text | raw }}
+            </div>
+        </div>
+    </div>
+{% endmacro %}

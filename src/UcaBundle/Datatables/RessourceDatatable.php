@@ -4,6 +4,10 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
+use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 
 class RessourceDatatable extends AbstractTranslatedDatatable
@@ -51,11 +55,12 @@ class RessourceDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Voir', 'RessourceVoir', ['id' => 'id']),
-                    $this->getActionBoutonConfig('Modifier', 'RessourceModifier', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'RessourceSupprimer', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'Ressource', 'objectId' => 'id']),
-                ]]);
+                    (new VoirButton($this, 'UcaGest_RessourceVoir', ['id' => 'id']))->getConfig(),
+                    (new ModifierButton($this, 'UcaGest_RessourceModifier', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_RessourceSupprimer', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Ressource', 'objectId' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
+                ]
+            ]);
     }
 
     public function getEntity()

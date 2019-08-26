@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="fr" class="">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <style type="text/CSS">
+            {% block style %}{% endblock %}
+        </style>
+    </head>
+    <body style="font-style: 16px">
+        
+        {% block main %}{% endblock %}
+        {% include "@Uca/Email/TemplateEmail.Signature.html.twig" %}
+    </body>
+</html>

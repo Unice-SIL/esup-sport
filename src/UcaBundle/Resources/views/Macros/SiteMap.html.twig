@@ -1,0 +1,40 @@
+{% macro generatePlanSite( elements, nbTour = 3) %}
+
+    {% if elements is null %}
+        {% set elements = sitemap.getSitemapOriginal %}
+    {% endif %}
+
+    {% if elements is not empty and nbTour > 0 %}
+        <ul>
+            {% for item in elements %}
+                {% if item.route == 'UcaGest_Accueil' %}
+                    {% if app.user and app.user.groups is not empty %}
+                        {{ _self.showItemPlanSite(item, nbTour) }}
+                    {% endif %}
+                {% else %}
+                    {{ _self.showItemPlanSite(item, nbTour) }}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+{% endmacro %}
+
+{% macro showItemPlanSite(item, nbTour) %}
+    {% if item.params is not defined or item.params == null %}
+        {% if item.droit is not defined or (item.droit is defined and is_granted(item.droit)) %}
+            {% if item.plansite is not defined or item.plansite != 0 %}
+                <li>
+                    {% if item.route is defined and item.route is not null %}
+                        <a href="{{ url(item.route) }}">{{ sitemap.getTitre(item) }}</a>
+                    {% else %}
+                        {{ sitemap.getTitre(item) }}
+                    {% endif %}
+                </li>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+    {% if item.items is defined and item.items is not empty %}
+        {{ _self.generatePlanSite( item.items, nbTour - 1 ) }}
+    {% endif %}
+{% endmacro %}

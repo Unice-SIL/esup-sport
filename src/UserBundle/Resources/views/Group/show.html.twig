@@ -1,5 +1,13 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
 {% block fos_user_content %}
-{% include "@FOSUser/Group/show_content.html.twig" %}
+<a class="btn btn-primary" href="{{ path('UcaGest_GroupeLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+<h1>{{ group.getLibelle() }}</p></h1>
+<p> 
+  <ul>
+{% for role in group.getRoles() %}
+      <li> {{ ('security.roles.'~role) | trans }}</li>
+    {% endfor %}
+  <ul> 
+</p>
 {% endblock fos_user_content %}

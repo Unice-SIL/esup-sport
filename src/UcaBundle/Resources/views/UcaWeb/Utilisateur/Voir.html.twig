@@ -1,75 +1,112 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
-{% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{# {% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %} #}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
 
 {% block main %}
-    <h1> {{ item.prenom }} {{ item.nom }} </h1>
-    {% if not item.enabled %}
-        <p>utilisateur bloqué</p>
-    {% endif %}
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4">
-                <h2>{{'common.infospersonnelles'|trans}}</h2>
-                <ul>
-                    <li> {{'common.nom.utilisateur'|trans}} : {{ item.username }} </li>
-                    <li> {{'common.naissance'|trans}} {{ item.dateNaissance|date('d/m/Y') }} </li>
-                    <li> {{'utilisateur.adresse'|trans}} : {{ item.adresse }}, {{ item.codePostal }} {{ item.ville|upper }} </li>
-                    <li> {{'common.telephone'|trans}} : {{ item.telephone }} </li>
-                    <li> {{'common.email'|trans}} : {{ item.email }}  </li>
-                    <li> {{'common.profil'|trans}} : {{ item.profil.libelle }} </li>
-                    {# {% if not item.groups is empty %}
-                        <li> {{'utilisateur.droits.de'|trans}} {{ item.prenom|title }} {{ item.nom|upper }} : </li>
-                        <ul>
-                            {% for groups in item.groups %}
-                                <li> {{ groups.name }} </li>
-                        {% endfor %}
-                        </ul>
-                    {% endif %} #}
-                    <li> {{'common.autorisations'|trans}} :</li><ul>
-                    {% for autorisation in item.autorisations %}
-                        <li> {{ autorisation.libelle }} </li>
-                    {% endfor %}</ul>
-                </ul>
+  <h1 class="h1-light">
+    {{ item.prenom }}
+    {{ item.nom }}
+  </h1>
+  <section class="container">
+    <div class="w-100 mb-5 p-md-3 container-style bg-white d-flex flex-wrap justify-content-between card-event">
+      <div class="m-0 p-0 pl-4 pl-md-0 col-12 event-info">
 
-                {# <h2> {{ 'utilisateur.description'|trans }} :</h2> #}
-                {# <p> {{ item.description }} </p> #}
+        <div class="row m-0">
+          <div class="col-md-6 mb-4">
+            <h2 class="text-uppercase">{{'common.nom.utilisateur'|trans}}
+            </h2>
+            <p>
+              {{ item.username }}
+            </p>
+          </div>
 
-            </div>
-            <div class="col-md-4">
-                 <h2> {{'utilisateur.activite.souscrite'|trans}} </h2>
-                <ul>
-                    {% for activite, formats in activiteSouscrite %}
-                        <li> {{ activite }} </li>
-                        {% for format in formats %}
-                            <ul>
-                                <li> {{ format }} </li>
-                            </ul>
-                        {% endfor %}
-                    {% endfor %}
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h2> {{'utilisateur.commande'|trans}} </h2>
-                <ul>
-                    {% for commande in item.commandes %}
-                        <li> {{ commande.matricule }}</li>
-                        <ul>
-                            <li> {{ commande.dateCommande|date('d/m/Y') }} </li>
-                            <li> {{ commande.montantTotal }} par {{ commande.moyenPaiement}} </li>
-                        </ul>
-                    {% endfor %}
-                </ul>
-            </div>
+          <div class="col-md-6 mb-4">
+            <h2 class="text-uppercase">{{'common.profil'|trans}}</h2>
+            <p>
+              {{ item.profil.libelle }}
+            </p>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <h2 class="text-uppercase">{{'common.infospersonnelles'|trans}}
+              <a aria-label="{{'bouton.modifier' | trans }}" href="{{ path('UcaWeb_MonCompte_Modifier') }}">
+                <span class='fas fa-edit'></span>
+              </a>
+            </h2>
+            <ul>
+              <li>
+                {{'common.email'|trans}}:
+                {{ item.email }}
+              </li>
+              <li>
+                {{'common.naissance'|trans}}:
+                {% if item.dateNaissance is null %}
+                  {{'utilisateur.datedenaissance.aucune'|trans}}
+                {% else %}
+                  {{ item.dateNaissance | date('d/m/Y') }}
+                {% endif %}
+              </li>
+              <li>
+                {{'utilisateur.adresse'|trans}}:
+                {% if item.adresse is null %}
+                  {{'utilisateur.adresse.aucune'|trans}}
+                {% else %}
+                  {{ item.adresse }}
+                {% endif %}
+              </li>
+              <li>
+                {{'utilisateur.ville'|trans}}:
+                {% if item.ville is null %}
+                  {{'utilisateur.ville.aucune'|trans}}
+                {% else %}
+                  {{ item.codePostal }} &nbsp; {{ item.ville|upper }}
+                {% endif %}
+              </li>
+              <li>
+                {{'common.telephone'|trans}}:
+                {% if item.telephone is null %}
+                  {{'utilisateur.telephone.aucun'|trans}}
+                {% else %}
+                  {{ item.telephone }}
+                {% endif %}
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-md-6 mb-4">
+            <h2 class="text-uppercase">{{'common.autorisations'|trans}}
+            </h2>
+            {% if item.autorisations is empty %}
+              <p>
+                {{'utilisateur.autorisations.aucune'|trans }}
+              </p>
+            {% else %}
+              <ul>
+                {% for autorisation in item.autorisations %}
+                  <li>
+                    {{ autorisation.libelle }}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+          </div>
+          <div class="col-12 mb-4">
+            <h2 class="text-uppercase">{{'common.acces.rapide'|trans}}</h2>
+            <a class="btn btn-primary" href="{{url('UcaWeb_MesCommandes')}}">{{ 'mescommandes.list.title' | trans }}</a>
+            <a class="btn btn-primary" href="{{url('UcaWeb_MesInscriptions')}}">{{ 'mesinscriptions.list.title' | trans }}</a>
+            <a class="btn btn-primary" href="{{url('UcaWeb_MonPlanning')}}">{{ 'monplanning.list.title' | trans }}</a>
+          </div>
         </div>
-        <h2> {{'utilisateur.planning'|trans}} </h2>
-        {{ dhtmlxCalendar.displayCalendarHtml }}
+      </div>
     </div>
-{% endblock %}
-
-{% block javascripts %}
-    <script> var typeA = "{{ type }}"; </script>
-    <script> var role = "{{ role }}"; </script>
-    {{ dhtmlxCalendar.initSchedulerData(item) }}
-    {{ dhtmlxCalendar.initCalendarJs(item) }}
-    {{ dhtmlxCalendar.debugSchedulerEvents() }}
-{% endblock %}
+  </div>
+</section>{% endblock %}{% block javascripts %}
+<script>
+  var typeA = "{{ type }}";
+  var role = "{{ role }}";
+</script>{% endblock %}

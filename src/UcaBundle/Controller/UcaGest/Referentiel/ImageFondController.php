@@ -22,7 +22,7 @@ use UcaBundle\Service\Common\FlashBag;
 class ImageFondController extends Controller
 {
     /**
-     * @Route("/", name="ImageFondLister")
+     * @Route("/", name="UcaGest_ImageFondLister")
      * @Isgranted("ROLE_GESTION_IMAGEFOND_LECTURE")
     */
     public function listerAction(Request $request)
@@ -47,7 +47,7 @@ class ImageFondController extends Controller
 
 
      /**
-     * @Route("/Supprimer/{id}", name="ImageFondSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_ImageFondSupprimer")
      * @Isgranted("ROLE_GESTION_IMAGEFOND_ECRITURE")
     */
     public function supprimerAction(Request $request, ImageFond $imageFond)
@@ -56,12 +56,12 @@ class ImageFondController extends Controller
         $em->remove($imageFond);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($imageFond, 'Supprimer');
-        return $this->redirectToRoute('EtablissementLister');
+        return $this->redirectToRoute('UcaGest_EtablissementLister');
     
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="ImageFondModifier",requirements={"id"="\d+"}) 
+     * @Route("/Modifier/{id}", name="UcaGest_ImageFondModifier",requirements={"id"="\d+"}) 
      * @Method({"GET", "POST"})
      * @Isgranted("ROLE_GESTION_IMAGEFOND_ECRITURE")
     */
@@ -73,7 +73,7 @@ class ImageFondController extends Controller
             $em->persist($imageFond);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($imageFond, 'Modifier');
-            return $this->redirectToRoute('ImageFondLister');
+            return $this->redirectToRoute('UcaGest_ImageFondLister');
         }
         $twigConfig['item'] = $imageFond;
         $twigConfig['form'] = $form->createView();

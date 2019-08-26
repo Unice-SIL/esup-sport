@@ -27,8 +27,8 @@ class FormatAvecReservationType extends AbstractType
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.save'
             ])
-            ->add('reset', ResetType::class, [
-                'label_format' => 'bouton.reset',
+            ->add('previsualiser', SubmitType::class, [
+                'label_format' => 'bouton.save.previsualiser'
             ]);
     }
 

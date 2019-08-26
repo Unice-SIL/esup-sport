@@ -1,10 +1,13 @@
 {# Template erreur 403 #}
-{% set message = 'erreur.403' %}
+{% set message = 'erreur.403.message' %}
 {% if 'wrong' not in exception.message %}
     {% set message = exception.message %}
 {% endif %}
 {{ include("@UcaBundle/Resources/views/Exception/error.html.twig", 
-    {'textError':
-        message
-    }) 
+    {
+        'textError': "erreur.403",
+        'errorIcon': "erreur.403.icon",
+        'errorMessage': message,
+        'errorButton': "erreur.button"
+    })
 }}

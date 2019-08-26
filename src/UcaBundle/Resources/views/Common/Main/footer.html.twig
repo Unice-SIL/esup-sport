@@ -5,34 +5,34 @@
         </a>
         <ul class="d-flex justify-content-between align-items-center">
             <li class="">
-                <a class="" href="#">{{ "footer.mentionsLegales"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_MentionsLegales')}}">{{ "footer.mentionslegales"|trans }}</a>
             </li>
             <li class="">
-                <a class="" href="#">{{ "footer.planDuSite"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_PlanSite')}}">{{ "footer.plandusite"|trans }}</a>
             </li>
             <li class="">
-                <a class="" href="#">{{ "footer.accessibilite"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_Accessibilite')}}">{{ "footer.accessibilite"|trans }}</a>
             </li>
             <li class="">
-                <a class="" href="#">{{ "footer.cgu"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_CGU')}}">{{ "footer.cgu"|trans }}</a>
             </li>
             <li class="">
-                <a class="" href="#">{{ "footer.cgv"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_CGV')}}">{{ "footer.cgv"|trans }}</a>
             </li>
             <li class="">
-                <a class="" href="#">{{ "footer.contact"|trans }}</a>
+                <a class="" href="{{url('UcaWeb_Contact')}}">{{ "footer.contact"|trans }}</a>
             </li>
         </ul>
         <form class="">
-            <p>{{ "footer.reseauxSociaux"|trans }}</p>
+            <p>{{ "footer.reseauxsociaux"|trans }}</p>
             <div class="d-flex align-items-center justify-content-center">
-                <a aria-expanded="false" aria-haspopup="false" class="" href="" role="button">
+                <a aria-expanded="false" aria-haspopup="false" class="" href="{{parametrage().lienFacebook}}" role="button">
                     <i class="fab fa-facebook-square"></i>
                 </a>
-                <a aria-expanded="false" aria-haspopup="false" class="" href="" role="button">
+                <a aria-expanded="false" aria-haspopup="false" class="" href="{{parametrage().lienYoutube}}" role="button">
                     <i class="fab fa-youtube"></i>
                 </a>
-                <a aria-expanded="false" aria-haspopup="false" class="" href="" role="button">
+                <a aria-expanded="false" aria-haspopup="false" class="" href="{{parametrage().lienInstagram}}" role="button">
                     <i class="fab fa-instagram"></i>
                 </a>
             </div>

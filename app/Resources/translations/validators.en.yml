@@ -4,6 +4,8 @@ activite.image.format: 'The picture of the activity is not in the right format. 
 activite.image.notnull: A picture must be selected
 activite.libelle.notblank: The activity's label is required
 activite.uniqueentity: An activity already exists with this label
+actualite.texte.notblank: The news text is required
+actualite.titre.notblank: The news title is required
 classeactivite.image.format: 'The activity class picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
 classeactivite.image.notnull: A picture must be selected for the activity class
 classeactivite.libelle.notblank: The activity class label is required
@@ -14,8 +16,13 @@ complement.encadrant.notblank: For a framed format, at least one supervisor must
 complement.niveauxsportifs.notblank: You must enter at least one sport level
 complement.profilsutilisateurs.notblank: You must enter at least one user profile
 complement.tarif.notblank: For a paid format, the rate must be selected
+contact.email.invalide: This is not a valid email address
+contact.email.notblank: An email address is required
+contact.message.notblank: A message is required
+contact.objet.notblank: A mail object is required
 etablissement.adresse.notblank: The campus address is required
 etablissement.code.notblank: The campus code is required
+etablissement.codePostal.invalide: The campus postal code is invalid, it must contain 5 digits
 etablissement.codePostal.notblank: The campus postal code is required
 etablissement.email.invalide: Invalid email
 etablissement.image.format: 'The campus picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
@@ -25,6 +32,12 @@ etablissement.telephone.invalide: Invalid phone number
 etablissement.uniqueentity: A campus already exists with this label
 etablissement.ville.notblank: The campus city is required
 formatactivite.achatcarte.carte.notnull: You must choose a card
+formatactivite.dateDebutEffective.notblank: Effective start date is required
+formatactivite.dateDebutInscription.notblank: Registration start date is required
+formatactivite.dateDebutPublication.notblank: Publication start date is required
+formatactivite.dateFinEffective.notblank: Effective end date is required
+formatactivite.dateFinInscription.notblank: Registration end date is required
+formatactivite.dateFinPublication.notblank: Publication end date is required
 formatactivite.description.notblank: The format description is required
 formatactivite.image.format: 'The format picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
 formatactivite.image.notnull: A picture must be selected
@@ -32,32 +45,75 @@ formatactivite.libelle.notblank: The format label is required
 formatactivite.lieu.notnull: The place is required
 formatactivite.reservation.ressource.notnull: Please select at least one resource
 formatactivite.uniqueentity: An activity format already exists with this label
+groupe.name.notnull: Group name is required
+groupe.name.tropLong: Group name is too long
+groupe.name.tropPetit: Group name is too short
+groupe.roles.notnull: Rigths is required
+groupe.uniqueentity: An group already exists with this name
 imagefond.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
 imagefond.image.notnull: A picture must be selected
 imagefond.titre.notnull: The title is required
 lieu.adresse.notblank: The place's address is required
+lieu.codepostal.invalide: The post code is invalid, it must contain 5 digits
 lieu.codepostal.notblank: The place's postal code is required
 lieu.libelle.notblank: The place's label is required
 lieu.ville.notblank: The place's city is required
 materiel.libelle.notblank: The material label is required
 materiel.quantite.notblank: Please enter an available quantity
-message.erreur.datefin: The start date can not be greater than the end date
+message.erreur.datedebut: The start date must be lower than the end date
+message.erreur.datefin: The end date must be greater than the start date
+message.parametrage.timercb.timerpaybox: The payment time by credit card must be longer than the Paybox payment time
+message.parametrage.timerpaybox.timercb: The Paybox time payment must be longer than the payment time by credit card
+message.typeinvalide.double: The value {{ value }} is not a valid number
+message.typeinvalide.entier: The value {{ value }} is not a valid integer
+parametrage.facebook.notblank: A facebook link is required
+parametrage.instagram.notblank: An Instagram link is required
+parametrage.lien.noturl: This is not a valid URL
+parametrage.mailcontact.notblank: An email address is required
+parametrage.mailcontact.notemail: This is not a valid email address
+parametrage.timer.type: The value must be a number
+parametrage.timer.zero: The value must be greater than 0
+parametrage.timerbds.notblank: Sports office timer is required
+parametrage.timercb.notblank: CB timer is required
+parametrage.timerpanier.notblank: Basket timer is required
+parametrage.timerpaybox.notblank: Paybox timer is required
+parametrage.youtube.notblank: A Youtube link is required
 profilutilisateur.libelle.notblank: The user profile label is required
+profilutilisateur.nbMaxinscriptions.notblank: Maximum subscribtions can't be empty
+profilutilisateur.preinscription.notblank: The preRegistration field cannot be empty
 profilutilisateur.uniqueentity: A user profile already exists with this label
 ressource.image.format: 'The resource picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
 ressource.image.notnull: A picture must be selected
 tarif.libelle.notblank: The price list label is required
 tarif.montant.notnull: Please enter an amount
+tarif.tva.invalid: VAT must be between 0 and 100
+tarif.tva.notnull: VAT must not be empty
 tarif.uniqueentity: A price already exists with this label
+texte.texte.notblank: The text is required
+texte.textemobile.notblank: The mobile text is required
+texte.titre.notblank: The text title is required
+traduction.texte.notblank: Translation into this language is required
 typeactivite.libelle.notblank: The activity type label is required
 typeactivite.uniqueentity: An activity type already exists with this label
 typeautorisation.comportement.notnull: Please select a behaviour
 typeautorisation.libelle.notblank: The authorization type label is required
 typeautorisation.uniqueentity: An authorization type already exists with this label
 utilisateur.UserProfile.notnull: Please select an user profil
+utilisateur.document.format.erreur: document type incorrect
+utilisateur.document.notBlank : document missing
 utilisateur.firstname.notnull: First name is required
+utilisateur.mail.existant: The email is already used 
+utilisateur.mail.invalide: Invalid email
 utilisateur.mail.notnull: Mail is required
+utilisateur.mail.tropLong: Mail is too long
+utilisateur.mail.tropPetit: Mail is too short
 utilisateur.name.notnull: Name is required
+utilisateur.password.notnull: Password is required
+utilisateur.password.tropPetit: Password is too short
 utilisateur.sexe.notnull: Civility is required
 utilisateur.telephone.invalide: Invalid telephone number
+utilisateur.username.existant: The username is already used
 utilisateur.username.notnull: Username is required
+utilisateur.username.tropLong: Username is too long
+utilisateur.username.tropPetit: Username is too short
+parametrage.timerpanierapresvalidation.notblank: Basket timer after validation is required

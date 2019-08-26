@@ -1,4 +1,4 @@
-$('select').each(function () {
+$('select:not(.noSelect2)').each(function () {
     $(this).select2({
         theme: 'bootstrap4',
         width: 'style',

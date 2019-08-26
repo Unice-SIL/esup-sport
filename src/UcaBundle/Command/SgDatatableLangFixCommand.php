@@ -20,9 +20,9 @@ class SgDatatableLangFixCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $origFile = '%kernel.root_dir%/../src/UcaBundle/Datatables/Response/DatatableQueryBuilder.Orig.php';
-        $fixedFile = '%kernel.root_dir%/../src/UcaBundle/Datatables/Response/DatatableQueryBuilder.Fixed.php';
-        $dstFile = '%kernel.root_dir%/../vendor/sg/datatablesbundle/Response/DatatableQueryBuilder.php';
+        $origFile = $this->getContainer()->get('kernel')->getRootDir().'/../src/UcaBundle/Datatables/Response/DatatableQueryBuilder.Orig.php';
+        $fixedFile = $this->getContainer()->get('kernel')->getRootDir().'/../src/UcaBundle/Datatables/Response/DatatableQueryBuilder.Fixed.php';
+        $dstFile = $this->getContainer()->get('kernel')->getRootDir().'/../vendor/sg/datatablesbundle/Response/DatatableQueryBuilder.php';
 
         $fs = new Filesystem();
         // $fs->copy($dstFile, $origFile, true);

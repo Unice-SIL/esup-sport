@@ -1,0 +1,12 @@
+{% extends "@Uca/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Le paiement de votre commande n°{{ commande.numeroCommande }} a bien été enregistrée.
+            Vous pouvez accéder à la facture de votre commande avec le lien suivant :
+            <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesCommandesExport', {id : commande.id}) }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesCommandesExport', {id : commande.id}) }}</a>.
+        </p>
+    </div>
+{% endblock %}

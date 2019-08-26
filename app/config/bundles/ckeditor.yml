@@ -4,6 +4,7 @@ fos_ck_editor:
             toolbar: 'my_toolbar_1'
     toolbars:
         configs:
-            my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Image", "Table" ], "/", [ "Format", "-", "Maximize" ] ]
+            # my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Image", "Table" ], "/", [ "Format", "-", "Maximize" ] ]
+            my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Table" ], "/", [ "Format", "-", "Maximize" ] ]
     base_path: "ckeditor/"
     js_path:   "ckeditor/ckeditor.js"

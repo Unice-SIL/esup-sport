@@ -16,6 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @Vich\Uploadable
  * @Gedmo\Loggable   
  * @UniqueEntity(fields="libelle", message="activite.uniqueentity")
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\ActiviteListener"})
  */
 class Activite
 {
@@ -39,7 +40,7 @@ class Activite
      * @Assert\NotBlank(message="activite.description.notblank") */
     private $description;
 
-    /** @Gedmo\Versioned
+    /**
      * @ORM\ManyToOne(targetEntity="ClasseActivite" , inversedBy="activites")
      * @Assert\NotNull(message="activite.classeactivite.notnull") */
     private $classeActivite;
@@ -61,6 +62,12 @@ class Activite
 
     /** @ORM\Column(type="datetime", nullable=true) */
     private $updatedAt;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $classeActiviteLibelle;
     #endregion
 
 
@@ -83,6 +90,12 @@ class Activite
     public function getImageFile()
     {
         return $this->imageFile;
+    }
+    public function updateClasseActiviteLibelle()
+    {
+        $this->classeActiviteLibelle = $this->getClasseActivite()->getLibelle();
+
+        return $this;
     }
     #endregion
 
@@ -258,5 +271,20 @@ class Activite
     public function getFormatsActivite()
     {
         return $this->formatsActivite;
+    }
+
+
+    /**
+     * Set classeActiviteLibelle.
+     *
+     * @param string $classeActiviteLibelle
+     *
+     * @return Activite
+     */
+    public function setClasseActiviteLibelle($classeActiviteLibelle)
+    {
+        $this->classeActiviteLibelle = $classeActiviteLibelle;
+
+        return $this;
     }
 }

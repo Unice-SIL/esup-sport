@@ -4,11 +4,13 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\HttpFoundation\File\File;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use UcaBundle\Service\Common\Previsualisation;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatActiviteRepository")
@@ -22,12 +24,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * } )
  * @Gedmo\Loggable
  * @Vich\Uploadable
- * @UniqueEntity(fields={"libelle","activite"}, message="formatactivite.uniqueentity")
  * @ORM\HasLifecycleCallbacks
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\FormatActiviteListener"})
  */
-abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Tarifable
+abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
+    use \UcaBundle\Entity\Traits\Article;
 
     #region Propriétés
     /**
@@ -54,32 +57,31 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $description;
 
     /** 
-     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Activite", inversedBy="formatsActivite", fetch="EAGER")
      */
     private $activite;
 
     /** 
-     * @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true) 
      */
     private $lienHtml;
 
     /** 
-     * @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true)
      */
     private $lienPdf;
 
     /** 
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime", options={"default": "2019-10-01"}) 
+     * @ORM\Column(type="datetime") 
+     * @Assert\NotBlank(message="formatactivite.dateDebutPublication.notblank") 
      */
     private $dateDebutPublication;
 
     /** 
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime", options={"default": "2020-04-01"})
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="formatactivite.dateFinPublication.notblank") 
      * @Assert\Expression("this.getDateFinPublication() >= this.getDateDebutPublication()", message="message.erreur.datefin")
      */
     private $dateFinPublication;
@@ -87,12 +89,14 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /** 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime") 
+     * @Assert\NotBlank(message="formatactivite.dateDebutInscription.notblank") 
      */
     private $dateDebutInscription;
 
     /** 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime") 
+     * @Assert\NotBlank(message="formatactivite.dateFinInscription.notblank") 
      * @Assert\Expression("this.getDateFinInscription() >= this.getDateDebutInscription()", message="message.erreur.datefin")
      */
     private $dateFinInscription;
@@ -100,13 +104,16 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /** 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime") 
+     * @Assert\NotBlank(message="formatactivite.dateDebutEffective.notblank") 
+     * @Assert\Expression("this.getDateFinEffective() > this.getDateDebutEffective()", message="message.erreur.datedebut")
      */
     private $dateDebutEffective;
 
     /** 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime")
-     * @Assert\Expression("this.getDateFinEffective() >= this.getDateDebutEffective()", message="message.erreur.datefin")
+     * @Assert\NotBlank(message="formatactivite.dateFinEffective.notblank") 
+     * @Assert\Expression("this.getDateFinEffective() > this.getDateDebutEffective()", message="message.erreur.datefin")
      */
     private $dateFinEffective;
 
@@ -114,7 +121,6 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\OneToMany(targetEntity="Inscription", mappedBy="formatActivite") 
      */
     protected $inscriptions;
-
 
     /** @ORM\Column(type="string", length=255) */
     private $image;
@@ -132,7 +138,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $updatedAt;
 
     /** @ORM\ManyToMany(targetEntity="Lieu", inversedBy="formatsActivite") 
-     * @Assert\Expression("!this.getLieu().isEmpty()", message="formatactivite.lieu.notnull") */
+     * @Assert\NotNull(message="formatactivite.lieu.notnull")
+     * @Assert\Count(min = 1, minMessage = "formatactivite.lieu.notnull")
+     */
     private $lieu;
 
     protected $type;
@@ -144,40 +152,79 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $autorisations;
 
     /** @ORM\ManyToMany(targetEntity="NiveauSportif") 
-     * @Assert\NotBlank(message="complement.niveauxsportifs.notblank") */
+     * @Assert\NotBlank(message="complement.niveauxsportifs.notblank")
+     * @Assert\Count(min = 1, minMessage = "complement.niveauxsportifs.notblank")
+     */
     private $niveauxSportifs;
 
     /** @ORM\ManyToMany(targetEntity="ProfilUtilisateur", inversedBy="formatsActivite", fetch="EAGER")
-     * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank") */
+     * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
+     * @Assert\Count(min = 1, minMessage = "complement.profilsutilisateurs.notblank")
+     */
     private $profilsUtilisateurs;
 
-    /** @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
     private $estPayant;
 
     /** 
-     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="formatsActivite", fetch="EAGER") 
      * @Assert\Expression("!this.getEstPayant() || this.getTarif()", message="complement.tarif.notblank")
      */
     private $tarif;
 
-    /** @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
     private $estEncadre;
 
     /** 
      * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="formatsActivite") 
-     * @Assert\Expression("!this.getEstEncadre() || this.getEncadrants()", message="complement.encadrant.notblank") */
+     * @Assert\Expression("!this.getEstEncadre() || !this.getEncadrants().isEmpty()", message="complement.encadrant.notblank")
+     */
     private $encadrants;
 
     /** 
      * @Gedmo\Versioned
      * @ORM\Column(type="integer") 
-     * @Assert\NotBlank(message="complement.capacite.notblank") 
+     * @Assert\NotBlank(message="complement.capacite.notblank")
+     * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
      */
     protected $capacite;
 
-    /** @ORM\Column(type="integer", options={"default":0}) */
-    private $statut;
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="integer") */
+    private $statut = false;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $tarifLibelle;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeLieux;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeAutorisations;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeNiveauxSportifs;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeProfils;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeEncadrants;
 
     #endregion
 
@@ -200,12 +247,17 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
     public function jsonSerializeProperties()
     {
-        return  ['libelle', 'description', 'type', 'estEncadre', 'profilsUtilisateurs', 'niveauxSportifs'];
+        return  ['libelle', 'description', 'type', 'estEncadre', 'profilsUtilisateurs', 'niveauxSportifs', 'encadrants', 'lieu'];
     }
 
     public function getType()
     {
         return $this->type;
+    }
+
+    public function getFormat()
+    {
+        return (new \ReflectionClass($this))->getShortName();
     }
 
     public function setImageFile(File $image = null)
@@ -230,15 +282,146 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         return $this->getActivite()->getClasseActivite()->getId();
     }
 
-    public function getMontant($user)
+    public function getArticleMontant($utilisateur)
     {
-        if ($this->estPayant) {
-            return $this->getTarif()->getUserMontant($user->getProfil()->getId())->getMontant();
-        } else {
+        if (!$this->estPayant) {
             return 0;
+        } else {
+            return $this->getArticleMontantDefaut($utilisateur);
         }
     }
 
+    public function getArticleLibelle()
+    {
+        return $this->getLibelle();
+    }
+
+    public function getArticleDescription()
+    {
+        return $this->getDescription();
+    }
+
+    public function dateInscriptionValid()
+    {
+
+        $now = new \DateTime("now");
+        return $now > $this->getDateDebutInscription() && $now < $this->getDateFinInscription();
+    }
+
+    public function hasProfil($user)
+    {
+        if ($user === null) {
+            return true;
+        }
+
+        return $this->profilsUtilisateurs->contains($user->getProfil());
+    }
+
+    public function verifieCoherenceDonnees()
+    {
+        if (!$this->estPayant) {
+            $this->tarif = null;
+        }
+        if (!$this->estEncadre) {
+            $this->encadrants->clear();
+        }
+    }
+
+    public function isDisponible($user)
+    {
+        return $this->dateInscriptionValid() && $this->hasProfil($user) && $this->getArticleMontant($user) >= 0;
+    }
+
+    public function userIsInscrit($user)
+    {
+        if ($user === null)
+            return false;
+
+        return $user->hasInscription($this);
+    }
+
+    public function updateTarifLibelle()
+    {
+        if ($this->getTarif() != null) {
+            $this->tarifLibelle = $this->getTarif()->getLibelle();
+        } else {
+            $this->tarifLibelle = '';
+        }
+
+        return $this;
+    }
+
+    public function updateListeLieux()
+    {
+        $this->listeLieux = '';
+        foreach ($this->getLieu() as $lieu) {
+            if (!empty($this->listeLieux)) {
+                $this->listeLieux .= ", ";
+            }
+            $this->listeLieux .= $lieu->getLibelle();
+        }
+
+        return $this;
+    }
+
+    public function updateListeAutorisations()
+    {
+        $this->listeAutorisations = '';
+        foreach ($this->getAutorisations() as $autorisation) {
+            if (!empty($this->listeAutorisations)) {
+                $this->listeAutorisations .= ", ";
+            }
+            $this->listeAutorisations .= $autorisation->getLibelle();
+        }
+
+        return $this;
+    }
+
+    public function updateListeNiveauxSportifs()
+    {
+        $this->listeNiveauxSportifs = '';
+        foreach ($this->getNiveauxSportifs() as $niveauSportif) {
+            if (!empty($this->listeNiveauxSportifs)) {
+                $this->listeNiveauxSportifs .= ", ";
+            }
+            $this->listeNiveauxSportifs .= $niveauSportif->getLibelle();
+        }
+
+        return $this;
+    }
+
+    public function updateListeProfils()
+    {
+        $this->listeProfils = '';
+        foreach ($this->getProfilsUtilisateurs() as $profil) {
+            if (!empty($this->listeProfils)) {
+                $this->listeProfils .= ", ";
+            }
+            $this->listeProfils .= $profil->getLibelle();
+        }
+
+        return $this;
+    }
+
+    public function updateListeEncadrants()
+    {
+        $this->listeEncadrants = '';
+        foreach ($this->getEncadrants() as $encadrant) {
+            if (!empty($this->listeEncadrants)) {
+                $this->listeEncadrants .= ", ";
+            }
+            $this->listeEncadrants .= $encadrant->getPrenom() . ' ' . $encadrant->getNom();
+        }
+
+        return $this;
+    }
+    
+    public function getInscriptionsValidee(){
+        $criteria = Criteria::create()
+        ->andWhere(Criteria::expr()->eq('statut', "valide"));
+
+        return $this->getInscriptions()->matching($criteria);
+    }
     #endregion
 
     /**
@@ -910,5 +1093,149 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function getEncadrants()
     {
         return $this->encadrants;
+    }
+
+    /**
+     * Set tarifLibelle.
+     *
+     * @param string $tarifLibelle
+     *
+     * @return FormatActivite
+     */
+    public function setTarifLibelle($tarifLibelle)
+    {
+        $this->tarifLibelle = $tarifLibelle;
+
+        return $this;
+    }
+
+    /**
+     * Get tarifLibelle.
+     *
+     * @return string
+     */
+    public function getTarifLibelle()
+    {
+        return $this->tarifLibelle;
+    }
+
+    /**
+     * Set listeLieux.
+     *
+     * @param string $listeLieux
+     *
+     * @return FormatActivite
+     */
+    public function setListeLieux($listeLieux)
+    {
+        $this->listeLieux = $listeLieux;
+
+        return $this;
+    }
+
+    /**
+     * Get listeLieux.
+     *
+     * @return string
+     */
+    public function getListeLieux()
+    {
+        return $this->listeLieux;
+    }
+
+    /**
+     * Set listeAutorisations.
+     *
+     * @param string $listeAutorisations
+     *
+     * @return FormatActivite
+     */
+    public function setListeAutorisations($listeAutorisations)
+    {
+        $this->listeAutorisations = $listeAutorisations;
+
+        return $this;
+    }
+
+    /**
+     * Get listeAutorisations.
+     *
+     * @return string
+     */
+    public function getListeAutorisations()
+    {
+        return $this->listeAutorisations;
+    }
+
+    /**
+     * Set listeNiveauxSportifs.
+     *
+     * @param string $listeNiveauxSportifs
+     *
+     * @return FormatActivite
+     */
+    public function setListeNiveauxSportifs($listeNiveauxSportifs)
+    {
+        $this->listeNiveauxSportifs = $listeNiveauxSportifs;
+
+        return $this;
+    }
+
+    /**
+     * Get listeNiveauxSportifs.
+     *
+     * @return string
+     */
+    public function getListeNiveauxSportifs()
+    {
+        return $this->listeNiveauxSportifs;
+    }
+
+    /**
+     * Set listeProfils.
+     *
+     * @param string $listeProfils
+     *
+     * @return FormatActivite
+     */
+    public function setListeProfils($listeProfils)
+    {
+        $this->listeProfils = $listeProfils;
+
+        return $this;
+    }
+
+    /**
+     * Get listeProfils.
+     *
+     * @return string
+     */
+    public function getListeProfils()
+    {
+        return $this->listeProfils;
+    }
+
+    /**
+     * Set listeEncadrants.
+     *
+     * @param string $listeEncadrants
+     *
+     * @return FormatActivite
+     */
+    public function setListeEncadrants($listeEncadrants)
+    {
+        $this->listeEncadrants = $listeEncadrants;
+
+        return $this;
+    }
+
+    /**
+     * Get listeEncadrants.
+     *
+     * @return string
+     */
+    public function getListeEncadrants()
+    {
+        return $this->listeEncadrants;
     }
 }

@@ -20,7 +20,9 @@ class MontantTarifProfilUtilisateur
      */
     private $id;
 
-    /** @ORM\Column(type="decimal",options={"default":-1}) */
+    /** @ORM\Column(type="decimal", precision=10, scale=2,options={"default":-1})
+     * @Assert\NotBlank(message="tarif.montant.notnull")
+     */
     private $montant;
 
     /** @ORM\ManyToOne(targetEntity="Tarif", inversedBy="montants") */

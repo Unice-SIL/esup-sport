@@ -1,11 +1,18 @@
 {% extends "@Uca/Common/Liste/Datatable.html.twig" %}
 
+{% block modal %}
+    {% include "@Uca/Common/Modal/Modal.Confirmation.html.twig" %}
+{% endblock %}
 {% block DatatableHeader%}
     {% if not noAddButton is defined %}
         <div class="row">
             <div class="col-lg-6">
-                <a href="{{ url('fos_user_registration_register') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+                <a href="{{ url('UcaGest_UtilisateurEnregistrement') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
             </div>
         </div>
     {% endif %}
+{% endblock %}
+{% block javascript %}
+    <script>
+        {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}</script>
 {% endblock %}

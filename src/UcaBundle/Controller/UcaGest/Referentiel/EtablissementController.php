@@ -19,7 +19,7 @@ use UcaBundle\Form\EtablissementType;
 class EtablissementController extends Controller
 {
     /**
-     * @Route("/", name="EtablissementLister")
+     * @Route("/", name="UcaGest_EtablissementLister")
      * @Isgranted("ROLE_GESTION_ETABLISSEMENT_LECTURE")
     */
     public function listerAction(Request $request)
@@ -45,7 +45,7 @@ class EtablissementController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="EtablissementAjouter")
+     * @Route("/Ajouter", name="UcaGest_EtablissementAjouter")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_ETABLISSEMENT_ECRITURE")
      */
@@ -58,7 +58,7 @@ class EtablissementController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('EtablissementLister');
+            return $this->redirectToRoute('UcaGest_EtablissementLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -66,7 +66,7 @@ class EtablissementController extends Controller
     }
 
     /**
-     * @Route("/Modifier/{id}", name="EtablissementModifier")
+     * @Route("/Modifier/{id}", name="UcaGest_EtablissementModifier")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_ETABLISSEMENT_ECRITURE")
     */
@@ -77,7 +77,7 @@ class EtablissementController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('EtablissementLister');
+            return $this->redirectToRoute('UcaGest_EtablissementLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -85,7 +85,7 @@ class EtablissementController extends Controller
     }
 
     /**
-     * @Route("/Supprimer/{id}", name="EtablissementSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_EtablissementSupprimer")
      * @Isgranted("ROLE_GESTION_ETABLISSEMENT_ECRITURE")
     */
     public function supprimerAction(Request $request, Etablissement $item)
@@ -93,16 +93,16 @@ class EtablissementController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$item->getRessources()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('EtablissementLister');
+            return $this->redirectToRoute('UcaGest_EtablissementLister');
         }
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-        return $this->redirectToRoute('EtablissementLister');
+        return $this->redirectToRoute('UcaGest_EtablissementLister');
     
     }
     /**
-     * @Route("/{id}", name="EtablissementVoir")
+     * @Route("/{id}", name="UcaGest_EtablissementVoir")
      * @Isgranted("ROLE_GESTION_ETABLISSEMENT_LECTURE")
     */
     public function voirAction(Request $request, Etablissement $item)

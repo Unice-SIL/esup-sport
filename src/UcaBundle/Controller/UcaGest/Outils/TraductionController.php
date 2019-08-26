@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 class TraductionController extends Controller
 {
     /**
-     * @Route("/", name="TraductionLister")
+     * @Route("/", name="UcaGest_TraductionLister")
      */
     public function listerAction(Request $request)
     {
@@ -42,7 +42,7 @@ class TraductionController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_TRADUCTION_ECRITURE")
-     * @Route("/Modifier", name="TraductionModifier")
+     * @Route("/Modifier", name="UcaGest_TraductionModifier")
      */
     public function modifierAction(Request $request)
     {
@@ -77,11 +77,11 @@ class TraductionController extends Controller
             $em->flush();
 
             $this->get('uca.flashbag')->addActionFlashBag($translation, 'Modifier');
-            return $this->redirectToRoute('TraductionLister');
+            return $this->redirectToRoute('UcaGest_TraductionLister');
         }
 
         $twigConfig["item"] = null;
         $twigConfig["form"] = $editForm->createView();
-        return $this->render('@Uca/Common/Formulaire/Simple.html.twig', $twigConfig);
+        return $this->render('@Uca/UcaGest/Outils/Traductions/Formulaire.html.twig', $twigConfig);
     }
 }

@@ -550,6 +550,9 @@ class DatatableQueryBuilder
     {
         $qb = clone $this->qb;
         $qb->select('count(distinct '.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
+        if(isset($this->userDatatable->distinct_count) && !$this->userDatatable->distinct_count) {
+            $qb->select('count('.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
+        }
         $qb->resetDQLPart('orderBy');
         $this->setJoins($qb);
 

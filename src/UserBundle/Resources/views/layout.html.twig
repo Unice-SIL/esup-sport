@@ -1,21 +1,19 @@
-{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 
 {% block main %}
-    <div class="container">
-        {% if app.request.hasPreviousSession %}
-            {% for type, messages in app.session.flashbag.all() %}
-                {% for message in messages %}
-                    <div class="flash-{{ type }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+    {% if app.request.hasPreviousSession %}
+        {% for type, messages in app.session.flashbag.all() %}
+            {% for message in messages %}
+                <div class="flash-{{ type }}">
+                    {{ message }}
+                </div>
             {% endfor %}
-        {% endif %}
+        {% endfor %}
+    {% endif %}
 
-        <div>
-            {{ flashBag.showAll }}
-            {% block fos_user_content %}{% endblock fos_user_content %}
-        </div>
+    <div>
+        {{ flashBag.showAll }}
+        {% block fos_user_content %}{% endblock fos_user_content %}
     </div>
 {% endblock %}

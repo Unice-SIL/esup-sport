@@ -18,7 +18,9 @@ class TypeAutorisationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('libelle', TextType::class);
+        $builder->add('libelle', TextType::class, [
+            'label_format' => 'common.libelle',
+        ]);
         $builder->add('comportement', EntityType::class, [
             'class' => 'UcaBundle:ComportementAutorisation',
             'choice_label' => 'libelle',
@@ -40,16 +42,16 @@ class TypeAutorisationType extends AbstractType
             'multiple' => false,
             'expanded' => false,
             'disabled' => false,
-            'placeholder' => '- Aucun -',
+            'placeholder' => 'common.aucun',
             'attr' => [
-                'class' => 'defaultToHide cotisationToShow caseToHide justificatifToHide achatToHide validationencadrantToHide'
+                'class' => 'defaultToHide cotisationToShow caseToHide justificatifToHide carteToShow validationencadrantToHide validationgestionnaireToHide'
             ]
         ]);
         $builder->add('informationsComplementaires', TextAreaType::class, [
             'required' => false,
             'label_format' => 'typeautorisation.informations.complementaires',
             'attr' => [
-                'class' => 'defaultToHide cotisationToHide caseToShow justificatifToHide achatToHide validationencadrantToShow'
+                'class' => 'defaultToHide cotisationToShow caseToShow justificatifToShow carteToShow validationencadrantToShow validationgestionnaireToShow'
             ]
         ]);
         $builder->add('save', SubmitType::class, [

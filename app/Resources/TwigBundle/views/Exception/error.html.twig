@@ -1,6 +1,9 @@
 {# Template erreur pour les erreurs qui n'ont pas de templates #}
-{{ include("@UcaBundle/Resources/views/Exception/error.html.twig", 
-    {'textError': 
-        'erreur.generale'
-    }) 
+{{ include("@UcaBundle/Resources/views/Exception/error.html.twig",
+    {
+        'textError': "erreur.generale",
+        'errorIcon': "erreur.generale.icon",
+        'errorMessage': "erreur.generale.message",
+        'errorButton': "erreur.button"
+    })
 }}

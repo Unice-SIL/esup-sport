@@ -5,15 +5,17 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use UcaBundle\Service\Common\Previsualisation;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\ReservabiliteRepository")
  * @Gedmo\Loggable 
  */
-class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable
+class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
 {
 
     use \UcaBundle\Entity\Traits\JsonSerializable;
+    use \UcaBundle\Entity\Traits\Article;
 
     #region Propriétés
     /**
@@ -23,22 +25,19 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $id;
 
-    /** @ORM\ManyToMany(targetEntity="Ressource") */
+    /** @ORM\ManyToOne(targetEntity="Ressource", inversedBy="reservabilites") */
     private $ressource;
 
-    /**
-     * @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite")
-     */
+    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite") */
     private $evenement;
 
-    /** @ORM\OneToMany(targetEntity="Reservation", mappedBy="reservabilite") */
-    protected $reservations;
+    /** @ORM\OneToMany(targetEntity="Inscription", mappedBy="reservabilite") */
+    protected $inscriptions;
 
+    private $formatActivite;
 
     #endregion
-    public function isFull(){
-        return !(count($this->reservations) < $this->ressource[0]->getFormatResa()[0]->getCapacite());
-    }
+
     #region Méthodes
 
     public function jsonSerializeProperties()
@@ -46,15 +45,86 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable
         return [];
     }
 
-    #endregion
+    public function getArticleLibelle()
+    {
+        return $this->getFormatActivite()->getLibelle();
+    }
 
+    public function getTarif()
+    {
+        return $this->getRessource()->getTarif();
+    }
+
+    public function getArticleDescription()
+    {
+        return $this->getEvenement()->getDescription();
+    }
+
+    public function getAutorisations()
+    {
+        return $this->getFormatActivite()->getAutorisations();
+    }
+
+    public function getCapacite()
+    {
+        return $this->ressource->getCapacite();
+    }
+
+    public function getEncadrants()
+    {
+        return $this->getFormatActivite()->getEncadrants();
+    }
+
+    public function getFormatActivite()
+    {
+        return $this->formatActivite;
+    }
+
+    public function setFormatActivite($formatActivite)
+    {
+        $this->formatActivite = $formatActivite;
+    }
+
+    public function dateInscriptionValid(){
+
+        return $this->ressource->getFormatResa()[0]->dateInscriptionValid();
+    }
+
+    public function isDisponible($user)
+    {
+        if(Previsualisation::$IS_ACTIVE)
+            return true;
+        return $this->dateInscriptionValid() && $this->hasProfil($user) ;
+    }
+
+    public function hasProfil($user)
+    {
+        if($user === null)
+            return true;
+
+        return $this->ressource->getFormatResa()[0]->getProfilsUtilisateurs()->contains($user->getProfil());
+    }
+
+    public function userIsInscrit($user)
+    {
+        if($user === null)
+            return false;
+        return $user->hasInscription($this);
+    }
+
+    public function getArticleMontant($utilisateur)
+    {
+        return $this->getArticleMontantDefaut($utilisateur);
+    }
+
+    #endregion
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->ressource = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -68,35 +138,23 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Add ressource.
+     * Set ressource.
      *
-     * @param \UcaBundle\Entity\Ressource $ressource
+     * @param \UcaBundle\Entity\Ressource|null $ressource
      *
      * @return Reservabilite
      */
-    public function addRessource(\UcaBundle\Entity\Ressource $ressource)
+    public function setRessource(\UcaBundle\Entity\Ressource $ressource = null)
     {
-        $this->ressource[] = $ressource;
+        $this->ressource = $ressource;
 
         return $this;
     }
 
     /**
-     * Remove ressource.
-     *
-     * @param \UcaBundle\Entity\Ressource $ressource
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeRessource(\UcaBundle\Entity\Ressource $ressource)
-    {
-        return $this->ressource->removeElement($ressource);
-    }
-
-    /**
      * Get ressource.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return \UcaBundle\Entity\Ressource|null
      */
     public function getRessource()
     {
@@ -125,5 +183,41 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function getEvenement()
     {
         return $this->evenement;
+    }
+
+    /**
+     * Add inscription.
+     *
+     * @param \UcaBundle\Entity\Inscription $inscription
+     *
+     * @return Reservabilite
+     */
+    public function addInscription(\UcaBundle\Entity\Inscription $inscription)
+    {
+        $this->inscriptions[] = $inscription;
+
+        return $this;
+    }
+
+    /**
+     * Remove inscription.
+     *
+     * @param \UcaBundle\Entity\Inscription $inscription
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeInscription(\UcaBundle\Entity\Inscription $inscription)
+    {
+        return $this->inscriptions->removeElement($inscription);
+    }
+
+    /**
+     * Get inscriptions.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getInscriptions()
+    {
+        return $this->inscriptions;
     }
 }

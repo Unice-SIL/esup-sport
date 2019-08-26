@@ -86,6 +86,22 @@ scheduler.config.lightbox.get = {
 
         };
     },
+    lieu: function(){
+        return { 
+            name: Translator.trans("common.lieu"),
+            type: "select",
+            map_to: "lieu_id",
+            controls: {
+                require: true,
+            },
+            options: scheduler.data.fn.toOptions({
+                data: scheduler.data.lists.lieu,
+                id: "id",
+                libelle: ["libelle"]
+                })
+
+        };
+    },
     recurring: function () {
         return {name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring", form: "myForm"};
     },

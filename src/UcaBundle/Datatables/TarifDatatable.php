@@ -4,7 +4,11 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
+use UcaBundle\Datatables\Column\TwigDataColumn;
 
 class TarifDatatable extends AbstractTranslatedDatatable
 {
@@ -24,12 +28,16 @@ class TarifDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('common.montants'),
                 'twigTemplate' => 'MontantData',
             ))
+            ->add('pourcentageTVA', TwigDataColumn::class, array(
+                'title' => $this->translator->trans('common.tva'),
+                'twigTemplate' => 'TVAData',
+            ))
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Modifier', 'TarifModifier', ['id' => 'id'], 'ROLE_GESTION_TARIF_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'TarifSupprimer', ['id' => 'id'], 'ROLE_GESTION_TARIF_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'Tarif', 'objectId' => 'id']),
+                    (new ModifierButton($this, 'UcaGest_TarifModifier', ['id' => 'id'], 'ROLE_GESTION_TARIF_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_TarifSupprimer', ['id' => 'id'], 'ROLE_GESTION_TARIF_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Tarif', 'objectId' => 'id'], 'ROLE_GESTION_TARIF_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

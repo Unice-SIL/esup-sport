@@ -8,9 +8,15 @@ var ACL = {
                 "ALL"
             ],
             encadrant: [
-                    "mail",
-                    "ev_onclick",
-                    "delete",
+                "mail",
+                "ev_onclick",
+                "delete",
+                "more"
+            ],
+            user: [
+                "mail",
+                "ev_onclick",
+                "delete",
             ]
         } 
     },

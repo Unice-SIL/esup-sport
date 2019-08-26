@@ -5,31 +5,66 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatSimpleRepository")
+ * @Gedmo\Loggable
  */
-class FormatSimple extends FormatActivite
+class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
-  #region Propriétés
-    /** @ORM\Column(type="boolean",nullable=false) */
+    #region Propriétés
+
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="boolean", nullable=false) */
     private $promouvoir = false;
 
-    protected $type = "simple";
-  #endregion
+    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", cascade={"persist", "remove"}, mappedBy="formatSimple") */
+    private $evenement;
 
-  #region Méthodes
-    
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    #endregion
+
+    #region Méthodes
+    public function __construct()
     {
-        return $this->id;
+        parent::__construct();
+        $this->evenement = new DhtmlxEvenement();
+        $this->evenement->setFormatSimple($this);
     }
-  #endregion
+
+    public function getArticleLibelle()
+    {
+        return $this->getLibelle();
+    }
+
+    public function getArticleDescription()
+    {
+        return $this->getDescription();
+    }
+
+    public function setDateDebutEffective($dateDebutEffective)
+    {
+        $this->evenement->setDateDebut($dateDebutEffective);
+        parent::setDateDebutEffective($dateDebutEffective);
+        return $this;
+    }
+
+    public function setDateFinEffective($dateFinEffective)
+    {
+        $this->evenement->setDateFin($dateFinEffective);
+        parent::setDateFinEffective($dateFinEffective);
+        return $this;
+    }
+
+    public function setLibelle($libelle)
+    {
+        $this->evenement->setDescription($libelle);
+        parent::setLibelle($libelle);
+        return $this;
+    }
+
+    #endregion
+
 
     /**
      * Set promouvoir.
@@ -53,5 +88,29 @@ class FormatSimple extends FormatActivite
     public function getPromouvoir()
     {
         return $this->promouvoir;
+    }
+
+    /**
+     * Set evenement.
+     *
+     * @param \UcaBundle\Entity\DhtmlxEvenement|null $evenement
+     *
+     * @return FormatSimple
+     */
+    public function setEvenement(\UcaBundle\Entity\DhtmlxEvenement $evenement = null)
+    {
+        $this->evenement = $evenement;
+
+        return $this;
+    }
+
+    /**
+     * Get evenement.
+     *
+     * @return \UcaBundle\Entity\DhtmlxEvenement|null
+     */
+    public function getEvenement()
+    {
+        return $this->evenement;
     }
 }

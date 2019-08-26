@@ -20,7 +20,7 @@ use UcaBundle\Form\TexteType;
 class TexteController extends Controller
 {
     /**
-     * @Route("/", name="TexteLister")
+     * @Route("/", name="UcaGest_TexteLister")
      * @Isgranted("ROLE_GESTION_TEXTE_LECTURE")
      */
     public function listerAction(Request $request)
@@ -43,7 +43,7 @@ class TexteController extends Controller
 
 
     /**
-     * @Route("/{id}/Modifier", name="TexteModifier")
+     * @Route("/{id}/Modifier", name="UcaGest_TexteModifier")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_TEXTE_ECRITURE")
      */
@@ -59,7 +59,7 @@ class TexteController extends Controller
                 $texte->setTexteMobile('');
             }
             $em->flush();
-            return $this->redirectToRoute('TexteLister');
+            return $this->redirectToRoute('UcaGest_TexteLister');
         }
 
         $twigConfig["item"] = $texte;

@@ -12,6 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\ClasseActiviteRepository")
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\ClasseActiviteListener"})
  * @Vich\Uploadable
  * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="classeactivite.uniqueentity")
@@ -35,20 +36,20 @@ class ClasseActivite
     protected $libelle;
 
     /** 
-     * @Gedmo\Versioned
      * @ORM\ManyToOne(targetEntity="TypeActivite" , inversedBy="classeActivite") 
      * @Assert\NotNull(message="classeactivite.typeactivite.notnull")
      */
     private $typeActivite;
 
+    
     /** 
      * @ORM\OneToMany(targetEntity="Activite", mappedBy="classeActivite" , fetch="EXTRA_LAZY")
-    */
+     */
     private $activites;
     
     /** @ORM\Column(type="string", length=255) */
     private $image;
-
+    
     /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
@@ -60,6 +61,12 @@ class ClasseActivite
     
     /** @ORM\Column(type="datetime",nullable=true) */
     private $updatedAt; 
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $typeActiviteLibelle;
     #endregion
 
     #region Méthodes
@@ -70,6 +77,12 @@ class ClasseActivite
     function __toString()
     {
         return $this->libelle;
+    }
+    public function updateTypeActiviteLibelle()
+    {
+        $this->typeActiviteLibelle = $this->getTypeActivite()->getLibelle();
+
+        return $this;
     }
     #endregion
     
@@ -229,5 +242,29 @@ class ClasseActivite
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set typeActiviteLibelle.
+     *
+     * @param string $typeActiviteLibelle
+     *
+     * @return ClasseActivite
+     */
+    public function setTypeActiviteLibelle($typeActiviteLibelle)
+    {
+        $this->typeActiviteLibelle = $typeActiviteLibelle;
+
+        return $this;
+    }
+
+    /**
+     * Get typeActiviteLibelle.
+     *
+     * @return string
+     */
+    public function getTypeActiviteLibelle()
+    {
+        return $this->typeActiviteLibelle;
     }
 }

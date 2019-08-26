@@ -87,6 +87,7 @@ var Serie = {
 
         var obj = this;
         obj.tarif_id = parseInt(data.tarif_id);
+        obj.lieu_id = parseInt(data.lieu_id);
         this.enfants = [];
         
         obj.encadrant_ids = data.encadrant_ids;
@@ -115,6 +116,7 @@ var Serie = {
                     }
 
                     ev.tarif_id = parseInt(data.tarif_id);
+                    ev.lieu_id = parseInt(data.lieu_id);
                     
                     ev.dateDebut = dateToStr(ev.start_date);
                     ev.dateFin = dateToStr(ev.end_date);
@@ -129,6 +131,7 @@ var Serie = {
             }
             else{
                 ev.tarif_id = parseInt(data.tarif_id);
+                ev.lieu_id = parseInt(data.lieu_id);
 
                 ev.start_date = new Date(ev.start_date.getTime());
                 //ev.end_date = transformDate(ev.end_date.getTime() );

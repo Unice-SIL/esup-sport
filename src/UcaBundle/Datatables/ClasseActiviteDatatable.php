@@ -4,6 +4,9 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Button\SupprimerButton;
 
 class ClasseActiviteDatatable extends AbstractTranslatedDatatable
 {
@@ -26,9 +29,9 @@ class ClasseActiviteDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
-                    $this->getActionBoutonConfig('Modifier', 'ClasseActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Supprimer', 'ClasseActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'),
-                    $this->getActionBoutonConfig('Log', 'LogLister', ['objectClass' => 'ClasseActivite', 'objectId' => 'id']),
+                    (new ModifierButton($this, 'UcaGest_ClasseActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_ClasseActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'ClasseActivite', 'objectId' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

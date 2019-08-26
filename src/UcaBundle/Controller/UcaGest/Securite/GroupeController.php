@@ -28,7 +28,7 @@ class GroupeController extends Controller
 {
 
     /** 
-     * @Route("/", name="GroupeLister") 
+     * @Route("/", name="UcaGest_GroupeLister") 
      * @Isgranted("ROLE_GESTION_GROUPE_LECTURE")
     */
     public function listerAction(Request $request)
@@ -55,74 +55,19 @@ class GroupeController extends Controller
     }
 
     /**
-     * @Route("/{id}/Supprimer", name="GroupeSupprimer") 
+     * @Route("/{id}/Supprimer", name="UcaGest_GroupeSupprimer") 
      * @Isgranted("ROLE_GESTION_GROUPE_ECRITURE")
      */
     public function supprimerAction(Request $request, Groupe $groupe)
     {
         $gm = $this->container->get('fos_user.group_manager');
         if (!$groupe->getUtilisateurs()->isEmpty()) {
-            $this->get('uca.flashbag')->addMessageFlashBag('Impossible de supprimer ce groupe, des utilisateur y sont affectés', 'danger');
-            return $this->redirectToRoute('GroupeLister');
+            $this->get('uca.flashbag')->addMessageFlashBag('groupe.supprimer.danger', 'danger');
+            return $this->redirectToRoute('UcaGest_GroupeLister');
         }
         $gm->deleteGroup($groupe);
         $this->get('uca.flashbag')->addActionFlashBag($groupe, 'Supprimer');
-        return $this->redirectToRoute('GroupeLister');
+        return $this->redirectToRoute('UcaGest_GroupeLister');
     }
 
-    /*
-     * @Route("/Groupe/Ajouter", name="GroupeAjouter")
-
-    public function ajouterAction(Request $request)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $item = new Groupe('');
-        $form = $this->get('form.factory')->create(GroupeType::class, $item, ['roles' => $this->getRoles()]);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $em->persist($item);
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('GroupeLister');
-        }
-        $twigConfig['item'] = $item;
-        $twigConfig['form'] = $form->createView();
-        return $this->render('@Uca/Common/Formulaire/Simple.html.twig', $twigConfig);
-    }
-    
- 
-     * @Route("/Groupe/Modifier/{id}", name="GroupeModifier")
-     
-    public function modifierAction(Request $request, Groupe $item)
-    {
-        $em = $this->getDoctrine()->getManager();
-        // dump(item); die;
-        $form = $this->get('form.factory')->create(GroupeType::class, $item, ['roles' => $this->getRoles()]);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('GroupeLister');
-        }
-        $twigConfig['item'] = $item;
-        $twigConfig['form'] = $form->createView();
-        return $this->render('@Uca/Common/Formulaire/Simple.html.twig', $twigConfig);
-    }
-
-     * @Route("/Groupe/Supprimer/{id}", name="GroupeSupprimer")
- 
-    public function supprimerAction(Request $request, Groupe $item)
-    {
-        $t = $this->get('translator');
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($item);
-        $em->flush();
-        $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-        return $this->redirectToRoute('GroupeLister');
-    }
-
-    public function getRoles()
-    {
-        $roles = $this->container->getParameter('security.role_hierarchy.roles');
-        return array_combine(array_keys($roles), array_keys($roles));
-    }
-*/
 }

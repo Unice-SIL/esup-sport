@@ -30,7 +30,7 @@ class EtablissementType extends AbstractType
             'label_format' => 'utilisateur.adresse'
         ]);
         $builder->add('codePostal',TextType::class,[
-            'label_format' => 'utilisateur.codePostal'
+            'label_format' => 'utilisateur.codepostal'
         ]);
         $builder->add('ville',TextType::class,[
             'label_format' => 'utilisateur.ville'

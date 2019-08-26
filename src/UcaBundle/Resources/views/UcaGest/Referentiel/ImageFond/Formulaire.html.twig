@@ -2,9 +2,17 @@
 {% import '@Uca/Macros/ImagePreview.html.twig' as ImagePreview %}
 
 {% block main %}
-    <a class="btn btn-primary" href="{{ path('ImageFondLister') }}">
+    <a class="btn btn-primary" href="{{ path('UcaGest_ImageFondLister') }}">
         <i class="fas fa-chevron-left"></i>
-        {{ 'bouton.retour' | trans }}</a>
+        {{ 'bouton.retour' | trans }}
+    </a>
+    <h1>{{'imagefond.modifier.title'|trans}}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
     {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
     {{ form_row(form.titre) }}
     {{ form_row(form.imageFile) }}

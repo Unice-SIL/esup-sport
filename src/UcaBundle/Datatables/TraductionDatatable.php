@@ -6,8 +6,11 @@ use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
+use Sg\DatatablesBundle\Datatable\Filter\TextFilter;
+use UcaBundle\Datatables\Button\ModifierButton;
+use UcaBundle\Datatables\Filter\LikeFilter;
 
-class TraductionDatatable extends AbstractUcaDatatable
+class TraductionDatatable extends AbstractNotTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
@@ -38,8 +41,10 @@ class TraductionDatatable extends AbstractUcaDatatable
                 'search_column' => $col['sql'],
                 'order_column' => $col['sql']
             ];
-            if (strpos($col['config'], 'write') === false) {
+            if (strpos($col['config'], 'write') === false && $config['visible'] == false) {
                 $config['searchable'] = false;
+            } else if(strpos($col['config'], 'write') === false && $config['visible'] == true) {
+                $config['searchable'] = true;
             } else {
                 $config['searchable'] = true;
                 $config['filter'] = [SelectFilter::class, [
@@ -60,7 +65,7 @@ class TraductionDatatable extends AbstractUcaDatatable
         $this->columnBuilder->add(null, ActionColumn::class, [
             'title' => $this->translator->trans('sg.datatables.actions.title'),
             'actions' =>  [
-                $this->getActionBoutonConfig('Modifier', 'TraductionModifier', ['id' => 'entityid', 'entity' => 'entity', 'field' => 'field'], 'ROLE_GESTION_TRADUCTION_ECRITURE')
+                (new ModifierButton($this, 'UcaGest_TraductionModifier', ['id' => 'entityid', 'entity' => 'entity', 'field' => 'field'], 'ROLE_GESTION_TRADUCTION_ECRITURE'))->getConfig(),
             ]
         ]);
     }

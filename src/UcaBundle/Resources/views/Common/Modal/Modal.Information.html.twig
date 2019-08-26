@@ -1,0 +1,21 @@
+<div aria-hidden="true" class="modal z-index-top fade" id="{{ block('modalId') }}" role="dialog" tabindex="-1">
+    <div class="modal-dialog" role="document">
+        {% block modalFormStart %}{% endblock %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 aria-labelledby="{{ block('modalId') }}" class="modal-title fs-24 hide-border-title">{{ block('modalTitle') | trans | upper }}</h2>
+                <button aria-label="Close" class="close" data-dismiss="modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">{{ block('modalBody') }}</div>
+            <div class="modal-footer">
+                {% block modalFooter %}
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button">{{ 'bouton.retour' | trans }}</button>
+                    <a class="btn btn-primary js-bouton-action" type="button">{{ block('modalBoutonActionLibelle') }}</a>
+                {% endblock %}
+            </div>
+        </div>
+        {% block modalFormEnd %}{% endblock %}
+    </div>
+</div>

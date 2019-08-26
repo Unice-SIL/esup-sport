@@ -1,11 +1,15 @@
 {% extends '@Uca/Common/Main/Structure.Application.html.twig' %}
 {% block stylesheets %}
-{{ encore_entry_link_tags('cssGest') }}
+    {{ encore_entry_link_tags('cssGest') }}
 {% endblock %}
 {% block body %}
-<div class="container-admin">
+<div class="container-admin pb-5">
     <div class="container-fluid">
-        {% include('@Uca/Common/Main/Structure.Menu.html.twig') %}
+        <div class="row">
+            {% include('@Uca/Common/Securite/Menu.Utilisateur.UcaGest.html.twig') %}
+        </div>
+    </div>
+    <div class="breadcrumb-ucaweb">
         {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
     </div>
     <div class="container container-style bg-white">
@@ -13,3 +17,8 @@
     </div>
 </div>
 {% endblock %}
+
+{% block footer %}
+    {% include '@Uca/Common/Main/footer.html.twig' %}
+{% endblock %}
+

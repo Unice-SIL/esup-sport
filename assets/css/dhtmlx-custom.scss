@@ -27,6 +27,9 @@
   background-image: url('images/person.png');  
 }
 
+.dhx_menu_icon.icon_more{
+  background-image: url('images/see-more.png');
+}
 
 .custom_form{
   position: absolute;
@@ -56,7 +59,7 @@
   width: 99%;
 }
 
-.icon_email, .icon_register{
+.icon_email, .icon_register, .icon_more{
   background-position: 0;
   /* background-color: white; */
   width: 20px;

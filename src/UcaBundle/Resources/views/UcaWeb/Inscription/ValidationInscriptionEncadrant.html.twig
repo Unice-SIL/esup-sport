@@ -1,0 +1,68 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+  <h1 class="h1-light">{{'sitemap.inscriptionavalider.libelle'|trans}}</h1>
+  <section class="container mb-5">
+    <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
+      <p>
+        {{'inscription.de' | trans }}
+        {{item.utilisateur.prenom}}
+        {{item.utilisateur.nom}}
+        {{'inscription.pour' | trans }}
+        :
+        {% include "@Uca/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': item } %}
+      </p>
+      {% for autorisation in item.autorisations %}
+        <div>
+          {% set codeComportement = autorisation.codeComportement %}
+          {% set typeAutorisation = autorisation.typeAutorisation %}
+          {% if codeComportement == 'justificatif' %}
+            <p>{{typeAutorisation.libelle}}</p>
+            <a class="btn btn-info" href="{{path('UcaWeb_TelechargerJustificatif', {'id': autorisation.id})}}" download="{{autorisation.justificatif}}">
+              <i class="fas fa-file-download"></i>
+              {{'inscription.bouton.justificatif' | trans }}</a>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <hr/>
+      {% if item.statut == 'attentevalidationencadrant' %}
+        <div class="row">
+          <div class="col-sm-6">
+            <form action="{{path('UcaWeb_InscriptionValideeParEncadrant', {'id':item.id}) }}">
+              <button class="btn btn-primary" type="submit">{{'inscription.bouton.valider' | trans }}</button>
+            </form>
+          </div>
+          <div class="col-sm-6">
+            <form action="{{path('UcaWeb_InscriptionRefuseeParEncadrant', {'id':item.id}) }}" method="POST">
+              <div class="form-group">
+                <label for="motifRefusEncadrant"> {{ 'inscription.refus.motif.libelle' | trans }} </label>
+                <input id="motifRefusEncadrant" type="text" name="motifRefus"/>
+              </div>
+              <button class="btn btn-primary btn-danger" type="submit">{{'inscription.bouton.refuser' | trans }}</button>
+            </form>
+          </div>
+        </div>
+      {% elseif item.statut == 'attentevalidationgestionnaire' %}
+        <form action="{{path('UcaWeb_InscriptionValideeParGestionnaire', {'id':item.id}) }}">
+          <button class="btn btn-primary" type="submit">{{'inscription.bouton.valider' | trans }}</button>
+        </form>
+        <form action="{{path('UcaWeb_InscriptionRefuseeParGestionnaire', {'id':item.id}) }}">
+          <div class="form-group">
+            <label for="motifRefusGestionnaire">{{ 'inscription.refus.motif.libelle' | trans }}</label>
+            <input id="motifRefusGestionnaire" type="text" name="motifRefus"/>
+          </div>
+          <button class="btn btn-primary btn-danger" type="submit">{{'inscription.bouton.refuser' | trans }}</button>
+        </form>
+      {% endif %}
+    </div>
+  </section>
+
+{% endblock %}

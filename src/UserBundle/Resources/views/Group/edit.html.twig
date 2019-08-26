@@ -1,5 +1,16 @@
 {% extends "@FOSUser/layout.html.twig" %}
 
 {% block fos_user_content %}
-{% include "@FOSUser/Group/edit_content.html.twig" %}
+<a class="btn btn-primary" href="{{ path('UcaGest_GroupeLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+
+<h1>{{'groupe.modifier.title'|trans}}</h1>
+<div class="well">
+  <div class="row">
+    <div class="col-sm-12 col-lg-6"> 
+       {{ form_start(form, { 'action': path('UcaGest_GroupeModifier', {'groupName': group_name}), 'attr': { 'novalidate': 'novalidate' } }) }}
+       {{ form_widget(form) }}
+       {{ form_end(form) }}
+     </div>
+  </div>
+</div>
 {% endblock fos_user_content %}

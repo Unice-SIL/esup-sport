@@ -41,8 +41,7 @@ class DhtmlxController extends Controller
         if ($type == "ressource" || $type == 'FormatActivite') {
             $events = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxDateByReference($type, $id);
             $series = $em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReference($type, $id);
-        } 
-            elseif ($type == "encadrant") {
+        } elseif ($type == "encadrant" || $type == "user") {
             $user = $this->getUser();
             if ($user == null) {
                 return false;
@@ -50,9 +49,15 @@ class DhtmlxController extends Controller
 
             $id = $user->getId();
 
-            $events = $em->getRepository(DhtmlxDate::class)->findDhtmlxDateByEncadrant(
-                $id
-            );
+            $InscriptionsCreneaux = $em->getRepository(DhtmlxSerie::class)->findDhtmlxCreneauByUser($user);
+            $EncadrementsCreneaux = $em->getRepository(DhtmlxSerie::class)->findDhtmlxCreneauByEncadrant($user);
+            $InscriptionsReservabilite = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxReservabiliteByUser($user);
+            $InscriptionsformatSimple = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxFormatSimpleByUser($user);
+            $EncadrementsformatSimple = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxFormatSimpleByEncadrant($user);
+            //$events = array_merge($creneaux, $reservabilites);
+
+            $events = array_merge($InscriptionsReservabilite, $InscriptionsformatSimple, $EncadrementsformatSimple);
+            $series = array_merge($InscriptionsCreneaux, $EncadrementsCreneaux);
         }
 
         return new JsonResponse(['evenements' => $events, 'series' => $series]);
@@ -79,18 +84,16 @@ class DhtmlxController extends Controller
 
         $emailToSend = array();
         foreach ($inscriptions as $key => $i) {
-
             $emailToSend[] = $i->getUtilisateur()->getEmail();
         }
-
-        $message = (new \Swift_Message('Unice - Evenement message'))
-            ->setFrom(['acatus.unice@gmail.com' => 'Unice'])
-            ->setTo($emailToSend)
-            ->setBody($text);
-
-        // Send the message
-        $result = $this->get('mailer')
-            ->send($message);
+        
+        $mailer = $this->container->get('mailService');
+        $mailer->sendMailWithTemplate(
+            "",// Préciser dans le sujet, le titre de l'inscription
+            $emailToSend,
+            '@Uca/Email/PreInscription/MailPourTousLesInscripts.html.twig',// Préciser dans le contenu, le titre de l'inscription
+            ['message' => $text]
+        );
 
         return new JsonResponse(json_encode(array("mesage" => "send")));
     }
@@ -103,12 +106,11 @@ class DhtmlxController extends Controller
         $em = $this->getDoctrine()->getManager();
         $ev = $request->request->get('evenement');
         $c = new DhtmlxCommand($em, $ev);
-        if($ev['action'] == 'delete') {
+        if ($ev['action'] == 'delete') {
             $res = $c->getResult();
             $c->execute();
             $em->flush();
-        }
-        else {
+        } else {
             $c->execute();
             $em->flush();
             $res = $c->getResult();

@@ -2,14 +2,17 @@
 
 namespace UcaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\Group;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\GroupeListener"})
+ * @Gedmo\Loggable   
+ * @UniqueEntity("libelle", message="groupe.uniqueentity")
  */
 class Groupe extends Group
 {
@@ -19,9 +22,28 @@ class Groupe extends Group
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+    /**
+     * @Gedmo\Versioned
+     * @Gedmo\Translatable
+     * @ORM\Column(type="string")
+     * @Assert\NotNull(message="groupe.name.notnull")
+     * @Assert\Length(min = 2, max = 180, minMessage = "groupe.name.tropPetit", maxMessage = "groupe.name.tropLong")
+     */
+    protected $libelle;
+    /**
+     * @Assert\NotNull(message="groupe.roles.notnull")
+     * @Assert\Count(min = 1, minMessage = "groupe.roles.notnull")
+     */
+    protected $roles;
 
     /** @ORM\ManyToMany(targetEntity="UcaBundle\Entity\Utilisateur", mappedBy="groups")  */
     protected $utilisateurs;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    protected $listeRoles;
 
     /**
      * Add utilisateur.
@@ -57,5 +79,39 @@ class Groupe extends Group
     public function getUtilisateurs()
     {
         return $this->utilisateurs;
+    }
+
+    /**
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+    /**
+     */
+    public function setLibelle($libelle)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     */
+    public function setListeRoles($listeRoles)
+    {
+        $this->listeRoles = $listeRoles;
+
+        return $this;
+    }
+
+    /**
+     * Get listeRoles.
+     *
+     * @return string
+     */
+    public function getListeRoles()
+    {
+        return $this->listeRoles;
     }
 }

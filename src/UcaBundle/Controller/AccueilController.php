@@ -9,11 +9,10 @@ use Symfony\Component\Routing\Annotation\Route;
 class AccueilController extends Controller
 {
     /**
-     * @Route("/", name="Accueil")
+     * @Route("/UcaGest/Accueil", name="UcaGest_Accueil")
      */
     public function accueilAction(Request $request)
     {
-        
         return $this->render('@Uca/Common/Main/Accueil.html.twig');
     }
 }

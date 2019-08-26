@@ -1,0 +1,32 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="h1-light">{{ 'contact.title' | trans }}</h1>
+
+    <section class="container">
+        <div class="w-100 p-5 mb-5 container-style bg-white d-flex flex-wrap justify-content-between">
+            <div
+                class="m-0 col-12">
+                <!-- Message de saisie incorrecte -->
+                {% if not form.vars.valid %}
+                    <div class="alert alert-danger" role="alert" sr-only="">
+                        {{ 'erreur.formulaire.champ.incorrect' | trans }}
+                    </div>
+                {% endif %}
+                {{ flashBag.showAll }}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

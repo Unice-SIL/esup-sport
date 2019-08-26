@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
-
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class GroupeType extends AbstractType
 {
@@ -34,7 +34,11 @@ class GroupeType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->remove('name');
         $builder
+            ->add('libelle', TextType::class, [
+                'label_format' => 'common.nom'
+            ])
             ->add('roles', ChoiceType::class, [
                 'label_format' => 'role.liste',
                 'choices' => $this->getRoleChoices(),

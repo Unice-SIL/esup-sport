@@ -1,29 +1,37 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% block main %}
-<a class="btn btn-primary" href="{{ path('TexteLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
-{{ form_start(form) }}
-{{ form_end(form) }}
+    <a class="btn btn-primary" href="{{ path('UcaGest_TexteLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    <h1>{{'texte.modifier.title'|trans}}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_end(form) }}
+
 {% endblock %} 
 
 {% block javascripts %}
-<script type="text/javascript">
-$( document ).ready(function() {
+    <script type="text/javascript">
+        $( document ).ready(function() {
 
-    if($('#ucabundle_texte_mobile').val() == 1){
-        $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','block');
-    }else{
-        $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','none');
-    }
+            if($('#ucabundle_texte_mobile').val() == 1){
+                $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','block');
+            }else{
+                $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','none');
+            }
 
-    $(document).on('change', '#ucabundle_texte_mobile', function(){
-        console.log('après');
-        if($('#ucabundle_texte_mobile').val() == 1){
-            $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','block');
-        }else{
-            $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','none');
-        }
-    })
-});
-
-</script>
+            $(document).on('change', '#ucabundle_texte_mobile', function(){
+                console.log('après');
+                if($('#ucabundle_texte_mobile').val() == 1){
+                    $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','block');
+                }else{
+                    $('#cke_ucabundle_texte_texteMobile').parent().closest('.form-group').css('display','none');
+                }
+            })
+        });
+    </script>
 {% endblock %}

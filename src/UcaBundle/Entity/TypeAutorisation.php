@@ -12,10 +12,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity
  * @Gedmo\Loggable
  * @UniqueEntity(fields={"libelle"}, message="typeautorisation.uniqueentity")
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\TypeAutorisationListener"})
  */
-class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article, \UcaBundle\Entity\Interfaces\Tarifable
+class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
+    use \UcaBundle\Entity\Traits\Article;
     #region Propriétés
     /**
      * @ORM\Id
@@ -42,6 +44,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     protected $comportement;
 
     /** 
+     * @Gedmo\Versioned
      * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
      */
@@ -53,13 +56,24 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     /** @ORM\OneToMany(targetEntity="FormatAchatCarte",mappedBy="carte") */
     private $formatsAchatCarte;
 
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $tarifLibelle;
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $comportementLibelle;
+
     #endregion
 
     #region Méthodes
 
     public function jsonSerializeProperties()
     {
-        return ['libelle', 'tarif', 'comportement', 'informationsComplementaires'];
+        return ['libelle', 'tarif', 'comportement', 'informationsComplementaires', 'montant'];
     }
 
     public function getArticleLibelle()
@@ -67,22 +81,69 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
         return $this->libelle;
     }
 
-    public function getArticleTarif()
-    {
-        return $this->tarif;
-    }
-
     public function getArticleDescription()
     {
-        return 'type.autorisation.panier.description';
+        if (!is_null($this->informationsComplementaires)) {
+            return $this->informationsComplementaires;
+        } else {
+            return $this->getComportement()->getDescriptionComportement();
+        }
     }
 
-    public function getMontant($user)
+    public function getAutorisations()
     {
-        if (!empty($this->tarif)) {
-            return $this->getTarif()->getUserMontant($user->getProfil()->getId())->getMontant();
+        return new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getCapacite()
+    {
+        return null;
+    }
+
+    public function getInscriptions()
+    {
+        return new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getEncadrants()
+    {
+        return new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function isDisponible($user)
+    {
+        return;
+    }
+
+    public function userIsInscrit($user)
+    {
+        return;
+    }
+
+    public function updateTarifLibelle()
+    {
+        if ($this->getTarif() != null) {
+            $this->tarifLibelle = $this->getTarif()->getLibelle();
         } else {
+            $this->tarifLibelle = '';
+        }
+
+        return $this;
+    }
+
+    public function updateComportementLibelle()
+    {
+        $this->comportementLibelle = $this->getComportement()->getLibelle();
+
+        return $this;
+    }
+
+    public function getArticleMontant($utilisateur)
+    {
+        if (!in_array($this->comportement->getCodeComportement(), ["carte", "cotisation"])) {
             return 0;
+        } else {
+            return $this->getArticleMontantDefaut($utilisateur);
         }
     }
     #endregion
@@ -272,5 +333,53 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     public function getFormatsAchatCarte()
     {
         return $this->formatsAchatCarte;
+    }
+
+    /**
+     * Set tarifLibelle.
+     *
+     * @param string $tarifLibelle
+     *
+     * @return TypeAutorisation
+     */
+    public function setTarifLibelle($tarifLibelle)
+    {
+        $this->tarifLibelle = $tarifLibelle;
+
+        return $this;
+    }
+
+    /**
+     * Get tarifLibelle.
+     *
+     * @return string
+     */
+    public function getTarifLibelle()
+    {
+        return $this->tarifLibelle;
+    }
+
+    /**
+     * Set comportementLibelle.
+     *
+     * @param string $comportementLibelle
+     *
+     * @return TypeAutorisation
+     */
+    public function setComportementLibelle($comportementLibelle)
+    {
+        $this->comportementLibelle = $comportementLibelle;
+
+        return $this;
+    }
+
+    /**
+     * Get comportementLibelle.
+     *
+     * @return string
+     */
+    public function getComportementLibelle()
+    {
+        return $this->comportementLibelle;
     }
 }

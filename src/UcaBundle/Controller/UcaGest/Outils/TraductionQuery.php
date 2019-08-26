@@ -52,6 +52,7 @@ class TraductionQuery
         foreach ($this->cols as $alias => $col) {
             $qb->addSelect($col['sql'] . ' AS ' . $alias);
         }
+        $qb->andWhere($this->cols['val' . $this->lang['default']]['sql'] . ' <> \'\' ');
     }
 
     public function qbFindOne(&$qb, $entity, $field, $id)

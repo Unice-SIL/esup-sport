@@ -6,7 +6,7 @@
 
 {% block main %}
     {{ flashBag.showAll }}
-    <a class="btn btn-primary" href="{{ path('ActiviteVoir', {'id' : item.activite.id}) }}">
+    <a class="btn btn-primary" href="{{ path('UcaGest_ActiviteVoir', {'id' : item.activite.id}) }}">
         <i class="fas fa-chevron-left"></i>
         {{ 'bouton.retour' | trans }}
     </a>
@@ -35,12 +35,12 @@
             <img class="img-fluid rounded mb-4" alt="image_format_activité" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
         </div>
         <div class="col-md-4">
-            <h2>
+            <h2 class="hide-border-title">
                 {{'common.description'|trans}}
             </h2>
-            <p>{{ item.description }}</p>
+            <p>{{ item.description|nl2br }}</p>
             {% if item.estEncadre %}
-                <h2>
+                <h2 class="hide-border-title">
                     {{'common.encadrants'|trans}}
                 </h2>
                 <ul>
@@ -67,7 +67,7 @@
                 {{'format.date.fin'|trans}}
                 {{item.dateFinEffective|date('d/m/Y H:i')}}</p>
             {% if not item.lieu is empty %}
-                <h2> {{'format.lieu'|trans}} </h2>
+                <h2 class="hide-border-title"> {{'format.lieu'|trans}} </h2>
                 <ul>
                     {% for lieu in item.lieu %}
                         <li> {{lieu.libelle}} </li>
@@ -84,13 +84,13 @@
         </div>
         <div class="col-md-4">
             {% if item.estPAyant %}
-                <h2>
+                <h2 class="hide-border-title">
                     {{'common.tarif'|trans}}
                 </h2>
                 <p>{{item.tarif}}</p>
             {% endif %}
 
-            <h2>
+            <h2 class="hide-border-title">
                 {{'common.profils.autorises'|trans}}
             </h2>
             {% if item.profilsUtilisateurs is empty %}
@@ -103,7 +103,7 @@
                 </ul>
             {% endif %}
 
-            <h2> {{'format.autorisations'|trans}} </h2>
+            <h2 class="hide-border-title"> {{'format.autorisations'|trans}} </h2>
             {% if item.autorisations is empty %}
                 <p> {{'formatactivite.autorisation.aucune'|trans}} </p>
             {% else %}
@@ -115,7 +115,7 @@
             {% endif %}
 
             {% if format == "FormatAvecReservation" %}
-                <h2> {{'common.ressources.reservees'|trans}} </h2>
+                <h2 class="hide-border-title"> {{'common.ressources.reservees'|trans}} </h2>
                 <ul>
                     {% for ressource in item.ressource %}
                         <li>{{ ressource.libelle }}</li>
@@ -126,7 +126,7 @@
     </div>
 
     {% if Scheduler %}
-        <h2>{{ 'common.creneaux' | trans }}</h2>
+        <h2 class="hide-border-title">{{ 'common.creneaux' | trans }}</h2>
         {{ dhtmlxCalendar.displayCalendarHtml }}
     {% endif %}
 

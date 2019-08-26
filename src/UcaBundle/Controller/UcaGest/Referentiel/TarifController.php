@@ -22,7 +22,7 @@ class TarifController extends Controller
 {
 
     /** 
-     * @Route("/", name="TarifLister")
+     * @Route("/", name="UcaGest_TarifLister")
      * @Isgranted("ROLE_GESTION_TARIF_LECTURE")
      */
     public function listerAction(Request $request)
@@ -50,7 +50,7 @@ class TarifController extends Controller
     }
 
     /** 
-     * @Route("/Ajouter", name="TarifAjouter") 
+     * @Route("/Ajouter", name="UcaGest_TarifAjouter") 
      * @Method({"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
@@ -67,7 +67,7 @@ class TarifController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('TarifLister');
+            return $this->redirectToRoute('UcaGest_TarifLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -76,7 +76,7 @@ class TarifController extends Controller
     }
 
     /** 
-     * @Route("/Supprimer/{id}", name="TarifSupprimer",requirements={"id"="\d+"}) 
+     * @Route("/Supprimer/{id}", name="UcaGest_TarifSupprimer",requirements={"id"="\d+"}) 
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
     public function supprimerAction(Request $request, Tarif $item)
@@ -97,17 +97,17 @@ class TarifController extends Controller
         }
         if ($r) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('TarifLister');
+            return $this->redirectToRoute('UcaGest_TarifLister');
         } else {
             $em->remove($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('TarifLister');
+            return $this->redirectToRoute('UcaGest_TarifLister');
         }
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="TarifModifier",requirements={"id"="\d+"}) 
+     * @Route("/Modifier/{id}", name="UcaGest_TarifModifier",requirements={"id"="\d+"}) 
      * @Method({"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
@@ -119,7 +119,7 @@ class TarifController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('TarifLister');
+            return $this->redirectToRoute('UcaGest_TarifLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();

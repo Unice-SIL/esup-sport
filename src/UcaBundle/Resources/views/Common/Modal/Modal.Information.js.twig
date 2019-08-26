@@ -1,0 +1,10 @@
+{% block modalJs %}
+$('[data-toggle=modal]').click(function () {
+    href = $(this).attr('href');
+    target = $(this).data('target');
+    console.log(href);
+    console.log(target);
+    $(target + ' .js-bouton-action').attr('href', href);
+    $(target).modal();
+});
+{% endblock %}

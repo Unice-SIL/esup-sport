@@ -15,13 +15,13 @@
             </ol>
             <div class="carousel-social-media">
                 <div>
-                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="" role="button">
+                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="{{parametrage().lienFacebook}}" role="button">
                         <i class="fab fa-facebook-square"></i>
                     </a>
-                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="" role="button">
+                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="{{parametrage().lienYoutube}}" role="button">
                         <i class="fab fa-youtube"></i>
                     </a>
-                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="" role="button">
+                    <a aria-expanded="false" aria-haspopup="false" class="text-white" href="{{parametrage().lienInstagram}}" role="button">
                         <i class="fab fa-instagram"></i>
                     </a>
                 </div>
@@ -29,7 +29,7 @@
             <img class="img-fluid carousel-logo-uca" alt="UCA Sports" src="{{ asset('images/logo-uca.png') }}">
             <div class="pb-10 carousel-inner" role="listbox">
                 {% for item in item_actualite %}
-                    <div class="carousel-item {% if loop.first %} active {% endif %}" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.thumb(item.image, 'thumb_background') }}') no-repeat center center;background-size: cover;">
+                    <div class="carousel-item {% if loop.first %} active {% endif %}" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.thumb(item.image, 'thumb_background') }}') no-repeat center center;background-size: cover;">
                         <div class="d-flex align-items-center h-75">
                             <div class="text-left text-white w-75 pb-10 ">
                                 <h2 class="h2-light">{{item.titre}}</h2>

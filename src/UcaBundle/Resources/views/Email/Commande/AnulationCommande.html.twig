@@ -1,0 +1,10 @@
+{% extends "@Uca/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Votre commande n°{{ commande.numeroCommande}} a été annulée.
+        </p>
+    </div>
+{% endblock %}

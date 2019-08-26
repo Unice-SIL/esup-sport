@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TraductionType extends AbstractType
 {
@@ -24,6 +25,9 @@ class TraductionType extends AbstractType
                     'data' => $options['data']['data'][$alias],
                     'label' => "column.$alias",
                     'disabled' => strpos($col['config'], 'readonly') !== false,
+                    'constraints' => [
+                        new NotBlank(["message" => "traduction.texte.notblank"]),
+                    ],
                 ]);
             }
         }

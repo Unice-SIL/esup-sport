@@ -1,3 +1,19 @@
+
+
 {% macro thumb(url, type) %}{{ asset('/upload/public/image/' ~  url) | imagine_filter(type) }}{% endmacro %}
 
 {% macro imageFond(emplacement) %}{{ _self.thumb(emplacementImageFond(emplacement).image, 'thumb_background') }}{% endmacro %}
+
+{% macro imageFondCssWithUrl(urlImageFond) %}
+    <style>
+        body {
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 100%) fixed, url('{{ _self.thumb(urlImageFond, 'thumb_background') }}') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+    </style>
+{% endmacro %}
+
+{% macro imageFondCssWithEmplacement(emplacement) %} {{ _self.imageFondCssWithUrl(emplacementImageFond(emplacement).image) }}{% endmacro %}

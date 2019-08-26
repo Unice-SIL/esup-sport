@@ -1,33 +1,45 @@
 parameters:
     onurb_yuml.direction: TB
     onurb_yuml.colors:
+        # User
         FOS\UserBundle\Model\Group: gold
         FOS\UserBundle\Model\User: gold
-        UcaBundle\Entity\Activite: red
+        UcaBundle\Entity\Groupe: gold
+        UcaBundle\Entity\ProfilUtilisateur: gold
+        UcaBundle\Entity\StatutUtilisateur: gold
+        UcaBundle\Entity\Utilisateur: gold
+        # Config Activité
+        UcaBundle\Entity\Activite: orangered
+        UcaBundle\Entity\ClasseActivite: orangered
+        UcaBundle\Entity\TypeActivite: orangered
+        # Formats d'activité
+        UcaBundle\Entity\FormatAchatCarte: red
+        UcaBundle\Entity\FormatActivite: red
         UcaBundle\Entity\FormatAvecCreneau: red
         UcaBundle\Entity\FormatAvecReservation: red
         UcaBundle\Entity\FormatSimple: red
-        UcaBundle\Entity\Article: orange
-        UcaBundle\Entity\Autorisation: mediumseagreen
-        UcaBundle\Entity\ClasseActivite: orangered
-        UcaBundle\Entity\Commande: orange
-        UcaBundle\Entity\ComportementAutorisation: mediumseagreen
-        UcaBundle\Entity\Creneau: palevioletred
-        UcaBundle\Entity\Etablissement: royalblue
+        UcaBundle\Entity\Creneau: red
+        # Dhtmlx
         UcaBundle\Entity\DhtmlxDate: green
         UcaBundle\Entity\DhtmlxEvenement: green
         UcaBundle\Entity\DhtmlxSerie: green
-        UcaBundle\Entity\Groupe: gold
-        UcaBundle\Entity\Inscription: palevioletred
-        UcaBundle\Entity\IntervalleDate: darkviolet
-        UcaBundle\Entity\Lieu: royalblue
-        UcaBundle\Entity\Materiel: royalblue
-        UcaBundle\Entity\Panier: orange
-        UcaBundle\Entity\ProfilUtilisateur: gold
-        UcaBundle\Entity\Reservabilite: palevioletred
-        UcaBundle\Entity\Reservation: palevioletred
-        UcaBundle\Entity\Ressource: royalblue
-        UcaBundle\Entity\Tarif: orange
-        UcaBundle\Entity\TypeActivite: orangered
-        UcaBundle\Entity\TypeAutorisation: mediumseagreen
-        UcaBundle\Entity\Utilisateur: gold
+        # Inscriptions & commandes
+        UcaBundle\Entity\Autorisation: mediumseagreen
+        UcaBundle\Entity\Commande: mediumseagreen
+        UcaBundle\Entity\CommandeDetail: mediumseagreen
+        UcaBundle\Entity\Inscription: mediumseagreen
+        #Ressources
+        UcaBundle\Entity\Etablissement: darkorange
+        UcaBundle\Entity\Lieu: darkorange
+        UcaBundle\Entity\Materiel: darkorange
+        UcaBundle\Entity\Reservabilite: darkorange
+        UcaBundle\Entity\Ressource: darkorange
+        # Referentiel
+        UcaBundle\Entity\Actualite: royalblue
+        UcaBundle\Entity\ComportementAutorisation: royalblue
+        UcaBundle\Entity\ImageFond: royalblue
+        UcaBundle\Entity\MontantTarifProfilUtilisateur: royalblue
+        UcaBundle\Entity\NiveauSportif: royalblue
+        UcaBundle\Entity\Tarif: royalblue
+        UcaBundle\Entity\Texte: royalblue
+        UcaBundle\Entity\TypeAutorisation: royalblue

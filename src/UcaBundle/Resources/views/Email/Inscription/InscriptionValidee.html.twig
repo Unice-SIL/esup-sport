@@ -1,0 +1,19 @@
+{% extends "@Uca/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Le {{ inscription.date | date("d/m/Y à H:i") }}, vous avez souhaité vous inscrire à l'activité suivante:
+            <span style="font-weight: bold;">
+                {% include "@Uca/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            Cette inscription a été validée. Vous devez maintenant accéder à la page "Mes inscriptions" (
+            <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesInscriptions') }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesInscriptions') }}</a>
+            ) afin de pouvoir ajouter votre inscription au panier et finaliser votre commande.
+        </p>
+        <p> Attention, vous avez {{parametrage().timerPanierApresValidation}} heure(s) pour finaliser votre inscription. Passé ce délai, votre inscription sera automatiquement annulée.</p>
+    </div>
+{% endblock %}

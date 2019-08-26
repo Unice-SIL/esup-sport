@@ -1,4 +1,5 @@
 <?php
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,16 +12,16 @@ use Symfony\Component\Routing\Annotation\Route;
 class EvenementController extends Controller
 {
     /**
-     * @Route("/{page}", name="UcaWeb_Evenement")
+     * @Route("/{page}", name="UcaWeb_Evenement", defaults={"page" = 1})
      */
     public function listAction(Request $request, $page)
     {
-        if($page < 1)
+        if ($page < 1)
             $page = 1;
         $em = $this->getDoctrine()->getManager();
 
         $evenements = $em->getRepository('UcaBundle:FormatSimple')
-            ->PromotionsPagination($page, 5);
+            ->PromotionsPagination($page, 5, $this->getUser());
 
         $pagination = array(
             'page' => $page,
@@ -31,6 +32,6 @@ class EvenementController extends Controller
 
         $twigConfig["pagination"] = $pagination;
         $twigConfig["evenements"] = $evenements;
-        return $this->render('@Uca/UcaWeb/Evenement/Lister.html.twig',$twigConfig);
+        return $this->render('@Uca/UcaWeb/Evenement/Lister.html.twig', $twigConfig);
     }
 }

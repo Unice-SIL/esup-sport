@@ -4,11 +4,26 @@
 {% endblock %}
 {% block body %}
     <div class="container-fluid">
-        {% include('@Uca/Common/Main/Structure.Menu.html.twig') %}
-        {% if app.request.attributes.get('_route') != 'UcaWeb_Accueil' %}
-            {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
-        {% endif %}
+        <div class="row">
+            {% include('@Uca/Common/Securite/Menu.Utilisateur.UcaWeb.html.twig') %}
+        </div>
     </div>
+    {% if app.session.get("previsualisation") %}
+    <div class="container-fluid previsualisation-div m-0 p-0">
+        <div class="prev-border prev-btop"></div>
+        <div class="prev-border prev-bright"></div>
+        <div class="prev-border prev-bbottom"></div>
+        <div class="prev-border prev-bleft"></div>
+        <div class="prev-button d-flex justify-content-center align-items-center w-100 m-0 p-0">
+            <a href="{{ urlRetourPrevisualisation() }}" class="d-block m-0 p-0 d-flex justify-content-center align-items-center px-5 h-100 text-uppercase fw-500 color-dark-gray">Quitter le mode prévisualisation</a>
+        </div>        
+    </div>
+    {% endif %}
+    {% if app.request.attributes.get('_route') != 'UcaWeb_Accueil' %}
+    <div class="breadcrumb-ucaweb">
+        {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
+    </div>
+    {% endif %}
     {% block main %}{% endblock %}
 {% endblock %}
 

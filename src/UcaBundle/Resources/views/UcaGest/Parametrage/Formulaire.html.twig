@@ -1,0 +1,19 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+
+    <a class="btn btn-primary" href="{{ path('UcaGest_Parametrage') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+    <h1>{{ 'parametrage.modifier.title' | trans }}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+{% endblock %}

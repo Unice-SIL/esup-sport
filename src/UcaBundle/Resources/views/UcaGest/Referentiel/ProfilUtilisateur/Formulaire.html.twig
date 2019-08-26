@@ -1,0 +1,44 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% block main %}
+
+  <a class="btn btn-primary" href="{{ path('UcaGest_ProfilUtilisateurLister') }}">
+    <i class="fas fa-chevron-left"></i>
+    {{'bouton.retour'|trans}}</a>
+
+  {% if (null == item.id) %}
+    <h1>{{'profilutilisateur.ajouter.title'|trans}}</h1>
+  {% else %}
+    <h1>{{'profilutilisateur.modifier.title'|trans}}</h1>
+  {% endif %}
+
+  <!-- Message de saisie incorrecte -->
+  {% if not form.vars.valid %}
+    <div class="alert alert-danger" role="alert" sr-only="">
+      {{ 'erreur.formulaire.champ.incorrect' | trans }}
+    </div>
+  {% endif %}
+
+  <div class="well">
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        {{ form_row(form.libelle)}}
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        {{ form_row(form.nbMaxInscriptions)}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        {{ form_row(form.preinscription)}}
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          {{ form_row(form.save) }}
+        </div>
+      </div>
+      {{ form_end(form) }}
+    </div>
+
+  {% endblock %}

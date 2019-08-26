@@ -10,8 +10,9 @@ scheduler.config.mode_modification_serie = 'serie'; // choix: occurence|serie
 scheduler.config.first_hour = 6;
 scheduler.config.key_nav = true;
 scheduler.config.last_hour = 23;
-scheduler.config.defaultColor = "#007ea1";
+scheduler.config.defaultColor = "#46aed8";
 scheduler.config.activeColor = "grey";
+scheduler.config.encadrantColor = "#1A1A1A";
 scheduler.config.repeat_date = "%d/%m/%Y";
 scheduler.config.xml_date = "%d/%m/%Y %H:%i";
 scheduler.locale.labels.section_tarif = "Tarifs";
@@ -21,7 +22,19 @@ scheduler.locale.labels.section_template = "Capacite";
 scheduler.config.modified_event_id = null;
 scheduler.locale = scheduler_lang[$("html").attr("lang")];
 scheduler.config.time_step = 15;
+scheduler.config.buttons_left = [];
+scheduler.config.buttons_right = ["dhx_save_btn","dhx_cancel_btn"];
 Load.start();
+
+//hide left toolbar
+if(role == "user")
+    scheduler.xy.menu_width = 0; 
+
+//remove icon_edit
+var index =  scheduler.config.icons_select.indexOf("icon_edit");
+if (index !== -1)  scheduler.config.icons_select.splice(index, 1);
+
+scheduler.config.icons_select.splice(1,0)
 
 ACL.init();
 ACL.utilisateur = role;
@@ -50,6 +63,11 @@ if(
     type = "ressource";
     scheduler.data.item.type = "ressource";
 }
+else{
+    scheduler.data.item.type = "creneau";
+}
+
+
 $.ajax({
     method: "GET",
     url: DHTMLXAPI,
@@ -63,6 +81,7 @@ $.ajax({
 
     initLoadData(data);
 });
+
 if(typeA == "encadrant"){
     scheduler.data.item.type = "creneau";
 }
@@ -92,23 +111,26 @@ var loadData = function(item)
 
 
     if(item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie"){
-        
         delete scheduler._series[item.oldId];
         let event = Object.create(Serie);
         event.load(item);
         scheduler._series[item.id] = event;
+        if(item.evenements != null ){
 
-        item.evenements.forEach(function(child){
-            
-            delete scheduler._events[child.oldId];
-            if(child.action == "delete"){
-                return;
-            }
-            child.serie = {
-                id: item.id
-            };
-            loadObjects(child)
-        });
+            item.evenements.forEach(function(child){
+                
+                delete scheduler._events[child.oldId];
+                if(child.action == "delete"){
+                    return;
+                }
+                child.serie = {
+                    id: item.id
+                };
+                loadObjects(child)
+    
+            });
+        }
+    
     }else {
         loadObjects(item)
     }
@@ -119,21 +141,48 @@ var loadData = function(item)
 
 //loading objects depending of format
 var loadObjects = function(item){
-
     let event;
-    if(scheduler.data.item.type == "creneau"){
-        event = Object.create(Creneau);
+    
+    if(item.serie != null){
+        if(scheduler._series[item.serie.id].creneau != null){
+            event = Object.create(Creneau);
+        }
+        else{
+            event = Object.create(Reservation);
+            event.resources_ids = scheduler.data.item.id;     
+        }
     }
-    else if (scheduler.data.item.type == "reservation"){
+    else if (item.reservabilite != null){
         event = Object.create(Reservation);
+        event.resources_ids = scheduler.data.item.id;        
     }
-    else if(scheduler.data.item.type == "ressource"){
+    //item formatSimple is like Reservation
+    else if(item.formatSimple != null){
         event = Object.create(Reservation);
-        event.resources_ids = scheduler.data.item.id;               
+        event.resources_ids = scheduler.data.item.id;      
     }
 
     event.load(item);
     scheduler._events[item.id] = event;
+}
+
+var itemType = function(){
+    let type;
+
+    if(item.serie != null){
+        console.log(item);
+        if(scheduler._series[item.serie.id].creneau != null){
+            type = "creneau";
+        }
+        else{
+            type = "reservation";
+        }
+    }
+    else if (item.reservabilite != null){
+        type = "reservation";
+    }
+
+    return type;
 }
 
 export {loadData}

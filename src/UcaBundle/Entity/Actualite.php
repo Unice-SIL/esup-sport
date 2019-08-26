@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="actualite")
  * @ORM\Entity
  * @Vich\Uploadable
+ * @Gedmo\Loggable
  */
 class Actualite
 {
@@ -30,20 +31,25 @@ class Actualite
     private $id;
 
     /** 
+     * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
     private $ordre;
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="actualite.titre.notblank")
      */
     private $titre;
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="text")
      * @CKEditor
+     * @Assert\NotBlank(message="actualite.texte.notblank")
      */
     private $texte;
 

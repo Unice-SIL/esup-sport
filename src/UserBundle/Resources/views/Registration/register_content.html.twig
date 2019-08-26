@@ -1,5 +1,11 @@
-{% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
-  with {'action': 'ajouter', 'formPath': 'fos_user_registration_register', 'formClass': 'fos_user_registration_register'} %}
+{% block main %}
+    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurLister') }}">
+        <i class="fas fa-chevron-left"></i>
+        {{'bouton.retour'|trans}}</a>
+    <h1>{{ ('utilisateur.ajouter.title') | trans }}</h1>
+    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
+  with {'action': 'ajouter', 'formPath': 'UcaGest_UtilisateurEnregistrement', 'formClass': 'UcaGest_UtilisateurEnregistrement'} %}
+{% endblock %}
 {% block javascripts %}
     {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
 {% endblock %}

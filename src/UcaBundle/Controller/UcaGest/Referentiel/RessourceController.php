@@ -28,7 +28,7 @@ use Doctrine\DBAL\Driver\PDOConnection as PDO;
 class RessourceController extends Controller
 {
     /**
-     * @Route("/", name="RessourceLister")
+     * @Route("/", name="UcaGest_RessourceLister")
      * @Isgranted("ROLE_GESTION_RESSOURCE_LECTURE")
     */
     public function listerAction(Request $request)
@@ -46,7 +46,7 @@ class RessourceController extends Controller
             $em->flush();
             // mise à jour du référentiel
             $this->majReferentielImmobilier();
-            return $this->redirectToRoute('RessourceLister');
+            return $this->redirectToRoute('UcaGest_RessourceLister');
         }
 
         $isAjax = $request->isXmlHttpRequest();
@@ -71,7 +71,7 @@ class RessourceController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="RessourceAjouter")
+     * @Route("/Ajouter", name="UcaGest_RessourceAjouter")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
      */
@@ -94,7 +94,7 @@ class RessourceController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('RessourceLister');
+            return $this->redirectToRoute('UcaGest_RessourceLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -102,7 +102,7 @@ class RessourceController extends Controller
     }
 
     /**
-     * @Route("/Supprimer/{id}", name="RessourceSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_RessourceSupprimer")
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
      */
     public function supprimerAction(Request $request, Ressource $item)
@@ -110,16 +110,16 @@ class RessourceController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$item->getFormatResa()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('RessourceLister');
+            return $this->redirectToRoute('UcaGest_RessourceLister');
         }
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
-        return $this->redirectToRoute('RessourceLister');
+        return $this->redirectToRoute('UcaGest_RessourceLister');
     }
 
     /**
-     * @Route("/Modifier/{id}", name="RessourceModifier")
+     * @Route("/Modifier/{id}", name="UcaGest_RessourceModifier")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
     */
@@ -142,7 +142,7 @@ class RessourceController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('RessourceLister');
+            return $this->redirectToRoute('UcaGest_RessourceLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -150,7 +150,7 @@ class RessourceController extends Controller
     }
     
     /**
-     * @Route("/Voir/{id}", name="RessourceVoir")
+     * @Route("/Voir/{id}", name="UcaGest_RessourceVoir")
      * @Isgranted("ROLE_GESTION_RESSOURCE_LECTURE")
     */
     public function voirAction(Ressource $item)
@@ -181,7 +181,7 @@ class RessourceController extends Controller
     }
 
     /**
-     * @Route("/Maj", name="RessourceMaj")
+     * @Route("/Maj", name="UcaGest_RessourceMaj")
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
     */
     public function majReferentielImmobilier(){
@@ -209,7 +209,7 @@ class RessourceController extends Controller
             $em->flush();
         }
         $this->get('uca.flashbag')->addMessageFlashBag('ressource.referentiel.success','success');
-        return $this->redirectToRoute('RessourceLister');
+        return $this->redirectToRoute('UcaGest_RessourceLister');
     }
 
     // Permet de renseigner un à partir des informations de la salle issue du référentiel
@@ -220,6 +220,7 @@ class RessourceController extends Controller
         $lieu->setDescription($salle->getDescription());
         $lieu->setNomenclatureRus($salle->getCodeRus());
         $lieu->setSuperficie($salle->getSuperficie());
+        $lieu->setCapacite($salle->getCapacite());
         $lieu->setLatitude($salle->getLatitude());
         $lieu->setLongitude($salle->getLongitude());
         // on force un nom d'image par défaut
@@ -267,13 +268,14 @@ class RessourceController extends Controller
            //$item->setDescription($record['description']);
            $item->setCodeRus($record['rus']);
            $item->setNomCampus($record['campus']);
+           $item->setCapacite($record['capacite_sportifs']);
            $item->setLatitude($record['latitude']);
            $item->setLongitude($record['longitude']);
            $item->setSuperficie(empty($record['superficie']) ? null : $record['superficie']);
            $em->persist($item);
         }
         $em->flush();
-        return $this->redirectToRoute('EtablissementLister');
+        return $this->redirectToRoute('UcaGest_EtablissementLister');
     }
     
     // Suppression de tous les lieux issus du référentiel immobilier (source = 'Auto')

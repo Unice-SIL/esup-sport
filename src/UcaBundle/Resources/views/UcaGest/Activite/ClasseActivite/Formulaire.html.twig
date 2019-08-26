@@ -3,7 +3,7 @@
 
 {% block main %}
 
-    <a class="btn btn-primary" href="{{ path('ClasseActiviteLister') }}">
+    <a class="btn btn-primary" href="{{ path('UcaGest_ClasseActiviteLister') }}">
         <i class="fas fa-chevron-left"></i>
         {{'bouton.retour'|trans}}</a>
 
@@ -11,6 +11,12 @@
         <h1>{{'classeactivite.ajouter.title'|trans}}</h1>
     {% else %}
         <h1>{{'classeactivite.modifier.title'|trans}}</h1>
+    {% endif %}
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
     {% endif %}
 
     <div class="well">

@@ -1,0 +1,9 @@
+function FilterValueChange() {
+    $( document ).ready(function() {
+        var oTable = $('.dataTable').DataTable();
+        if (!oTable.data().count()) {
+            $('.selectCommande').val('panier').trigger('change');
+            oTable.order([3, 'desc']);
+        }
+    });
+}

@@ -3,18 +3,21 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
+use UcaBundle\Service\Common\Previsualisation;
 
 /**
  * @ORM\Entity
  * @Gedmo\Loggable
  */
-class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article, \UcaBundle\Entity\Interfaces\Tarifable
+class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
+    use \UcaBundle\Entity\Traits\Article;
 
     #region Propriétés
     /**
@@ -80,7 +83,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     public function jsonSerializeProperties()
     {
-        return ['capacite', 'tarif', 'profilsUtilisateurs', 'encadrants', 'niveauxSportifs'];
+        return ['capacite', 'tarif', 'profilsUtilisateurs', 'encadrants', 'niveauxSportifs', 'lieu'];
     }
 
     public function getArticleLibelle()
@@ -88,28 +91,22 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         return $this->getFormatActivite()->getLibelle();
     }
 
-    public function getArticleTarif()
-    {
-        return $this->tarif;
-    }
-
     public function getArticleDescription()
     {
         return $this->getSerie()->getEvenements()->first()->getDescription();
     }
 
-    public function isFull()
+    public function hasProfil($user)
     {
-        return  count($this->inscriptions) < $this->capacite;
+        if ($user === null)
+            return true;
+
+        return $this->profilsUtilisateurs->contains($user->getProfil());
     }
 
-    public function hasProfil($profil)
+    public function getArticleAutorisations()
     {
-        if ($this->profilsUtilisateurs->contains($profil)) {
-            return true;
-        }
-
-        return false;
+        return $this->formatActivite->getAutorisations();
     }
 
     public function dateInscriptionValid()
@@ -118,18 +115,32 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         return $now > $this->formatActivite->getDateDebutInscription() && $now < $this->formatActivite->getDateFinInscription();
     }
 
-    public function getMontant($user)
+    public function isDisponible($user)
     {
-        if (!empty($this->tarif)) {
-            return $this->getTarif()->getUserMontant($user->getProfil()->getId())->getMontant();
-        } else {
-            return 0;
-        }
+        if (Previsualisation::$IS_ACTIVE)
+            return true;
+
+        return $this->dateInscriptionValid() && $this->hasProfil($user) && $this->getArticleMontant($user) >= 0;
     }
-    
-    public function getAutorisations()
+
+    public function userIsInscrit($user)
     {
-        return $this->formatActivite->getAutorisations();
+        if ($user === null)
+            return false;
+
+        return $user->hasInscription($this);
+    }
+
+    public function getArticleMontant($utilisateur)
+    {
+        return $this->getArticleMontantDefaut($utilisateur);
+    }
+
+    public function getInscriptionsValidee(){
+        $criteria = Criteria::create()
+        ->andWhere(Criteria::expr()->eq('statut', "valide"));
+
+        return $this->getInscriptions()->matching($criteria);
     }
 
     #endregion
@@ -418,5 +429,31 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     public function getEncadrants()
     {
         return $this->encadrants;
+    }
+
+    /**
+     * Add niveauxSportif.
+     *
+     * @param \UcaBundle\Entity\NiveauSportif $niveauxSportif
+     *
+     * @return Creneau
+     */
+    public function addNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    {
+        $this->niveauxSportifs[] = $niveauxSportif;
+
+        return $this;
+    }
+
+    /**
+     * Remove niveauxSportif.
+     *
+     * @param \UcaBundle\Entity\NiveauSportif $niveauxSportif
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    {
+        return $this->niveauxSportifs->removeElement($niveauxSportif);
     }
 }

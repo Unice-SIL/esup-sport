@@ -10,12 +10,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
+ * @Gedmo\Loggable
  */
 class Materiel extends Ressource
 {
     #region Propriétés
-    /** @ORM\Column(type="integer", nullable=true)
-     *  @Assert\NotBlank(message="materiel.quantite.notblank") 
+    /** @Gedmo\Versioned
+     *  @ORM\Column(type="integer", nullable=true)
+     *  @Assert\NotBlank(message="materiel.quantite.notblank")
+     *  @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
+     *  @Assert\GreaterThanOrEqual(value = 0)
      */
     private $quantiteDisponible;
     #endregion

@@ -9,9 +9,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\EtablissementRepository")
  * @Gedmo\Loggable
  * @Vich\Uploadable
  * @UniqueEntity(fields="libelle", message="etablissement.uniqueentity")
@@ -43,22 +42,25 @@ class Etablissement
 
     /** @ORM\OneToMany(targetEntity="Ressource", mappedBy="etablissement") */
     private $ressources;
-    #endregion
 
     /** 
      * @ORM\Column(type="string") 
+     * @Gedmo\Versioned
      * @Assert\NotBlank(message="etablissement.adresse.notblank") 
      */
     private $adresse;
 
     /** 
      * @ORM\Column(type="string", length=5)
-     * @Assert\NotBlank(message="etablissement.codePostal.notblank")   
+     * @Gedmo\Versioned
+     * @Assert\NotBlank(message="etablissement.codePostal.notblank")
+     * @Assert\Regex(pattern="/^[0-9]{5}$/", message="lieu.codepostal.invalide")
      */
     private $codePostal;
 
     /** 
      * @ORM\Column(type="string")
+     * @Gedmo\Versioned
      * @Assert\NotBlank(message="etablissement.ville.notblank")   
      */
     private $ville;
@@ -79,18 +81,23 @@ class Etablissement
     private $updatedAt; 
     
     /** @ORM\Column(type="string",nullable=true)
+     *  @Gedmo\Versioned
      *  @Assert\Email(message="etablissement.email.invalide")
      */
     private $email;  
     
     /** @ORM\Column(type="string",nullable=true)
+     *  @Gedmo\Versioned
      *  @Assert\Length(min = 10, max = 10, minMessage = "etablissement.telephone.invalide", maxMessage = "etablissement.telephone.invalide")
      *  @Assert\Regex(pattern="/^0[0-9]([-. ]?[0-9]{2}){4}$/", message="etablissement.telephone.invalide")
      */
     private $telephone; 
     
-    /** @ORM\Column(type="text",nullable=true) */
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="text",nullable=true) 
+     */
     private $horairesOuverture; 
+    #endregion
 
 
 

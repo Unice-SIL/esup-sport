@@ -1,0 +1,52 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/ShowDatatable.html.twig' as Datatable %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+
+    {% if app.request.attributes.get("_route") == "UcaWeb_MesInscriptions" %}
+        {% include "@Uca/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
+    {% elseif app.request.attributes.get("_route") == "UcaWeb_MesCommandes" or app.request.attributes.get("_route") == "UcaWeb_CommandeEnAttenteLister" %}
+        {% include "@Uca/UcaWeb/Commande/Modal.Annulation.html.twig" %}
+    {% else %}
+        {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    {% endif %}
+
+    <h1 class="h1-light">{{ (codeListe|lower ~ '.list.title')|trans }}</h1>
+
+    <section class="container">
+        {{ flashBag.showAll }}
+        <div class="row">
+        <div class="w-100 mb-5 p-md-5 container-style bg-white justify-content-between card-event">
+            {% if retourBouton is defined %}
+                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
+                    <i class="fas fa-chevron-left"></i>
+                    {{'bouton.retour'|trans}}</a>
+            {% endif %}
+
+            {% block DatatableHeader %}
+                {% if not noAddButton is defined %}
+                    <div class="row">
+                        <a href="{{ url(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+                    </div>
+                {% endif %}
+            {% endblock %}
+
+            {{ Datatable.showDatatable(datatable) }}
+
+        </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ Datatable.renderDatatable(datatable) }}
+{% endblock %}

@@ -6,6 +6,7 @@ import {dateToStr} from "./Date";
 import {loadData} from "./Config";
 import {changeColor} from "./Events";
 import {Load} from "./Load";
+import {More} from "./More";
 
 var Creneau = {
 
@@ -15,12 +16,13 @@ var Creneau = {
 
     //object from database
     load: function(data){
+
         this.evenement = Object.create(Evenement)
         this.evenement.load(data);
-
         //this.extend(this, data);
 
         this.tarif_id = this.evenement.tarif_id;
+
         this.copyId = null;
         this.id = data.id;
         this.start_date = transformDate(data.dateDebut);
@@ -78,7 +80,12 @@ var Creneau = {
             }
             
             this.tarif_id = this.getParent().creneau.tarif.id;
+            if(this.getParent().creneau.lieu != null){
+                this.lieu_id = this.getParent().creneau.lieu.id;
+            }
         }
+        this.defaultColor();
+
 
     },
 
@@ -86,8 +93,9 @@ var Creneau = {
         this.callBackBeforeLigthBox();
         //init the mail event for the Creneau, this add the mail button and open the mail popup
         //when user click in it
-        Mail.init();
-        Registered.init();
+/*         Mail.init();
+        Registered.init(); */
+        More.init();
     }, 
 
     //send data to symfony
@@ -121,10 +129,13 @@ var Creneau = {
             //we are on insert mode
             let ev = scheduler._events[id];
             if(typeof ev.generatedId !== "undefined"){
-                $($(".dhx_multi_select_Profils")[0]).find("input").each(function(){ 
+                $($(".dhx_multi_select_"+obj.getNameSelect("common.profils"))[0]).find("input").each(function(){ 
                     $(this)[0].checked = true 
                 });
-                $($(".dhx_multi_select_Encadrants")[0]).find("input").each(function(){ 
+                $($(".dhx_multi_select_"+obj.getNameSelect("common.encadrants"))[0]).find("input").each(function(){ 
+                    $(this)[0].checked = true 
+                });
+                $($(".dhx_multi_select_"+obj.getNameSelect("common.niveauSportif"))[0]).find("input").each(function(){ 
                     $(this)[0].checked = true 
                 });
                 $(".dhx_custom_button")[0].click()
@@ -132,6 +143,10 @@ var Creneau = {
 
             return true;
         });
+    },
+
+    getNameSelect: function(translatorName){
+        return Translator.trans(translatorName).split(" ")[0];
     },
 
     isNew: function(){
@@ -179,6 +194,13 @@ var Creneau = {
     },
 
     defaultColor: function(){
+        if(this.encadrant_ids != null){
+            if(this.encadrant_ids.split(",").indexOf(USERID) != -1){
+                this.color = scheduler.config.encadrantColor;
+                return true;
+            }
+        }
+        
         this.color = scheduler.config.defaultColor;
         return true;
     },

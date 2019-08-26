@@ -5,6 +5,8 @@ namespace UcaBundle\Datatables;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\BooleanColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use UcaBundle\Datatables\Button\LogButton;
+use UcaBundle\Datatables\Button\ModifierButton;
 
 class TexteDatatable extends AbstractTranslatedDatatable
 {
@@ -34,7 +36,8 @@ class TexteDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' =>  [
-                    $this->getActionBoutonConfig('Modifier', 'TexteModifier', ['id' => 'id'], 'ROLE_GESTION_TEXTE_ECRITURE')
+                    (new ModifierButton($this, 'UcaGest_TexteModifier', ['id' => 'id'], 'ROLE_GESTION_TEXTE_ECRITURE'))->getConfig(),
+                    (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Texte', 'objectId' => 'id'], 'ROLE_GESTION_TEXTE_ECRITURE'))->getConfig(),
                 ]
             ]);
     }

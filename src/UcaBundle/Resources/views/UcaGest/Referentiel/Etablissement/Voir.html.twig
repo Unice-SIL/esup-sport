@@ -4,7 +4,7 @@
 
 {% block main %}
   {{ flashBag.showAll }}
-  <a class="btn btn-primary" href="{{ path('EtablissementLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+  <a class="btn btn-primary" href="{{ path('UcaGest_EtablissementLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
   <h1> {{ item.libelle }} </h1>
 
   
@@ -26,7 +26,7 @@
         <li> <span> {{ 'etablissement.email.libelle' | trans }} : </span> {{ item.email }} </li>
         <li> <span> {{ 'etablissement.telephone.libelle' | trans }} :</span> {{ item.telephone }} </li>
         <li> {{ 'common.horaires.ouverture' | trans }} : <br>
-              {{ item.horairesOuverture }}
+              {{ item.horairesOuverture|nl2br }}
         </li>
       </ul>
     </div>

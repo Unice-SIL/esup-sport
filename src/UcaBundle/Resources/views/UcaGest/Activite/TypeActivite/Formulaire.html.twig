@@ -2,26 +2,32 @@
 
 {% block main %}
 
-<a class="btn btn-primary" href="{{ path('TypeActiviteLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
+    <a class="btn btn-primary" href="{{ path('UcaGest_TypeActiviteLister') }}"><i class="fas fa-chevron-left"></i> {{'bouton.retour'|trans}}</a>
 
-{% if (null == item.id) %}
-<h1>{{'typeactivite.ajouter.title'|trans}}</h1>
-{% else %}
-<h1>{{'typeactivite.modifier.title'|trans}}</h1>
-{% endif %}
-
-<div class="well">
-    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-    <div class="row">
-        <div class="col-sm-6">
-            {{ form_row(form.libelle)}}
+    {% if (null == item.id) %}
+        <h1>{{'typeactivite.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'typeactivite.modifier.title'|trans}}</h1>
+    {% endif %}
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
         </div>
+    {% endif %}
+
+    <div class="well">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(form.libelle)}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12"> {{ form_row(form.save) }} </div>
+        </div>
+        {{ form_end(form) }}
     </div>
-    <div class="row">
-        <div class="col-sm-12"> {{ form_row(form.save) }} </div>
-    </div>
-    {{ form_end(form) }}
-</div>
 
 {% endblock %} 
 

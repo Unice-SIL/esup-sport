@@ -1,65 +1,207 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
 
 {% block title %}
     Uca Web
 {% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithUrl(item.image) }}
+{% endblock %}
+
 {% block main %}
-    <h1>{{ item.libelle }}</h1>
-    <div class="row">
-        <div class="offset-lg-3 col-lg-6 col-md-12">
-            <div class="calandar">
-                <div id="header-calendar">
-                    <div class="row">
-                    {% for day in  0..6 %}
-                        <div class="week">
-                            {{ ("common."~days[day])|lower|trans }}
-                            {% set start_date = '+' ~ day ~ ' day' %}
-                            <p>{{ start_date|date("d M y") }}</p>
-                        </div>
-                    {% endfor %}
+    <div class="container p-0 pl-4 pl-xl-0">
+        <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteDetail', {idCa : item.activite.classeActivite.id, idA : item.activite.id, id: item.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.libelle}) }}</a>
+    </div>
+
+    <h1 class="h1-light">{{ item.libelle }}
+        -
+        {{ libelleRessource }}</h1>
+
+    <section class="container container-style bg-white mb-5">
+
+        <h2 class="hide-border-title color-dark-gray text-center text-uppercase fs-21 fw-800 mb-5">{{ "reservation.calendrier.titre"|trans }}</h2>
+
+        {#
+                #########################     
+                #        DESKTOP        #
+                #########################
+                #}
+
+        {# Légende #}
+        <div class="row d-none d-lg-block">
+            <div class="d-flex justify-content-center mb-5">
+                <div class="legend d-flex align-items-center mx-3">
+                    <div class="legend-item bg-danger mr-2"></div>
+                    <p class="m-0">{{ "reservation.calendrier.complet"|trans }}</p>
+                </div>
+                <div class="legend d-flex align-items-center mx-3">
+                    <div class="legend-item bg-blue-calendar d-flex align-items-center mr-2">
+                        <div class="available-icon bg-success ml-1"></div>
                     </div>
+                    <p class="m-0">{{ "reservation.calendrier.disponible"|trans }}</p>
                 </div>
-                
-                <div class="row line-separator"></div>
-
-                <div class="row">
-                    {% set actualDay = 0 %}
-                    
-
-                    {% for ressources in ressourcesSort %}
-                        <div class="week">
-                        {% for ressource in ressources %}
-                            {% if ressource.reservabilite.isFull() %}
-                                {% set statut =  "full" %}
-                                {% set available =  "" %}
-                            {% else %}
-                                {% set statut =  "notFull" %}
-                                {% set available =  "available" %}
-                            {% endif %}
-
-                            <div class="calandar-element {{ statut }}" elId="{{ ressource.id }}">
-                                <div> <div class="{{ available }}"></div> <p class="hours">{{ ressource.dateDebut|date("H:i") }} - {{ ressource.dateFin|date("H:i") }}</p> </div>
-                            </div>
-                        {% endfor %}
-                        </div>
-                    {% endfor %}
+                <div class="legend d-flex align-items-center mx-3">
+                    <div class="legend-item bg-taupe-gray mr-2"></div>
+                    <p class="m-0 text-capitalize">{{ "reservation.calendrier.indisponible"|trans }}</p>
                 </div>
-
-                <div class="row"> 
-                    <div class="offset-5 col-2 ">
-                        <button url="" id="inscription" class="btn btn-primary">{{ "creneau.list.reserver"|trans }}</button>
-                    </div>
+                <div class="legend d-flex align-items-center mx-3">
+                    <div class="legend-item bg-blue mr-2"></div>
+                    <p class="m-0 text-capitalize">{{ "reservation.calendrier.inscrit"|trans }}</p>
                 </div>
-
             </div>
         </div>
-    </div>
+
+        {# Calendrier #}
+        <div class="row d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="calendar-arrow-left text-center fs-30">
+                    <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": previous_date }) }}">
+                        <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
+                    </a>
+                </div>
+                <div class="flex-fill">
+                    <div class="row mb-4 d-flex justify-content-between" id="header-calendar">
+                        {% for day in  0..6 %}
+                            <p class="day text-center text-uppercase fs-14 fw-700">
+                                {{ ("common."~days[day])|lower|trans }}<br/>
+                                {{ start_date|date_modify('+' ~ day ~ ' day')|date("d/m/Y") }}
+                            </p>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row d-flex justify-content-between align-items-stretch">
+                        {% set actualDay = 0 %}
+                        {% for day in reservabilitesByDay %}
+                            <div class="day-time-slots text-center">
+                                {% for reservabilite in day %}
+                                    {% if isPrevisualisation() %}
+                                        {% set statut =  "notFull bg-blue-calendar" %}
+                                        {% set available =  "available-icon bg-success mr-1 disabled" %}
+                                    {% elseif reservabilite.userIsInscrit(app.user) %}
+                                        {% set statut =  "register bg-blue text-white" %}
+                                        {% set available =  "" %}
+                                    {% elseif not reservabilite.isDisponible(app.user) %}
+                                        {% set statut =  "unvailable bg-taupe-gray color-dark-gray" %}
+                                        {% set available =  "" %}
+                                    {% elseif reservabilite.isFull() %}
+                                        {% set statut =  "full bg-danger text-white" %}
+                                        {% set available =  "" %}
+                                    {% else %}
+                                        {% set statut =  "notFull bg-blue-calendar color-blue" %}
+                                        {% set available =  "available available-icon bg-success mr-1" %}
+                                    {% endif %}
+
+                                    <button class="btn calendar-time-slot d-flex justify-content-center align-items-center w-100 p-0 m-0 mb-2 {{ statut }}" elid="{{ reservabilite.id }}" formatid="{{ item.id }}">
+                                        <div class="{{ available }}"></div>
+                                        <p class="m-0 fw-700">{{ reservabilite.evenement.dateDebut|date("H:i") }}
+                                            -
+                                            {{ reservabilite.evenement.dateFin|date("H:i") }}</p>
+                                    </button>
+
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="calendar-arrow-right text-center fs-30">
+                    <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": next_date }) }}">
+                        <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {#
+                #########################     
+                #         MOBILE        #
+                #########################
+                #}
+
+        <div class="row d-lg-none" id="calendar-mobile">
+            <div class="col-12">
+                <div class="row d-flex justify-content-between align-items-center mb-5">
+                    <div id="header-left" class="calendar-arrow-left text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": previous_date, beginning: "end" }) }}">
+                        <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
+                    </div>
+
+                    <div class="flex-fill d-flex justify-content-center align-items-center text-uppercase fs-14 fw-700" id="header-mid"></div>
+
+                    <div id="header-right" class="calendar-arrow-right text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": next_date }) }}">
+                        <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
+                    </div>
+                </div>
+
+                {% set nbToDisplay = 1 %}
+                {% if beginning == "end"  %}
+                    {% set nbToDisplay = 7 %}
+                {% endif %}
+                <div class="row body-calendar-mobile">
+                    {% set actualDay = 0 %}
+
+                    {% for day in reservabilitesByDay %}
+
+                        {% set hidden = "d-none" %}
+                        {% if loop.index == nbToDisplay %}
+                            {% set hidden = "week-active" %}
+                        {% endif %}
+
+                        <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
+
+                            {% for reservabilite in day %}
+                                {% if isPrevisualisation() %}
+                                    {% set statut =  "notFull bg-blue-calendar color-blue" %}
+                                    {% set available =  "available-icon bg-success mr-1 disabled" %}
+                                {% elseif reservabilite.userIsInscrit(app.user) %}
+                                    {% set statut =  "register bg-blue text-white" %}
+                                    {% set available =  "" %}
+                                {% elseif not reservabilite.isDisponible(app.user) %}
+                                    {% set statut =  "unvailable bg-taupe-gray color-dark-gray" %}
+                                    {% set available =  "" %}
+                                {% elseif reservabilite.isFull() %}
+                                    {% set statut =  "full bg-danger text-white" %}
+                                    {% set available =  "" %}
+                                {% else %}
+                                    {% set statut =  "notFull bg-blue-calendar color-blue" %}
+                                    {% set available =  "available available-icon bg-success mr-1" %}
+                                {% endif %}
+
+                                <button class="btn calendar-time-slot d-flex justify-content-center align-items-center p-2 mb-2  {{ statut }}" elid="{{ reservabilite.id }}" formatid="{{ item.id }}">
+                                    <div class="{{ available }}"></div>
+                                    <p class="m-0 fw-700">{{ reservabilite.evenement.dateDebut|date("H:i") }}
+                                        -
+                                        {{ reservabilite.evenement.dateFin|date("H:i") }}</p>
+                                </button>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <button callback="changeStatut" class="btn btn-success js-inscription" data-type="UcaBundle:Reservabilite" id="inscription" url="">{{ "creneau.list.reserver"|trans }}</button>
+            </div>
+        </div>
+
+    </section>
+
+
+    {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}
+    {{ Inscription.HtmlModal }}
 {% endblock %}
 
 
 {% block javascripts %}
-    {{ encore_entry_script_tags('calandar') }}
-    
+    {{ parent() }}
+    {{ encore_entry_script_tags('calendar') }}
+    {{ Inscription.Js }}
+
 {% endblock %}

@@ -31,3 +31,6 @@ fos_js_routing:
 
 bazinga_jstranslation:
     resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
+
+lexik_paybox:
+    resource: '@LexikPayboxBundle/Resources/config/routing.yml'

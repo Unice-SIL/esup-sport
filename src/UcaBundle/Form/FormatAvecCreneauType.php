@@ -16,13 +16,14 @@ class FormatAvecCreneauType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('formatActivite', FormatActiviteType::class,[
-                'data_class' => FormatAvecCreneau::class])
+            ->add('formatActivite', FormatActiviteType::class, [
+                'data_class' => FormatAvecCreneau::class
+            ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.save'
             ])
-            ->add('reset', ResetType::class, [
-                'label_format' => 'bouton.reset',
+            ->add('previsualiser', SubmitType::class, [
+                'label_format' => 'bouton.save.previsualiser'
             ]);
     }
 

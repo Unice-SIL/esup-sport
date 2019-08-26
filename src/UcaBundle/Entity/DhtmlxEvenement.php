@@ -24,19 +24,29 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
     protected $reservabilite;
 
+    /** @ORM\OneToOne(targetEntity="FormatSimple", inversedBy="evenement") */
+    protected $formatSimple;
+
     /** @ORM\Column(type="string") */
     protected $description;
 
+    /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER") */
+    protected $appels;
     #endregion
 
     #region Méthodes
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'serie', 'dependanceSerie', 'reservabilite', 'description', 'oldId', 'action'];
+        return ['dateDebut', 'dateFin', 'serie', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action'];
     }
 
+
+
+ 
     #endregion
+    
+    
 
     /**
      * Set dependanceSerie.
@@ -63,61 +73,27 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     }
 
     /**
-     * Get id.
+     * Set description.
      *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set dateDebut.
-     *
-     * @param \DateTime $dateDebut
+     * @param string $description
      *
      * @return DhtmlxEvenement
      */
-    public function setDateDebut($dateDebut)
+    public function setDescription($description)
     {
-        $this->dateDebut = $dateDebut;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get dateDebut.
+     * Get description.
      *
-     * @return \DateTime
+     * @return string
      */
-    public function getDateDebut()
+    public function getDescription()
     {
-        return $this->dateDebut;
-    }
-
-    /**
-     * Set dateFin.
-     *
-     * @param \DateTime $dateFin
-     *
-     * @return DhtmlxEvenement
-     */
-    public function setDateFin($dateFin)
-    {
-        $this->dateFin = $dateFin;
-
-        return $this;
-    }
-
-    /**
-     * Get dateFin.
-     *
-     * @return \DateTime
-     */
-    public function getDateFin()
-    {
-        return $this->dateFin;
+        return $this->description;
     }
 
     /**
@@ -168,28 +144,84 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
         return $this->reservabilite;
     }
 
-
     /**
-     * Set description.
+     * Set formatSimple.
      *
-     * @param String $description
+     * @param \UcaBundle\Entity\FormatSimple|null $formatSimple
      *
      * @return DhtmlxEvenement
      */
-    public function setDescription($description = null)
+    public function setFormatSimple(\UcaBundle\Entity\FormatSimple $formatSimple = null)
     {
-        $this->description = $description;
+        $this->formatSimple = $formatSimple;
 
         return $this;
     }
 
     /**
-     * Get description.
+     * Get formatSimple.
      *
-     * @return String
+     * @return \UcaBundle\Entity\FormatSimple|null
      */
-    public function getDescription()
+    public function getFormatSimple()
     {
-        return $this->description;
+        return $this->formatSimple;
+    }
+
+    /**
+     * Set appels.
+     *
+     * @param \UcaBundle\Entity\Appel|null $appels
+     *
+     * @return DhtmlxEvenement
+     */
+    public function setAppels(\UcaBundle\Entity\Appel $appels = null)
+    {
+        $this->appels = $appels;
+
+        return $this;
+    }
+
+    /**
+     * Get appels.
+     *
+     * @return \UcaBundle\Entity\Appel|null
+     */
+    public function getAppels()
+    {
+        return $this->appels;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->appels = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add appel.
+     *
+     * @param \UcaBundle\Entity\Appel $appel
+     *
+     * @return DhtmlxEvenement
+     */
+    public function addAppel(\UcaBundle\Entity\Appel $appel)
+    {
+        $this->appels[] = $appel;
+
+        return $this;
+    }
+
+    /**
+     * Remove appel.
+     *
+     * @param \UcaBundle\Entity\Appel $appel
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAppel(\UcaBundle\Entity\Appel $appel)
+    {
+        return $this->appels->removeElement($appel);
     }
 }

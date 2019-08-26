@@ -1,98 +1,117 @@
-<a class="btn btn-primary" href="{{ path('UtilisateurLister') }}">
-    <i class="fas fa-chevron-left"></i>
-    {{'bouton.retour'|trans}}</a>
-<h1>{{ ('utilisateur.' ~ action ~ '.title') | trans }}</h1>
-
+<!-- Message de saisie incorrecte -->
 {% if not form.vars.valid %}
-    <div class="alert alert-danger" role="alert" sr-only="">
-        {{ 'erreur.formulaire.champ.incorrect' | trans }}
-    </div>
+  <div class="alert alert-danger" role="alert" sr-only="">
+    {{ 'erreur.formulaire.champ.incorrect' | trans }}
+  </div>
 {% endif %}
+<div class="col-sm-12 col-lg-12">
+  {{ form_start(form, {'method': 'post', 'attr': {'class': formClass, 'novalidate': 'novalidate'}}) }}
 
-<div class='row'>
-    <div class="col-sm-12">
-        {{ form_start(form, {'method': 'post', 'attr': {'class': formClass, 'novalidate': 'novalidate'}}) }}
-        <h2>{{ 'utilisateur.insciption.information.connexion' | trans }}</h2>
-        <div class='row'>
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.username) }}
-            </div>
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.email) }}
-            </div>
-        </div>
-        <h2>{{ 'utilisateur.insciption.information.personnelle' | trans }}</h2>
-        <div class='row'>
-            <div class='col-sm-12 col-md-4'>
-                {{ form_row(form.matricule) }}
-            </div>
-            <div class='col-sm-12 col-md-4'>
-                {{ form_row(form.numeroNfc) }}
-            </div>
-            <div class='col-sm-12 col-md-4'>
-                {{ form_row(form.profil) }}
-            </div>
-        </div>
-        <div class='row'>
-            <div class='col-sm-12'>
-                {{ form_row(form.sexe) }}
-            </div>
-            <div class='col-sm-12 col-md-6 col-lg-4'>
-                {{ form_row(form.prenom)}}
-            </div>
-            <div class='col-sm-12 col-md-6 col-lg-4'>
-                {{ form_row(form.nom) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class='col-sm-12 col-md-12 col-lg-8'>
-                {{ form_row(form.adresse)}}
-            </div>
-            <div class="w-100"></div>
-            <div class='col-sm-12 col-md-4 col-lg-3'>
-                {{ form_row(form.codePostal)}}
-            </div>
-            <div class='col-sm-12 col-md-8 col-lg-5'>
-                {{ form_row(form.ville)}}
-            </div>
-        </div>
-        <div class="row">
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.dateNaissance) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.telephone) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class='col-sm-12 col-lg-6'>
-                {{ form_row(form.groups) }}
-            </div>
-            <div class="col-sm-12 col-lg-6">
-                {{ form_row(form.autorisations) }}
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <div id="descriptionEncadrant">
-                    {{ form_row(form.description) }}
-                </div>
-            </div>
-        </div>
+  <!-- Username et Email -->
+  <h2 class="hide-border-title">{{ 'utilisateur.inscription.information.connexion' | trans }}</h2>
+  <div class='row'>
+    <div class='col-sm-12 col-md-6'>
+      {{ form_row(form.username) }}
+    </div>
+    <div class='col-sm-12 col-md-6'>
+      {{ form_row(form.email) }}
+    </div>
+  </div>
+
+  <!-- PréInscription -->
+  {% if (action == 'preInscription') %}
+    <div class="row">
+      <div class='col-sm-12 col-md-6'>
+        {{ form_row(form.plainPassword) }}
+      </div>
+    </div>
+    <h2 class="hide-border-title">{{ 'utilisateur.inscription.information.preinscription' | trans }}</h2>
+    <div class="row">
+      <div class='col-sm-12 col-md-6'>
+        {{ form_row(form.profil) }}
+      </div>
+      <div class='col-sm-12 col-md-6'>
+        {{ form_row(form.documentFile) }}
+      </div>
     </div>
 
-    <!-- Boutons -->
-    <div class="col-sm-12">
-        <div class="row">
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.save)}}
-            </div>
-            <div class='col-sm-12 col-md-6'>
-                {{ form_row(form.reset)}}
-            </div>
-        </div>
+  {% elseif (action != 'profil')  %}
+    <!-- Ajout ou modification -->
+    <div class='row'>
+      <div class='col-sm-12 col-md-6'>
+        {{ form_row(form.matricule) }}
+      </div>
+      <div class='col-sm-12 col-md-6'>
+        {{ form_row(form.numeroNfc) }}
+      </div>
     </div>
-    {{ form_end(form) }}
-</div>
+    <h2 class="hide-border-title">{{ 'utilisateur.inscription.information.profil' | trans }}</h2>
+    <div class="row">
+      <div class='col-sm-12 col-md-4'>
+        {{ form_row(form.profil) }}
+      </div>
+      <div class="col-sm-12 col-lg-4">
+        {{ form_row(form.statut) }}
+      </div>
+      <div class='col-sm-12 col-lg-4'>
+        {{ form_row(form.groups) }}
+      </div>
+    </div>
+  {% endif %}
+
+  <!-- Informations personnelles -->
+  <h2 class="hide-border-title">{{ 'utilisateur.inscription.information.personnelle' | trans }}</h2>
+  <div class='row'>
+    <div class='col-sm-12 col-md-4 col-lg-2'>
+      {{ form_row(form.sexe) }}
+    </div>
+    <div class='col-sm-12 col-md-4 col-lg-5'>
+      {{ form_row(form.prenom)}}
+    </div>
+    <div class='col-sm-12 col-md-4 col-lg-4'>
+      {{ form_row(form.nom) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class='col-sm-12 col-md-12 col-lg-8'>
+      {{ form_row(form.adresse)}}
+    </div>
+    <div class="w-100"></div>
+    <div class='col-sm-12 col-md-4 col-lg-3'>
+      {{ form_row(form.codePostal)}}
+    </div>
+    <div class='col-sm-12 col-md-8 col-lg-5'>
+      {{ form_row(form.ville)}}
+    </div>
+  </div>
+  <div class="row">
+    <div class='col-sm-12 col-md-6'>
+      {{ form_row(form.dateNaissance) }}
+    </div>
+  </div>
+  <div class="row">
+    <div class='col-sm-12 col-md-6'>
+      {{ form_row(form.telephone) }}
+    </div>
+  </div>
+ 
+  {% if (action != 'preInscription' and action != 'profil') %}
+    <h2 class="hide-border-title">{{ 'utilisateur.inscription.information.aministrative' | trans }}</h2>
+    <div class="row">
+      <div class="col-sm-12 col-lg-6">
+        {{ form_row(form.autorisations) }}
+      </div>
+      <div class="col-sm-12 col-lg-6">
+        {{ form_row(form.description) }}
+      </div>
+      <div id="descriptionEncadrant"></div>
+    </div>
+  {% endif %}
+
+  <!-- Boutons -->
+  <div class="col-sm-12">
+    <div class="row">
+      {{ form_row(form.save)}}
+    </div>
+  </div>
+  {{ form_end(form) }}</div>

@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Entity\Actualite;
@@ -22,7 +23,7 @@ use UcaBundle\Service\Common\FlashBag;
 class ActualiteController extends Controller
 {
     /**
-     * @Route("/", name="ActualiteLister")
+     * @Route("/", name="UcaGest_ActualiteLister")
      * @Isgranted("ROLE_GESTION_ACTUALITE_LECTURE")
     */
     public function listerAction(Request $request)
@@ -44,11 +45,11 @@ class ActualiteController extends Controller
             $twigConfig['noAddButton'] = true;
         }
         $twigConfig['codeListe'] = 'Actualite';
-        return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
+        return $this->render('@Uca/UcaGest/Referentiel/Actualite/Datatable.html.twig', $twigConfig);
     }
 
     /**
-     * @Route("/Ajouter", name="ActualiteAjouter")
+     * @Route("/Ajouter", name="UcaGest_ActualiteAjouter")
      * @Method({"GET""POST"})
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
      */
@@ -62,7 +63,7 @@ class ActualiteController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectToRoute('ActualiteLister');
+            return $this->redirectToRoute('UcaGest_ActualiteLister');
         }
 
         $twigConfig['item'] = $item;
@@ -72,7 +73,7 @@ class ActualiteController extends Controller
 
 
      /**
-     * @Route("/Supprimer/{id}", name="ActualiteSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_ActualiteSupprimer")
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
     */
     public function supprimerAction(Request $request, Actualite $actualite)
@@ -81,16 +82,16 @@ class ActualiteController extends Controller
         $em->remove($actualite);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($actualite, 'Supprimer');
-        return $this->redirectToRoute('ActualiteLister');
+        return $this->redirectToRoute('UcaGest_ActualiteLister');
     
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="ActualiteModifier",requirements={"id"="\d+"}) 
+     * @Route("/Modifier/{id}", name="UcaGest_ActualiteModifier",requirements={"id"="\d+"}) 
      * @Method({"GET", "POST"})
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
     */
-    public function modifierAction(Request $request, actualite $actualite)
+    public function modifierAction(Request $request, Actualite $actualite)
     {
         $em = $this->getDoctrine()->getManager();
         $form = $this->get('form.factory')->create(ActualiteType::class, $actualite);
@@ -98,10 +99,41 @@ class ActualiteController extends Controller
             $em->persist($actualite);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($actualite, 'Modifier');
-            return $this->redirectToRoute('ActualiteLister');
+            return $this->redirectToRoute('UcaGest_ActualiteLister');
         }
         $twigConfig['item'] = $actualite;
         $twigConfig['form'] = $form->createView();
         return $this->render('@Uca/UcaGest/Referentiel/Actualite/Formulaire.html.twig', $twigConfig);
     }
+
+    /** 
+     * @Route("/ActualiteModifierOrdre/{id}/{action}", name="UcaGest_ActualiteModifierOrdre", options={"expose"=true}, requirements={"id"="\d+"})
+     * @Method({"GET"})
+     * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
+    */
+    public function monterOrdreActualite(Request $request, Actualite $actualite, $action){
+        $em = $this->getDoctrine()->getManager();
+        $actualites = $em->getRepository(Actualite::class)->findAll();
+        if($action == "monter"){
+            $condition = $actualite->getOrdre() > 0;
+            $oldOrdre = $actualite->getOrdre();
+            $newOrdre = $actualite->getOrdre()-1;
+        
+        }elseif ($action == "descendre"){
+            $condition = $actualite->getOrdre() < count($actualites)-1;
+            $oldOrdre = $actualite->getOrdre();
+            $newOrdre = $actualite->getOrdre()+1;
+        }
+        // Si c'est le premier dans l'ordre et qu'on veut monter encore
+        if($condition){
+            $actuAffecteeParChangement = $em->getRepository(Actualite::class)->findOneByOrdre($newOrdre);
+            $actuAffecteeParChangement->setOrdre($oldOrdre);
+            $actualite->setOrdre($newOrdre);
+            $em->flush();
+            return new Response(200);
+        }else{
+            return new Response(204);
+        }
+    }
+
 }
