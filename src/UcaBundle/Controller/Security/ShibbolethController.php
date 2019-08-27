@@ -15,7 +15,17 @@ class ShibbolethController extends Controller
      */
     public function shibLoginAction()
     {
-        return $this->redirectToRoute('UcaWeb_Accueil');
+        try {
+            if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
+                return $this->redirectToRoute('UcaWeb_MentionsLegales');
+            } else {
+                return $this->redirectToRoute('UcaWeb_Accueil');
+            }
+        } catch (\Exception $e) {
+            $this->get('uca.flashbag')->addMessageFlashBag($e->getMessage(), 'danger');
+            return $this->redirectToRoute('fos_user_security_login');
+
+        }
     }
 
     /**
@@ -35,12 +45,12 @@ class ShibbolethController extends Controller
     }
 
     /**
-     * @Route("/UcaWeb/ShibLoginTest", name="UcaWeb_ShibLoginTest")
+     * @Route("/UcaWeb/aShibLoginTest", name="UcaWeb_aShibLoginTest")
      */
-    public function shibLoginTestAction()
+    public function shibLoginTestAction(Request $request)
     {
         $usp = $this->get('uca.shibboleth.provider');
-        $usr = $usp->loadUser([
+        $usrConfig = ['dcharlot' => [
             "username" => "dcharlot@unice.fr",
             "uid" => "dcharlot",
             "eppn" => "dcharlot@unice.fr",
@@ -51,6 +61,43 @@ class ShibbolethController extends Controller
             "eduPersonPrimaryAffiliation" => "staff",
             "supannEtuId" => "20052308",
             "ptdrouv" => ""
-        ]);
+        ], 'etudiant' => [
+            "username" => "99999999@unice.fr",
+            "uid" => "99999999",
+            "eppn" => "99999999@unice.fr",
+            "mail" => "test1.testcrips4@etu.univ-cotedazur.fr",
+            "givenName" => "Test1",
+            "sn" => "testCRIPS",
+            "eduPersonAffiliation" => "member;student",
+            "eduPersonPrimaryAffiliation" => "student",
+            "supannEtuId" => "99999999",
+            "ptdrouv" => "0",
+            'supannOrganisme' => '{EES}0060931E'
+        ], 'doctor' => [
+            "username" => "99999999@unice.fr",
+            "uid" => "99999999",
+            "eppn" => "99999999@unice.fr",
+            "mail" => "test1.testcrips4@etu.univ-cotedazur.fr",
+            "givenName" => "Test1",
+            "sn" => "testCRIPS",
+            "eduPersonAffiliation" => "member;employee;staff;student",
+            "eduPersonPrimaryAffiliation" => "student",
+            "supannEtuId" => "99999999",
+            "ptdrouv" => "0",
+            'supannOrganisme' => '{EES}0060931E'
+        ]];
+        try {
+            $usr = $usp->loadUser($usrConfig[$request->get('user')]);
+            if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
+                return $this->redirectToRoute('UcaWeb_MentionsLegales');
+            } else {
+                return $this->redirectToRoute('UcaWeb_Accueil');
+            }
+        } catch (\Exception $e) {
+            $this->get('uca.flashbag')->addMessageFlashBag($e->getMessage(), 'danger');
+            return $this->redirectToRoute('fos_user_security_login');
+        }
+        dump($usr);
+        die;
     }
 }

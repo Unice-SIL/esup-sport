@@ -385,8 +385,8 @@ modalinscription.titre.panier: Add to the basket
 modalinscription.titre.preinscription: Pre-registration
 modalinscription.validation.message: Your inscription has been taken into account. 
 monPlanning.modal.mail.title: Send mail to subscribers
-monPlanning.more.appel.titre: Subscibers list
 monPlanning.more.appel.texte: "Select people present at activity"
+monPlanning.more.appel.titre: Subscibers list
 monPlanning.more.appel: List subscribers
 monPlanning.more.button.mail: Send mail
 monPlanning.more.datedebut: beginning date
@@ -544,6 +544,9 @@ security.roles.ROLE_PREVISUALISATION: Manage previews
 security.roles.ROLE_SUPER_ADMIN: Access UcaGest (Advaanced)
 security.roles.ROLE_USER: Access UcaWeb
 security.shibboleth.login.submit: Shibboleth connection
+shibboleth.error.doctorant: Please login with your student account
+shibboleth.error.dossierincomplet: Your file is not complete
+shibboleth.error.profilinconnu: This type of profile is unknown
 sitemap.activite.libelle: Activities
 sitemap.activites.libelle: Activities
 sitemap.actualite.libelle: News

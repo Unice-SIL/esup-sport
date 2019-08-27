@@ -556,6 +556,9 @@ security.roles.ROLE_PREVISUALISATION: Gestion de la prévisualisation
 security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
 security.roles.ROLE_USER: Accès UcaWeb
 security.shibboleth.login.submit: 'Connexion Shibboleth'
+shibboleth.error.doctorant: Veuillez vous connecter avec votre compte étudiant
+shibboleth.error.dossierincomplet: Votre dossier n'est pas complet
+shibboleth.error.profilinconnu: Ce type de profil est inconnu
 sitemap.activite.libelle: Activités
 sitemap.activites.libelle: Activités
 sitemap.actualite.libelle: Actualités
