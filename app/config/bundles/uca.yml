@@ -89,7 +89,7 @@ services:
         autowire: true
     mailService:
         class: UcaBundle\Service\Common\MailService
-        arguments: ['@mailer', '%mailer_user%', '@templating']
+        arguments: ['@mailer', '%mailer_sender%', '@templating']
     UcaBundle\Service\Common\MailService: '@mailService'
     uca.user.registration.listener:
         class: UcaBundle\Service\Listener\RegistrationConfirmListener
