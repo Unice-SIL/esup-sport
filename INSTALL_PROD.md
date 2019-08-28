@@ -68,7 +68,7 @@ Livraison d'un correctif
 > php bin/console cache:clear --env=prod
 
 Livraison d'une mise à jour
-------------------------
+---------------------------
 
 ### GIT :
 
@@ -83,3 +83,11 @@ Livraison d'une mise à jour
 > php bin/console fos:js-routing:dump --format=json --target=assets/bundles/fosjsrouting/fos_routes.json
 > yarn encore prod --ucaEnv=prod
 > php bin/console cache:clear --env=prod
+
+Activation du mode Debug
+------------------------
+> cp web/~app_dev.php.dev web/app_dev.php
+
+Désactivation du mode Debug
+------------------------
+> cp web/~app_dev.php web/app_dev.php
