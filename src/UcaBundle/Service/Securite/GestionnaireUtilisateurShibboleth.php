@@ -11,6 +11,7 @@ use UcaBundle\Entity\TypeAutorisation;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Entity\torisation;
 use UniceSIL\ShibbolethBundle\Security\User\ShibbolethUserProviderInterface as SUP;
+use UcaBundle\Exception\ShibbolethException;
 
 class GestionnaireUtilisateurShibboleth implements SUP
 {
@@ -66,11 +67,11 @@ class GestionnaireUtilisateurShibboleth implements SUP
 
 
         if (in_array(4, $arrayAffiliationNumber) && in_array(8, $arrayAffiliationNumber)) {
-            throw new \Exception('shibboleth.error.doctorant');
+            throw new ShibbolethException('shibboleth.error.doctorant');
         } elseif (in_array(4, $arrayAffiliationNumber) && $credentials['ptdrouv'] > 0) {
-            throw new \Exception('shibboleth.error.dossierincomplet');
+            throw new ShibbolethException('shibboleth.error.dossierincomplet');
         } elseif (!in_array(4, $arrayAffiliationNumber) && !in_array(8, $arrayAffiliationNumber)) {
-            throw new \Exception('shibboleth.error.profilinconnu');
+            throw new ShibbolethException('shibboleth.error.profilinconnu');
         }
 
         $objProfil = $this->em->getReference(ProfilUtilisateur::class, $transco[$profil]);

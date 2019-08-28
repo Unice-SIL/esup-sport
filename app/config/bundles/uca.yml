@@ -97,3 +97,8 @@ services:
         tags:
             - { name: kernel.event_subscriber }
         arguments: ['@doctrine.orm.entity_manager', '@router', '@uca.flashbag']
+    uca.listener.exception:
+        class: UcaBundle\Service\Listener\ExceptionListener
+        arguments: ['@router', '@uca.flashbag']
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }

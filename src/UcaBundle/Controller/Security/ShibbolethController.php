@@ -15,16 +15,10 @@ class ShibbolethController extends Controller
      */
     public function shibLoginAction()
     {
-        try {
-            if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
-                return $this->redirectToRoute('UcaWeb_MentionsLegales');
-            } else {
-                return $this->redirectToRoute('UcaWeb_Accueil');
-            }
-        } catch (\Exception $e) {
-            $this->get('uca.flashbag')->addMessageFlashBag($e->getMessage(), 'danger');
-            return $this->redirectToRoute('fos_user_security_login');
-
+        if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
+            return $this->redirectToRoute('UcaWeb_MentionsLegales');
+        } else {
+            return $this->redirectToRoute('UcaWeb_Accueil');
         }
     }
 
@@ -86,8 +80,8 @@ class ShibbolethController extends Controller
             "ptdrouv" => "0",
             'supannOrganisme' => '{EES}0060931E'
         ]];
+        $usr = $usp->loadUser($usrConfig[$request->get('user')]);
         try {
-            $usr = $usp->loadUser($usrConfig[$request->get('user')]);
             if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
                 return $this->redirectToRoute('UcaWeb_MentionsLegales');
             } else {
