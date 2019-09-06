@@ -70,6 +70,11 @@ Livraison d'un correctif
 Livraison d'une mise à jour
 ---------------------------
 
+### Sauvegarde
+
+Sauvegarder la base de données
+> mysqldump -h mysql2.prive.unice.fr -u uca_sport -p uca_sport > /home/lepin/Uca/uca_sport.sql
+
 ### GIT :
 
 * Mettre à jour le dépot
@@ -79,6 +84,7 @@ Livraison d'une mise à jour
 > composer update
 > yarn install
 > php bin/console assets:install --symlink assets
+> php bin/console doctrine:schema:update --force
 > php bin/console bazinga:js-translation:dump assets/bundles/bazingajstranslation --merge-domains --format=js
 > php bin/console fos:js-routing:dump --format=json --target=assets/bundles/fosjsrouting/fos_routes.json
 > yarn encore prod --ucaEnv=prod
