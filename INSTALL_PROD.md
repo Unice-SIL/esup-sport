@@ -48,6 +48,7 @@ parameters:
 > composer update
 > yarn install
 > php bin/console assets:install --symlink assets
+> php bin/console doctrine:schema:update --force
 > php bin/console bazinga:js-translation:dump assets/bundles/bazingajstranslation --merge-domains --format=js
 > php bin/console fos:js-routing:dump --format=json --target=assets/bundles/fosjsrouting/fos_routes.json
 > yarn encore prod --ucaEnv=prod
@@ -97,3 +98,11 @@ Activation du mode Debug
 Désactivation du mode Debug
 ------------------------
 > cp web/~app_dev.php web/app_dev.php
+
+Paybox : activation du mode test
+--------------------------------
+> cp app/config/bundles/paybox.test.yml app/config/bundles/paybox.yml
+
+Paybox : activation du mode prod
+--------------------------------
+> cp app/config/bundles/paybox.prod.yml app/config/bundles/paybox.yml
