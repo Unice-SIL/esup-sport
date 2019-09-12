@@ -44,7 +44,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\Column(type="string") */
     private $statut;
-    /* valeurs : initialise, attentevalidationencadrant, attentevalidationgestionnaire, attenteajoutpanier, attentepaiement, valide, annule */
+    /* valeurs : initialise, attentevalidationencadrant, attentevalidationgestionnaire, attenteajoutpanier, attentepaiement, valide, annule, desinscrit */
 
     /** @ORM\Column(type="string", nullable=true) */
     private $motifAnnulation;
@@ -58,21 +58,37 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="inscriptionsAValider") */
     private $encadrants;
+
+    /** @ORM\OneToMany(targetEntity="CommandeDetail", mappedBy="inscription", cascade={"persist"}, orphanRemoval=true) */
+    private $commandeDetails;
+
+    /** @ORM\Column(type="datetime", nullable=true) */
+    private $dateDesinscription;
     #endregion
 
     #region Méthodes
 
-    public function __construct(\UcaBundle\Entity\Interfaces\Article $item, $user, $format = null)
+    public function __construct(\UcaBundle\Entity\Interfaces\Article $item, $user, $options)
     {
-        $this->setUtilisateur($user);
-        $this->setItem($item, $format);
-        foreach ($this->getItem()->getEncadrants()->getIterator() as $encadrant) {
-            $this->addEncadrant($encadrant);
-            $encadrant->addInscriptionsAValider($this);
+        if (!isset($options['format'])) {
+            $options['format'] = null;
         }
+        if (!isset($options['typeInscription'])) {
+            $options['typeInscription'] = 'principale';
+        }
+        $this->setUtilisateur($user);
+        $this->setItem($item, $options['format']);
         $this->setDate(new \DateTime());
-        $this->initAutorisations();
-        $this->updateStatut();
+        if ($options['typeInscription'] == 'principale') {
+            foreach ($this->getItem()->getEncadrants()->getIterator() as $encadrant) {
+                $this->addEncadrant($encadrant);
+                $encadrant->addInscriptionsAValider($this);
+            }
+            $this->initAutorisations();
+            $this->updateStatut();
+        } elseif ($options['typeInscription'] == 'format') {
+            $this->setStatut('attentepaiement');
+        }
         $user->addInscription($this);
     }
 
@@ -101,6 +117,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     {
         if (is_a($item, Creneau::class)) {
             $this->setCreneau($item);
+            $this->setFormatActivite($item->getFormatActivite());
         } elseif (is_a($item, Reservabilite::class)) {
             $this->setReservabilite($item);
             $this->setFormatActivite($format);
@@ -128,12 +145,12 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     public function getItemType()
     {
-        if (!empty($this->reservabilite)) {
+        if (!empty($this->creneau)) {
+            return 'UcaBundle:Creneau';
+        } elseif (!empty($this->reservabilite)) {
             return 'UcaBundle:Reservabilite';
         } elseif (!empty($this->formatActivite)) {
             return 'UcaBundle:FormatActivite';
-        } elseif (!empty($this->creneau)) {
-            return 'UcaBundle:Creneau';
         }
     }
     public function getAutorisationsByComportement($arrayComportement, $statut = 'all')
@@ -158,6 +175,12 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             $this->motifAnnulation = $options['motifAnnulation'];
         if (isset($options['commentaireAnnulation']))
             $this->commentaireAnnulation = $options['commentaireAnnulation'];
+        if (in_array($statut, ['annule', 'valide'])) {
+            $this->removeAllAutorisations();
+        }
+        if (in_array($statut, ['valide'])) {
+            $this->removeAllCommandeDetails();
+        }
         return $this;
     }
 
@@ -187,7 +210,6 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         $this->autorisations = new ArrayCollection();
         foreach ($this->getAutorisationTypes()->getIterator() as $typeAutorisation) {
             $autorisation = new Autorisation($this, $typeAutorisation);
-            // dump($autorisation);
             if ($autorisation->getStatut() != 'valide')
                 $this->addAutorisation($autorisation);
         }
@@ -203,18 +225,21 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         }
     }
 
-    public function getFormatActivite()
+    public function removeAllCommandeDetails()
     {
-        if (!empty($this->reservabilite)) {
-            return $this->formatActivite;
-        } elseif (!empty($this->formatActivite)) {
-            return $this->formatActivite;
-        } elseif (!empty($this->creneau)) {
-            return $this->creneau->getFormatActivite();
+        foreach ($this->commandeDetails->getIterator() as $cd) {
+            $c = $cd->getCommande();
+            if ($c->getStatut() != 'termine') {
+                $this->commandeDetails->removeElement($cd);
+                $cd->setInscription(null);
+                $cd->setMontant(0)->setTva(0);
+                $c->updateMontantTotal();
+            }
         }
     }
 
     #endregion
+
 
     /**
      * Get id.
@@ -253,11 +278,11 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Set dateValidation.
      *
-     * @param \DateTime $dateValidation
+     * @param \DateTime|null $dateValidation
      *
      * @return Inscription
      */
-    public function setDateValidation($dateValidation)
+    public function setDateValidation($dateValidation = null)
     {
         $this->dateValidation = $dateValidation;
 
@@ -267,7 +292,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get dateValidation.
      *
-     * @return \DateTime
+     * @return \DateTime|null
      */
     public function getDateValidation()
     {
@@ -344,6 +369,16 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         $this->formatActivite = $formatActivite;
 
         return $this;
+    }
+
+    /**
+     * Get formatActivite.
+     *
+     * @return \UcaBundle\Entity\FormatActivite|null
+     */
+    public function getFormatActivite()
+    {
+        return $this->formatActivite;
     }
 
     /**
@@ -488,5 +523,65 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function getEncadrants()
     {
         return $this->encadrants;
+    }
+
+    /**
+     * Add commandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
+     *
+     * @return Inscription
+     */
+    public function addCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    {
+        $this->commandeDetails[] = $commandeDetail;
+
+        return $this;
+    }
+
+    /**
+     * Remove commandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    {
+        return $this->commandeDetails->removeElement($commandeDetail);
+    }
+
+    /**
+     * Get commandeDetails.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommandeDetails()
+    {
+        return $this->commandeDetails;
+    }
+
+    /**
+     * Set dateDesinscription.
+     *
+     * @param \DateTime|null $dateDesinscription
+     *
+     * @return Inscription
+     */
+    public function setDateDesinscription($dateDesinscription = null)
+    {
+        $this->dateDesinscription = $dateDesinscription;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDesinscription.
+     *
+     * @return \DateTime|null
+     */
+    public function getDateDesinscription()
+    {
+        return $this->dateDesinscription;
     }
 }

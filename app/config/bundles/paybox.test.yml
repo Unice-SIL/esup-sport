@@ -1,0 +1,10 @@
+lexik_paybox:
+    parameters:
+        production: false        # Switches between Paybox test and production servers (preprod-tpe <> tpe)
+        site:        '1999888'   # Site number provided by the bank
+        rank:        '43'        # Rank number provided by the bank
+        login:       '107975626' # Customer's login provided by Paybox
+        hmac:
+            key: '0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF' # Key used to compute the hmac hash, provided by Paybox
+        currencies:  
+            - '978'  # EUR

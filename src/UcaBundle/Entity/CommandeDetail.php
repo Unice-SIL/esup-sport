@@ -28,7 +28,7 @@ class CommandeDetail
     /** @ORM\Column(type="string", nullable=true) */
     private $hmac;
 
-    /** @ORM\OneToOne(targetEntity="Inscription") */
+    /** @ORM\ManyToOne(targetEntity="Inscription", inversedBy="commandeDetails", cascade={"persist"}) */
     protected $inscription;
 
     /** @ORM\ManyToMany(targetEntity="CommandeDetail", inversedBy="ligneCommandeLiees", cascade={"persist"}) */
@@ -67,7 +67,7 @@ class CommandeDetail
     /** @ORM\Column(type="string", nullable=true) */
     private $libelle;
 
-    /** @ORM\Column(type="string", nullable=true) */
+    /** @ORM\Column(type="text", nullable=true) */
     private $description;
 
     /** @ORM\Column(type="datetime", nullable=true) */
@@ -75,6 +75,9 @@ class CommandeDetail
 
     /** @ORM\Column(type="datetime", nullable=true) */
     private $dateFin;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $typeArticle;
     #endregion
 
     #region Méthodes
@@ -90,6 +93,13 @@ class CommandeDetail
             $this->setInscription($inscription);
             $this->formatActivite = $inscription->getFormatActivite();
             $this->setItem($item);
+        } elseif ($type == 'format') {
+            $inscription = $data;
+            $item = $inscription->getItem();
+            $this->setInscription($inscription);
+            $this->setItem($item);
+            $this->addLigneCommandeReference($article);
+            $article->addLigneCommandeLiee($this);
         } elseif ($type == 'autorisation') {
             $item = $data;
             $this->setItem($item);
@@ -125,13 +135,13 @@ class CommandeDetail
 
     public function getItem()
     {
-        if (!empty($this->reservabilite)) {
+        if (!empty($this->creneau)) {
+            return $this->creneau;
+        } elseif (!empty($this->reservabilite)) {
             $this->reservabilite->setFormatActivite($this->formatActivite);
             return $this->reservabilite;
         } elseif (!empty($this->formatActivite)) {
             return $this->formatActivite;
-        } elseif (!empty($this->creneau)) {
-            return $this->creneau;
         } elseif (!empty($this->typeAutorisation)) {
             return $this->typeAutorisation;
         }
@@ -141,28 +151,19 @@ class CommandeDetail
     {
         $this->libelle = $this->getItem()->getArticleLibelle();
         $this->description = $this->getItem()->getArticleDescription();
-        // $this->dateDebut = $this->getItem()->getArticleDateDebut();
-        // $this->dateFin = $this->getItem()->getArticleDateFin();
-        // $this->montant = $this->getItem()->getArticleMontant();
+        $this->dateDebut = $this->getItem()->getArticleDateDebut();
+        $this->dateFin = $this->getItem()->getArticleDateFin();
+        $this->typeArticle = $this->getItem()->getArticleType();
     }
 
     public function traitementPostPaiement()
     {
-        $hmac = $this->commande->getHmac();
-        if (empty($hmac) || $this->hmac == $hmac) {
-            if ($this->type == 'inscription') {
-                $this->inscription->setStatut('valide');
-                $this->inscription->removeAllAutorisations();
-            } elseif ($this->type == 'autorisation') {
-                $this->commande->getUtilisateur()->addAutorisation($this->getTypeAutorisation());
-            }
-        } else {
-            // $utilisateur = $this->commande->getUtilisateur();
-            // $panier = new Commande($utilisateur);
-            // $utilisateur->addCommande($panier);
-            // $this->commande->removeCommandeDetail($this);
-            // $this->commande = $panier;
-            // $panier->addCommandeDetail($this);
+        if ($this->type == 'inscription') {
+            $this->inscription->setStatut('valide');
+        } elseif ($this->type == 'format') {
+            $this->inscription->setStatut('valide');
+        } elseif ($this->type == 'autorisation') {
+            $this->commande->getUtilisateur()->addAutorisation($this->getTypeAutorisation());
         }
     }
 
@@ -170,7 +171,8 @@ class CommandeDetail
     {
         if ($this->type == 'inscription') {
             $this->inscription->setStatut('annule', $options);
-            $this->inscription->removeAllAutorisations();
+        } elseif ($this->type == 'format') {
+            $this->inscription->setStatut('annule', $options);
         } elseif ($this->type == 'autorisation') {
             // NA
         }
@@ -186,6 +188,7 @@ class CommandeDetail
     public function isRemovable()
     {
         return $this->getType() == 'autorisation' && $this->getLigneCommandeReferences()->isEmpty()
+            || $this->getType() == 'format' && $this->getLigneCommandeReferences()->isEmpty()
             || $this->getType() == 'inscription';
     }
 
@@ -195,6 +198,14 @@ class CommandeDetail
             if (!$this->getLigneCommandeReferences()->isEmpty()) {
                 return false;
             } else {
+                $this->remove();
+                return true;
+            }
+        } elseif ($this->getType() == 'format') {
+            if (!$this->getLigneCommandeReferences()->isEmpty()) {
+                return false;
+            } else {
+                $this->getInscription()->setStatut('annule',  $options);
                 $this->remove();
                 return true;
             }
@@ -486,6 +497,30 @@ class CommandeDetail
     public function getDateFin()
     {
         return $this->dateFin;
+    }
+
+    /**
+     * Set typeArticle.
+     *
+     * @param string|null $typeArticle
+     *
+     * @return CommandeDetail
+     */
+    public function setTypeArticle($typeArticle = null)
+    {
+        $this->typeArticle = $typeArticle;
+
+        return $this;
+    }
+
+    /**
+     * Get typeArticle.
+     *
+     * @return string|null
+     */
+    public function getTypeArticle()
+    {
+        return $this->typeArticle;
     }
 
     /**

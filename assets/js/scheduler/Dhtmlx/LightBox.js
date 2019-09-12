@@ -18,8 +18,12 @@ scheduler.config.lightbox.get = {
             options: scheduler.data.fn.toOptions({
                 data: scheduler.data.lists.tarifs,
                 id: "id",
-                libelle: ["libelle"]
-                })
+                libelle: ["libelle"],
+                firstValueEmpty: true
+            }),
+            controls: {
+                require: true,
+            },
         };
     },
     profils: function () {
@@ -97,8 +101,10 @@ scheduler.config.lightbox.get = {
             options: scheduler.data.fn.toOptions({
                 data: scheduler.data.lists.lieu,
                 id: "id",
-                libelle: ["libelle"]
-                })
+                libelle: ["etablissementLibelle", "libelle"],
+                libelleSeparateur: " - ",
+                firstValueEmpty: true
+            })
 
         };
     },
@@ -120,12 +126,11 @@ scheduler.config.lightbox.init = function (params) {
 
 //check if the input are correct
 scheduler.config.lightbox.control = function(params, isNew){
-    for(var a in scheduler.config.lightbox.get){
-        let element = scheduler.config.lightbox.get[a]();
-
+    for(var idElement in scheduler.config.lightbox.get){
+        let element = scheduler.config.lightbox.get[idElement]();
         let typeEvent = isNew ? "new" : "update"; 
 
-        if(scheduler.config.lightbox.toDisplay[typeEvent].indexOf(element.name) == -1){
+        if(scheduler.config.lightbox.toDisplay[typeEvent].indexOf(idElement) == -1){
             continue;
         }
 
@@ -134,13 +139,13 @@ scheduler.config.lightbox.control = function(params, isNew){
         }
 
         if(element.controls.require && params[element.map_to] == ""){
-            displayErrorMessage("Le champs "+element.name+" est vide");
+            displayErrorMessage(Translator.trans("scheduler.error.field")+" "+element.name+" "+Translator.trans("scheduler.error.isEmpty"));
             params.event_pid = "";
             return false;
         }
         if(element.controls.type == "int"){
             if(!isNormalInteger(params[element.map_to])){
-                displayErrorMessage("Le champs "+element.name+" n'est pas du bon type");
+                displayErrorMessage(Translator.trans("scheduler.error.field")+" "+element.name+" "+Translator.trans("scheduler.error.type"));
                 return false;
             }
         }

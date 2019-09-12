@@ -27,13 +27,7 @@ class PanierController extends Controller
         $utilisateur = $this->getUser();
         if ($utilisateur) {
             $panier = $utilisateur->getPanier();
-            // if(empty($panier->getId())) {
-            //     $em->persist($panier);
-            //     $em->flush();
-            // }
-            $apayer = $utilisateur->getCommandesByStatut('apayer');
             $twigConfig["commande"] = $panier;
-            $twigConfig["apayer"] = $apayer;
             $twigConfig["source"] = 'monpanier';
             return $this->render('@Uca/UcaWeb/Commande/DetailCommande.html.twig', $twigConfig);
         } else {
@@ -41,7 +35,7 @@ class PanierController extends Controller
             return $this->redirectToRoute('fos_user_security_login');
         }
     }
-    
+
     /**
      * @Route("/SuppressionArticle/{id}", name="UcaWeb_SuppressionArticle")
      */
@@ -70,7 +64,6 @@ class PanierController extends Controller
             $commandeDetail->traitementPostSuppressionPanier(['motif_annulation' => 'annulationutilisateur', 'commentaire_annulation' => '']);
         }
         return $this->finSuppression($commande);
-       
     }
 
     function finSuppression($commande)

@@ -2,17 +2,17 @@
 
 namespace UcaBundle\Entity;
 
-use FOS\UserBundle\Model\User as FOSUser;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as FOSUser;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
-use Doctrine\Common\Collections\Criteria;
-use Proxies\__CG__\UcaBundle\Entity\Inscription;
-use UcaBundle\Repository\CommandeRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Repository\CommandeDetailRepository;
+use UcaBundle\Repository\CommandeRepository;
+use UcaBundle\Repository\EntityRepository;
 use UcaBundle\Service\Common\Previsualisation;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\UtilisateurRepository")
@@ -78,7 +78,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     /** @ORM\Column(type="string", nullable=true ,length=5) 
      *  @Assert\Regex(pattern="/^[0-9]{5}$/", message="lieu.codepostal.invalide")
-    */
+     */
     private $codePostal;
 
     /** @ORM\Column(type="string", nullable=true) */
@@ -164,21 +164,23 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
         return ['prenom', 'nom'];
     }
 
-    public function getPanier()
+    public function getCommandesByCriteria($crits)
     {
-        $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('statut', 'panier'));
-        $panier = $this->commandes->matching($criteria)->first();
-        if (empty($panier))
-            $panier = new Commande($this);
-        return $panier;
+        $criterias = EntityRepository::criteriaBy($crits);
+        return $this->getCommandes()->matching($criterias);
     }
 
     public function getCommandesByStatut($statut)
     {
-        $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('statut', $statut));
-        return $this->commandes->matching($criteria);
+        return $this->getCommandesByCriteria([['statut', 'eq', $statut]]);
+    }
+
+    public function getPanier()
+    {
+        $panier = $this->getCommandesByStatut('panier')->first();
+        if (!$panier)
+            $panier = new Commande($this);
+        return $panier;
     }
 
     public function movePanierToCommande()
@@ -189,15 +191,15 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
         }
     }
 
-    public function hasInscription($item)
+    public function getInscriptionsByCriteria($crits)
     {
-        if(Previsualisation::$IS_ACTIVE)
-            return false;
+        $criterias = EntityRepository::criteriaBy($crits);
+        return $this->getInscriptions()->matching($criterias);
+    }
 
-        $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq(Inscription::getItemColumn($item), $item))
-            ->andWhere(Criteria::expr()->neq('statut', 'annule'));
-        return !$this->inscriptions->matching($criteria)->isEmpty();
+    public function hasInscriptionsByCriteria($crits)
+    {
+        return !$this->getInscriptionsByCriteria($crits)->isEmpty();
     }
 
     public function hasAutorisation($typeAutorisation)
@@ -207,23 +209,17 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
         return $this->autorisations->contains($typeAutorisation);
     }
 
-    public function hasGroup($group)
+    public function getNbInscriptionCreneau()
     {
-        if(Previsualisation::$IS_ACTIVE)
-            return true;
-            
-        return $this->groups->contains($group);
+        return $this->getInscriptionsByCriteria([
+            ['creneau', 'neq', null],
+            ['statut', 'notIn', ['annule', 'desinscrit']]
+        ])->count();
     }
 
-    public function isMaxInscription()
+    public function nbCreneauMaximumAtteint()
     {
-        if(Previsualisation::$IS_ACTIVE)
-            return false;
-
-        $inscriptions = $this->inscriptions->filter(function ($inscription) {
-            return !is_null($inscription->getCreneau()) && $inscription->getStatut() != "annule";
-        });
-        return count($inscriptions) >= $this->getProfil()->getNbMaxInscriptions();
+        return $this->getNbInscriptionCreneau() >= $this->getProfil()->getNbMaxInscriptions();
     }
 
     public function setDocumentFile(File $document = null)
@@ -260,12 +256,12 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     public function isEncadrantEvenement(DhtmlxEvenement $dhtmlxEvenement)
     {
-        if($dhtmlxEvenement->getSerie() != null){
-            if($dhtmlxEvenement->getSerie()->getCreneau() != null){
+        if ($dhtmlxEvenement->getSerie() != null) {
+            if ($dhtmlxEvenement->getSerie()->getCreneau() != null) {
                 return $dhtmlxEvenement->getSerie()->getCreneau()->getEncadrants()->contains($this);
             }
         }
-        if($dhtmlxEvenement->getFormatSimple()){
+        if ($dhtmlxEvenement->getFormatSimple()) {
             return $dhtmlxEvenement->getFormatSimple()->getEncadrants()->contains($this);
         }
         return false;
@@ -861,24 +857,37 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
         return $this->statut;
     }
 
+
     /**
-     * Set appels.
+     * Add appel.
      *
-     * @param \UcaBundle\Entity\Appel|null $appels
+     * @param \UcaBundle\Entity\Appel $appel
      *
      * @return Utilisateur
      */
-    public function setAppels(\UcaBundle\Entity\Appel $appels = null)
+    public function addAppel(\UcaBundle\Entity\Appel $appel)
     {
-        $this->appels = $appels;
+        $this->appels[] = $appel;
 
         return $this;
     }
 
     /**
+     * Remove appel.
+     *
+     * @param \UcaBundle\Entity\Appel $appel
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAppel(\UcaBundle\Entity\Appel $appel)
+    {
+        return $this->appels->removeElement($appel);
+    }
+
+    /**
      * Get appels.
      *
-     * @return \UcaBundle\Entity\Appel|null
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAppels()
     {

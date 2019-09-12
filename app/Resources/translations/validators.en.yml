@@ -61,7 +61,10 @@ lieu.ville.notblank: The place's city is required
 materiel.libelle.notblank: The material label is required
 materiel.quantite.notblank: Please enter an available quantity
 message.erreur.datedebut: The start date must be lower than the end date
+message.erreur.datedebutinscription.publication: The start date must be between the start and end dates of publication
 message.erreur.datefin: The end date must be greater than the start date
+message.erreur.datefininscription.effective: The end date of registration must be smaller than the effective end date
+message.erreur.datefininscription.publication: The end date must be between the start and end dates of publication
 message.parametrage.timercb.timerpaybox: The payment time by credit card must be longer than the Paybox payment time
 message.parametrage.timerpaybox.timercb: The Paybox time payment must be longer than the payment time by credit card
 message.typeinvalide.double: The value {{ value }} is not a valid number

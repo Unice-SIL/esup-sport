@@ -22,8 +22,9 @@ class TwigExtensions extends AbstractExtension
         return [
             new TwigFunction('emplacement', [$this, 'getTexte']),
             new TwigFunction('emplacementImageFond', [$this, 'getImageFond']),
-            new TwigFunction('parametrage', [$this, 'getParametrage']),
             new TwigFunction('isPrevisualisation', [$this, 'isPrevisualisation']),
+            new TwigFunction('parametrage', [$this, 'getParametrage']),
+            new TwigFunction('serverPathToWeb', [$this, 'serverPathToWeb']),
             new TwigFunction('urlRetourPrevisualisation', [$this, 'urlRetourPrevisualisation']),
         ];
     }
@@ -65,18 +66,31 @@ class TwigExtensions extends AbstractExtension
         return Parametrage::get();
     }
 
-    public function dateFormat($date, $type = null)
+    public function dateFormat($date, $format = null)
     {
-        // Liste des formats autorisé
-        // http://userguide.icu-project.org/formatparse/datetime
-        return (new \IntlDateFormatter($this->requestStack->getCurrentRequest()->getLocale(), \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, null, null, $type))->format($date);
+        return Fn::intlDateFormat($date, $format);
     }
 
-    public function isPrevisualisation(){
+    public function isPrevisualisation()
+    {
         return Previsualisation::$IS_ACTIVE;
     }
 
-    public function urlRetourPrevisualisation(){
+    public function serverPathToWeb()
+    {
+
+        $result = $_SERVER['DOCUMENT_ROOT'];
+        if (isset($_SERVER['BASE'])) {
+            $result .= $_SERVER['BASE'];
+        }
+        if (substr($result, -1) != '/') {
+            $result .= '/';
+        }
+        return $result;
+    }
+
+    public function urlRetourPrevisualisation()
+    {
         return Previsualisation::$BACK_URL;
     }
 }

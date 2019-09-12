@@ -23,7 +23,7 @@
                     {% endfor %}
                 {% endfor %}
                 <div class="card-header" id="heading{{loop.index}}">
-                    <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12 {% if not loop.first %}collapsed{% endif %}" data-target="#collapse{{loop.index}}" data-toggle="collapse">
+                    <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12" data-target="#collapse{{loop.index}}" data-toggle="collapse">
                         <div class="row text-left d-flex flex-wrap">
                             <h2 class="mb-0 col-11 col-md-5 col-lg-7 text-dark text-uppercase order-1">{{ item.libelle }}</h2>
                             <p class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-md-3 col-lg-2 order-3 order-md-2">{% if item.telephone %}<i class="fas fa-phone"></i> {{ item.telephone }}{% endif %}</p>
@@ -32,7 +32,7 @@
                         </div>
                     </a>
                 </div>
-                <div aria-labelledby="heading{{loop.index}}" class="card-body collapse {% if loop.first %}show{% endif %}" data-parent="#accordionInstallations" id="collapse{{loop.index}}">
+                <div aria-labelledby="heading{{loop.index}}" class="card-body collapse show" data-parent="#accordionInstallations" id="collapse{{loop.index}}">
                     <div class="row">
                         <div class="text-center text-sm-left col-sm-8 col-md-4 install-picture">
                             <img class="img-fluid img-rounded" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">

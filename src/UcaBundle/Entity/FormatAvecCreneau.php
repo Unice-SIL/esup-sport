@@ -10,7 +10,7 @@ use Gedmo\Translatable\Translatable;
  * @ORM\Entity
  * @Gedmo\Loggable
  */
-class FormatAvecCreneau extends FormatActivite
+class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article 
 {
     #region Propriétés
     /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="formatActivite") */

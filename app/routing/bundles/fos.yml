@@ -26,11 +26,8 @@ fos_user_resetting:
 
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
-    prefix: /{_locale}/ChangementMotdePasse
+    prefix: /{_locale}/UcaWeb/MonCompte
 
 fos_user_group:
     resource: "@FOSUserBundle/Resources/config/routing/group.xml"
     prefix: /{_locale}/UcaGest/Groupe
-
-
-

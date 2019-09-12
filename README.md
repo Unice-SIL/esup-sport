@@ -22,6 +22,7 @@ D'abord, il faut supprimer et recréer la base de données uca (via phpmyadmin)
 # 3. Configuration :
 > Editer le php.ini d'Apache et modifier la variable max_input_vars à 1000000 :
   max_input_vars = 1000000
+  date.timezone = "Europe/Paris"
 
 # 4. Comptes de test SSO - Shibboleth
 > Edtudiant : user = tsuaps   / mdp = Tx8UjhUe

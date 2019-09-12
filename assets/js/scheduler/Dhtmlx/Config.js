@@ -24,6 +24,8 @@ scheduler.locale = scheduler_lang[$("html").attr("lang")];
 scheduler.config.time_step = 15;
 scheduler.config.buttons_left = [];
 scheduler.config.buttons_right = ["dhx_save_btn","dhx_cancel_btn"];
+scheduler.config.include_end_by = true;
+scheduler.config.repeat_precise = true;
 Load.start();
 
 //hide left toolbar
@@ -54,7 +56,12 @@ scheduler.templates.event_class = function (start, end, event) {
     }
     return ""; // default
 };
-scheduler.init('scheduler_here', new Date(), "week");
+
+var initDate = new Date()
+if(typeof(ITEM.dateDebutEffective) !== "undefined" && new Date(ITEM.dateDebutEffective) > new Date()){
+    initDate = new Date(ITEM.dateDebutEffective);
+}
+scheduler.init('scheduler_here', initDate, "week");
 var type = "formatActivite";
 if(
     scheduler.data.item.objectClass == "UcaBundle\\Entity\\Lieu" 
@@ -80,7 +87,7 @@ $.ajax({
 }).done(function (data) {
 
     initLoadData(data);
-});
+}).fail(_uca.ajax.fail);
 
 if(typeA == "encadrant"){
     scheduler.data.item.type = "creneau";

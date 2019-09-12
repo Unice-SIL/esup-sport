@@ -1,20 +1,24 @@
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
-<div class="w-100 mb-4 p-2 p-md-4 container-style bg-white d-flex flex-wrap justify-content-between card-event">
-    <div class="col-4 d-flex justify-content-center event-img img-rounded" style="background: url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+{% set inscriptionInformations = item.getInscriptionInformations(app.user) %}
+
+<div class="w-100 mb-4 p-2 py-4 p-md-4 container-style bg-white d-flex flex-wrap justify-content-between card-event">
+    <div class="col-4 d-none d-sm-flex justify-content-center event-img img-rounded" style="background: url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
         <p class="event-date align-self-center text-center">
             {{ item.dateDebutEffective | dateFormat('dd') }}<br/>
             {{ item.dateDebutEffective | dateFormat('MMM') }}<br/>
             {{ item.dateDebutEffective | dateFormat('Y') }}
         </p>
     </div>
-    <div class="m-0 p-0 pl-4 pl-md-0 col-8 event-info">
+    <div class="m-0 p-0 pl-4 pl-md-0 col-12 col-sm-8 event-info">
         <div class="row">
-            <h2 class="m-0 mb-3 p-0 pl-2 pl-md-5 col-12 text-dark text-uppercase">{{ item.libelle }}</h2>
+            <h2 class="m-0 mb-2 p-0 pl-2 pl-md-5 col-12 text-dark text-uppercase">{{ item.libelle }}</h2>
+            <p class="d-block d-sm-none m-0 mb-2 p-0 pl-2 pl-md-5 col-12 font-italic fs-14 color-taupe-gray">Le
+                {{ item.dateDebutEffective | dateFormat('dd/mm/Y') }}</p>
             <p class="m-0 mb-4 p-0 pl-2 pl-md-5 col-12">{{ item.description | nl2br }}</p>
         </div>
         <div class="row d-flex flex-wrap">
-            <div class="p-0 pl-2 pl-md-5 col-6 col-md-3 col-lg-2 event-location">
+            <div class="p-0 pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-2 event-location">
                 <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.lieu' | trans }}</h3>
                 {% if item.lieu is not empty %}
                     {% for l in item.lieu %}
@@ -24,7 +28,7 @@
                     <p class="m-0 mb-3 p-0">{{ 'formatactivite.lieu.aucun' | trans }}</p>
                 {% endif %}
             </div>
-            <div class="pl-2 pl-md-5 col-6 col-md-4 col-lg-3 event-supervisor">
+            <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-4 col-lg-3 event-supervisor">
                 <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.encadrants' | trans }}</h3>
                 <p class="m-0 mb-3 p-0">
                     {% if item.encadrants is not empty %}
@@ -38,30 +42,40 @@
                     {% endif %}
                 </p>
             </div>
-            <div class="pl-2 pl-md-5 col-6 col-md-3 col-lg-2 event-time">
+            <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-2 event-time">
                 <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.horaires' | trans }}</h3>
                 <p class="m-0 mb-3 p-0">
                     {{ item.dateDebutEffective|date("d/m/Y") }}
                     <br/>{{ item.dateDebutEffective|date("H:i") }}</p>
             </div>
-            <div class="pl-2 pl-md-5 col-6 col-md-3 col-lg-2 event-price">
-                {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and item.isDisponible(app.user) %}
+            <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-2 event-price">
+                {% if inscriptionInformations.montant.total >= 0  %}
                     <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.tarif' | trans }}</h3>
-                    <p class="m-0 mb-3 p-0">{{ item.getArticleMontant(app.user) | number_format }}&nbsp;€</p>
+                    <p class="m-0 mb-3 p-0">{{ inscriptionInformations.montant.total | number_format }}&nbsp;€ *</p>
                 {% endif %}
             </div>
-            <div class="pl-2 pl-md-5 col-6 col-md-3 col-lg-2">
-                {% if isPrevisualisation() %}
+            <!-- {{ inscriptionInformations.statut }} -->
+            <div class="pl-0 pl-md-5 col-12 col-md-3 col-lg-2 text-center">
+                {% if inscriptionInformations.statut in ['previsualisation'] %}
                     <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans | upper }}</button>
-                {% elseif not is_granted('IS_AUTHENTICATED_REMEMBERED') or not item.isDisponible(app.user) %}
-                    <button class="btn btn-info disabled">{{ 'common.indisponible' | trans | upper }}</button>
-                {% elseif item.userIsInscrit(app.user) %}
+                {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
                     <p class="m-0 fs-14 fw-500 color-blue">
                         <i class="fas fa-check-circle"></i>
-                        {{ "formatSimple.list.inscrit"|trans|upper }}</p>
-                {% else %}
+                        {{ ('formatSimple.list.' ~ inscriptionInformations.statut) | trans | upper }}
+                    </p>
+                {% elseif inscriptionInformations.statut in ['complet'] %}
+                    <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
+                {% elseif inscriptionInformations.statut in ['disponible'] %}
                     <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatSimple" data-id="{{ item.id }}" callback="changeStatut">{{ 'common.inscrire' | trans }}</button>
+                {% else %}
+                    <button class="btn btn-info disabled">{{ 'common.indisponible' | trans | upper }}</button>
                 {% endif %}
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="pl-0 pl-md-5 col-12">
+                {{ 'formatactivite.fraiscomplementaires.montantsinclus.evenementsimple' | trans }}
             </div>
         </div>
     </div>

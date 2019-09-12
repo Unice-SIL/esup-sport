@@ -1,24 +1,33 @@
-
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+  {{ parent() }}
+  {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
 {% endblock %}
 
 {% block main %}
-    <h1 class="h1-light">
-        {{'utilisateur.moncompte.modifier.titre'|trans}}
-    </h1>
-    <section class="container mb-5">
-        <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
-            {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
+  <h1 class="h1-light">
+    {{'utilisateur.moncompte.modifier.titre'|trans}}
+  </h1>
+  <section class="container mb-5">
+    <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
+      <div class='row'>
+        <a class="btn btn-primary" href="{{ path('UcaWeb_MonCompte') }}">
+          <i class="fas fa-chevron-left"></i>
+          {{'bouton.retour'|trans}}
+        </a>
+        <a class="btn btn-warning" href="{{ path('fos_user_change_password') }}"> 
+            <i class="fa fa-key"> </i>
+            {{ 'utilisateur.changer.motdepasse' | trans }}
+        </a>
+      </div>
+      {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
                 with {'action': 'profil', 'formPath': '', 'formClass': ''} %}
-        </div>
-    </section>
+    </div>
+  </section>
 {% endblock %}
 
 {% block javascripts %}
-    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
+  {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
 {% endblock %}

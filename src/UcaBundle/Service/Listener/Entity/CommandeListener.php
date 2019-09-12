@@ -34,8 +34,10 @@ class CommandeListener
                 }
             }
             if ($event->getOldValue('statut') != 'termine' && $event->getNewValue('statut') == 'termine') {
-                $numero = $em->getRepository(Commande::class)->max('numeroRecu') + 1;
-                $commande->setNumeroRecu($numero);
+                if($event->getNewValue('montantTotal') != 0){
+                    $numero = $em->getRepository(Commande::class)->max('numeroRecu') + 1;
+                    $commande->setNumeroRecu($numero);
+                }
                 
                 $this->mailer->sendMailWithTemplate(
                     'Validation de la commande',

@@ -42,6 +42,7 @@
 > composer list > ~debug_composer-command.txt
 
 * Urls
+> https://symfony.com/doc/3.4/setup/file_permissions.html
 > http://suapsweb.unice.fr
 > http://univ-cotedazur.fr/
 > http://localhost/Uca/web/app_dev.php

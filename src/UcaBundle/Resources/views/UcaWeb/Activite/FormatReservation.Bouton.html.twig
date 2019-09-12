@@ -1,0 +1,25 @@
+{% set inscriptionInformations = reservabilite.getInscriptionInformations(app.user, item) %}
+<!-- {{ inscriptionInformations.statut }} -->
+{% if inscriptionInformations.statut in ['previsualisation'] %}
+    {% set statut =  "notFull bg-blue-calendar" %}
+    {% set available =  "available-icon bg-success mr-1 disabled" %}
+{% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
+    {% set statut =  "register bg-blue text-white" %}
+    {% set available =  "" %}
+{% elseif inscriptionInformations.statut in ['complet'] %}
+    {% set statut =  "full bg-danger text-white" %}
+    {% set available =  "" %}
+{% elseif inscriptionInformations.statut in ['disponible'] %}
+    {% set statut =  "notFull bg-blue-calendar color-blue" %}
+    {% set available =  "available available-icon bg-success mr-1" %}
+{% else %}
+    {% set statut =  "unvailable bg-taupe-gray color-dark-gray" %}
+    {% set available =  "" %}
+{% endif %}
+
+<button class="btn calendar-time-slot d-flex justify-content-center align-items-center {{ cssClass }} mb-2 {{ statut }}" elid="{{ reservabilite.id }}" formatid="{{ item.id }}">
+    <div class="{{ available }}"></div>
+    <p class="m-0 fw-700">{{ reservabilite.evenement.dateDebut|date("H:i") }}
+        -
+        {{ reservabilite.evenement.dateFin|date("H:i") }}</p>
+</button>

@@ -1,0 +1,60 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+
+{% import 'LexikPayboxBundle:Macro:paybox.html.twig' as paybox %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Commande.html.twig' as MacroCommande %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+
+    {{ flashBag.showAll }}
+    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+    <h1 class="h1-light">{{ 'sitemap.detailinscription.libelle' | trans}}</h1>
+    <section class="container">
+
+        <div class="row">
+            <div class="col-12 mb-4 pl-3 p-xl-0">
+                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
+                    <i class="fas fa-chevron-left"></i>
+                    {{'bouton.retour'|trans}}
+                </a>
+            </div>
+        </div>
+        {% set item = inscription.item %}
+        <div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+
+            <p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{item.articleLibelle}}</p>
+
+            {% if inscription.statut == 'annule' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.motifannulation"|trans }} : {{inscription.motifAnnulation}}</p>
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.commentaireannulation"|trans }} : {{inscription.commentaireAnnulation}}</p>
+
+            {% elseif inscription.statut == 'valide' %}
+
+            {% elseif inscription.statut == 'attentevalidationencadrant' %}
+
+            {% endif %}
+
+            {{inscription.date|date("d/m/Y")}}
+
+            {{dump(item)}}
+            {# {% if inscription.formatActivite %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">
+                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
+                </p>
+            {% elseif inscription.reservabilite %}
+
+                <a href="{{ url('UcaWeb_FormatActiviteReservationDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
+            {% elseif inscription.creneau %}
+               
+                <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : , yearWeek: } ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
+            {% endif %} #}
+            </div>
+
+        </section>
+    {% endblock %}

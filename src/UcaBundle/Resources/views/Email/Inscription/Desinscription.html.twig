@@ -1,0 +1,16 @@
+{% extends "@Uca/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Vous avez été désinscrit à l'activité suivante:
+            <span style="font-weight: bold;">
+                {% include "@Uca/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            En cas de problème, merci de contacter le bureau des sports
+        </p>
+    </div>
+{% endblock %}

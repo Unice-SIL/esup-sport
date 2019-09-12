@@ -15,6 +15,15 @@ use UcaBundle\Form\InscriptionType;
  */
 class InscriptionController extends Controller
 {
+
+    private function convertResultToJsonTextResponse($form, $result)
+    {
+        $response = new JsonResponse($result);
+        if ($form->isSubmitted()) {
+            $response->headers->set('Content-Type', 'text/plain');
+        }
+        return $response;
+    }
     /**
      * @Route("/Inscription", name="UcaWeb_Inscription", options={"expose"=true})
      * @Method("POST")
@@ -29,62 +38,44 @@ class InscriptionController extends Controller
         $idFormat = $request->get("idFormat");
 
         $item = $em->getRepository($type)->find($id);
-
-        $result = $inscriptionService->controlePrevisualisation($item);
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-        $result = $inscriptionService->controleDejaInscrit($item);
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-        $result = $inscriptionService->controleMaxInscriptionCreneau($item, $type);
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-        $result = $inscriptionService->controleMaxCapacite($item, $type);
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-
         $format = null;
         if (!empty($idFormat))
             $format = $em->getRepository('UcaBundle:FormatAvecReservation')->find($idFormat);
 
-        $inscription = new Inscription($item, $this->getUser(), $format);
+            
+        $inscriptionInformations = $item->getInscriptionInformations($this->getUser(), $format);
+        if ($inscriptionInformations['statut'] != 'disponible') {
+            $result['itemId'] = $item->getId();
+            $result['statut'] = '-1';
+            $result['html'] = $this->get('twig')->render(
+                '@Uca/UcaWeb/Inscription/Modal.Error.html.twig',
+                ["title" => "modal.error", "message" => "modal.error." . $inscriptionInformations['statut']]
+            );
+            return new JsonResponse($result);
+        }
+
+        $inscription = new Inscription($item, $this->getUser(), ['format' => $format]);
         $form = $this->get('form.factory')->create(InscriptionType::class, $inscription);
         $form->handleRequest($request);
         $inscription->updateStatut();
 
         $inscriptionService->setInscription($inscription);
 
-        $result = $inscriptionService->controleDateInscription($item, $type);
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-
-        $result = $inscriptionService->controleMontantItem($this->getUser());
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-
-        $result = $inscriptionService->controleMontantAutorisations($this->getUser());
-        if ($result['statut'] == '-1')
-            return new JsonResponse($result);
-
         if ($inscription->getStatut() == 'initialise') {
             $result = $inscriptionService->getFormulaire($form);
-            return new JsonResponse($result);
+            return $this->convertResultToJsonTextResponse($form, $result);
         } elseif (in_array($inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
             $em->persist($inscription);
             $result = $inscriptionService->getMessagePreInscription();
             $em->flush();
-
             $inscriptionService->envoyerMailInscriptionNecessitantValidation();
-            
-            $response = new JsonResponse($result);
-            $response->headers->set('Content-Type', 'text/plain');
-            return $response;
+            return $this->convertResultToJsonTextResponse($form, $result);
         } elseif ($inscription->getStatut() == 'attentepaiement') {
             $em->persist($inscription);
             $articles = $inscriptionService->ajoutPanier();
             $result = $inscriptionService->getComfirmationPanier($articles);
             $em->flush();
-            return new JsonResponse($result);
+            return $this->convertResultToJsonTextResponse($form, $result);
         } else {
             dump($inscription);
             die;

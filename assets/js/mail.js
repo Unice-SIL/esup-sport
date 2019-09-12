@@ -28,5 +28,5 @@ var sendForm = function(data){
         type: "POST",
         data: data
     }).done(function(){
-    });
+    }).fail(_uca.ajax.fail);
 }

@@ -74,20 +74,49 @@ $.post(DATAAPI, {
             }
         });
     }
-});
+
+    if(typeof(ITEM.dateFinEffective) !== "undefined"){
+        var date = new Date(ITEM.dateFinEffective);
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        if (day < 10) {
+            day = '0' + day;
+        }
+        if (month < 10) {
+            month = '0' + month;
+        }
+        scheduler.config.repeat_date_of_end = [day, month, year].join('/');
+    }
+}).fail(_uca.ajax.fail);
 
 scheduler.data.fn = {};
 scheduler.data.fn.toOptions = function (list) {
     if(list.data == null){
         return;
     }
-    return list.data.map(function(item){
-        var label = "";
-        for (let i = 0; i < list['libelle'].length; i++) {
-            const element = list['libelle'][i];
-            label += " "+item[element];  
-        }
-        label = label.trim();
-        return {key: item[list['id']], label: label};
-    });
+
+    var listeOptions = [];
+    if(list.firstValueEmpty && list.data.length > 1){
+        listeOptions = [{key: '', label: Translator.trans('common.select.emptyValue')}];
+    }
+
+    if(typeof list.libelleSeparateur == 'undefined'){
+        list.libelleSeparateur = " ";
+    }
+
+    return listeOptions.concat(
+        list.data.map(function(item){
+            var label = "";
+            for (let i = 0; i < list['libelle'].length; i++) {
+                const element = list['libelle'][i];
+                if(label != ""){
+                    label += list.libelleSeparateur;  
+                }
+                label += item[element];  
+            }
+            label = label.trim();
+            return {key: item[list['id']], label: label};
+        })
+    );
 }

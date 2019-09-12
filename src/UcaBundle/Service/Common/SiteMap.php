@@ -96,7 +96,6 @@ class SiteMap
     public function getTitre($itemAriane, $context = [])
     {
         $instruction = $itemAriane['titre'];
-        // dump($instruction); die;
         $el = new ExpressionLanguage();
         $el->register('trans', function ($str) {
             return $this->translator->trans($str);

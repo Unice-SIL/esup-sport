@@ -2,6 +2,8 @@
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 {% import '@Uca/Macros/Inscription.html.twig' as Inscription %}
 
+{% set inscriptionInformations = item.getInscriptionInformations(app.user) %}
+
 {% block title %}
     {{ item.libelle }}
 {% endblock %}
@@ -34,28 +36,35 @@
                         <h3 class="mb-2">
                             <i class="fas fa-euro-sign"></i>
                             {{ 'common.tarif' | trans }}</h3>
-                        {% if item.getArticleMontant(app.user) < 0 %}
+                        {% if inscriptionInformations.montant.total < 0 %}
                             <p>{{ "common.tarif.inconnu"|trans }}</p>
                         {% else %}
-                            <p>{{ item.getArticleMontant(app.user) | number_format }}
-                                €</p>
+                            <p>{{ inscriptionInformations.montant.total | number_format }}&nbsp;€ *</p>
                         {% endif %}
                     </div>
                 </div>
+                <!-- {{ inscriptionInformations.statut }} -->
                 <div class="row mt-3">
-                    {% if isPrevisualisation() %}
+                    {% if inscriptionInformations.statut in ['previsualisation'] %}
                         <button class="btn btn-primary disabled">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
-                    {% elseif item.isDisponible(app.user) %}
-                        {% if item.userIsInscrit(app.user) %}
-                            <p class="m-0 fs-14 fw-500 color-blue w-100 text-center">
-                                <i class="fas fa-check-circle"></i>
-                                {{ "formatSimple.list.inscrit"|trans|upper }}</p>
-                        {% else %}
-                            <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatAchatCarte" data-id="{{ item.id }}" callback="changeStatut">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
-                        {% endif %}
+                    {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
+                        <p class="m-0 fs-14 fw-500 color-blue w-100 text-center">
+                            <i class="fas fa-check-circle"></i>
+                            {{ ('formatCarte.list.' ~ inscriptionInformations.statut) | trans | upper }}
+                        </p>
+                    {% elseif inscriptionInformations.statut in ['complet'] %}
+                        <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
+                    {% elseif inscriptionInformations.statut in ['disponible'] %}
+                        <button class="btn btn-primary js-inscription" data-type="UcaBundle:FormatAchatCarte" data-id="{{ item.id }}" callback="changeStatut">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
                     {% else %}
                         <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">{{ 'bouton.panier.indisponible' | trans | upper }}</p>
                     {% endif %}
+                </div>
+                <br/>
+                <div class="row">
+                    <div class="col-12">
+                        {{ 'formatactivite.fraiscomplementaires.montantsinclus.achatcarte' | trans}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -64,7 +73,7 @@
     <div class="d-none" id="js-text-inscrit-clone">
         <div class="offset-4 color-blue col-4 text-center">
             <i class="fas fa-check-circle"></i>
-            <span>{{ "creneau.list.inscrit"|trans|upper }}</span>
+            <span>{{ "formatCarte.list.preinscrit"|trans|upper }}</span>
         </div>
     </div>
     {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}

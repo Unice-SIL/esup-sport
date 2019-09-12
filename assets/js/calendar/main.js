@@ -37,6 +37,9 @@ global.changeStatut = changeStatut;
 
 
 //mobile
+$(document).ready(function(){
+    changeJour(1,$("#dayWeekParameter").val());
+});
 
 $("#header-left").on("click", function(){
     changeDay("left");
@@ -48,6 +51,18 @@ $("#header-right").on("click", function(){
     changeDay("right");
 });
 
+$(document).on("click", ".changeJour", function(){
+    let targetDay = $(this).attr('targetday');
+    let baseDay= $(this).attr('baseday');
+    changeJour(baseDay, targetDay);
+});
+
+function changeJour(baseDay, targetDay){
+    var i;
+    for (i = 0; i < targetDay-baseDay; i++) {
+        changeDay("right");
+    }
+}
 
 var changeDay = function(direction){
     let day = parseInt($(".week-active").attr("day"));

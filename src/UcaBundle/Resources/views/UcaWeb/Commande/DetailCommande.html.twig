@@ -23,10 +23,17 @@
 
         <div class="row">
             <div class="col-12 mb-4 pl-3 p-xl-0">
-                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
-                    <i class="fas fa-chevron-left"></i>
-                    {{'bouton.retour'|trans}}
-                </a>
+                {% if 'Paiement/Validation' in app.request.headers.get('referer') %}
+                    <a class="btn btn-primary" href="{{url('UcaWeb_Accueil')}}">
+                        <i class="fas fa-chevron-left"></i>
+                        {{'common.accueil.retour'|trans}}
+                    </a>
+                {% else %}
+                    <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
+                        <i class="fas fa-chevron-left"></i>
+                        {{'bouton.retour'|trans}}
+                    </a>
+                {% endif %}
             </div>
         </div>
 
@@ -43,17 +50,18 @@
                     {{ commande.utilisateur.nom }}
                 </p>
                 {% if commande.timeout and commande.commandeDetails is not empty %}
-                    <p class="p-0 m-0">
+                    <p
+                        class="p-0 m-0">
                         {# <strong>Timeout :</strong>
-                        <span id='commande-timer'/> #}
-                    {% set temps = ('common.temps.heure' | transchoice(commande.timeout.d * 24 + commande.timeout.h)) ~ ' ' ~ ('common.et' | transchoice(commande.timeout.h and commande.timeout.i)) ~ ' ' ~ ('common.temps.minute' | transchoice(commande.timeout.i)) %}
-                    {% if source == 'monpanier' %}
-                        {% set typeCommande = 'panier' %}
-                    {% else %}
-                        {% set typeCommande = 'commande' %}
-                    {% endif %}
-                    {{ 'commande.timeout.timer' | trans({ '%temps%': temps, '%typecommande%': typeCommande }) }}
-                    {{ ('commande.timeout.' ~ typeCommande ~ '.expiration') | trans }}
+                                                <span id='commande-timer'/> #}
+                        {% set temps = ('common.temps.heure' | transchoice(commande.timeout.d * 24 + commande.timeout.h)) ~ ' ' ~ ('common.et' | transchoice(commande.timeout.h and commande.timeout.i)) ~ ' ' ~ ('common.temps.minute' | transchoice(commande.timeout.i)) %}
+                        {% if source == 'monpanier' %}
+                            {% set typeCommande = 'panier' %}
+                        {% else %}
+                            {% set typeCommande = 'commande' %}
+                        {% endif %}
+                        {{ 'commande.timeout.timer' | trans({ '%temps%': temps, '%typecommande%': typeCommande }) }}
+                        {{ ('commande.timeout.' ~ typeCommande ~ '.expiration') | trans }}
                     </p>
                 {% endif %}
             </div>

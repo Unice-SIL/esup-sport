@@ -31,6 +31,8 @@
                     - titre: "libelleRessource"
                       route: UcaWeb_FormatActiviteReservationDetailAnneeSemaine
                     - titre: "libelleRessource"
+                      route: UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour
+                    - titre: "libelleRessource"
                       route: UcaWeb_FormatActiviteReservationDetail
     - titre: "trans('sitemap.installations.libelle')"
       route: UcaWeb_InstallationsSportives 
@@ -62,6 +64,10 @@
           plansite: 0
           route: UcaWeb_MonCompte_Modifier
           droit: IS_AUTHENTICATED_FULLY
+        - titre: "trans('sitemap.moncompte.changermotdepasse')"
+          menu: 0
+          plansite: 0
+          route: fos_user_change_password
     - titre: "trans('sitemap.listeinscriptionavalider.libelle')"
       menu: 0
       route: UcaWeb_InscriptionAValiderLister
@@ -108,6 +114,11 @@
       menu: 0
       droit: IS_AUTHENTICATED_FULLY
       route: UcaWeb_MesInscriptions
+      items:
+        - titre: "trans('sitemap.detailinscription.libelle')"
+          route: UcaWeb_MesInscriptionsVoir
+          droit: IS_AUTHENTICATED_FULLY
+          params: { id: id }
     - titre: "trans('sitemap.gestioncommande.libelle')"
       menu: 0
       route: UcaWeb_CommandeEnAttenteLister
@@ -373,7 +384,14 @@
             - titre: "trans('sitemap.detailscommande.libelle')"
               route: UcaGest_ReportingCommandeDetails
               params: { id: id }
-
+        - titre: "trans('sitemap.gestioninscription.libelle')"
+          droit: ROLE_GESTION_INSCRIPTION
+          route: UcaGest_GestionInscription
+          items:
+            - titre: "trans('sitemap.detailinscription.libelle')"
+              route: UcaGest_GestionInscriptionVoir
+              droit: ROLE_GESTION_INSCRIPTION
+              params: { id: id }
     - titre: "trans('sitemap.parametrage.libelle')"
       route: null
       droit: ROLE_GESTION_PARAMETRAGE

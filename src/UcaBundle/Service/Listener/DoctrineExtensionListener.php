@@ -31,7 +31,9 @@ class DoctrineExtensionListener
 
     public function onLateKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {
-        $this->translatableListener->setTranslatableLocale($event->getRequest()->getLocale());
+        $locale = $event->getRequest()->getLocale();
+        $this->translatableListener->setTranslatableLocale($locale);
+        ini_set('intl.default_locale', $locale);
     }
     public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {

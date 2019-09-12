@@ -2,15 +2,16 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use UcaBundle\Service\Common\Fn;
 use UcaBundle\Service\Common\Previsualisation;
-use Doctrine\Common\Collections\Criteria;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatActiviteRepository")
@@ -90,6 +91,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime") 
      * @Assert\NotBlank(message="formatactivite.dateDebutInscription.notblank") 
+     * @Assert\Expression("this.getDateDebutPublication()<=this.getDateDebutInscription()", message="message.erreur.datedebutinscription.publication")
      */
     private $dateDebutInscription;
 
@@ -98,6 +100,8 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="datetime") 
      * @Assert\NotBlank(message="formatactivite.dateFinInscription.notblank") 
      * @Assert\Expression("this.getDateFinInscription() >= this.getDateDebutInscription()", message="message.erreur.datefin")
+     * @Assert\Expression("this.getDateFinInscription()<=this.getDateFinPublication()", message="message.erreur.datefininscription.publication")
+     * @Assert\Expression("this.getDateFinInscription()<=this.getDateFinEffective()",message="message.erreur.datefininscription.effective")
      */
     private $dateFinInscription;
 
@@ -247,7 +251,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
     public function jsonSerializeProperties()
     {
-        return  ['libelle', 'description', 'type', 'estEncadre', 'profilsUtilisateurs', 'niveauxSportifs', 'encadrants', 'lieu'];
+        return  ['libelle', 'description', 'type', 'estEncadre', 'profilsUtilisateurs', 'niveauxSportifs', 'encadrants', 'lieu', 'dateDebutEffective', 'dateFinEffective'];
     }
 
     public function getType()
@@ -298,7 +302,17 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
     public function getArticleDescription()
     {
-        return $this->getDescription();
+        return Fn::strTruncate($this->getDescription(), 97);
+    }
+
+    public function getArticleDateDebut()
+    {
+        return $this->getDateDebutEffective();
+    }
+
+    public function getArticleDateFin()
+    {
+        return $this->getDateFinEffective();
     }
 
     public function dateInscriptionValid()
@@ -325,19 +339,6 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         if (!$this->estEncadre) {
             $this->encadrants->clear();
         }
-    }
-
-    public function isDisponible($user)
-    {
-        return $this->dateInscriptionValid() && $this->hasProfil($user) && $this->getArticleMontant($user) >= 0;
-    }
-
-    public function userIsInscrit($user)
-    {
-        if ($user === null)
-            return false;
-
-        return $user->hasInscription($this);
     }
 
     public function updateTarifLibelle()
@@ -415,12 +416,25 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
         return $this;
     }
-    
-    public function getInscriptionsValidee(){
+
+    public function getInscriptionsValidee()
+    {
         $criteria = Criteria::create()
-        ->andWhere(Criteria::expr()->eq('statut', "valide"));
+            ->andWhere(Criteria::expr()->eq('statut', "valide"));
 
         return $this->getInscriptions()->matching($criteria);
+    }
+
+    public function getAutorisations($options = null)
+    {
+        if (empty($options)) {
+            return $this->autorisations;
+        } else {
+            return $this->autorisations->filter(function ($item) use ($options) {
+                return !(isset($options['comportement']) && !in_array($item->getComportement()->getCodeComportement(), $options['comportement']))
+                    && !(isset($options['utilisateur']) && $options['utilisateur']->hasAutorisation($item));
+            });
+        }
     }
     #endregion
 
@@ -951,16 +965,6 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function removeAutorisation(\UcaBundle\Entity\TypeAutorisation $autorisation)
     {
         return $this->autorisations->removeElement($autorisation);
-    }
-
-    /**
-     * Get autorisations.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getAutorisations()
-    {
-        return $this->autorisations;
     }
 
     /**

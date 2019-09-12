@@ -62,12 +62,12 @@
 </style>
 <page backbottom="10mm" backleft="10mm" backright="10mm" backtop="10mm">
     <page_header>
-        <img alt="image_activite" src="{{app.request.server.get('DOCUMENT_ROOT') ~ 'build/images/logo_black.png'}}" style="align:left;">
+        <img alt="image_activite" src="{{ serverPathToWeb() ~ 'build/images/logo_black.png'}}" style="align:left;">
     </page_header>
     <table style="vertical-align:top;width:100%;margin-top:70px;">
         <tr>
             <td class="50p">
-                <strong>Université de Nice</strong><br/>
+                <strong>Université de Nice Sophia-Antipolis</strong><br/>
                 28 Avenue Valrose, 06100 Nice<br/>
                 <strong>SIRET:</strong>19060931300019<br/>
             </td>
@@ -83,7 +83,7 @@
     <table style="margin-top: 50px;width:100%;">
         <tr>
             <td class="50p">
-                <h2>{{'common.facture'|trans}}</h2>
+                <h2>{{'common.facture'|trans}} n°{{commande.numeroRecu}}</h2>
             </td>
             <td class="50p" style="text-align: right;">{{ "now"|date("d/m/y")}}</td>
         </tr>
@@ -116,30 +116,41 @@
                 <td></td>
                 <td></td>
             </tr>
-
-            <tr>
-                <td class="no-border" colspan="1"></td>
-                <td rowspan="3" style="text-align: center;">
-                    <strong>{{'common.total'|trans}}:</strong>
-                </td>
-                <td>
-                    {{'common.ht'|trans }}&nbsp;:&nbsp;{{(commande.montantTotal - commande.tva)|round(2, 'floor')|number_format(2)}}&nbsp;€
-                </td>
-            </tr>
-            <tr>
-                <td class="no-border" colspan="1"></td>
-                <td>
-                    {% if  commande.tva != 0 %}
-                        {{'common.tva'|trans }}&nbsp;:&nbsp;{{commande.tva|round(2, 'floor')|number_format(2)}}&nbsp;€
-                    {% else %}
-                        {{ 'common.tva.nonapplicable'| trans }}
-                    {% endif %}
-                </td>
-            </tr>
-            <tr>
-                <td class="no-border" colspan="1"></td>
-                <td>{{'common.ttc'|trans }}&nbsp;:&nbsp;{{commande.montantTotal|round(2, 'floor')|number_format(2)}}&nbsp;€</td>
-            </tr>
+            {% if commande.tva == 0 %}
+                <tr>
+                    <td class="no-border" colspan="1"></td>
+                    <td rowspan="3" style="text-align: center;">
+                        <strong>{{'common.total'|trans}}:</strong>
+                    </td>
+                    <td>
+                        {{commande.montantTotal}}&nbsp;€
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="no-border" colspan="1"></td>
+                    <td rowspan="3" style="text-align: center;">
+                        <strong>{{'common.total'|trans}}:</strong>
+                    </td>
+                    <td>
+                        {{'common.ht'|trans }}&nbsp;:&nbsp;{{(commande.montantTotal - commande.tva)|round(2, 'floor')|number_format(2)}}&nbsp;€
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no-border" colspan="1"></td>
+                    <td>
+                        {% if  commande.tva != 0 %}
+                            {{'common.tva'|trans }}&nbsp;:&nbsp;{{commande.tva|round(2, 'floor')|number_format(2)}}&nbsp;€
+                        {% else %}
+                            {{ 'common.tva.nonapplicable'| trans }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="no-border" colspan="1"></td>
+                    <td>{{'common.ttc'|trans }}&nbsp;:&nbsp;{{commande.montantTotal|round(2, 'floor')|number_format(2)}}&nbsp;€</td>
+                </tr>
+            {% endif %}
         </tbody>
     </table>
 </page>

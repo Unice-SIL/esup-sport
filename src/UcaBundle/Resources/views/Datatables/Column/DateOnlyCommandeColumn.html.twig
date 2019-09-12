@@ -1,0 +1,7 @@
+{% if row.datePaiement == null and row.dateAnnulation == null %}
+{{ row.dateCommande|date("d/m/Y") }}
+{% elseif row.datePaiement != null and row.dateAnnulation == null %}
+{{ row.datePaiement|date("d/m/Y") }}
+{% elseif row.datePaiement == null and row.dateAnnulation != null %}
+{{ row.dateAnnulation|date("d/m/Y") }}
+{% endif %}

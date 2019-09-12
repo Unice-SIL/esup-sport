@@ -25,6 +25,12 @@ class Materiel extends Ressource
     #endregion
 
     #region Méthodes
+
+    public function getCapacite()
+    {
+        return $this->getQuantiteDisponible();
+    }
+
     #endregion
 
     /**

@@ -2,7 +2,6 @@
 
 namespace UcaBundle\Repository;
 
-use UcaBundle\Entity\FormatAvecCreneau;
 
 /**
  * ActiviteRepository
@@ -61,5 +60,26 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         ->setParameter("userid", $user->getId())
         ->getQuery()
         ->getResult();
+    }
+
+
+    public function findPremierEvenementDependantSerieDeChaqueSerieDuFormat($formatActiviteId)
+    {
+        return $this->createQueryBuilder("d")
+            ->addSelect("MIN(d.dateDebut)")
+            ->addSelect("next.dateDebut")
+            ->leftJoin("d.serie", "serie")
+            ->leftJoin("serie.creneau", "c")
+			->leftJoin('UcaBundle\Entity\DhtmlxEvenement','next','WITH','next.serie = serie and next.dateDebut > :maintenant')
+            ->where("c.formatActivite = :formatActivite")
+            ->andWhere("d.dependanceSerie = :dependanceSerie")
+            ->setParameter("formatActivite", $formatActiviteId)
+            ->setParameter("dependanceSerie", true)
+            ->setParameter("maintenant", (new \DateTime())->format('Y-m-d H:i:s'))
+            ->groupBy("d.serie")
+            ->orderBy("d.dateDebut")
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

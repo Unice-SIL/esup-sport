@@ -19,7 +19,8 @@ class GestionnaireUtilisateurShibboleth implements SUP
     private $um;
     private $firstConnection = false;
 
-    public function isFirstConnection() {
+    public function isFirstConnection()
+    {
         return $this->firstConnection;
     }
 
@@ -37,7 +38,6 @@ class GestionnaireUtilisateurShibboleth implements SUP
             $utilisateur = new Utilisateur();
         }
 
-        $profil = $credentials['eduPersonPrimaryAffiliation'];
         $transco = [
             'alum' => 8,
             'student' => 4,
@@ -62,9 +62,7 @@ class GestionnaireUtilisateurShibboleth implements SUP
                 array_push($arrayAffiliationNumber, $transco[trim($affiliation)]);
         }
 
-        $numberAffiliation = str_replace(array_keys($transco), array_values($transco), $credentials['eduPersonAffiliation']);
         $arrayAffiliationNumber = array_unique($arrayAffiliationNumber);
-
 
         if (in_array(4, $arrayAffiliationNumber) && in_array(8, $arrayAffiliationNumber)) {
             throw new ShibbolethException('shibboleth.error.doctorant');
@@ -72,9 +70,13 @@ class GestionnaireUtilisateurShibboleth implements SUP
             throw new ShibbolethException('shibboleth.error.dossierincomplet');
         } elseif (!in_array(4, $arrayAffiliationNumber) && !in_array(8, $arrayAffiliationNumber)) {
             throw new ShibbolethException('shibboleth.error.profilinconnu');
+        } elseif (in_array(4, $arrayAffiliationNumber)) {
+            $profil = 4;
+        } elseif (in_array(8, $arrayAffiliationNumber)) {
+            $profil = 8;
         }
 
-        $objProfil = $this->em->getReference(ProfilUtilisateur::class, $transco[$profil]);
+        $objProfil = $this->em->getReference(ProfilUtilisateur::class, $profil);
         $objCotisationSportive = $this->em->getReference(TypeAutorisation::class, 2);
 
 
@@ -89,7 +91,7 @@ class GestionnaireUtilisateurShibboleth implements SUP
             ->setPrenom($credentials['givenName'])
             ->setShibboleth(true)
             ->setEnabled(true);
-        if(!$utilisateur->hasAutorisation($objCotisationSportive) && in_array(4, $arrayAffiliationNumber)) {
+        if (!$utilisateur->hasAutorisation($objCotisationSportive) && in_array(4, $arrayAffiliationNumber)) {
             $utilisateur->addAutorisation($objCotisationSportive);
         }
         $this->em->persist($utilisateur);
@@ -103,10 +105,8 @@ class GestionnaireUtilisateurShibboleth implements SUP
     }
 
     public function loadUserByUsername($username)
-    {
-    }
+    { }
 
     public function supportsClass($class)
-    {
-    }
+    { }
 }

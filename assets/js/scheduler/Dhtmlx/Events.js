@@ -298,7 +298,7 @@ var lastEventClickTimeStamp = 0;
 // because onDblClick and onClick are not compatible together
 scheduler.attachEvent("onClick", function (id, e){
     changeColor(id);
-
+    scheduler.updateView();
     if(role == "user")
     window.location = PATH_SEE_MORE+id;
     
@@ -329,13 +329,11 @@ var checkEvents = function(el){
 
 
     if(el.evenement.evenementType == "creneau"){
-        if(el.encadrant_ids.split(",").indexOf(USERID)){
 /*             scheduler.config.icons_select.splice(2,0,"icon_email")
             scheduler.config.icons_select.splice(3,0,"icon_register") */
             scheduler.config.icons_select.splice(1,0, "icon_more");
-            scheduler.locale.labels.icon_more = "See more";
+            scheduler.locale.labels.icon_more = Translator.trans('scheduler.message.voirplus');
 
-        }
     }
 }
 
@@ -348,10 +346,8 @@ scheduler.attachEvent("onBeforeDrag", function (id, e){
 
 
 var changeColor = function(id){
-let eventDhtmlx = scheduler._events[id];
-    if(eventDhtmlx == null){
-        return false;
-    }
+    let eventDhtmlx = scheduler._events[id];
+    
     for(var s in scheduler._series){
         let serie = scheduler._series[s];
         serie.defaultColor();
@@ -359,7 +355,11 @@ let eventDhtmlx = scheduler._events[id];
     for(var ev in scheduler._events){
         let evnt = scheduler._events[ev];
         evnt.defaultColor();
+    }   
+    if(eventDhtmlx == null){
+            return false;
     }
+
 
     if(eventDhtmlx.getParent() != "undefined"){
         eventDhtmlx.getParent().color();
@@ -367,8 +367,6 @@ let eventDhtmlx = scheduler._events[id];
     else{
         eventDhtmlx.color = scheduler.config.activeColor;
     }
-
-    scheduler.updateView();
 }
 
 

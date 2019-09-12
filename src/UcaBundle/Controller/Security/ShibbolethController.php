@@ -79,18 +79,16 @@ class ShibbolethController extends Controller
             "supannEtuId" => "99999999",
             "ptdrouv" => "0",
             'supannOrganisme' => '{EES}0060931E'
+        ], 'teacher' => [
+            "username" => "pdupond@unice.fr",
+            "eduPersonAffiliation" => "teacher",
+            "eppn" => "pdupond@unice.fr",
+            "givenName" => "Philippe",
+            "mail" => "Philippe.DUPOND@univ-cotedazur.fr",
+            "sn" => "Dupond",
+            "uid" => "pdupond",
         ]];
         $usr = $usp->loadUser($usrConfig[$request->get('user')]);
-        try {
-            if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
-                return $this->redirectToRoute('UcaWeb_MentionsLegales');
-            } else {
-                return $this->redirectToRoute('UcaWeb_Accueil');
-            }
-        } catch (\Exception $e) {
-            $this->get('uca.flashbag')->addMessageFlashBag($e->getMessage(), 'danger');
-            return $this->redirectToRoute('fos_user_security_login');
-        }
         dump($usr);
         die;
     }

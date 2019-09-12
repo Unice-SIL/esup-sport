@@ -51,6 +51,8 @@ bouton.annuler: Annuler
 bouton.bloquer: Bloquer
 bouton.debloquer: Débloquer
 bouton.descendre: Descendre
+bouton.desinscrire.inscription: Désinscrire
+bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportpdf: Export
 bouton.log: Historique
@@ -117,6 +119,7 @@ common.dateajoutpanier: Date d'ajout au panier
 common.datepaiement: Date de paiement
 common.deconnexion: 'Vous avez été deconnecté de l''application. Merci de fermer votre navigateur pour fermer totalement la session.'
 common.description: Description
+common.desinscrit: Désinscrit
 common.email: Email
 common.emplacement: Emplacement
 common.encadrants.aucun: aucun encadrant
@@ -149,6 +152,7 @@ common.nom.utilisateur: Nom d'utilisateur
 common.nom: Nom
 common.non: 'Non'
 common.numerocommande: Numéro de Commande
+common.numerorecu: Numéro de Reçu
 common.ordre: Ordre
 common.oui: 'Oui'
 common.paiementcb: Payer par carte bancaire
@@ -164,6 +168,7 @@ common.ressources.reservees: Ressources réservées
 common.ressources: Ressources
 common.role: Rôle
 common.saturday: Samedi
+common.select.emptyValue: '- Sélectionner une valeur -'
 common.statut: Statut
 common.sunday: Dimanche
 common.tarif.gratuit: Gratuit
@@ -203,10 +208,15 @@ creneau.ajouter: 'Ajouter un créneau'
 creneau.list.complet: "Complet"
 creneau.list.indisponible: "Indisponible"
 creneau.list.inscrit: inscrit
+creneau.list.next: Prochain jour de cours
+creneau.list.preinscrit: "Pré-inscrit"
 creneau.list.prochainCours: "Prochain cours"
 creneau.list.reserver: "S'inscrire"
 creneau.liste.titre: 'Liste des créneaux'
+creneau.week.indisponible: Aucun créneau n'est disponible aujourd'hui
 detailscommande.list.title: Détails de commande
+detail.inscription.motifannulation: Motif de l'annulation
+detail.inscription.commentaireannulation: Commentaire
 email.politesse: Bonjour,
 email.preinscription.confirmationDemande: Vottre demande de pré-inscription a bien été prise en compte.
 erreur.403.icon: "fas fa-ban"
@@ -276,7 +286,12 @@ format.statut.publie: Publié
 format.statut: Statut
 format.tarif.placeholder: '- Sélectionner un Tarif -'
 format.tarif: Tarif
+formatCarte.list.inscrit: carte achétée
+formatCarte.list.preinscrit: carte commandée
+formatCreneau.list.inscrit: inscrit
+formatCreneau.list.preinscrit: pré-inscrit
 formatSimple.list.inscrit: Inscrit
+formatSimple.list.preinscrit: pré-inscrit
 formatachatcarte.ajouter.succes: 'Format achat de carte ajouté avec succès'
 formatachatcarte.carte.placeholder: '- Sélectionner une carte -'
 formatachatcarte.modalites: Modalités
@@ -291,6 +306,12 @@ formatactivite.carte.modifier.title: Modifier un format avec achat de carte
 formatactivite.creneau.ajouter.title: Ajouter un format avec créneaux
 formatactivite.creneau.modifier.title: Modifier un format avec créneaux
 formatactivite.etablissements.title: "Où pratiquer cette activité ?"
+formatactivite.fraiscomplementaires.cotisationscartesrequises: "Cotisations et cartes requises"
+formatactivite.fraiscomplementaires.montantformat: "Coût de l'accès à l'activité - %montant% €"
+formatactivite.fraiscomplementaires.montantsinclus.achatcarte: "* Ce tarif tient compte du prix de la carte et des eventuels frais associés à cet achat."
+formatactivite.fraiscomplementaires.montantsinclus.evenementsimple: "* Ce tarif tient compte des eventuels frais associés à cet achat."
+formatactivite.fraiscomplementaires.texteinformatif: "Ces éléments ne sont payables qu'une seule fois et seront automatiquement ajoutés au panier si nécessaire."
+formatactivite.fraiscomplementaires.titre: "Frais complémentaires"
 formatactivite.horaires: Horaires
 formatactivite.libelle: 'Format d''activité'
 formatactivite.lieu.aucun: Aucun lieu défini
@@ -317,6 +338,7 @@ formatsimple.supprimer.erreur: Impossible de supprimer ce format. Il y a encore 
 formatsimple.supprimer.succes: 'Évènement supprimé avec succès'
 formatsimple.title: Évènement
 gestioncommande.list.title: Commandes en attente de paiement
+gestioninscription.list.title: Gestion des inscriptions
 groupe.ajouter.succes: Groupe ajouté avec succès
 groupe.ajouter.title: 'Ajouter un groupe'
 groupe.libelle: Groupe
@@ -372,13 +394,19 @@ message.confirmation.annulation.commande.titre: Confirmez l'annulation
 message.confirmation.annulation.commande: Toutes les inscriptions liées à cette commande seront supprimées. Annuler la commande ?
 message.confirmation.annulation.inscription.titre: Confirmez l'annulation
 message.confirmation.annulation.inscription: Aucun remboursement de l'inscription ne sera effectué après l'annulation de celle-ci. Annuler l'inscription ?
+message.confirmation.desinscription.inscription.titre: Confirmez la désinscription
+message.confirmation.desinscription.inscription: Aucun remboursement de l'inscription ne sera effectué après la désinscription. Confirmez la désinscription ?
 message.confirmation.suppression.titre: "Confirmez la suppression"
 message.confirmation.suppression: "Supprimer l'enregistrement ?"
-modal.error.dejainscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
-modal.error.maxInscription: "Erreur lors de l'inscription : Nombre maximum de reservations de créneaux dépassé"
-modal.error.maxcapacite: "Erreur lors de l'inscription : La capacité maximale a été dépassée"
-modal.error.montant: "Erreur lors de l'inscription : Le tarif pour le profil n'est pas défini"
+modal.error.complet: "Erreur lors de l'inscription : La capacité maximale a été dépassée"
+modal.error.error500: "Erreur lors de l'inscription : si cela persiste, veuillez contacter un administrateur"
+modal.error.inscriptionferme: "Erreur lors de l'inscription : Les inscriptions sont fermés"
+modal.error.inscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
+modal.error.montantincorrect: "Erreur lors de l'inscription : Ce profil n'est pas autorisé"
+modal.error.nbcreneaumaxatteint: "Erreur lors de l'inscription : Nombre maximum de reservations de créneaux dépassé"
+modal.error.preinscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
 modal.error.previsualisation: "Erreur lors de l'inscription : Le mode prévisualisation est activé"
+modal.error.profilinvalide: "Erreur lors de l'inscription : Le tarif pour le profil n'est pas défini"
 modal.error: "Erreur"
 modalinscription.bouton.inscription: Inscription
 modalinscription.bouton.preinscription: Préinscription
@@ -476,7 +504,7 @@ reservation.calendrier.disponible: Disponible
 reservation.calendrier.indisponible: Non disponible
 reservation.calendrier.inscrit: inscrit
 reservation.calendrier.titre: Créneaux disponibles
-ressource.ajouter.succes: 'Resource ajoutée'
+ressource.ajouter.succes: 'Ressource ajoutée'
 ressource.capacite: Capacité
 ressource.code.rus: Code RUS
 ressource.etablissement: Campus
@@ -487,29 +515,40 @@ ressource.lieu.ajouter: 'Ajouter Lieu'
 ressource.list.subTitle: Liste des ressources
 ressource.list.title: 'Gestion des ressources'
 ressource.longitude: Longitude
-ressource.modifier.succes: 'Resource modifée'
+ressource.modifier.succes: 'Ressource modifée'
 ressource.quantite: Quantite
 ressource.referentiel.success: 'Le référentiel immobilier a été mis à jour avec succès'
 ressource.superficie: Superficie
-ressource.supprimer.succes: 'Resource supprimée'
+ressource.supprimer.succes: 'Ressource supprimée'
 ressource.tarif: Tarif
 role.liste: Roles
-scheduler.action.delete: supprimer
-scheduler.action.save: enregistrer
-scheduler.action.update: mettre à jour
-scheduler.message.action.debut: Voulez vous
+scheduler.action.delete: Supprimer
+scheduler.action.save: Enregistrer
+scheduler.action.title.delete: la suppresion
+scheduler.action.title.save: l'enregistrement
+scheduler.action.title.update: la mise à jour
+scheduler.action.update: Mettre à jour
+scheduler.error.field: Le champs
+scheduler.error.isEmpty: est vide
+scheduler.error.type: "n'est pas du bon type"
+scheduler.message.action.debut: Confirmer
 scheduler.message.action.occurence: l’occurence
-scheduler.message.action.serie: toute la série ?
+scheduler.message.action.serie: toute la série
 scheduler.message.annuler: Annuler
 scheduler.message.inscrit_list: Liste des inscrits
 scheduler.message.send_mail: Envoyer un mail à tous les inscrits de ce créneau
+scheduler.message.titre: Confirmez la suppression
 scheduler.message.valider: Enregistrer
+scheduler.message.voirplus: Voir plus
 securite.libelle: Sécurité
-security.login.noninscrit: Vous n'avez pas de compte ?
+security.login.example.partners: (CNRS, OCA, INRA, ...)
+security.login.external.account: Vous avez un compte partenaire ?
+security.login.noninscrit: Vous n'avez pas de compte partenaire ?
 security.login.not.register: Pas encore de compte
 security.login.password: Mot de passe
 security.login.remember_me: 'Se souvenir de moi'
-security.login.shibboleth: Vous avez un compte à l'Université ?
+security.login.shibboleth: Vous avez un compte UNS / UCA ?
+security.login.submit.external: Connexion partenaire
 security.login.submit: Connexion
 security.login.username: Nom d'utilisateur
 security.roles.ROLE_ADMIN: Accès UcaGest
@@ -532,6 +571,7 @@ security.roles.ROLE_GESTION_GROUPE_ECRITURE: Gestion des droits (lecture/écritu
 security.roles.ROLE_GESTION_GROUPE_LECTURE: Gestion des droits (lecture seule)
 security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Gestion des images de fond (lecture/écriture)
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Gestion des images de fond (lecture seule)
+security.roles.ROLE_GESTION_INSCRIPTION: Gestion des inscriptions
 security.roles.ROLE_GESTION_LOG_LECTURE: Gestion des logs (lecture seule)
 security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Gestionnaire de caisse
 security.roles.ROLE_GESTION_PARAMETRAGE: Gestion du paramétrage
@@ -555,7 +595,7 @@ security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Gestion des utilisateurs (lectu
 security.roles.ROLE_PREVISUALISATION: Gestion de la prévisualisation
 security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
 security.roles.ROLE_USER: Accès UcaWeb
-security.shibboleth.login.submit: 'Connexion Shibboleth'
+security.shibboleth.login.submit: 'Se connecter'
 shibboleth.error.doctorant: Veuillez vous connecter avec votre compte étudiant
 shibboleth.error.dossierincomplet: Votre dossier n'est pas complet
 shibboleth.error.profilinconnu: Ce type de profil est inconnu
@@ -566,6 +606,7 @@ sitemap.ajouter: Ajouter
 sitemap.classeactivite.libelle: Classes d'activités
 sitemap.confirmation.invalide: Confirmation expirée
 sitemap.connexion: Connexion
+sitemap.detailinscription.libelle: Detail de l'inscription
 sitemap.detailscommande.libelle: Détails de commande
 sitemap.en: Translate to english
 sitemap.etablissement.libelle: Campus
@@ -578,6 +619,7 @@ sitemap.format.simple.ajouter: Ajouter évènement
 sitemap.fr: Traduire en français
 sitemap.gestion.libelle: Gestion
 sitemap.gestioncommande.libelle: Commandes en attente de paiement
+sitemap.gestioninscription.libelle: Gestion des inscriptions
 sitemap.groupe.libelle: Groupes
 sitemap.imagefond.libelle: Images de fond
 sitemap.infospratiques.libelle: Infos pratiques
@@ -593,6 +635,7 @@ sitemap.menu: Menu
 sitemap.mescommandes.libelle: Mes commandes
 sitemap.mesinscriptions.libelle: Mes inscriptions
 sitemap.modifier: Modifier
+sitemap.moncompte.changermotdepasse: Modifier mot de passe
 sitemap.moncompte.libelle: Mon Compte
 sitemap.moncompte.modifier.libelle: Modifier
 sitemap.monplanning.libelle: Mon planning
@@ -689,6 +732,7 @@ utilisateur.adresse.aucune: Aucune adresse enregistrée
 utilisateur.adresse: Adresse
 utilisateur.ajouter.succes: 'Utilisateur ajouté avec succès'
 utilisateur.ajouter.title: Ajout d'un utilisateur
+utilisateur.ancien.motdepasse: Ancien mot de passe
 utilisateur.autorisation.ajouter.success: Autorisation modifiée avec succès
 utilisateur.autorisation.aucun: Pas d'autorisation enregistrée
 utilisateur.autorisation.modifier: Modifier les autorisations
@@ -697,6 +741,7 @@ utilisateur.autorisations: Autorisations
 utilisateur.bloquer.message: Cet utilisateur est bloqué.
 utilisateur.bloquer.succes: Utilisateur bloqué avec succès
 utilisateur.calendrier.voir: Voir le calendrier
+utilisateur.changer.motdepasse: Changer mon mot de passe
 utilisateur.civilite: Civilité
 utilisateur.codepostal.invalide: 'Code Postal incorrect'
 utilisateur.codepostal: 'Code Postal'

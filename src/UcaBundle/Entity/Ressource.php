@@ -101,7 +101,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
 
     public function jsonSerializeProperties()
     {
-        return ['libelle', 'description'];
+        return ['libelle', 'description', 'etablissementLibelle'];
     }
     
     public function setImageFile(File $imageFile = null)

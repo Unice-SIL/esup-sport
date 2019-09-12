@@ -22,7 +22,8 @@ class PayBox
     public function setCommande(Commande $commande)
     {
         $this->paybox->setParameters(array(
-            'PBX_CMD'          => $commande->getNumeroCommande(),
+            'PBX_CMD'          => $commande->getNumeroCommande() . '-' . (new \DateTime())->format('YmdHis'),
+            // 'PBX_CMD'          => $commande->getNumeroCommande(),
             'PBX_DEVISE'       => '978',
             'PBX_PORTEUR'      => $commande->getUtilisateur()->getEmail(),
             'PBX_RETOUR'       => 'Mt:M;Ref:R;Auto:A;Erreur:E',
@@ -34,7 +35,7 @@ class PayBox
             'PBX_REFUSE'       => $this->router->generate('UcaWeb_PaiementRetourPaybox', ['id' => $commande->getId(), 'status' => 'denied'], UrlGeneratorInterface::ABSOLUTE_URL),
             'PBX_ANNULE'       => $this->router->generate('UcaWeb_PaiementRetourPaybox', ['id' => $commande->getId(), 'status' => 'canceled'], UrlGeneratorInterface::ABSOLUTE_URL),
             'PBX_RUF1'         => 'POST',
-            'PBX_REPONDRE_A'   => $this->router->generate('lexik_paybox_ipn', array('time' => time()), UrlGeneratorInterface::ABSOLUTE_URL),
+            'PBX_REPONDRE_A'   => $this->router->generate('lexik_paybox_ipn', array('time' => time(), 'id' => $commande->getId()), UrlGeneratorInterface::ABSOLUTE_URL),
         ));
 
         // $commande->setHmac($this->paybox->getParameters()['PBX_HMAC']);

@@ -66,25 +66,25 @@
     background: $isabelline;
 }
 .fs-12 {
-    font-size: 0.75rem;
+    font-size: 0.75rem !important;
 }
 .fs-14 {
-    font-size: 0.875rem;
+    font-size: 0.875rem !important;
 }
 .fs-16 {
-    font-size: 1rem;
+    font-size: 1rem !important;
 }
 .fs-18 {
-    font-size: 1.125rem;
+    font-size: 1.125rem !important;
 }
 .fs-21 {
-    font-size: 1.3125rem;
+    font-size: 1.3125rem !important;
 }
 .fs-24 {
-    font-size: 1.5rem;
+    font-size: 1.5rem !important;
 }
 .fs-30 {
-    font-size: 1.875rem;
+    font-size: 1.875rem !important;
 }
 .fw-200 {
     font-weight: 200;
@@ -113,7 +113,8 @@
 
 // CONTAINER / SECTIONS / BACKGROUNDS
 html { 
-    height: 100%; 
+    height: 100%;
+    overflow-x: hidden;
 }
 body {
     letter-spacing: 1px;
@@ -232,6 +233,8 @@ h1{
     text-align: center;
     font-weight: 800;
     padding: 25px;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 h1.h1-light {
     color: $blanc;
@@ -335,6 +338,12 @@ h3 {
 .btn-outline.disabled,
 .btn-info.disabled {
     cursor: not-allowed;
+}
+.btn-fit-content {
+    height: fit-content;
+}
+.mh-40 {
+    min-height: 40px !important;
 }
 @include media-breakpoint-down(xs) { 
     .btn-form {
@@ -493,6 +502,11 @@ a.return-to-website {
     }
 }
 @include media-breakpoint-down(sm) {
+    .navbar {
+        align-items: center;
+        flex-wrap: nowrap;
+        z-index: 9999;
+    }
     .main-nav {
         height: 75px;
     }
@@ -500,7 +514,32 @@ a.return-to-website {
         width: 75%;
     }
     .second-nav-header {
-        padding: 18px 0;
+        padding: 10px 20px 5px 20px;
+        top: 65px;
+        right: initial;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        background: #1a1a1a !important;
+        border-top: 1px solid rgb(50,50,50);
+    }
+    .navbar-dark .navbar-toggler {
+        z-index: 9999;
+    }
+    .navbar-collapse {
+        flex-basis: initial;
+        flex-grow: initial;
+        align-items: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh !important;
+        padding: 65px 25px;
+    }
+    .breadcrumb-ucaweb nav[aria-label="breadcrumb"] {
+        margin-top: 150px !important;
     }
 }
 

@@ -66,69 +66,64 @@ class ActiviteController extends Controller
    * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}/day/{day}", name="UcaWeb_FormatActiviteDetailJour")
    * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}", name="UcaWeb_FormatActiviteDetail")
    * @Method("GET")
-   * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
    */
   public function FormatActiviteDetailAction($idCa, $idA, $id, $day = 1, $yearWeek = null)
   {
     $em = $this->getDoctrine()->getManager();
     $item = $em->getRepository('UcaBundle:FormatActivite')->findOneBy(['id' => $id]);
 
-    $activite = $em->getRepository('UcaBundle:Activite')->findOneBy(['id' => $idA]);
-
-    $twigConfig["data"] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($activite, $this->getUser());
+    $twigConfig["data"] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($idA, $this->getUser());
     $twigConfig["idCa"] = $idCa;
     $twigConfig["idA"] = $idA;
     $twigConfig["item"] = $item;
     $twigConfig["id"] = $item->getId();
+    $twigConfig["creneauParJour"] = [];
 
     if (get_class($item) == FormatAvecCreneau::class) {
-      return $this->FormatActiviteAvecCreneau($idCa, $idA, $item, $day, $twigConfig);
+      return $this->FormatActiviteAvecCreneau($item, $day, $twigConfig);
     } elseif (get_class($item) == FormatAchatCarte::class) {
-      return $this->FormatActiviteAchatCarte($id, $twigConfig);
+      return $this->FormatActiviteAchatCarte($twigConfig);
     } elseif (get_class($item) == FormatAvecReservation::class) {
-      return $this->formatAvecReservationVoirRessource($idCa, $idA, $item, $yearWeek, $twigConfig);
+      return $this->formatAvecReservationVoirRessource($item, $twigConfig);
     } elseif (get_class($item) == FormatSimple::class) {
-      return $this->FormatActiviteSimple($id, $twigConfig);
+      return $this->FormatActiviteSimple($twigConfig);
     }
   }
 
-  public function formatAvecReservationVoirRessource($idCa, $idA, $item, $yearWeek, $twigConfig)
+  public function formatAvecReservationVoirRessource($item, $twigConfig)
   {
-    $em = $this->getDoctrine()->getManager();
-
     $twigConfig["data"] = $item->getRessource();
 
     return $this->render('@Uca/UcaWeb/Activite/ListerRessource.html.twig', $twigConfig);
   }
 
-  function FormatActiviteAvecCreneau($idCa, $idA, $item, $day, $twigConfig)
+  function FormatActiviteAvecCreneau($item, $day, $twigConfig)
   {
     $em = $this->getDoctrine()->getManager();
     $id = $item->getId();
-    $twigConfig["idCa"] = $idCa;
-    $twigConfig["idA"] = $idA;
-    $twigConfig["item"] = $item;
-    $twigConfig["id"] = $item->getId();
     $twigConfig["entite"] = 'FormatActiviteDetail';
+    
+    $events = null;
 
-    $date = new \DateTime();
+    $evenements = $em->getRepository("UcaBundle:DhtmlxEvenement")->findPremierEvenementDependantSerieDeChaqueSerieDuFormat($id);
+    foreach ($evenements as $event) {
+      $ev = $event[0];
+      $dayOfWeek = $ev->getDateDebut()->format("w");
 
-    $days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+      if ($dayOfWeek == $day) {
+        $events[$ev->getSerie()->getId()]["creneau"] = $ev;
+        $events[$ev->getSerie()->getId()]["nextCreneauDebut"] = $event["dateDebut"];
+      }
 
-    $evenements = $em->getRepository("UcaBundle:DhtmlxSerie")->findByDhtmlxDateByDay($days[$day - 1], $id);
-    $nextCreneaux = $em->getRepository("UcaBundle:DhtmlxSerie")->findByDhtmlxDateByDay($days[$day - 1], $id, false, $date);
-
-    $events = array();
-
-    //add crenrau and nextcreneau together
-    foreach($evenements as $ev){
-      $events[$ev->getSerie()->getId()]["creneau"] = $ev;
+      if (empty($twigConfig["nombreEvenement"][$dayOfWeek])) $twigConfig["nombreEvenement"][$dayOfWeek] = 0;
+      $twigConfig["nombreEvenement"][$dayOfWeek] += 1;
+      if ($ev->getSerie()->getCreneau()->getInscriptionInformations($this->getUser(), $item)['statut'] == 'disponible') {
+        if (empty($twigConfig["nombreEvenementDispo"][$dayOfWeek])) $twigConfig["nombreEvenementDispo"][$dayOfWeek] = 0;
+        $twigConfig["nombreEvenementDispo"][$dayOfWeek] += 1;
+      }
     }
-    foreach($nextCreneaux as $c){
-      $events[$c->getSerie()->getId()]["nextCreneau"] = $c;
-    }
 
-    $twigConfig["days"] = $days;
+    $twigConfig["days"] = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
     $twigConfig["currentDay"] = $day;
     $twigConfig["events"] = $events;
     return $this->render('@Uca/UcaWeb/Activite/FormatActivite.html.twig', $twigConfig);
@@ -137,14 +132,14 @@ class ActiviteController extends Controller
   /**
    * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}", name="UcaWeb_FormatActiviteReservationDetail")
    * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaine")
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}/dayWeek/{day_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour")
    * @Method("GET") 
    */
-  public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, $id, $idRessource, $year_week = null)
+  public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, $id, $idRessource, $year_week = null, $day_week = null)
   {
     $em = $this->getDoctrine()->getManager();
     $ressource = $em->getRepository('UcaBundle:Ressource')->findOneBy(['id' => $idRessource]);
     $item = $em->getRepository('UcaBundle:FormatAvecReservation')->findOneBy(['id' => $id]);
-
     $twigConfig["idRessource"] = $idRessource;
     $twigConfig["libelleRessource"] = $ressource->getLibelle();
     $twigConfig["idCa"] = $idCa;
@@ -169,10 +164,16 @@ class ActiviteController extends Controller
     $reservabilites = $em->getRepository("UcaBundle:Reservabilite")->findByDhtmlxDateByWeek($ressource->getId(), $yearWeek);
 
     $days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-    $reservabilitesByDay = array(1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 0 => []);
+    $reservabilitesByDay = array(1 => [], 2 => [], 3 => [], 4 => [], 5 => [], 6 => [], 7 => []);
 
     foreach ($reservabilites as $key => $reservabilite) {
       $reservabilitesByDay[$reservabilite->getEvenement()->getDateDebut()->format("w")][] = $reservabilite;
+    }
+
+    $dateNextCreneau = null;
+    $reservabilitesAVenir = $em->getRepository("UcaBundle:Reservabilite")->findReservabilite($ressource->getId(), $this->findNextDate($date));
+    if ($reservabilitesAVenir) {
+      $dateNextCreneau = $reservabilitesAVenir[0]->getEvenement()->getDateDebut();
     }
 
     $twigConfig["reservabilitesByDay"] = $reservabilitesByDay;
@@ -181,58 +182,29 @@ class ActiviteController extends Controller
     $twigConfig["next_date"] = $this->findNextDate($date);
     $twigConfig["previous_date"] = $this->findPreviousDate($date);
     $twigConfig["beginning"] = $request->query->get('beginning');
+    $twigConfig["nextCreneau"] = $dateNextCreneau;
     return $this->render('@Uca/UcaWeb/Activite/FormatReservation.html.twig', $twigConfig);
   }
 
-  private function findNextDate(\DateTime $date)
+  private function findNextDate(\DateTime $baseDate)
   {
-
-    $week = $date->format("W");
-    $nextWeek = clone $date;
-    $nextWeek->modify("+1 week");
-
-    //On test si le changement d'annee tombe au mileu de la semaine 52
-    //Si c'est le cas on change nous même la date
-    if ($week == 52 && $nextWeek->format("W") != "53") {
-      $isSameYear = $date->format("Y") == $nextWeek->format("Y") ? true : false;
-      if ($isSameYear) {
-        $nw = explode("_", $nextWeek->format("Y_W"));
-        $nextWeek = ($nw[0] + 1) . "_01";
-      }
-    }
-
-    return $nextWeek->format("Y_W");
+    $date = clone $baseDate;
+    return $date->modify("+1 week");
   }
 
-  private function findPreviousDate(\DateTime $date)
+  private function findPreviousDate(\DateTime $baseDate)
   {
-    $previousWeek = clone $date;
-
-    return $previousWeek->modify("-1 week")->format("Y_W");
+    $date = clone $baseDate;
+    return $date->modify("-1 week");
   }
 
-
-  /**
-   * @Route("/FormatActiviteAchatCarte/{id}", name="UcaWeb_FormatActiviteAchatCarte")
-   * @Method("GET")
-   */
-  public function FormatActiviteAchatCarte($id, $twigConfig)
+  public function FormatActiviteAchatCarte($twigConfig)
   {
-    $em = $this->getDoctrine()->getManager();
-    $item = $this->getDoctrine()->getRepository(FormatActivite::class)->findOneById($id);
-    $twigConfig["item"] = $item;
     return $this->render('@Uca/UcaWeb/Activite/FormatAchatCarte.html.twig', $twigConfig);
   }
 
-  /**
-   * @Route("/FormatActiviteSimple/{id}", name="UcaWeb_FormatActiviteSimple")
-   * @Method("GET")
-   */
-  public function FormatActiviteSimple($id, $twigConfig)
+  public function FormatActiviteSimple($twigConfig)
   {
-    $em = $this->getDoctrine()->getManager();
-    $item = $this->getDoctrine()->getRepository(FormatActivite::class)->findOneById($id);
-    $twigConfig["item"] = $item;
     return $this->render('@Uca/UcaWeb/Activite/FormatSimple.html.twig', $twigConfig);
   }
 }

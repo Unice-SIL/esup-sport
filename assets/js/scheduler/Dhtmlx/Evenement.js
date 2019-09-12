@@ -29,7 +29,7 @@ var Evenement = {
             else{
                 scheduler._events[data.id].saveCallback(data);
             }
-        });            
+        }).fail(_uca.ajax.fail);            
     },
 
     //use to instanciate the object
@@ -77,7 +77,7 @@ var Evenement = {
 
                 //scheduler.getEvent(item.oldId).saveCallback(item);
             }
-        });
+        }).fail(_uca.ajax.fail);
     },
 
 

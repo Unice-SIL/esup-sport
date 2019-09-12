@@ -18,7 +18,7 @@ use UcaBundle\Entity\Creneau;
 
 /**
  * @Route("UcaWeb/ValidationInscription")
- * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+ * @Security("has_role('ROLE_ENCADRANT') or has_role('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
  */
 class ValidationInscriptionEncadrantController extends Controller
 {
@@ -27,6 +27,10 @@ class ValidationInscriptionEncadrantController extends Controller
     */
     public function listerAction(Request $request)
     {
+        if(($request->get('type') == 'gestionnaire' && !$this->isGranted('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')) || $request->get('type') == 'encadrant' && !$this->isGranted('ROLE_ENCADRANT')){
+            throw $this->createAccessDeniedException();
+        }
+
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
         $datatable = $this->get('sg_datatables.factory')->create(InscriptionAValiderDatatable::class);
@@ -58,7 +62,7 @@ class ValidationInscriptionEncadrantController extends Controller
 
     /**
      * @Route("/{id}",name="UcaWeb_InscriptionAValiderVoir")
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_ENCADRANT') or has_role('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
     */
     public function voirAction(Request $request, Inscription $inscription)
     {
@@ -70,7 +74,7 @@ class ValidationInscriptionEncadrantController extends Controller
 
     /**
      * @Route("/ValiderIncriptionParEncadrant/{id}",name="UcaWeb_InscriptionValideeParEncadrant")
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_ENCADRANT')")
     */
     public function validationParEncadrantAction(Request $request, Inscription $inscription)
     {
@@ -98,7 +102,7 @@ class ValidationInscriptionEncadrantController extends Controller
 
      /**
      * @Route("/RefuserIncriptionParEncadrant/{id}",name="UcaWeb_InscriptionRefuseeParEncadrant")
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_ENCADRANT')")
     */
     public function refusParEncadrantAction(Request $request, Inscription $inscription)
     {
@@ -130,7 +134,7 @@ class ValidationInscriptionEncadrantController extends Controller
     
     /**
      * @Route("/telechargerJustificatif/{id}",name="UcaWeb_TelechargerJustificatif", options={"expose"=true})
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_ENCADRANT') or has_role('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
     */
     public function telechargerJustificatifAction(Request $request, Autorisation $autorisation)
     {
@@ -144,7 +148,7 @@ class ValidationInscriptionEncadrantController extends Controller
 
     /**
      * @Route("/ValiderIncriptionParGestionnaire/{id}",name="UcaWeb_InscriptionValideeParGestionnaire")
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
     */
     public function validationParGestionnaireAction(Request $request, Inscription $inscription)
     {
@@ -166,9 +170,9 @@ class ValidationInscriptionEncadrantController extends Controller
         return $this->redirectToRoute('UcaWeb_InscriptionAValiderLister', ['type' => 'gestionnaire']);
     }
 
-     /**
+    /**
      * @Route("/RefuserIncriptionParGestionnaire/{id}",name="UcaWeb_InscriptionRefuseeParGestionnaire")
-     * @Security("has_role('ROLE_ENCADRANT', 'ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
+     * @Security("has_role('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION')")
     */
     public function refusParGestionnaireAction(Request $request, Inscription $inscription)
     {

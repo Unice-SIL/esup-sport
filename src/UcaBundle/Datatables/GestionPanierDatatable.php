@@ -6,7 +6,8 @@ use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use UcaBundle\Datatables\Button\SupprimerButton;
 use UcaBundle\Datatables\Button\VoirButton;
-use UcaBundle\Datatables\Column\TwigDataColumn;
+use UcaBundle\Datatables\Column\TwigVirtualColumn;
+use UcaBundle\Datatables\Filter\DateFilter;
 
 class GestionPanierDatatable extends AbstractTranslatedDatatable
 {
@@ -14,13 +15,20 @@ class GestionPanierDatatable extends AbstractTranslatedDatatable
     {
         $this->setUcaDefault();
 
+        $this->addInvisibleColumns([
+            'id',
+            'statut',
+            'dateCommande',
+            'montantTotal',
+        ]);
+
         $this->columnBuilder
             ->add('id', Column::class, array(
                 'title' => 'Id',
                 'visible' => false,
             ))
-            ->add('utilisateur.username', Column::class, array(
-                'title' => $this->translator->trans('common.utilisateur'),
+            ->add('numeroCommande', Column::class, array(
+                'title' => $this->translator->trans('common.numerocommande'),
                 'class_name' => 'hide-column-sm'
             ))
             ->add('utilisateur.nom', Column::class, array(
@@ -29,13 +37,21 @@ class GestionPanierDatatable extends AbstractTranslatedDatatable
             ->add('utilisateur.prenom', Column::class, array(
                 'title' => $this->translator->trans('common.prenom'),
             ))
-            ->add('utilisateur.email', Column::class, array(
-                'title' => $this->translator->trans('common.email'),
-                'class_name' => 'hide-column-md'
+            ->add('dateCommande', TwigVirtualColumn::class, array(
+                'title' => $this->translator->trans('common.date'),
+                'search_column' => 'date',
+                'twigTemplate' => 'DateOnly',
+                'searchable' => true,
+                'filter' => array(DateFilter::class, array(
+                    'classes' => 'datetimepicker',
+                    'attributes' => array('data-datetimepicker-format' => 'd/m/Y')
+                ))
             ))
-            ->add('statut', TwigDataColumn::class, array(
-                'title' => $this->translator->trans('common.statut'),
-                'twigTemplate' => 'Trans',
+            ->add('montantTotalFormated', TwigVirtualColumn::class, array(
+                'title' => $this->translator->trans('common.montant'),
+                'field' => 'montantTotal',
+                'twigTemplate' => 'Montant',
+                'class_name' => 'hide-column-md'
             ))
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),

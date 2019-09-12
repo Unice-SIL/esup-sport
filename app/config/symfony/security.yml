@@ -102,6 +102,9 @@ security:
         # Gestion de toutes les commandes
         ROLE_GESTION_COMMANDES: ROLE_ADMIN
 
+        # Gestion de toutes les inscriptions
+        ROLE_GESTION_INSCRIPTION: ROLE_ADMIN
+
         # Gestion du paramétrage
         ROLE_GESTION_PARAMETRAGE: ROLE_ADMIN
         
@@ -133,7 +136,8 @@ security:
             ROLE_GESTION_UTILISATEUR_ECRITURE,
             ROLE_GESTION_COMMANDES,
             ROLE_GESTION_PARAMETRAGE,
-            ROLE_PREVISUALISATION]
+            ROLE_PREVISUALISATION,
+            ROLE_GESTION_INSCRIPTION]
 
         #ACCES_HISTORIQUE_COMMANDE: ROLE_USER
         #ACCES_PLANNING: ROLE_USER

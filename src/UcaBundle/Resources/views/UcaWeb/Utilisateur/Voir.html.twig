@@ -1,5 +1,6 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 {# {% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %} #}
 
 {% block stylesheets %}
@@ -15,7 +16,7 @@
   <section class="container">
     <div class="w-100 mb-5 p-md-3 container-style bg-white d-flex flex-wrap justify-content-between card-event">
       <div class="m-0 p-0 pl-4 pl-md-0 col-12 event-info">
-
+          {{ flashBag.showAll }}
         <div class="row m-0">
           <div class="col-md-6 mb-4">
             <h2 class="text-uppercase">{{'common.nom.utilisateur'|trans}}
@@ -36,6 +37,10 @@
             <h2 class="text-uppercase">{{'common.infospersonnelles'|trans}}
               <a aria-label="{{'bouton.modifier' | trans }}" href="{{ path('UcaWeb_MonCompte_Modifier') }}">
                 <span class='fas fa-edit'></span>
+              </a>
+              <a  aria-label=" {{ 'utilisateur.changer.motdepasse' | trans }}" href="{{ path('fos_user_change_password') }}"> 
+                <span class="fa fa-key"> </span>
+           
               </a>
             </h2>
             <ul>

@@ -26,7 +26,7 @@ var Serie = {
         }).done(function (data) {
 
             me.saveCallback(data);
-        });
+        }).fail(_uca.ajax.fail);
     },
 
     load: function(data)
@@ -221,19 +221,15 @@ var Serie = {
     },
 
     color: function(){
-        
         this.getDependantChildren().forEach(function(item){
             item.color = scheduler.config.activeColor;
         });
-        scheduler.updateView();
     },
 
     defaultColor: function(){
-        
         this.getDependantChildren().forEach(function(item){
             item.color = scheduler.config.defaultColor;
         });
-        scheduler.updateView();
     },
 
     //delete element we don't want to send

@@ -16,15 +16,11 @@
     <div class="container p-0 pl-4 pl-xl-0">
         <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteLister', {idCa : item.activite.classeActivite.id, id : item.activite.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.activite.libelle}) }}</a>
     </div>
-
     <h1 class="h1-light">{{ item.libelle }}</h1>
     <section class="container container-style bg-white mb-5">
         {{ item.description|nl2br }}
-        <p class="mt-3">
-            <span class="font-weight-bold">{{ 'common.tarif'|trans|upper }}</span>
-            :
-            {{ item.getArticleMontant(app.user) }}€ ({{'formatavecreservation.tarif.ajouttarifressource'|trans}})</p>
     </section>
+    {% include '@Uca/UcaWeb/Activite/BlocTarif.html.twig' with { format: item } %}
     <section class="container">
         <div class="row mb-5 d-flex flex-wrap justify-content-around">
             {% for dataItem in data %}
@@ -32,13 +28,15 @@
                     <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
                         <a class="align-self-center text-center d-flex flex-wrap justify-content-center align-items-center align-content-center p-0" href="{{ url("UcaWeb_FormatActiviteReservationDetail", params | merge( {idRessource: dataItem.id} ) ) }}">
                             <div class="w-100">{{ dataItem.libelle }}</div>
-                            <div class="w-100 font-italic fw-500">
-                                {% if dataItem.tarif != null %}
-                                    {{ dataItem.tarif.getMontantUtilisateur(app.user) }}€
-                                {% else %}
-                                    {{ 'common.tarif.gratuit'|trans }}
-                                {% endif %}
-                            </div>
+                            {% if app.user %}
+                                <div class="w-100 font-italic fw-500">
+                                    {% if dataItem.tarif != null %}
+                                        {{ dataItem.tarif.getMontantUtilisateur(app.user) }}€
+                                    {% else %}
+                                        {{ 'common.tarif.gratuit'|trans }}
+                                    {% endif %}
+                                </div>
+                            {% endif %}
                         </a>
                     </div>
                 {% endif %}

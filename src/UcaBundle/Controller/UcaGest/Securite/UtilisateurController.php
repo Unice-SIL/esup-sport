@@ -54,6 +54,7 @@ class UtilisateurController extends Controller
      */
     public function telechargerPreInscriptionJustificatifAction(Request $request, Utilisateur $item)
     {
+        $handler = $this->container->get('vich_uploader.upload_handler');
         $path = $this->get('kernel')->getProjectDir() . '/web/upload/public/documents/';
         if ($item->getDocument()) {
             $file = $item->getDocument();
@@ -99,7 +100,7 @@ class UtilisateurController extends Controller
             $messageView,
             ['user' => $usr]
         );
-
+        $this->container->get('vich_uploader.upload_handler')->remove($usr, 'documentFile');
         $em->flush();
         return $this->redirectToRoute('UcaGest_UtilisateurLister');
     }

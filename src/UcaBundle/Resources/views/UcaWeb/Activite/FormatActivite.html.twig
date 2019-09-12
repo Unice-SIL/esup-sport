@@ -12,34 +12,35 @@
 {% endblock %}
 
 {% block main %}
+
     <div class="container p-0 pl-4 pl-xl-0">
         <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteLister', {idCa : item.activite.classeActivite.id, id : item.activite.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.activite.libelle}) }}</a>
     </div>
-
     <h1 class="h1-light">{{ item.libelle }}</h1>
     <section class="container container-style bg-white mb-5">
-    {{ item.description|nl2br }}
+        {{ item.description|nl2br }}
     </section>
+    {% include '@Uca/UcaWeb/Activite/BlocTarif.html.twig' with { format: item } %}
     <section class="pb-5 mb-5">
-
         <div class="container mb-2">
             <div class="row d-flex justify-content-between">
                 {% for day in days %}
-                    {% if currentDay == loop.index %}
+                    {% if currentDay == loop.index % 7 %}
                         {% set active = "bg-dark-gray" %}
                     {% else %}
                         {% set active = "" %}
                     {% endif %}
-
                     <div class="d-none d-md-block flex-fill">
-                        <a class="d-block text-center" href="{{ path('UcaWeb_FormatActiviteDetailJour', {'day': loop.index, 'idCa': idCa, 'idA': idA, 'id': id}) }}">
-                            <button class="btn bg-white px-3 px-lg-4 px-xl-5 {{ active }}">{{ ("common."~day)|lower|trans }}</button>
-                        </a>
+                        {% if nombreEvenement[loop.index % 7] is not defined or nombreEvenement[loop.index % 7] == 0 %}
+                            <a class="d-block text-center"><button class="btn px-3 px-lg-4 px-xl-5 {{ active }} bg-white" disabled> {{ ("common."~day)|lower|trans }} </button></a>
+                        {% else %}
+                            <a class="d-block text-center" href="{{ path('UcaWeb_FormatActiviteDetailJour', {'day': loop.index % 7, 'idCa': idCa, 'idA': idA, 'id': id}) }}"><button class="btn px-3 px-lg-4 px-xl-5 {{ active }} bg-white"> {{ ("common."~day)|lower|trans }} </button></a>
+                        {% endif %}
                     </div>
                 {% endfor %}
-                
+
                 <div class="d-md-none col-12 text-center">
-                    <select class="text-uppercase fs-12 fw-500 noSelect2" id="selectDays">
+                    <select class="text-uppercase fs-12 fw-500" id="selectDays">
                         {% for day in days %}
                             {% set selected = "" %}
                             {% if currentDay == loop.index %}
@@ -53,58 +54,76 @@
         </div>
 
         {% for event in events %}
-        <div class="container container-style container-style-border-none bg-white mb-3 px-4 py-3">
-            <div class="row d-flex px-3">
-                <div class="col-6 col-lg-2 order-1 p-2 p-lg-0 align-self-center fw-800">
-                    <p class="m-0">{{ event.creneau.dateDebut|date("H:i") }} - {{ event.creneau.dateFin|date("H:i") }}</p>
-                </div>
-                <div class="col-6 col-md-4 col-lg-3 order-3 p-2 p-lg-0">
-                    <p class="m-0 fw-800 color-blue text-uppercase"><i class="fas fa-map-marker-alt mr-1"></i> {{ "format.lieu"|trans }}</p>
-                    {% if event.creneau.serie.creneau.lieu is not null %}
-                        <p class="m-0">{{ event.creneau.serie.creneau.lieu.etablissement.libelle }} - {{ event.creneau.serie.creneau.lieu.libelle }}</p>
-                    {% else %}
-                        <p class="m-0">{{'formatactivite.lieu.aucun' | trans}}</p>
-                    {% endif %}
-                </div>
-                <div class="col-6 col-md-3 col-lg-2 order-4 p-2 p-lg-0">
-                    <p class="m-0 fw-800 color-blue text-uppercase"><i class="fas fa-user-friends mr-1"></i> {{ "common.encadrants"|trans }}</p>
-                    <p class="m-0">
-                    {% for encadrant in event.creneau.serie.creneau.encadrants %}
-                        {{ encadrant.nom }} {{ encadrant.prenom }}<br/>
-                    {% endfor %}
-                    </p>
-                </div>
-                <div class="col-6 col-md-3 col-lg-2 order-5 p-2 p-lg-0">
-                    <p class="m-0 fw-800 color-blue text-uppercase">{{ "creneau.list.prochainCours"|trans }}</p>
-                    <p class="m-0">{{ event.nextCreneau.dateDebut|dateFormat('dd MMM Y H:mm') }}</p>
-                </div>
-                <div class="col-6 col-md-2 col-lg-1 order-6 p-2 p-lg-0">
-                    <p class="m-0 fw-800 color-blue text-uppercase"><i class="fas fa-euro-sign mr-1"></i> {{ "common.tarif"|trans }}</p>
-                    <p class="m-0">
-                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                        {% if event.creneau.serie.creneau.tarif is not null %}
-                            {{ event.creneau.serie.creneau.tarif.getMontantUtilisateur(app.user) }}€
+            {% set creneau = event.creneau.serie.creneau %}
+            {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
+            <div class="container container-style container-style-border-none bg-white mb-3 px-4 py-3">
+                <div class="row d-flex px-3">
+                    <div class="col-6 col-lg-2 order-1 p-2 p-lg-0 align-self-center fw-800">
+                        <p class="m-0">{{ event.creneau.dateDebut|date("H:i") }}
+                            -
+                            {{ event.creneau.dateFin|date("H:i") }}</p>
+                    </div>
+                    <div class="col-6 col-md-4 col-lg-3 order-3 p-2 p-lg-0">
+                        <p class="m-0 fw-800 color-blue text-uppercase">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            {{ "format.lieu"|trans }}</p>
+                        {% if creneau.lieu is not null %}
+                            <p class="m-0">{{ creneau.lieu.etablissement.libelle }}
+                                -
+                                {{ creneau.lieu.libelle }}</p>
+                        {% else %}
+                            <p class="m-0">{{'formatactivite.lieu.aucun' | trans}}</p>
                         {% endif %}
-                    {% else %}
-                        ---
-                    {% endif %}
-                    </p>
-                </div>
-                <div class="col-6 col-lg-2 order-2 order-lg-7 p-2 p-lg-0 align-self-center text-right text-lg-center">
-                    {% if isPrevisualisation() %}
-                        <button class="btn btn-success disabled">{{ 'common.inscrire' | trans }}</button>
-                    {% elseif event.creneau.serie.creneau.isFull() %}
-                        <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
-                    {% elseif not event.creneau.serie.creneau.isDisponible(app.user)  %}
-                        <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray">{{ "creneau.list.indisponible"|trans }}</p>
-                    {% elseif app.user.hasInscription(event.creneau.serie.creneau) %}
-                        <p class="m-0 fs-14 fw-500 color-blue"><i class="fas fa-check-circle"></i> {{ "creneau.list.inscrit"|trans|upper }}</p>
-                    {% else %}
-                        <button class="btn btn-success js-inscription" data-type="UcaBundle:Creneau" data-id="{{ event.creneau.serie.creneau.id }}" callback="changeStatut">{{ "creneau.list.reserver"|trans }}</button>
-                    {% endif %}
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2 order-4 p-2 p-lg-0">
+                        <p class="m-0 fw-800 color-blue text-uppercase">
+                            <i class="fas fa-user-friends mr-1"></i>
+                            {{ "common.encadrants"|trans }}</p>
+                        <p class="m-0">
+                            {% for encadrant in creneau.encadrants %}
+                                {{ encadrant.nom }}
+                                {{ encadrant.prenom }}<br/>
+                            {% endfor %}
+                        </p>
+                    </div>
+                    <div class="col-6 col-md-3 col-lg-2 order-5 p-2 p-lg-0">
+                        <p class="m-0 fw-800 color-blue text-uppercase">{{ "creneau.list.prochainCours"|trans }}</p>
+                        {% if event.nextCreneauDebut is defined and event.nextCreneauDebut is not null %}
+                            <p class="m-0">{{ event.nextCreneauDebut|dateFormat('dd MMM Y H:mm') }}</p>
+                        {% else %}
+                            <p class="m-0">{{ "common.aucun"|trans }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-1 order-6 p-2 p-lg-0">
+                        <p class="m-0 fw-800 color-blue text-uppercase">
+                            <i class="fas fa-euro-sign mr-1"></i>
+                            {{ "common.tarif"|trans }}</p>
+                        <p class="m-0">
+                            {% if inscriptionInformations.montant.article >= 0 %}
+                                {{ inscriptionInformations.montant.article }}&nbsp;€
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div
+                        class="col-6 col-lg-2 order-2 order-lg-7 p-2 p-lg-0 align-self-center text-right text-lg-center">
+                        <!-- {{ inscriptionInformations.statut }} -->
+                        {% if inscriptionInformations.statut in ['previsualisation'] %}
+                            <button class="btn btn-success disabled">{{ 'common.inscrire' | trans }}</button>
+                        {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
+                            <p class="m-0 fs-14 fw-500 color-blue">
+                                <i class="fas fa-check-circle"></i>
+                                {{ ('formatCreneau.list.' ~ inscriptionInformations.statut) | trans | upper }}
+                            </p>
+                        {% elseif inscriptionInformations.statut in ['complet'] %}
+                            <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
+                        {% elseif inscriptionInformations.statut in ['disponible'] %}
+                            <button class="btn btn-success js-inscription" data-type="UcaBundle:Creneau" data-id="{{ creneau.id }}" callback="changeStatut">{{ "creneau.list.reserver"|trans }}</button>
+                        {% else %}
+                            <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray">{{ "creneau.list.indisponible"|trans }}</p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
 
     </section>
@@ -112,12 +131,14 @@
     {{ Inscription.HtmlModal }}
 
     {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}
-    
+
     <div id="js-text-inscrit-clone" class="d-none">
-        <div class="color-blue"><i class="fas fa-check-circle"></i><span>{{ "creneau.list.inscrit"|trans|upper }}</span></div>
+        <div class="color-blue">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ "formatCreneau.list.preinscrit"|trans|upper }}</span>
+        </div>
     </div>
 {% endblock %}
-
 
 {% block javascripts %}
     {{ parent() }}

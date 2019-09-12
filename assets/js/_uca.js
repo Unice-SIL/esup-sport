@@ -24,6 +24,17 @@ _uca.toggleFormDisplay = function (ReferenceValues) {
 _uca.showEncadrants = _uca.toggleFormDisplay({ '0': 'nonEncadre', '1': 'encadre' });
 _uca.showTarifs = _uca.toggleFormDisplay({ '0': 'nonPayant', '1': 'payant' });
 
+/* Gestion globale de l'ajax */
+_uca.ajax = {}
+_uca.ajax.fail = function (data) {
+    if (uca.sf_env == 'dev') {
+        $('html').html(data.responseText);
+    }
+    else {
+        window.location.href = Routing.generate('UcaWeb_Erreur500');
+    }
+};
+
 /* Gestion des timers javascript */
 _uca.timer = {}
 _uca.timer.value = null;
@@ -62,6 +73,7 @@ _uca.timer.init = function (htmlId, t) {
     }
 }
 
+/* Gestion des inscriptions */
 _uca.inscription = {};
 
 _uca.inscription.init = function () {
@@ -74,12 +86,14 @@ _uca.inscription.init = function () {
 };
 
 _uca.inscription.iframeAjaxLoad = function (data) {
-    var pre = document.getElementById("ajax-form-iframe").contentDocument.getElementsByTagName("pre")
-    if (pre.length > 0) {
-        var resultat;
-        resultat = pre[0].innerHTML;
-        resultat = JSON.parse(resultat);
+    if ($(this).contents().attr('URL') == "about:blank") {
+        return;
+    }
+    try {
+        resultat = JSON.parse($(this).contents().find('pre').first().html());
         _uca.inscription.formValidation(resultat);
+    } catch (e) {
+        _uca.ajax.fail({ responseText: $(this).contents().find('html').html() });
     }
 };
 
@@ -116,7 +130,8 @@ _uca.inscription.addButtonEvent = function () {
                 id: _uca.inscription.id,
                 idFormat: _uca.inscription.idFormat
             }
-        }).done(_uca.inscription.formValidation);
+        })
+            .done(_uca.inscription.formValidation)
+            .fail(_uca.ajax.fail);
     });
 };
-

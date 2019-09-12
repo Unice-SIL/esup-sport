@@ -17,7 +17,6 @@ class LieuType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //dump($options['data']->getSourceReferentiel());die;
         $builder ->add('nomenclatureRus', TextType::class, [
             'required' => false,
             'label_format' => 'ressource.code.rus',
@@ -33,7 +32,7 @@ class LieuType extends AbstractType
             'disabled' => $options['data']->getSourceReferentiel(),
             'placeholder' => 'common.aucun',
         ]);
-        $builder ->add('capacite', TextType::class, [
+        $builder ->add('capaciteAccueil', TextType::class, [
             'required' => false,
             'label_format' => 'ressource.capacite'
         ]);

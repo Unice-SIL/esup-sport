@@ -13,7 +13,6 @@ class IntervalleDateRepository extends \Doctrine\ORM\EntityRepository
 
     public function findByReference($reference)
     {
-        // dump($options); die;
         // if (is_a($reference, 'UcaBundle\Entity\FormatAvecCreneau')) {
         //     return $this->findByFormatAvecCreneau($reference->getId());
         // } 

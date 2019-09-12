@@ -88,11 +88,7 @@ class UtilisateurType extends AbstractType
                 'attr' => array(
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y',
-                    /* 'datetimepicker-defaultdate' => '1/1/2000',
-                    'data-datetimepicker-maxDate' => date('Y/m/d',time()),
-                    'data-datetimepicker-minDate' => date('Y/m/d',time()-(86400*365*100)),
-                    'datetimepicker-yearstart' => 1900,
-                    'datetimepicker-allowblank' => true,*/
+                    'data-datetimepicker-defaultdate' => '',
                 )
             ])
             ->add('adresse', TextType::class, [

@@ -5,8 +5,9 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
+use UcaBundle\Service\Common\Fn;
 
 /**
  * @ORM\Entity
@@ -84,10 +85,22 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     public function getArticleDescription()
     {
         if (!is_null($this->informationsComplementaires)) {
-            return $this->informationsComplementaires;
+            $description = $this->informationsComplementaires;
         } else {
-            return $this->getComportement()->getDescriptionComportement();
+            $description = $this->getComportement()->getDescriptionComportement();
         }
+
+        return Fn::strTruncate($description, 97);
+    }
+
+    public function getArticleDateDebut()
+    {
+        return null;
+    }
+
+    public function getArticleDateFin()
+    {
+        return null;
     }
 
     public function getAutorisations()
@@ -108,16 +121,6 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     public function getEncadrants()
     {
         return new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    public function isDisponible($user)
-    {
-        return;
-    }
-
-    public function userIsInscrit($user)
-    {
-        return;
     }
 
     public function updateTarifLibelle()

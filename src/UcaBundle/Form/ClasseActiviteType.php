@@ -19,7 +19,6 @@ class ClasseActiviteType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // dump($this->get('translator'));die;
         $builder
             ->add('libelle', TextType::class, [
                 'label_format' => 'common.libelle'

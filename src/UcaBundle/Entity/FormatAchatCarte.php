@@ -5,6 +5,7 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
+use UcaBundle\Service\Common\Fn;
 
 /** @ORM\Entity 
  * @Gedmo\Loggable
@@ -31,7 +32,7 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
 
     public function getArticleAutorisations()
     {
-        $autorisations = $this->getAutorisations();
+        $autorisations = clone $this->getAutorisations();
         $autorisations->add($this->carte);
         return $autorisations;
     }
@@ -43,7 +44,7 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
 
     public function getArticleDescription()
     {
-        return $this->getDescription();
+        return Fn::strTruncate($this->getDescription(), 97);
     }
 
     public function updateCarteLibelle()

@@ -65,10 +65,6 @@ services:
         class: UcaBundle\Service\Listener\Entity\RessourceListener
         tags:
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Ressource, method: preFlush }
-    # uca.doctrine.utilisateur.listener:
-    #     class: UcaBundle\Service\Listener\Entity\UtilisateurListener
-    #     tags:
-    #         - { name: doctrine.orm.entity_listener, event: preUpdate, entity: App\Entity\Utilisateur }
     uca.paybox_response_listener:
         class: UcaBundle\Service\Listener\PayboxResponseListener
         autowire: true

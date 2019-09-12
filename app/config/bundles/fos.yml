@@ -23,6 +23,12 @@ fos_user:
             type: UcaBundle\Form\UtilisateurType
             validation_groups: [Default]
 
+    change_password:
+        form:
+            type:  FOS\UserBundle\Form\Type\ChangePasswordFormType
+            validation_groups:  [ChangePassword]
+
+
 fos_ck_editor:
     base_path: "build/ckeditor"
     js_path:   "build/ckeditor/ckeditor.js"
@@ -41,5 +47,10 @@ services:
     group.controller:
         class: UserBundle\Controller\Groupe\GroupController
         arguments: ['@event_dispatcher', '@fos_user.group.form.factory', '@fos_user.group_manager']
+        calls:
+            - [setContainer, ['@service_container']]
+    user.change_password.controller:
+        class: UserBundle\Controller\Utilisateur\ChangePasswordController
+        arguments: ['@event_dispatcher', '@fos_user.change_password.form.factory', '@fos_user.user_manager', '@security.token_storage']
         calls:
             - [setContainer, ['@service_container']]

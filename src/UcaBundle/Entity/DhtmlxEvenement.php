@@ -38,15 +38,10 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'serie', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action'];
+        return ['dateDebut', 'dateFin', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action'];
     }
 
-
-
- 
     #endregion
-    
-    
 
     /**
      * Set dependanceSerie.

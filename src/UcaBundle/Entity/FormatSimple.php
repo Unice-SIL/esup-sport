@@ -2,10 +2,11 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use UcaBundle\Service\Common\Fn;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatSimpleRepository")
@@ -34,12 +35,13 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
 
     public function getArticleLibelle()
     {
-        return $this->getLibelle();
+        return $this->getLibelle()
+            . ' [' . $this->getArticleDateDebut()->format('d/m/Y H:i') . ']';
     }
 
     public function getArticleDescription()
     {
-        return $this->getDescription();
+        return Fn::strTruncate($this->getDescription(), 97);
     }
 
     public function setDateDebutEffective($dateDebutEffective)

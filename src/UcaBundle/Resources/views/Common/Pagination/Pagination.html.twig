@@ -1,10 +1,10 @@
-<div class="row d-flex flex-wrap justify-content-center align-items-center pagination">
+<div class="row d-flex flex-column flex-sm-row flex-wrap justify-content-center align-items-center pagination">
     {% if pagination.nbPages > 0 %}            
         {% if pagination.page > 1 %}
             <div class="">
                 <a href="{{ path(pagination.nomRoute,
                 pagination.paramsRoute|merge({'page': pagination.page-1})) }}">
-                    <button class="btn btn-info ">PRÉCÉDENT</button>
+                    <button class="btn btn-primary ">PRÉCÉDENT</button>
                 </a>
             </div>
         {% else %}
@@ -33,7 +33,7 @@
             </div>
         {% else %}
             <div class="">
-                <button class="btn btn-primary disabled ">SUIVANT</button>
+                <button class="btn btn-info disabled ">SUIVANT</button>
             </div>
         {% endif %}
     {% endif %}

@@ -5,11 +5,11 @@ namespace UcaBundle\Controller\UcaWeb;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\UtilisateurType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
+use FOS\UserBundle\Event\GetResponseUserEvent;
 
 /**
  * @Route("UcaWeb")
@@ -17,8 +17,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class UtilisateurController extends Controller
 {
     /**
-     * @Route("/DemandeInscription",name="UcaWeb_preInscription")
-     * @Method({"GET", "POST"})
+     * @Route("/DemandeInscription",name="UcaWeb_preInscription", methods={"GET","POST"})
      */
     public function preInscriptionAction(Request $request)
     {
@@ -62,8 +61,7 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * @Route("/ConfirmationDemande",name="UcaWeb_preInscription_confirmation")
-     * @Method({"GET", "POST"})
+     * @Route("/ConfirmationDemande",name="UcaWeb_preInscription_confirmation", methods={"GET","POST"})
      */
     public function preInscriptionActionConfirmation(Request $request)
     {
@@ -78,7 +76,7 @@ class UtilisateurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $item = $this->getUser();
-        $isEncadrant = $item->hasGroup($em->getRepository("UcaBundle:Groupe")->findOneByName("Encadrant"));
+        $isEncadrant = $item->hasRole('ROLE_ENCADRANT');
 
         $twigConfig['type'] = "encadrant";
         if ($isEncadrant) {
@@ -93,7 +91,7 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * @Route("/MonCompte/Modifier",name="UcaWeb_MonCompte_Modifier")
+     * @Route("/MonCompte/Modifier",name="UcaWeb_MonCompte_Modifier", methods={"GET","POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      */
     public function modifierAction(Request $request)
@@ -110,7 +108,7 @@ class UtilisateurController extends Controller
         $twigConfig['form'] = $form->createView();
         return $this->render('@Uca/UcaWeb/Utilisateur/ModifierMonCompte.html.twig', $twigConfig);
     }
-
+    
     public function FormatParActivite(Utilisateur $item)
     {
         $listeActivite = [];

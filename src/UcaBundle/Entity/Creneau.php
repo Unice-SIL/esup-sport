@@ -8,6 +8,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
+use UcaBundle\Repository\EntityRepository;
+use UcaBundle\Service\Common\Fn;
 use UcaBundle\Service\Common\Previsualisation;
 
 /**
@@ -86,14 +88,34 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         return ['capacite', 'tarif', 'profilsUtilisateurs', 'encadrants', 'niveauxSportifs', 'lieu'];
     }
 
+    public function getSerieEvenements()
+    {
+        return $this->getSerie()->getEvenements()->matching(EntityRepository::criteriaBy([['dependanceSerie', 'eq', true]]));
+    }
+
     public function getArticleLibelle()
     {
-        return $this->getFormatActivite()->getLibelle();
+        $dateDebut = $this->getSerieEvenements()->first()->getDateDebut();
+        $dateFin = $this->getSerieEvenements()->first()->getDateFin();
+        return $this->getFormatActivite()->getLibelle()
+            . ' [' . Fn::intlDateFormat($dateDebut, 'cccc')
+            . ' ' . $dateDebut->format('H:i')
+            . ' - ' . $dateFin->format('H:i') . ']';
     }
 
     public function getArticleDescription()
     {
-        return $this->getSerie()->getEvenements()->first()->getDescription();
+        return Fn::strTruncate($this->getSerieEvenements()->first()->getDescription(), 97);
+    }
+
+    public function getArticleDateDebut()
+    {
+        return $this->getFormatActivite()->getArticleDateDebut();
+    }
+
+    public function getArticleDateFin()
+    {
+        return $this->getFormatActivite()->getArticleDateFin();
     }
 
     public function hasProfil($user)
@@ -115,30 +137,15 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         return $now > $this->formatActivite->getDateDebutInscription() && $now < $this->formatActivite->getDateFinInscription();
     }
 
-    public function isDisponible($user)
-    {
-        if (Previsualisation::$IS_ACTIVE)
-            return true;
-
-        return $this->dateInscriptionValid() && $this->hasProfil($user) && $this->getArticleMontant($user) >= 0;
-    }
-
-    public function userIsInscrit($user)
-    {
-        if ($user === null)
-            return false;
-
-        return $user->hasInscription($this);
-    }
-
     public function getArticleMontant($utilisateur)
     {
         return $this->getArticleMontantDefaut($utilisateur);
     }
 
-    public function getInscriptionsValidee(){
+    public function getInscriptionsValidee()
+    {
         $criteria = Criteria::create()
-        ->andWhere(Criteria::expr()->eq('statut', "valide"));
+            ->andWhere(Criteria::expr()->eq('statut', "valide"));
 
         return $this->getInscriptions()->matching($criteria);
     }

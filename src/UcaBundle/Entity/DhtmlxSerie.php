@@ -5,7 +5,6 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
-use Proxies\__CG__\UcaBundle\Entity\Creneau;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\DhtmlxSerieRepository")

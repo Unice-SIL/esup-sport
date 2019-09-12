@@ -5,6 +5,7 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
+use UcaBundle\Service\Common\Fn;
 use UcaBundle\Service\Common\Previsualisation;
 
 /**
@@ -45,19 +46,31 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
         return [];
     }
 
-    public function getArticleLibelle()
-    {
-        return $this->getFormatActivite()->getLibelle();
-    }
-
     public function getTarif()
     {
         return $this->getRessource()->getTarif();
     }
 
+    public function getArticleLibelle()
+    {
+        return $this->getRessource()->getLibelle()
+            . ' [' . $this->getArticleDateDebut()->format('d/m/Y H:i')
+            . ' - ' . $this->getArticleDateFin()->format('d/m/Y H:i') . ']';
+    }
+
     public function getArticleDescription()
     {
-        return $this->getEvenement()->getDescription();
+        return Fn::strTruncate($this->getFormatActivite()->getLibelle(), 97);
+    }
+
+    public function getArticleDateDebut()
+    {
+        return $this->getEvenement()->getDateDebut();
+    }
+
+    public function getArticleDateFin()
+    {
+        return $this->getEvenement()->getDateFin();
     }
 
     public function getAutorisations()
@@ -85,31 +98,17 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
         $this->formatActivite = $formatActivite;
     }
 
-    public function dateInscriptionValid(){
-
-        return $this->ressource->getFormatResa()[0]->dateInscriptionValid();
-    }
-
-    public function isDisponible($user)
+    public function dateInscriptionValid()
     {
-        if(Previsualisation::$IS_ACTIVE)
-            return true;
-        return $this->dateInscriptionValid() && $this->hasProfil($user) ;
+        return $this->getEvenement()->getDateDebut() >= new \DateTime();
     }
 
     public function hasProfil($user)
     {
-        if($user === null)
+        if ($user === null)
             return true;
 
         return $this->ressource->getFormatResa()[0]->getProfilsUtilisateurs()->contains($user->getProfil());
-    }
-
-    public function userIsInscrit($user)
-    {
-        if($user === null)
-            return false;
-        return $user->hasInscription($this);
     }
 
     public function getArticleMontant($utilisateur)

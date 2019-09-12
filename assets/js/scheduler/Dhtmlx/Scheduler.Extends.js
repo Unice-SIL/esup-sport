@@ -46,7 +46,7 @@ scheduler.displaySerieModalBox = function (action, ev) {
     var ev = ev;
 
     dhtmlx.modalbox({
-        text:  Translator.trans("scheduler.message.action.debut") +" " +Translator.trans("scheduler.action."+action) + " " +Translator.trans("scheduler.message.action.serie"),
+        text:  Translator.trans("scheduler.message.titre"),
         width: "500px",
         position: "middle",
         buttons: [  

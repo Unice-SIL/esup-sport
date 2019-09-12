@@ -3,7 +3,6 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             {% for itemAriane in sitemap.getAriane %}
-                {# {{ dump(itemAriane) }} #}
                 {% if itemAriane.route and loop.last %}
                     <li aria-current="page" class="breadcrumb-item active">
                         <span>{{ sitemap.getTitre(itemAriane, _context) }}</span>
@@ -21,5 +20,5 @@
         </ol>
     </nav>
 {% elseif app.environment == 'dev' %}
-<nav aria-label="breadcrumb" style="background-color:red">Il faut configurer le sitemap pour faire apparaitre le fil d'ariane !</nav>
+<nav aria-label="breadcrumb" style="background-color:red">Il faut configurer le sitemap pour faire apparaitre le fil d'ariane ! (message affiché uniquement en dev)</nav>
 {% endif %}

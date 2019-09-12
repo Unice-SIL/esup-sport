@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Lieu extends Ressource
 {
     #region Propriétés
+
     /** @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true) */
     private $nomenclatureRus;
@@ -29,7 +30,7 @@ class Lieu extends Ressource
      * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
      * @Assert\GreaterThanOrEqual(value = 0)
      */
-    private $capacite;
+    private $capaciteAccueil;
 
     /** @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true)
@@ -66,18 +67,20 @@ class Lieu extends Ressource
      * @ORM\Column(type="string", nullable=true) 
      * @Assert\NotBlank(message="lieu.ville.notblank") 
     */
-    private $ville;
-
-    #region Propriétés
-
-    
+    private $ville;    
     
     #endregion
 
     #region Méthodes
+    
+    public function getCapacite()
+    {
+        return 1;
+    }
+
     #endregion
 
-    
+
 
     /**
      * Set nomenclatureRus.
@@ -128,27 +131,27 @@ class Lieu extends Ressource
     }
 
     /**
-     * Set capacite.
+     * Set capaciteAccueil.
      *
-     * @param int|null $capacite
+     * @param int|null $capaciteAccueil
      *
      * @return Lieu
      */
-    public function setCapacite($capacite = null)
+    public function setCapaciteAccueil($capaciteAccueil = null)
     {
-        $this->capacite = $capacite;
+        $this->capaciteAccueil = $capaciteAccueil;
 
         return $this;
     }
 
     /**
-     * Get capacite.
+     * Get capaciteAccueil.
      *
      * @return int|null
      */
-    public function getCapacite()
+    public function getCapaciteAccueil()
     {
-        return $this->capacite;
+        return $this->capaciteAccueil;
     }
 
     /**
@@ -199,41 +202,6 @@ class Lieu extends Ressource
         return $this->longitude;
     }
 
-    /**
-     * Add formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
-     *
-     * @return Lieu
-     */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
-    {
-        $this->formatsActivite[] = $formatsActivite;
-
-        return $this;
-    }
-
-    /**
-     * Remove formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
-    {
-        return $this->formatsActivite->removeElement($formatsActivite);
-    }
-
-    /**
-     * Get formatsActivite.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFormatsActivite()
-    {
-        return $this->formatsActivite;
-    }
     /**
      * Set adresse.
      *
@@ -305,13 +273,40 @@ class Lieu extends Ressource
     {
         return $this->ville;
     }
+
     /**
-     * Constructor
+     * Add formatsActivite.
+     *
+     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
+     *
+     * @return Lieu
      */
-    public function __construct()
+    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
     {
-        parent::__construct();
-        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formatsActivite[] = $formatsActivite;
+
+        return $this;
     }
 
+    /**
+     * Remove formatsActivite.
+     *
+     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    {
+        return $this->formatsActivite->removeElement($formatsActivite);
+    }
+
+    /**
+     * Get formatsActivite.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFormatsActivite()
+    {
+        return $this->formatsActivite;
+    }
 }

@@ -17,6 +17,11 @@ $( ".datetimepicker" ).each(function( index ) {
     var step = $(this).data("datetimepicker-step");
     var minTime = $(this).data("datetimepicker-mintime");
     var maxTime = $(this).data("datetimepicker-maxtime");
+    var defaultDate = $(this).data("datetimepicker-defaultdate");
+    if(typeof defaultDate == 'undefined'){
+        defaultDate = dateValue;
+    }
+    
     $(this).datetimepicker({
         format:format,
         timepicker:timepicker,
@@ -24,5 +29,6 @@ $( ".datetimepicker" ).each(function( index ) {
         minTime:minTime,
         maxTime:maxTime,
         value:dateValue+"",
+        defaultDate:defaultDate+"",
     });
 });

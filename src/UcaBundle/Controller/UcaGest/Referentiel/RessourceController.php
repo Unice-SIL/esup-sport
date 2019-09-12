@@ -220,7 +220,7 @@ class RessourceController extends Controller
         $lieu->setDescription($salle->getDescription());
         $lieu->setNomenclatureRus($salle->getCodeRus());
         $lieu->setSuperficie($salle->getSuperficie());
-        $lieu->setCapacite($salle->getCapacite());
+        $lieu->setCapaciteAccueil($salle->getCapacite());
         $lieu->setLatitude($salle->getLatitude());
         $lieu->setLongitude($salle->getLongitude());
         // on force un nom d'image par défaut

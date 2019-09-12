@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Gedmo\Loggable
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\FormatAvecReservationListener"})
  */
-class FormatAvecReservation extends FormatActivite
+class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
     #region Propriétés
     /** @ORM\ManyToMany(targetEntity="Ressource", inversedBy="formatResa")

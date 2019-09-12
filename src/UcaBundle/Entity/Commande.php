@@ -61,6 +61,9 @@ class Commande
     /** @ORM\Column(type="string", nullable=true) */
     private $nom;
 
+    /** @ORM\Column(type="string", nullable=true) */
+    private $email;
+
     /** @ORM\Column(type="decimal", precision=10, scale=2) */
     private $montantTotal;
 
@@ -93,12 +96,6 @@ class Commande
         }
     }
 
-    public function incrementNumeroRecu()
-    {
-        $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('statut', 'panier'));
-    }
-
     public function sauvegardeInformations()
     {
         $this->matricule = $this->utilisateur->getMatricule();
@@ -120,6 +117,7 @@ class Commande
 
         if ($statut == 'panier') {
             $this->datePanier = new \DateTime();
+            $this->sauvegardeInformations();
         } elseif ($statut == 'apayer') {
             $this->dateCommande = new \DateTime();
             $this->sauvegardeInformations();
@@ -433,6 +431,30 @@ class Commande
     public function getNom()
     {
         return $this->nom;
+    }
+
+    /**
+     * Set email.
+     *
+     * @param string|null $email
+     *
+     * @return Commande
+     */
+    public function setEmail($email = null)
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * Get email.
+     *
+     * @return string|null
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     /**

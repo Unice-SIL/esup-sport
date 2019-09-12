@@ -51,7 +51,7 @@ var Mail = {
                     }
                 }).done(function (data) {
 
-                });
+                }).fail(_uca.ajax.fail);
         },
 
         event: function(){

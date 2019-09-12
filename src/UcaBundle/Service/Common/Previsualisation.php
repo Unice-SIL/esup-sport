@@ -31,7 +31,6 @@ class Previsualisation
         if ($this->tokenStorage->getToken() == null) {
             return;
         }
-        // dump($event);die;
         $this->event = $event;
 
         //Check if the user have the role previsualisation and delete session var if is not the case

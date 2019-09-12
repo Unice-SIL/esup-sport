@@ -4,6 +4,7 @@ FormatAvecReservation.button: Book
 FormatSimple.button: See upcoming events
 Utilisater.statu.libelle: User status
 acceuil.evenements.liste: See all events
+acceuil.evenements.zeroEvt: "No events are planned at this time."
 acceuil.prochainement.consulter: Read more
 accueil.classeActivite.title: 'Sports activities'
 accueil.connexion: Log in
@@ -50,6 +51,8 @@ bouton.annuler: Cancel
 bouton.bloquer: Block
 bouton.debloquer: Unblock
 bouton.descendre: Drop
+bouton.desinscrire.inscription: Unsubscribe
+bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
 bouton.exportpdf: Export
 bouton.log: Log
@@ -116,6 +119,7 @@ common.dateajoutpanier: Added to basket date
 common.datepaiement: Payment date
 common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
 common.description: Description
+common.desinscrit: Unsubscribed
 common.email: Email
 common.emplacement: Location
 common.encadrants.aucun: no supervisor
@@ -148,6 +152,7 @@ common.nom.utilisateur: Username
 common.nom: Name
 common.non: 'No'
 common.numerocommande: Order Number
+common.numerorecu: Bill Number
 common.ordre: Order
 common.oui: 'Yes'
 common.paiementcb: Pay with credit card
@@ -163,6 +168,7 @@ common.ressources.reservees: Reserved ressource
 common.ressources: Resources
 common.role: Role
 common.saturday: Saturday
+common.select.emptyValue: "- Select a value -"
 common.statut: Status
 common.sunday: Sunday
 common.tarif.gratuit: Free
@@ -202,17 +208,31 @@ creneau.ajouter: Add a time slot
 creneau.list.complet: "Full"
 creneau.list.indisponible: "Unavailable"
 creneau.list.inscrit: registered
+creneau.list.next: Next lesson's day
+creneau.list.preinscrit: Pending registration
 creneau.list.prochainCours: "Next lesson"
 creneau.list.reserver: "Subscribe"
 creneau.liste.titre: List of time slots
+creneau.week.indisponible: No lessons are available today
 detailscommande.list.title: Order details
+detail.inscription.motifannulation: Cancelation's reason
+detail.inscription.commentaireannulation: Comment
 email.politesse: Hello,
 email.preinscription.confirmationDemande: Your pre-registration request has been taken into account.
-erreur.403: Error 403. You don't have permission to access.
-erreur.404: Error 404. he page you're trying to access was not found.
-erreur.500: Error 500. An internal error occured. Please contact us if it happens again.
+erreur.403.icon: "fas fa-ban"
+erreur.403.message: "You don't have permission to access."
+erreur.403: Error 403
+erreur.404.icon: "fas fa-unlink"
+erreur.404.message: "The page you're trying to access was not found!"
+erreur.404: Error 404
+erreur.500.icon: "fas fa-exclamation-circle"
+erreur.500.message: "An internal error occured. Please contact us if it happens again."
+erreur.500: Error 500
+erreur.button: "Back to the site"
 erreur.formulaire.champ.incorrect: One or more fields are incorrects
-erreur.generale: An error occured. Please contact us if it happens again.
+erreur.generale.icon: "fas fa-question-circle"
+erreur.generale.message: An error occured. Please contact us if it happens again.
+erreur.generale: Error
 etablissement.ajouter.succes: Campus successfully added 
 etablissement.ajouter.title: Add a Campus
 etablissement.code: Campus code
@@ -266,7 +286,12 @@ format.statut.publie: Published
 format.statut: Status
 format.tarif.placeholder: '- Select a Rate -'
 format.tarif: Price
+formatCarte.list.inscrit: Card purchased
+formatCarte.list.preinscrit: card ordered
+formatCreneau.list.inscrit: registered
+formatCreneau.list.preinscrit: pending registration
 formatSimple.list.inscrit: registered
+formatSimple.list.preinscrit: pending registration
 formatachatcarte.ajouter.succes: Card purchase format successfully added
 formatachatcarte.carte.placeholder: '- Choose a card -'
 formatachatcarte.modalites: Modality
@@ -281,6 +306,12 @@ formatactivite.carte.modifier.title: Edit a format with card purchase
 formatactivite.creneau.ajouter.title: Add a format with time slots
 formatactivite.creneau.modifier.title: Edit a format with time slots
 formatactivite.etablissements.title: "Where to practice this activity ?"
+formatactivite.fraiscomplementaires.cotisationscartesrequises: "Dues and cards required"
+formatactivite.fraiscomplementaires.montantformat: "Cost of access to the activity - %montant% €"
+formatactivite.fraiscomplementaires.montantsinclus.achatcarte: "* This rate takes into account the price of the card and any fees associated with this purchase."
+formatactivite.fraiscomplementaires.montantsinclus.evenementsimple: "* This rate reflects any costs associated with this purchase."
+formatactivite.fraiscomplementaires.texteinformatif: "These items are payable only once and will be automatically added to the shopping cart if necessary."
+formatactivite.fraiscomplementaires.titre: "Additional expenses"
 formatactivite.horaires: Schedules
 formatactivite.libelle: Activity format
 formatactivite.lieu.aucun: No place defined
@@ -307,6 +338,7 @@ formatsimple.supprimer.erreur: Impossible to delete this activity. There'are sti
 formatsimple.supprimer.succes: Event successfully deleted
 formatsimple.title: Event
 gestioncommande.list.title: Orders with payment pending
+gestioninscription.list.title: Registrations management
 groupe.ajouter.succes: Group successfully added
 groupe.ajouter.title: 'Add a group'
 groupe.libelle: Group
@@ -362,20 +394,30 @@ message.confirmation.annulation.commande.titre: Confirm cancellation
 message.confirmation.annulation.commande: All entries related to this order will be deleted. Cancel the order ?
 message.confirmation.annulation.inscription.titre: Confirm cancellation
 message.confirmation.annulation.inscription: No refund of registration will be made after the cancellation of this one. Cancel registration ?
+message.confirmation.desinscription.inscription.titre: Confirm unsubscription
+message.confirmation.desinscription.inscription: No refund of registration will be made after unsubscription. Confirm unsubscription?
 message.confirmation.suppression.titre: "Confirm deletion"
 message.confirmation.suppression: "Delete entry ?"
-modal.error.dejainscrit: "Error : You are already subscribe"
-modal.error.maxInscription: "Error : You have exceeded the max number of subscription"
-modal.error.maxcapacite: "Error : The max number of subscription has been exceeded"
-modal.error.montant: "Error : Prices  for this profile is not defined"
+modal.error.complet: "Error : The max number of subscription has been exceeded"
+modal.error.error500: "Error : if it occurs again, please contact an administrator"
+modal.error.inscriptionferme: "Error : Registrations are closed"
+modal.error.inscrit: "Error : You are already subscribe"
+modal.error.montantincorrect: "Error : Prices  for this profile is not defined"
+modal.error.nbcreneaumaxatteint: "Error : You have exceeded the max number of subscription"
+modal.error.preinscrit: "Error : You are already subscribe"
 modal.error.previsualisation: "Error : The preview mode is active"
+modal.error.profilinvalide: "Error : Prices  for this profile is not authorised"
 modal.error: "Error"
 modalinscription.bouton.inscription: Registration
 modalinscription.bouton.preinscription: Pre-registration
 modalinscription.carte.texte: To register you must have the %nom% card which is worth %montant% €
 modalinscription.continuer: Continue on the website
 modalinscription.cotisation.texte: To register you must subscribe to the %nom% fee which is worth %montant% €
-modalinscription.justificatif.texte: 'To register, you must provide justificatory : %nom% '
+modalinscription.justificatif.document: '%nom% '
+modalinscription.mention.ajout.panier: ' - Automatic add to cart'
+modalinscription.mention.document.telechargement: ' - Download document below'
+modalinscription.mention.information.importante: 'Important information !'
+modalinscription.mention.obligatoire: 'Required'
 modalinscription.panier.voir: See basket
 modalinscription.titre.attentevalidationencadrant: Registration waiting for approuval
 modalinscription.titre.attentevalidationgestionnaire: Registration waiting for approuval
@@ -387,8 +429,6 @@ modalinscription.validation.message: Your inscription has been taken into accoun
 monPlanning.modal.mail.title: Send mail to subscribers
 monPlanning.more.appel.texte: "Select people present at activity"
 monPlanning.more.appel.titre: Subscibers list
-monPlanning.more.appel: List subscribers
-monPlanning.more.button.mail: Send mail
 monPlanning.more.datedebut: beginning date
 monPlanning.more.datefin: End date
 monPlanning.more.description: Description
@@ -482,23 +522,34 @@ ressource.superficie: Surface area
 ressource.supprimer.succes: Resource deleted
 ressource.tarif: Price
 role.liste: Rights
-scheduler.action.delete: delete
-scheduler.action.save: sauvegarder
-scheduler.action.update: update
-scheduler.message.action.debut: Do you wan't to
+scheduler.action.delete: Delete
+scheduler.action.save: Save
+scheduler.action.title.delete: delete
+scheduler.action.title.save: save
+scheduler.action.title.update: update
+scheduler.action.update: Update
+scheduler.error.field: Field
+scheduler.error.isEmpty: is empty
+scheduler.error.type: "don't have the right type"
+scheduler.message.action.debut: Confirm
 scheduler.message.action.occurence: occurence
-scheduler.message.action.serie: all the series ?
+scheduler.message.action.serie: all the series 
 scheduler.message.annuler: Cancel
 scheduler.message.inscrit_list: Subscribers list
 scheduler.message.send_mail: Send a mail to the subscribers
+scheduler.message.titre: Confirm the deletion
 scheduler.message.valider: Save
+scheduler.message.voirplus: See more
 securite.libelle: Security
+security.login.example.partners: (CNRS, OCA, INRA, ...)
+security.login.external.account: You have an account as a partner (CNRS, OCA, INRA, ...) ?
 security.login.noninscrit: You are not registered ?
 security.login.not.register: No account yet
 security.login.password: Password
 security.login.remember_me: 'Remember me'
-security.login.shibboleth: You have an account at the University ?
-security.login.submit: Connexion
+security.login.shibboleth: You have a UNS / UCA account ?
+security.login.submit.external: Sign in as a partner
+security.login.submit: Sign in
 security.login.username: Username
 security.roles.ROLE_ADMIN: Access UcaGest
 security.roles.ROLE_ENCADRANT: Supervisor
@@ -520,6 +571,7 @@ security.roles.ROLE_GESTION_GROUPE_ECRITURE: Access Rights (read/write)
 security.roles.ROLE_GESTION_GROUPE_LECTURE: Access Rigths (read only)
 security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Manage Background pictures (read/write)
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Manage Background pictures (read only)
+security.roles.ROLE_GESTION_INSCRIPTION: Manage registrations
 security.roles.ROLE_GESTION_LOG_LECTURE: Manage Logs (read only)
 security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Cash manager
 security.roles.ROLE_GESTION_PARAMETRAGE: Manage settings
@@ -543,7 +595,7 @@ security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Manage users (read/write)
 security.roles.ROLE_PREVISUALISATION: Manage previews
 security.roles.ROLE_SUPER_ADMIN: Access UcaGest (Advaanced)
 security.roles.ROLE_USER: Access UcaWeb
-security.shibboleth.login.submit: Shibboleth connection
+security.shibboleth.login.submit: Sign in
 shibboleth.error.doctorant: Please login with your student account
 shibboleth.error.dossierincomplet: Your file is not complete
 shibboleth.error.profilinconnu: This type of profile is unknown
@@ -554,6 +606,7 @@ sitemap.ajouter: Add
 sitemap.classeactivite.libelle: Activity classes
 sitemap.confirmation.invalide: Confirmation Expired
 sitemap.connexion: Login
+sitemap.detailinscription.libelle: Registration details
 sitemap.detailscommande.libelle: Order details
 sitemap.en: Translate to english
 sitemap.etablissement.libelle: Campus
@@ -566,6 +619,7 @@ sitemap.format.simple.ajouter: Add event
 sitemap.fr: Traduire en français
 sitemap.gestion.libelle: Administration
 sitemap.gestioncommande.libelle: Orders with payment pending
+sitemap.gestioninscription.libelle: Registrations management 
 sitemap.groupe.libelle: Groups 
 sitemap.imagefond.libelle: Background pictures 
 sitemap.infospratiques.libelle: Practical information
@@ -581,6 +635,7 @@ sitemap.menu: Menu
 sitemap.mescommandes.libelle: My orders
 sitemap.mesinscriptions.libelle: My registrations
 sitemap.modifier: Edit
+sitemap.moncompte.changermotdepasse: Change password
 sitemap.moncompte.libelle: My Account
 sitemap.moncompte.modifier.libelle: Edit
 sitemap.monplanning.libelle: My schedule
@@ -677,6 +732,7 @@ utilisateur.adresse.aucune: No address registered
 utilisateur.adresse: Address
 utilisateur.ajouter.succes: User successfully added
 utilisateur.ajouter.title: Add user
+utilisateur.ancien.motdepasse: Old password
 utilisateur.autorisation.ajouter.success: Authorization successfully modified
 utilisateur.autorisation.aucun: No authorization registered
 utilisateur.autorisation.modifier: Modify authorizations
@@ -685,6 +741,7 @@ utilisateur.autorisations: Authorizations
 utilisateur.bloquer.message: This user is blocked
 utilisateur.bloquer.succes: User successfully bocked
 utilisateur.calendrier.voir: Consult calendar
+utilisateur.changer.motdepasse: Change my password
 utilisateur.civilite: Civility
 utilisateur.codepostal.invalide: Zip Code invalid
 utilisateur.codepostal: Zip Code

@@ -62,7 +62,10 @@ lieu.ville.notblank: La ville du lieu est obligatoire
 materiel.libelle.notblank: Le libellé du lieu est obligatoire
 materiel.quantite.notblank: Veuillez renseigner une quantité disponible
 message.erreur.datedebut: La date de début doit être inférieure à la date de fin
+message.erreur.datedebutinscription.publication: La date de début doit être comprise entre les dates de début et de fin de publication
 message.erreur.datefin: La date de fin doit être supérieure à la date de début
+message.erreur.datefininscription.effective: La date de fin d'inscription doit être plus petite que la date de fin effective
+message.erreur.datefininscription.publication: La date de fin doit être comprise entre les dates de début et de fin de publication
 message.parametrage.timercb.timerpaybox: Le délai de paiement par CB doit être supérieur au délai de paiement Paybox
 message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être inférieur au délai de paiement par CB
 message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
@@ -82,7 +85,7 @@ parametrage.timerpaybox.notblank: Le délai de paiement Paybox doit être rensei
 parametrage.youtube.notblank: Un lien Youtube doit être renseigné
 profilutilisateur.libelle.notblank: Le libellé du profil utilisateur est obligatoire
 profilutilisateur.nbMaxinscriptions.notblank: Le nombre maximum d'inscriptions du profil utilisateur est obligatoire
-profilutilisateur.preinscription.notblank: La prreinscription ne doit pas être vide
+profilutilisateur.preinscription.notblank: La pré-inscription ne doit pas être vide
 profilutilisateur.uniqueentity: Un profil utilisateur existe déjà avec ce libellé
 ressource.image.format: 'L''image de la ressource n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
 ressource.image.notnull: Une image doit être sélectionnée

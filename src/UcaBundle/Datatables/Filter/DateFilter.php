@@ -54,9 +54,9 @@ class DateFilter extends TextFilter
 
     $parameterCounter++;
     $date = DateTime::createFromFormat('d/m/Y', $searchValue);
+    
     if($date){
-      $qb->andWhere('commande.datePaiement >= :date_start')
-      ->andWhere('commande.datePaiement <= :date_end')
+      $qb->andWhere('commande.datePaiement BETWEEN :date_start AND :date_end')
       ->setParameter('date_start', $date->format('Y-m-d 00:00:00'))
       ->setParameter('date_end',   $date->format('Y-m-d 23:59:59'));
     }

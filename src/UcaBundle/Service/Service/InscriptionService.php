@@ -2,6 +2,7 @@
 
 namespace UcaBundle\Service\Service;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -10,6 +11,8 @@ use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Service\Common\MailService;
 use UcaBundle\Service\Common\Previsualisation;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use UcaBundle\Repository\EntityRepository;
 
 class InscriptionService
 {
@@ -38,90 +41,6 @@ class InscriptionService
         $this->inscription = $inscription;
     }
 
-    public function controleDejaInscrit($item)
-    {
-        if ($this->user->hasInscription($item)) {
-            $result['itemId'] = $item->getId();
-            $result['statut'] = '-1';
-            $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.dejainscrit"));
-        } else {
-            $result['statut'] = '0';
-        }
-        return $result;
-    }
-
-    public function controleMaxInscriptionCreneau($item, $type)
-    {
-        if ($type == "UcaBundle:Creneau" && $this->user->isMaxInscription()) {
-            $result['itemId'] = $item->getId();
-            $result['statut'] = '-1';
-            $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.maxInscription"));
-        } else {
-            $result['statut'] = '0';
-        }
-        return $result;
-    }
-
-    public function controleMaxCapacite($item, $type){
-        $result['statut'] = "0";
-        if ($type == "UcaBundle:Creneau"){
-            if ($item->isFull()) {
-                $result['itemId'] = $item->getId();
-                $result['statut'] = '-1';
-                $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.maxcapacite"));
-            }
-        }
-
-        return $result;    
-    }
-
-    public function controleDateInscription($item, $type){
-        $result['statut'] = '0';
-
-        if (!$item->dateInscriptionValid()) {
-            $result['itemId'] = $this->inscription->getItem()->getId();
-            $result['statut'] = '-1';
-            $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.dateinscription"));
-        }
-        return $result;        
-    }
-
-    public function controlePrevisualisation(){
-        $result['statut'] = '0';
-
-        if(Previsualisation::$IS_ACTIVE){
-            $result['statut'] = '-1';
-            $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.previsualisation"));
-        }
-        
-        return $result;
-    }
-
-    public function controleMontantItem($user){
-        $result['statut'] = '0';
-
-        if($this->inscription->getFormatActivite()->getArticleMontant($user) < 0){
-            $result['statut'] = '-1';
-            $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.montant"));
-            return $result;            
-        }
-        return $result;
-
-    }
-
-    public function controleMontantAutorisations($user){
-        $result['statut'] = '0';
-        
-        foreach($this->inscription->getAutorisations() as $key => $autorisation){
-            if($autorisation->getTypeAutorisation()->getArticleMontant($user) < 0 ){
-                $result['statut'] = '-1';
-                $result['html'] = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Error.html.twig', array("title" => "modal.error", "message" => "modal.error.montant"));
-                return $result;
-            }
-        }
-        return $result;
-    }
-    
     public function getFormulaire($form)
     {
         $twigConfig['item'] = $this->inscription;
@@ -139,10 +58,39 @@ class InscriptionService
 
     public function ajoutPanier()
     {
-        $panier = $this->inscription->getUtilisateur()->getPanier();
+        $user = $this->inscription->getUtilisateur();
+        $panier = $user->getPanier();
+        $item = $this->inscription->getItem();
         $articles = [];
         $articleInscription = new CommandeDetail($panier, 'inscription', $this->inscription);
         array_push($articles, $articleInscription);
+        if (in_array($this->inscription->getItemType(), ['UcaBundle:Creneau', 'UcaBundle:Reservabilite'])) {
+            $inscriptionFormat = $user->getInscriptionsByCriteria([
+                ['formatActivite', 'eq', $item->getFormatActivite()],
+                ['creneau', 'eq', null],
+                ['reservabilite', 'eq', null],
+                ['statut', 'notIn', ['annule', 'desinscrit']]
+            ])->first();
+            if (empty($inscriptionFormat)) {
+                $inscriptionFormat = new Inscription($item->getFormatActivite(), $user, ['typeInscription' => 'format']);
+                $articleInscriptionFormat = false;
+                $inscriptionFormatValide = false;
+            } elseif ($inscriptionFormat->getStatut() != 'valide') {
+                $articleInscriptionFormat = $panier->getCommandeDetails()->matching(EntityRepository::criteriaBy([['inscription', 'eq', $inscriptionFormat]]))->first();
+                $inscriptionFormatValide = false;
+            } else {
+                $inscriptionFormatValide = true;
+            }
+            if (!$inscriptionFormatValide) {
+                if (!empty($articleInscriptionFormat)) {
+                    $articleInscriptionFormat->addLigneCommandeReference($articleInscription);
+                    $articleInscription->addLigneCommandeLiee($articleInscriptionFormat);
+                } else {
+                    $articleInscriptionFormat = new CommandeDetail($panier, 'format', $inscriptionFormat, $articleInscription);
+                    array_push($articles, $articleInscriptionFormat);
+                }
+            }
+        }
         foreach ($this->inscription->getAutorisationsByComportement(['carte', 'cotisation'], 'invalide')->getIterator() as $autorisation) {
             $article = $this->em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $panier, 'typeAutorisation' => $autorisation->getTypeAutorisation()]);
             if (!empty($article)) {
@@ -166,7 +114,8 @@ class InscriptionService
         return ["itemId" => $this->inscription->getItem()->getId(), "statut" => "0", "html" => $html];
     }
 
-    public function envoyerMailInscriptionNecessitantValidation(){
+    public function envoyerMailInscriptionNecessitantValidation()
+    {
         if (in_array($this->inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
             $this->mailer->sendMailWithTemplate(
                 'Inscription',
@@ -181,27 +130,27 @@ class InscriptionService
                 foreach ($listUser as $user) {
                     $destinataires[$user->getEmail()] = ucfirst($user->getPrenom()) . ' ' . ucfirst($user->getNom());
                 }
-            } else if($this->inscription->getStatut() == 'attentevalidationgestionnaire'){
+            } else if ($this->inscription->getStatut() == 'attentevalidationgestionnaire') {
                 $listUser = $this->em->getRepository('UcaBundle:Utilisateur')->findByRole('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION');
                 foreach ($listUser as $user) {
                     $destinataires[$user['email']] = ucfirst($user['prenom']) . ' ' . ucfirst($user['nom']);
                 }
             }
-            
+
             $this->mailer->sendMailWithTemplate(
                 'Demande d\'inscription',
                 $destinataires,
                 '@Uca/Email/Inscription/InscriptionDemandeValidation.html.twig',
                 ['inscription' => $this->inscription]
             );
-        } else if($this->inscription->getStatut() == 'attenteajoutpanier'){
+        } else if ($this->inscription->getStatut() == 'attenteajoutpanier') {
             $this->mailer->sendMailWithTemplate(
                 'Demande d\'inscription validée',
                 $this->inscription->getUtilisateur()->getEmail(),
                 '@Uca/Email/Inscription/InscriptionValidee.html.twig',
                 ['inscription' => $this->inscription]
             );
-        } else if($this->inscription->getStatut() == 'annule'){
+        } else if ($this->inscription->getStatut() == 'annule') {
             $this->mailer->sendMailWithTemplate(
                 'Demande d\'inscription refusée',
                 $this->inscription->getUtilisateur()->getEmail(),
@@ -209,5 +158,15 @@ class InscriptionService
                 ['inscription' => $this->inscription]
             );
         }
+    }
+
+    public function mailDesinscription()
+    {
+        $this->mailer->sendMailWithTemplate(
+            'Désinscription',
+            $this->inscription->getUtilisateur()->getEmail(),
+            '@Uca/Email/Inscription/Desinscription.html.twig',
+            ['inscription' => $this->inscription]
+        );
     }
 }
