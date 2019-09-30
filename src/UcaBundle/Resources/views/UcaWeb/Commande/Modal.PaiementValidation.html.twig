@@ -1,0 +1,7 @@
+{% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalValidationPaiement' ~ typePaiement %}
+{% block modalTitle 'message.confirmation.paiement' %}
+{% block modalBody %}
+    <div style="text-align:left;">{{ ('message.confirmation.paiement' ~ typePaiement)|trans }}</div>
+{% endblock %}
+{% block modalBoutonActionLibelle 'common.oui' | trans %}

@@ -1,1 +1,0 @@
-DELETE FROM `texte` WHERE `texte`.`id` = 19;

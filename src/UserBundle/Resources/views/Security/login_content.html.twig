@@ -2,13 +2,16 @@
     <div class="col-12 col-md-6 pb-5">
 
         <div class="text-center py-3">
-          <div class="w-100">
-            <img class="img-fluid rounded mb-3" alt="logo UCA" src="{{ asset('images/logo-UCA-large-transp.png') }}">
-          </div>
-          <p class="font-weight-bold fs-21">{{'security.login.shibboleth' | trans}}</p>
-          <a aria-label="{{ 'security.shibboleth.login.submit'|trans }}" class="btn btn-primary px-3 py-2 fs-18" href="{{ path('UcaWeb_ShibLogin') }}" rel="tooltip" role="button" title="{{ 'security.shibboleth.login.submit'|trans }}">
-              {{ 'security.shibboleth.login.submit'|trans }}
-          </a>
+            <div class="w-100">
+                <img class="img-fluid rounded mb-3" alt="logo UCA" src="{{ asset('images/logo-UCA-large-transp.png') }}">
+            </div>
+            <p class="fs-21">
+                {{'security.login.shibboleth' | trans | raw}}<br>
+                {{'security.login.shibboleth.precision' | trans | raw}}
+            </p>
+            <a aria-label="{{ 'security.shibboleth.login.submit'|trans }}" class="btn btn-primary px-3 py-2 fs-18" href="{{ path('UcaWeb_ShibLogin') }}" rel="tooltip" role="button" title="{{ 'security.shibboleth.login.submit'|trans }}">
+                {{ 'security.shibboleth.login.submit'|trans }}
+            </a>
         </div>
 
         <hr class="d-block d-md-none col-6 mt-5">
@@ -25,8 +28,7 @@
         <div class="row m-0 p-0 d-flex justify-content-center">
 
             <p class="col-12 text-center font-weight-bold mb-4">
-              {{'security.login.external.account' | trans}}<br>
-              {{'security.login.example.partners' | trans}}
+                {{'security.login.inscrit' | trans}}
             </p>
 
             <form action="{{ path("fos_user_security_check") }}" method="post" class="col-12 col-md-8 col-lg-6" novalidate>
@@ -58,9 +60,10 @@
 
             <hr class="col-6 my-5 my-md-4">
 
-            <div class="col-12 text-center py-3">
+            <div class="col-10 text-center py-3">
                 <p class="font-weight-bold">
-                  {{'security.login.noninscrit' | trans}}
+                    {{'security.login.external.account' | trans}}<br>
+                    {{'security.login.others.account' | trans}}<br>
                 </p>
                 <a href="{{ url('UcaWeb_preInscription') }}" class="btn btn-primary mt-2 px-3 py-2 fs-12">{{'accueil.demander.inscription' | trans | upper}}</a>
             </div>

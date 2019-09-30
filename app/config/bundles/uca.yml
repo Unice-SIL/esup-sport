@@ -75,6 +75,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
         arguments: ['@security.token_storage', '@security.authorization_checker']
+    uca.historique_navigation:
+        class: UcaBundle\Service\Common\HistoriqueNavigation
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     uca.parametrage:
         class: UcaBundle\Service\Common\Parametrage
         autowire: true

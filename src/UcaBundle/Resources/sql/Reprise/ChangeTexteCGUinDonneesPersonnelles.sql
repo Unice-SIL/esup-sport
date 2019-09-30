@@ -1,0 +1,1 @@
+UPDATE `texte` SET `emplacement` = "Données Personnelles" WHERE `texte`.`id` = 19;

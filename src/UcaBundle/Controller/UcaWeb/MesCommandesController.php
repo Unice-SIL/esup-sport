@@ -14,6 +14,7 @@ use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
 use Spipu\Html2Pdf\Html2Pdf;
+use UcaBundle\Form\ValiderPaiementPayboxType;
 
 
 /**
@@ -68,6 +69,17 @@ class MesCommandesController extends Controller
             $qb->setParameter('commande', $commande);
             return $responseService->getResponse();
         }
+        $form = $this->get('form.factory')->create(ValiderPaiementPayboxType::class, $commande);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            if ($commande->getCgvAcceptees()) {
+                $em->persist($commande);
+                $em->flush();
+                return $this->redirectToRoute('UcaWeb_PaiementRecapitulatif', array('id' => $commande->getId(), 'typePaiement' => 'PAYBOX'));
+            } else {
+                $this->get('uca.flashbag')->addTranslatedFlashBag('danger', 'mentions.conditions.nonvalide');
+            }
+        }
+        $twigConfig['form'] = $form->createView();
         $twigConfig['noAddButton'] = true;
         $twigConfig["codeListe"] = 'DetailsCommande';
         $twigConfig['retourBouton'] = true;
@@ -84,8 +96,7 @@ class MesCommandesController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$commande) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($commande, 'Supprimer');
-        }
-        else {
+        } else {
             $commande->changeStatut('annule', ['motifAnnulation' => 'annulationutilisateur', 'commentaireAnnulation' => null]);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($commande, 'Supprimer');

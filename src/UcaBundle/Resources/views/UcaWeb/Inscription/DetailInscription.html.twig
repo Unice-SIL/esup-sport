@@ -19,10 +19,7 @@
 
         <div class="row">
             <div class="col-12 mb-4 pl-3 p-xl-0">
-                <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
-                    <i class="fas fa-chevron-left"></i>
-                    {{'bouton.retour'|trans}}
-                </a>
+                {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
             </div>
         </div>
         {% set item = inscription.item %}
@@ -31,30 +28,40 @@
             <p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{item.articleLibelle}}</p>
 
             {% if inscription.statut == 'annule' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.annule"|trans}}</p>
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.motifannulation"|trans }} : {{inscription.motifAnnulation}}</p>
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.commentaireannulation"|trans }} : {{inscription.commentaireAnnulation}}</p>
 
             {% elseif inscription.statut == 'valide' %}
-
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.valide"|trans}}</p>
             {% elseif inscription.statut == 'attentevalidationencadrant' %}
-
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationencadrant"|trans}}</p>
+            {% elseif inscription.statut == 'desinscrit' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscrit"|trans}}</p>
             {% endif %}
 
-            {{inscription.date|date("d/m/Y")}}
+            {{ "common.dateinscription"|trans }} : {{inscription.date|dateFormat('Y_ww')}}
+            <p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDescription}}</p>
+            <p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDateDebut|date("d/m/Y H:i")}} - {{item.articleDateFin|date("d/m/Y H:i")}}</p>
 
-            {{dump(item)}}
-            {# {% if inscription.formatActivite %}
+            {% if inscription.creneau is not null %}
                 <p class="m-0 mb-1 p-0 col-12 fw-500">
-                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
+                    <a href="{{ url('UcaWeb_FormatActiviteDetailJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : item.serie.dateDebut|date("N") , yearWeek: item.serie.dateDebut|date("W")} ) }}" class="btn btn-outline-primary">
+                        {{ "common.creneaux"|trans }}</a>
                 </p>
-            {% elseif inscription.reservabilite %}
+            {% elseif inscription.reservabilite is not null %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">
+                    <a href="{{ url('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, idRessource: item.ressource.id , year_week: item.evenement.dateDebut|date("Y") ~ '_' ~ item.evenement.dateDebut|date("W"), day_week:item.evenement.dateDebut|date("N")} ) }}" class="btn btn-outline-primary">
+                        {{ "formatavecreservation.title"|trans }}</a>
+                </p>
+            {% elseif inscription.formatActivite is not null %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">
+                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">
+                        {{ "formatactivite.libelle"|trans }}</a>
+                </p>
+            {% endif %}
 
-                <a href="{{ url('UcaWeb_FormatActiviteReservationDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
-            {% elseif inscription.creneau %}
-               
-                <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : , yearWeek: } ) }}" class="btn btn-outline-primary">{{ "detail.formatactivite"|trans }}</a>
-            {% endif %} #}
-            </div>
+        </div>
 
-        </section>
-    {% endblock %}
+    </section>
+{% endblock %}

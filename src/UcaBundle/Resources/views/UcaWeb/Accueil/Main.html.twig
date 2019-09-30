@@ -103,7 +103,34 @@
     {% endif %}
 {% endblock %}
 {% block javascripts %}
-    <script type="text/javascript">
-        $('.carousel').carousel({interval: false})
-    </script>
+<script type="text/javascript">
+    $('.carousel').carousel({interval: false})
+
+{% if app.request.server.get('HTTP_HOST') == 'sport.univ-cotedazur.fr'%}       
+    <!-- Matomo -->
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+            var u = "https://piwik.unice.fr/";
+        _paq.push([
+                'setTrackerUrl',
+            u + 'matomo.php'
+        ]);
+        _paq.push(['setSiteId', '44']);
+        var d = document,
+            g = d.createElement('script'),
+            s = d.getElementsByTagName('script')[0];
+        g.type = 'text/javascript';
+        g.async = true;
+        g.defer = true;
+        g.src = u + 'matomo.js';
+        s.parentNode.insertBefore(g, s);
+    })();
+    <!-- End Matomo Code -->
+{% endif %}     
+</script>
+
+
 {% endblock %}

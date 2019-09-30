@@ -79,6 +79,7 @@ parametrage.timer.zero: The value must be greater than 0
 parametrage.timerbds.notblank: Sports office timer is required
 parametrage.timercb.notblank: CB timer is required
 parametrage.timerpanier.notblank: Basket timer is required
+parametrage.timerpanierapresvalidation.notblank: Basket timer after validation is required
 parametrage.timerpaybox.notblank: Paybox timer is required
 parametrage.youtube.notblank: A Youtube link is required
 profilutilisateur.libelle.notblank: The user profile label is required
@@ -108,6 +109,7 @@ utilisateur.firstname.notnull: First name is required
 utilisateur.mail.existant: The email is already used 
 utilisateur.mail.invalide: Invalid email
 utilisateur.mail.notnull: Mail is required
+utilisateur.mail.shibboleth: You already have a university account
 utilisateur.mail.tropLong: Mail is too long
 utilisateur.mail.tropPetit: Mail is too short
 utilisateur.name.notnull: Name is required
@@ -119,4 +121,3 @@ utilisateur.username.existant: The username is already used
 utilisateur.username.notnull: Username is required
 utilisateur.username.tropLong: Username is too long
 utilisateur.username.tropPetit: Username is too short
-parametrage.timerpanierapresvalidation.notblank: Basket timer after validation is required

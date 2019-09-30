@@ -1,4 +1,4 @@
-imports:
+imports: 
     - { resource: symfony/parameters.yml }
     - { resource: symfony/security.yml }
     - { resource: symfony/services.yml }

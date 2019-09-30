@@ -37,10 +37,15 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
      * @Assert\Length(min = 2, max = 180, minMessage = "utilisateur.username.tropPetit", maxMessage = "utilisateur.username.tropLong")
      */
     protected $username;
+
     /**
      * @Assert\NotNull(message="utilisateur.mail.notnull")
      * @Assert\Length(min = 2, max = 180, minMessage = "utilisateur.mail.tropPetit", maxMessage = "utilisateur.mail.tropLong")
      * @Assert\Email(message = "utilisateur.mail.invalide")
+     * @Assert\Expression(
+     *  "this.getEmailDomain() not in ['@univ-cotedazur.fr', '@unice.fr','@etu.univ-cotedazur.fr'] && not this.getShibboleth()", 
+     *  message = "utilisateur.mail.shibboleth"
+     * )
      */
     protected $email;
     /**
@@ -137,6 +142,9 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     /** @ORM\OneToMany(targetEntity="Appel", mappedBy="utilisateur") */
     private $appels;
+
+    /** @ORM\Column(type="boolean") */
+    protected $cgvAcceptees = false;
 
     #endregion
 
@@ -267,9 +275,12 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
         return false;
     }
 
+    public function getEmailDomain() {
+          return strstr($this->getEmail(),'@');
+    }
+
     #endregion
-
-
+    
 
     /**
      * Set description.
@@ -608,6 +619,30 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     }
 
     /**
+     * Set cgvAcceptees.
+     *
+     * @param bool $cgvAcceptees
+     *
+     * @return Utilisateur
+     */
+    public function setCgvAcceptees($cgvAcceptees)
+    {
+        $this->cgvAcceptees = $cgvAcceptees;
+
+        return $this;
+    }
+
+    /**
+     * Get cgvAcceptees.
+     *
+     * @return bool
+     */
+    public function getCgvAcceptees()
+    {
+        return $this->cgvAcceptees;
+    }
+
+    /**
      * Add inscription.
      *
      * @param \UcaBundle\Entity\Inscription $inscription
@@ -856,7 +891,6 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     {
         return $this->statut;
     }
-
 
     /**
      * Add appel.

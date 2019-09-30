@@ -25,7 +25,7 @@
 
 
     <div class="container p-0 pl-4 pl-xl-0">
-        <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteDetail', {idCa : item.activite.classeActivite.id, idA : item.activite.id, id: item.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.libelle}) }}</a>
+        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     </div>
     <input type="hidden" value="{{app.request.attributes.get('day_week')}}" id="dayWeekParameter">
     <h1 class="h1-light">{{ item.libelle }}
@@ -41,7 +41,7 @@
 
         {# Ajouter style du blocInscription dans un CSS #}
         <div class="col-12 text-center" style="visibility:hidden;" id="blocInscription">
-            <button callback="changeStatut" class="btn btn-success js-inscription" data-type="UcaBundle:Reservabilite" id="inscription" url="">{{ "creneau.list.reserver"|trans }}</button>
+            <button class="btn btn-success js-inscription" data-type="UcaBundle:Reservabilite" id="inscription" url="">{{ "creneau.list.reserver"|trans }}</button>
         </div>
 
     </section>
@@ -62,7 +62,8 @@
             $(".notFull").on('click', function () {
                 $("#blocInscription").css("visibility", "visible");
             });
+
+            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
-
 {% endblock %}

@@ -6,9 +6,7 @@
 {% block main %}
     {% include "@Uca/Common/Modal/Modal.Confirmation.html.twig" %}
     {{ flashBag.showAll }}
-    <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurLister') }}">
-        <i class="fas fa-chevron-left"></i>
-        {{ 'bouton.retour' | trans }}</a>
+    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     <h1>
         {{ item.prenom }}
         {{ item.nom }}

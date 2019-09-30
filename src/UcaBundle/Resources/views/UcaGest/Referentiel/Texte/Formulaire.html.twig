@@ -1,6 +1,6 @@
 {% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
 {% block main %}
-    <a class="btn btn-primary" href="{{ path('UcaGest_TexteLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     <h1>{{'texte.modifier.title'|trans}}</h1>
     <!-- Message de saisie incorrecte -->
     {% if not form.vars.valid %}

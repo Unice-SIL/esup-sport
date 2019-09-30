@@ -39,7 +39,7 @@ class RegistrationConfirmListener implements EventSubscriberInterface
 
         $this->flashMessage->addMessageFlashBag('registration.confirm.success', 'success');
 
-        $url = $this->router->generate('UcaWeb_MentionsLegales');
+        $url = $this->router->generate('UcaWeb_CGV');
         $event->setResponse(new RedirectResponse($url));
     }
 }

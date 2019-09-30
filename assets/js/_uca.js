@@ -81,7 +81,6 @@ _uca.inscription.init = function () {
     _uca.inscription.type = '';
     _uca.inscription.id = '';
     _uca.inscription.idFormat = '';
-    _uca.inscription.callback = null;
     _uca.inscription.vData = '';
 };
 
@@ -97,6 +96,30 @@ _uca.inscription.iframeAjaxLoad = function (data) {
     }
 };
 
+_uca.inscription.isFormatAvecReservation = function () {
+    return $('#header-calendar').length;
+}
+
+_uca.inscription.formatAvecReservationValidation = function (data) {
+    let calendarElement = $('.calendar-time-slot[elid="' + data.itemId + '"]');
+
+    calendarElement.removeClass("notFull");
+    calendarElement.addClass("register");
+    calendarElement.find(".available").remove()
+
+    //remove data on the register buttun to prevent the user to subscribe to the same event
+    $('.js-inscription').each(function () {
+        $(this).removeData("id");
+    });
+}
+
+_uca.inscription.formatAutreValidation = function (data) {
+    let el = $('.js-inscription[data-id="' + data.itemId + '"]');
+    $(el.parent()).html($("#js-text-inscrit-clone")[0].innerHTML);
+}
+
+
+
 _uca.inscription.formValidation = function (data) {
     $('#modalInscription .modal-dialog').html($(data.html).find('.modal-dialog').html());
     // $('#form-inscription').submit(function (e) {
@@ -104,8 +127,13 @@ _uca.inscription.formValidation = function (data) {
     //     return true;
     // });
     $('#ajax-form-iframe').on('load', _uca.inscription.iframeAjaxLoad);
-    if (_uca.inscription.callback != null) {
-        window[_uca.inscription.callback](data.itemId, data.statut);
+    if (data.statut == 0) {
+        if (_uca.inscription.isFormatAvecReservation()) {
+            _uca.inscription.formatAvecReservationValidation(data);
+        }
+        else {
+            _uca.inscription.formatAutreValidation(data);
+        }
     }
 };
 
@@ -114,7 +142,6 @@ _uca.inscription.addButtonEvent = function () {
         _uca.inscription.type = $(this).data('type');
         _uca.inscription.id = $(this).data('id');
         _uca.inscription.idFormat = $(this).data('id-format');
-        _uca.inscription.callback = $(this).attr('callback');
         if (_uca.inscription.id == null) {
             return;
         }

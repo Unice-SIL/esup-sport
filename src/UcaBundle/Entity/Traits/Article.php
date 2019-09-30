@@ -38,6 +38,16 @@ trait Article
         }
     }
 
+    public function inscriptionsTerminees()
+    {
+        return new \DateTime() > $this->getDateFinInscription();
+    }
+
+    public function inscriptionsAVenir()
+    {
+        return new \DateTime() < $this->getDateDebutInscription();
+    }
+
     public function isNotFull()
     {
         return !empty($this->getCapacite()) || $this->getInscriptions()->count() < $this->getCapacite();
@@ -53,6 +63,11 @@ trait Article
         return $this->getAutorisations();
     }
 
+    public function autoriseProfil($profilUtilisateur)
+    {
+        return $this->profilsUtilisateurs->contains($profilUtilisateur);
+    }
+
     public function getInscriptionInformations($utilisateur, $format = null)
     {
         $resultat['montant'] = ['article' => -1, 'total' => -1];
@@ -66,8 +81,12 @@ trait Article
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (!$this->hasProfil($utilisateur)) {
+        } elseif (is_a($this, Reservabilite::class) && !$formatReference->autoriseProfil($utilisateur->getProfil())) {
             $resultat['statut'] = 'profilinvalide';
+        } elseif (!is_a($this, Reservabilite::class) && !$this->autoriseProfil($utilisateur->getProfil())) {
+            $resultat['statut'] = 'profilinvalide';
+        } elseif (!$utilisateur->getCgvAcceptees()) {
+            $resultat['statut'] = 'cgvnonacceptees';
         } else {
             $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $format);
             $inscriptions = $utilisateur->getInscriptionsByCriteria([
@@ -84,8 +103,12 @@ trait Article
                 $resultat['statut'] = 'complet';
             } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
                 $resultat['statut'] = 'nbcreneaumaxatteint';
-            } elseif (!$formatReference->dateInscriptionValid() || !$this->dateInscriptionValid()) {
-                $resultat['statut'] = 'inscriptionferme';
+            } elseif ($formatReference->inscriptionsTerminees()) {
+                $resultat['statut'] = 'inscriptionsterminees';
+            } elseif ($formatReference->inscriptionsAVenir()) {
+                $resultat['statut'] = 'inscriptionsavenir';
+            } elseif (is_a($this, Reservabilite::class) && $this->dateReservationPasse()) {
+                $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';
             } else {

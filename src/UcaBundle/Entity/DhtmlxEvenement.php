@@ -27,7 +27,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /** @ORM\OneToOne(targetEntity="FormatSimple", inversedBy="evenement") */
     protected $formatSimple;
 
-    /** @ORM\Column(type="string") */
+    /** @ORM\Column(type="text") */
     protected $description;
 
     /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER") */

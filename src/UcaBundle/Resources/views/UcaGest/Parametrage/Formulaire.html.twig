@@ -2,9 +2,7 @@
 
 {% block main %}
 
-    <a class="btn btn-primary" href="{{ path('UcaGest_Parametrage') }}">
-        <i class="fas fa-chevron-left"></i>
-        {{'bouton.retour'|trans}}</a>
+    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     <h1>{{ 'parametrage.modifier.title' | trans }}</h1>
     <!-- Message de saisie incorrecte -->
     {% if not form.vars.valid %}

@@ -3,22 +3,22 @@
     {{ encore_entry_link_tags('cssGest') }}
 {% endblock %}
 {% block body %}
-<div class="container-admin pb-5">
-    <div class="container-fluid">
-        <div class="row">
-            {% include('@Uca/Common/Securite/Menu.Utilisateur.UcaGest.html.twig') %}
+    <div class="container-admin pb-5">
+        <div class="container-fluid">
+            <div class="row">
+                {% include('@Uca/Common/Securite/Menu.Utilisateur.UcaGest.html.twig') %}
+            </div>
+        </div>
+        <div class="breadcrumb-ucaweb">
+            {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
+        </div>
+        {% include('@Uca/Common/Main/Debug.HistoriqueNavigation.html.twig') %}
+        <div class="container container-style bg-white">
+            {% block main %}{% endblock %}
         </div>
     </div>
-    <div class="breadcrumb-ucaweb">
-        {% include('@Uca/Common/Main/Structure.Ariane.html.twig') %}
-    </div>
-    <div class="container container-style bg-white">
-        {% block main %}{% endblock %}
-    </div>
-</div>
 {% endblock %}
 
 {% block footer %}
     {% include '@Uca/Common/Main/footer.html.twig' %}
 {% endblock %}
-

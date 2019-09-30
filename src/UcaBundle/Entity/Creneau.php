@@ -118,23 +118,19 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         return $this->getFormatActivite()->getArticleDateFin();
     }
 
-    public function hasProfil($user)
-    {
-        if ($user === null)
-            return true;
-
-        return $this->profilsUtilisateurs->contains($user->getProfil());
-    }
-
     public function getArticleAutorisations()
     {
         return $this->formatActivite->getAutorisations();
     }
 
-    public function dateInscriptionValid()
+    public function getDateDebutInscription()
     {
-        $now = new \DateTime("now");
-        return $now > $this->formatActivite->getDateDebutInscription() && $now < $this->formatActivite->getDateFinInscription();
+        return $this->formatActivite->getDateDebutInscription();
+    }
+
+    public function getDateFinInscription()
+    {
+        return $this->formatActivite->getDateFinInscription();
     }
 
     public function getArticleMontant($utilisateur)

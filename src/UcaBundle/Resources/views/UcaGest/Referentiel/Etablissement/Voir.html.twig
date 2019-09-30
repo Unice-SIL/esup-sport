@@ -4,7 +4,7 @@
 
 {% block main %}
   {{ flashBag.showAll }}
-  <a class="btn btn-primary" href="{{ path('UcaGest_EtablissementLister') }}"><i class="fas fa-chevron-left"></i> {{ 'bouton.retour' | trans }}</a>
+  {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
   <h1> {{ item.libelle }} </h1>
 
   

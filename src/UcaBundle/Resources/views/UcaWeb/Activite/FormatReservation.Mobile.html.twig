@@ -37,7 +37,7 @@
                     {% set hidden = "week-active" %}
                 {% endif %}
 
-                <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
+                <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index0 }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
                     {% set isDispo = false %}
                     {% for reservabilite in day %}
                         {% if reservabilite.getInscriptionInformations(app.user, item).statut == 'disponible' %}

@@ -14,28 +14,6 @@ var defaultElement = function (){
     el.removeClass("activeCalendar")
 }
 
-var changeStatut = function(itemid, error){
-
-    //the user is register to the reservation
-    //change event statut
-    if(error == 0){
-        let calendarElement = $('.calendar-time-slot[elid="'+itemid+'"]');
-
-        calendarElement.removeClass("notFull");
-        calendarElement.addClass("register");
-        calendarElement.find(".available").remove()
-
-        //remove data on the register buttun to prevent the user to subscribe to the same event
-        $('.js-inscription').each(function(){
-            $(this).removeData("id");
-        });
-    }
-
-}
-
-global.changeStatut = changeStatut;
-
-
 //mobile
 $(document).ready(function(){
     changeJour(1,$("#dayWeekParameter").val());

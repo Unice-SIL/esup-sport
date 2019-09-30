@@ -12,9 +12,7 @@
     {% endif %}
 
     {% if retourBouton is defined %}
-        <a class="btn btn-primary" href="{{ app.request.headers.get('referer') }}">
-            <i class="fas fa-chevron-left"></i>
-            {{'bouton.retour'|trans}}</a>
+        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     {% endif %}
 
     <h1>{{ (codeListe|lower ~ '.list.title')|trans }}</h1>

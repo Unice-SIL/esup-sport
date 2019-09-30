@@ -9,7 +9,7 @@ acceuil.prochainement.consulter: Read more
 accueil.classeActivite.title: 'Sports activities'
 accueil.connexion: Log in
 accueil.cotisations.infos: More about fees
-accueil.demander.inscription: Ask for a registration
+accueil.demander.inscription: Make an account creation request
 accueil.inscription.title: Registration
 accueil.prochainement.title: 'Comming soon'
 activite.ajouter.succes: Activity successfully added 
@@ -55,6 +55,13 @@ bouton.desinscrire.inscription: Unsubscribe
 bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
 bouton.exportpdf: Export
+bouton.indisponible.inscriptionsterminees: Registration closed
+bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
+bouton.indisponible.statut.inscriptionsterminees: Registrations are closed
+bouton.indisponible.statut.montantincorrect: "The price for this activity is not defined yet, please contact the Sport's office for more details."
+bouton.indisponible.statut.nbcreneaumaxatteint: "You have already registered to %maxCreneau% time slots. You have reached the maximum number of registration for these time slots."
+bouton.indisponible.statut.nonconnecte: "You must be logged-in in order to register to the activities."
+bouton.indisponible.statut.profilinvalide: "Your profile does not allow you to register to this activity."
 bouton.log: Log
 bouton.modifier: Edit
 bouton.monter: Rise
@@ -68,6 +75,10 @@ bouton.save.previsualiser: Save and preview
 bouton.save: Save
 bouton.supprimer: Delete
 bouton.voir: See
+cgv.acceptees: Thank you for accepting the general terms and conditions of sale 
+cgv.legales.information: Please accept the general terms and conditions of sale 
+cgv.legales.refusees: You must tick the box in order to accept the general terms and conditions of sale 
+cgv.legales.validation: I accept the general terms and conditions of sale 
 classeActivite.list.title: List of activity classes
 classeactivite.ajouter.succes: Activity class successfully added
 classeactivite.ajouter.title: Add an activity class
@@ -116,6 +127,7 @@ common.date.naissance: Date of Birth
 common.date: Date
 common.dateCommande: Order date
 common.dateajoutpanier: Added to basket date
+common.dateinscription: Registration date
 common.datepaiement: Payment date
 common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
 common.description: Description
@@ -136,6 +148,7 @@ common.ht: Excluding tax
 common.indisponible: Unavailable
 common.infospersonnelles: Personal Information
 common.infossupplementaires: Additional information
+common.inscriptionsavenir: Soon available
 common.inscrire: Register
 common.libelle: Label
 common.lieu: Place
@@ -196,12 +209,18 @@ common.valide: Valid
 common.wednesday: Wednesday
 confirmation.action.message: Are you sure ?
 confirmation.action.titre: Confirmation window
+contact.compteactif.remplir: Fill the form by clicking on this link
+contact.compteactif: You have an enabled UNice account
+contact.compteinactif.remplir: Write your request by filling the form below
+contact.compteinactif: You don't have an enabled UNice account
 contact.demande.success: Your request has been considered. You will receive a confirmation email within a few minutes.
 contact.email: Your email address
 contact.envoye.depuis: Mail send from Uca Sport application
+contact.formulaire.nom: Form
 contact.mail.from: Mail from
 contact.message: Message
 contact.objet: Object of your message
+contact.phrasedepot: You can drop off your requests about UCA SPORT online
 contact.save: Send
 contact.title: Contact
 creneau.ajouter: Add a time slot
@@ -214,9 +233,9 @@ creneau.list.prochainCours: "Next lesson"
 creneau.list.reserver: "Subscribe"
 creneau.liste.titre: List of time slots
 creneau.week.indisponible: No lessons are available today
-detailscommande.list.title: Order details
-detail.inscription.motifannulation: Cancelation's reason
 detail.inscription.commentaireannulation: Comment
+detail.inscription.motifannulation: Cancelation's reason
+detailscommande.list.title: Order details
 email.politesse: Hello,
 email.preinscription.confirmationDemande: Your pre-registration request has been taken into account.
 erreur.403.icon: "fas fa-ban"
@@ -249,9 +268,9 @@ etablissement.supprimer.succes: Campus successfully deleted
 etablissement.telephone.libelle: Contact Phone Number
 evenements.title: Events
 footer.accessibilite: "Accessibility"
-footer.cgu: "Conditions of Use"
 footer.cgv: "Conditions of Sale"
 footer.contact: "Contact us"
+footer.donneespersonnelles: Personal data
 footer.mentionslegales: "Legal notices"
 footer.plandusite: "Site map"
 footer.reseauxsociaux: "Find us on : "
@@ -388,6 +407,8 @@ materiel.modifier.succes: Equipment successfully modified
 materiel.modifier.title: Modify a material
 materiel.supprimer.erreur: Cannot delete this material, reservations are assigned
 materiel.supprimer.succes: Equipment successfully deleted
+mentions.informations.validation: "I accept the general conditions of sales"
+mentions.conditions.nonvalide: "Please accept the general conditions of sales"
 mescommandes.list.title: My orders
 mesinscriptions.list.title: My registrations
 message.confirmation.annulation.commande.titre: Confirm cancellation
@@ -396,11 +417,16 @@ message.confirmation.annulation.inscription.titre: Confirm cancellation
 message.confirmation.annulation.inscription: No refund of registration will be made after the cancellation of this one. Cancel registration ?
 message.confirmation.desinscription.inscription.titre: Confirm unsubscription
 message.confirmation.desinscription.inscription: No refund of registration will be made after unsubscription. Confirm unsubscription?
+message.confirmation.paiement: Confirm the payment ?
+message.confirmation.paiementcarte: Do you confirm paying with a credit card ?
+message.confirmation.paiementcheque: Do you confirm paying with a check ?
+message.confirmation.paiementespece: Do you confirm paying with cash ?
 message.confirmation.suppression.titre: "Confirm deletion"
 message.confirmation.suppression: "Delete entry ?"
 modal.error.complet: "Error : The max number of subscription has been exceeded"
 modal.error.error500: "Error : if it occurs again, please contact an administrator"
-modal.error.inscriptionferme: "Error : Registrations are closed"
+modal.error.inscriptionsavenir: "Error : Registrations are not yet opened"
+modal.error.inscriptionsterminees: "Error : Registrations are closed"
 modal.error.inscrit: "Error : You are already subscribe"
 modal.error.montantincorrect: "Error : Prices  for this profile is not defined"
 modal.error.nbcreneaumaxatteint: "Error : You have exceeded the max number of subscription"
@@ -541,14 +567,15 @@ scheduler.message.titre: Confirm the deletion
 scheduler.message.valider: Save
 scheduler.message.voirplus: See more
 securite.libelle: Security
-security.login.example.partners: (CNRS, OCA, INRA, ...)
-security.login.external.account: You have an account as a partner (CNRS, OCA, INRA, ...) ?
-security.login.noninscrit: You are not registered ?
+security.login.external.account: "You are a member of one of the following institutions: CNRS, OCA, INRA, INRIA, INSERM, IRD?"
+security.login.inscrit: Already have a UCA SPORT account?
 security.login.not.register: No account yet
+security.login.others.account: Or are you alumni, retiree or honorary member? 
 security.login.password: Password
 security.login.remember_me: 'Remember me'
-security.login.shibboleth: You have a UNS / UCA account ?
-security.login.submit.external: Sign in as a partner
+security.login.shibboleth.precision: Use your usual <strong>username</strong> and <strong>password</strong> to log in
+security.login.shibboleth: Are you a <strong>student</strong> or <strong>staff</strong> University Côte d'Azur?
+security.login.submit.external: Sign in
 security.login.submit: Sign in
 security.login.username: Username
 security.roles.ROLE_ADMIN: Access UcaGest
@@ -597,8 +624,9 @@ security.roles.ROLE_SUPER_ADMIN: Access UcaGest (Advaanced)
 security.roles.ROLE_USER: Access UcaWeb
 security.shibboleth.login.submit: Sign in
 shibboleth.error.doctorant: Please login with your student account
-shibboleth.error.dossierincomplet: Your file is not complete
-shibboleth.error.profilinconnu: This type of profile is unknown
+shibboleth.error.dossierincomplet: We are unable to identify you as a member of the UCA, please contact us via the contact form
+shibboleth.error.profilinconnu: We are unable to identify you as a member of the UCA, please contact us via the contact form
+shibboleth.error.utilisateurbloque: Connection problem - please refer to the sports office 
 sitemap.activite.libelle: Activities
 sitemap.activites.libelle: Activities
 sitemap.actualite.libelle: News
@@ -643,7 +671,7 @@ sitemap.outils.libelle: Tools
 sitemap.panier.libelle: Basket
 sitemap.parametrage.libelle: Settings
 sitemap.parametrage: Settings
-sitemap.preInscription.libelle: Registration demand
+sitemap.preInscription.libelle: Make an account creation request
 sitemap.preInscription_confirmation: Confirmation
 sitemap.profilutilisateur.libelle: User profiles
 sitemap.recapitulatifcommande.libelle: Validation

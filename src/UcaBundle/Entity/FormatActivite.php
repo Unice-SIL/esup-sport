@@ -315,22 +315,6 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         return $this->getDateFinEffective();
     }
 
-    public function dateInscriptionValid()
-    {
-
-        $now = new \DateTime("now");
-        return $now > $this->getDateDebutInscription() && $now < $this->getDateFinInscription();
-    }
-
-    public function hasProfil($user)
-    {
-        if ($user === null) {
-            return true;
-        }
-
-        return $this->profilsUtilisateurs->contains($user->getProfil());
-    }
-
     public function verifieCoherenceDonnees()
     {
         if (!$this->estPayant) {

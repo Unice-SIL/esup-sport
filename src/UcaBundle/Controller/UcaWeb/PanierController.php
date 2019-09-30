@@ -11,6 +11,7 @@ use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Doctrine\Common\Collections\Criteria;
+use UcaBundle\Form\ValiderPaiementPayboxType;
 
 /**
  * @Route("UcaWeb")
@@ -29,6 +30,17 @@ class PanierController extends Controller
             $panier = $utilisateur->getPanier();
             $twigConfig["commande"] = $panier;
             $twigConfig["source"] = 'monpanier';
+            $form = $this->get('form.factory')->create(ValiderPaiementPayboxType::class, $panier);
+            if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+                if ($panier->getCgvAcceptees()) {
+                    $em->persist($panier);
+                    $em->flush();
+                    return $this->redirectToRoute('UcaWeb_PaiementRecapitulatif', array('id' => $panier->getId(), 'typePaiement' => 'PAYBOX'));
+                } else {
+                    $this->get('uca.flashbag')->addTranslatedFlashBag('danger', 'mentions.conditions.nonvalide');
+                }
+            }
+            $twigConfig['form'] = $form->createView();
             return $this->render('@Uca/UcaWeb/Commande/DetailCommande.html.twig', $twigConfig);
         } else {
             /* Sinon on redirige vers page de connexion */

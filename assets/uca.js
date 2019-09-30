@@ -12,9 +12,9 @@ global.$ = global.jQuery = $;
 
 const moment = require('moment');
 global.moment = moment;
-
-const Promise = require("bluebird");
-global.Promise = Promise;
+ 
+var ES6Promise = require("es6-promise");
+ES6Promise.polyfill();  
 
 var uca = {
     lang: $('html').attr('lang'),
@@ -79,5 +79,4 @@ import "./libs/dhtmlxScheduler-5.1.6/sources/ext/dhtmlxscheduler_multiselect.js"
 import "./libs/dhtmlxScheduler-5.1.6/sources/ext/dhtmlxscheduler_recurring.js";
 
 import "./js/_uca.js";
-import "./js/inscription/main.js";
 import "./js/mail.js";

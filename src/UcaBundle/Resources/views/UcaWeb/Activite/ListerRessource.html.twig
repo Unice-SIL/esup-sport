@@ -14,7 +14,7 @@
 
 {% block main %}
     <div class="container p-0 pl-4 pl-xl-0">
-        <a class="btn btn-primary" href="{{ path('UcaWeb_FormatActiviteLister', {idCa : item.activite.classeActivite.id, id : item.activite.id} ) }}">{{ 'bouton.retour.element' | trans({'%element%' : item.activite.libelle}) }}</a>
+        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     </div>
     <h1 class="h1-light">{{ item.libelle }}</h1>
     <section class="container container-style bg-white mb-5">

@@ -3,10 +3,7 @@
 
 {% block main %}
 
-    <a class="btn btn-primary" href="{{ path('UcaGest_ActiviteLister') }}">
-        <i class="fas fa-chevron-left"></i>
-        {{'bouton.retour'|trans}}
-    </a>
+    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
 
     {% if (null == item.id) %}
         <h1>{{'activite.ajouter.title'|trans}}</h1>

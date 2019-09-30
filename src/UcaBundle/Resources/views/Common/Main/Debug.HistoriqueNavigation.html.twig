@@ -1,0 +1,17 @@
+{% if historique_navigation.debug %}
+    <div class="container">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Historique de navigation
+            </button>
+            <div class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                {% for i in 1..15 %}
+                    {% set url = historique_navigation.getUrlRetour(i) %}
+                    {% if url %}
+                        <a class="dropdown-item" href="{{ url }}">{{ url }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

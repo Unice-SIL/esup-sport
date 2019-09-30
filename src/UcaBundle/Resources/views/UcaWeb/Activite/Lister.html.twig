@@ -15,8 +15,6 @@
     {% set params = {idCa: item.id} %}
     {% set title = item.libelle %}
     {% set description = '' %}
-    {% set urlRetour = path('UcaWeb_ClasseActiviteLister') %}
-    {% set textBoutonRetour = 'bouton.retour.listeClasse' | trans %}
 {% elseif app.request.attributes.get('_route') == 'UcaWeb_FormatActiviteLister' %}
     {% set pageActivity = true %}
     {% set urlImageFond = item.image %}
@@ -24,8 +22,6 @@
     {% set params = {idCa: idCa, idA: item.id} %}
     {% set title = item.libelle %}
     {% set description = item.description %}
-    {% set urlRetour = path('UcaWeb_ActiviteLister', {id : item.classeActivite.id} ) %}
-    {% set textBoutonRetour = 'bouton.retour.element' | trans({'%element%' : item.classeActivite.libelle}) %}
 {% endif %}
 
 {% block title %}
@@ -38,11 +34,9 @@
 {% endblock %}
 
 {% block main %}
-    {% if urlRetour is defined and textBoutonRetour is defined %}
-        <div class="container p-0 pl-4 pl-xl-0">
-            <a class="btn btn-primary" href="{{ urlRetour }}">{{ textBoutonRetour }}</a>
-        </div>
-    {% endif %}
+    <div class="container p-0 pl-4 pl-xl-0">
+        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+    </div>
 
     <h1 class="h1-light">{{ title }}</h1>
     {% if description is not empty %}
@@ -65,13 +59,13 @@
                         {% set iconFormat = 'fas fa-ticket-alt' %}
                     {% endif %}
                     {% set ctaButtonFormat = dataItem.format~'.button' %}
-                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                            <div class="align-self-center text-center w-100 mb-0">
-                                <i class="{{ iconFormat }} text-white mb-2"></i>
-                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
-                            </div>
-                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                    <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center w-100 mb-0">
+                            <i class="{{ iconFormat }} text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
                         </div>
+                        <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                    </div>
                 {% endfor %}
             </div>
         </section>
@@ -87,7 +81,9 @@
                             <a aria-controls="collapse-{{ loop.index }}" aria-expanded="true" class="col-12 collapsed" data-target="#collapse-{{ loop.index }}" data-toggle="collapse">
                                 <div class="row text-left d-flex flex-wrap">
                                     <h2 class="mb-0 col-11 text-dark text-uppercase">{{ etablissement.libelle }}</h2>
-                                    <p class="m-0 p-0 pr-3 col-1 text-right"><i class="fas fa-chevron-down"></i></p>
+                                    <p class="m-0 p-0 pr-3 col-1 text-right">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </p>
                                 </div>
                             </a>
                         </div>
@@ -97,21 +93,28 @@
                                     <img class="img-fluid img-rounded" src="{{ ImageAsset.thumb(etablissement.image, 'thumb_large_small') }}">
                                 </div>
                                 <div class="m-0 p-0 p-md-0 pl-3 pl-md-4 pt-3 col-12 col-sm-6 col-md-4 card-section">
-                                    <h3 class="text-uppercase"><i class="fas fa-map-marker-alt"></i> {{ "installationssportives.coordonnees.title"|trans }}</h3>
+                                    <h3 class="text-uppercase">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ "installationssportives.coordonnees.title"|trans }}</h3>
                                     <p>
                                         {{ etablissement.libelle }}
                                         <br/>{{ etablissement.adresse }}
-                                        <br/>{{ etablissement.codePostal }} {{ etablissement.ville }}
+                                        <br/>{{ etablissement.codePostal }}
+                                        {{ etablissement.ville }}
                                     </p>
                                     <p>
-                                        <i class="fas fa-phone mr-2"></i> {{ etablissement.telephone }}
-                                        <br/><i class="fas fa-envelope mr-2"></i> {{ etablissement.email }}
+                                        <i class="fas fa-phone mr-2"></i>
+                                        {{ etablissement.telephone }}
+                                        <br/><i class="fas fa-envelope mr-2"></i>
+                                        {{ etablissement.email }}
                                     </p>
                                 </div>
                                 <div class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-sm-6 col-md-4 card-section">
-                                    <h3 class="text-uppercase"><i class="far fa-clock"></i> {{ "installationssportives.horaireouverture.title"|trans }}</h3>
+                                    <h3 class="text-uppercase">
+                                        <i class="far fa-clock"></i>
+                                        {{ "installationssportives.horaireouverture.title"|trans }}</h3>
                                     <pre class="ff-apex fs-16 fw-400 color-dark-gray">{{ etablissement.horairesOuverture }}</pre>
-                                </div>                            
+                                </div>
                             </div>
                         </div>
                     </div>

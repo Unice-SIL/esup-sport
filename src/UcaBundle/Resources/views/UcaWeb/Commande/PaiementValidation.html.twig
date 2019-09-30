@@ -11,11 +11,7 @@
         <div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
             <div class="col-12 px-5 py-3">
                 <p>{{ ('paiement.validation.' ~ status) | trans({'%typePaiement%': commande.moyenPaiement, '%montant%': commande.montantTotal}) }}</p>
-                {% if source == 'mescommandes' or source == 'monpanier' %}
-                    <a class="btn btn-primary" href="{{ path('UcaWeb_MesCommandesVoir', { id: commande.id }) }}" class="btn btn-primary">{{ 'paiement.bouton.commandes' | trans }}</a>
-                {% elseif source == 'gestioncaisse' %}
-                    <a class="btn btn-primary" href="{{url('UcaWeb_CommandeEnAttenteLister')}}">{{ 'bouton.retour' | trans }}</a>
-                {% endif %}
+                {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
             </div>
         </div>
         {% if app.request.server.get('HTTP_HOST') == 'localhost' and commande.statut == 'apayer' and status == 'success' %}

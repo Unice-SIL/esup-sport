@@ -77,6 +77,9 @@ class Commande
     /** @ORM\Column(type="string", nullable=true) */
     private $moyenPaiement;
     /* valeurs : cheque, cb, espece */
+
+    /** @ORM\Column(type="boolean") */
+    protected $cgvAcceptees = false;
     #endregion
 
     #region Méthodes
@@ -611,5 +614,29 @@ class Commande
     public function getCommandeDetails()
     {
         return $this->commandeDetails;
+    }
+    
+    /**
+     * Set cgvAcceptees.
+     *
+     * @param bool $cgvAcceptees
+     *
+     * @return Utilisateur
+     */
+    public function setCgvAcceptees($cgvAcceptees)
+    {
+        $this->cgvAcceptees = $cgvAcceptees;
+
+        return $this;
+    }
+
+    /**
+     * Get cgvAcceptees.
+     *
+     * @return bool
+     */
+    public function getCgvAcceptees()
+    {
+        return $this->cgvAcceptees;
     }
 }

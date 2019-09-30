@@ -9,7 +9,7 @@ acceuil.prochainement.consulter: 'Consulter'
 accueil.classeActivite.title: 'Activités sportives'
 accueil.connexion: 'Se connecter'
 accueil.cotisations.infos: 'En savoir plus sur les cotisations'
-accueil.demander.inscription: "Faire une demande d'inscription"
+accueil.demander.inscription: "Faire une demande de création de compte"
 accueil.inscription.title: 'Inscription'
 accueil.prochainement.title: 'Prochainement'
 activite.ajouter.succes: 'Activité ajoutée avec succès'
@@ -55,6 +55,13 @@ bouton.desinscrire.inscription: Désinscrire
 bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportpdf: Export
+bouton.indisponible.inscriptionsterminees: inscriptions fermées
+bouton.indisponible.statut.inscriptionsterminees: Les inscriptions sont terminées
+bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
+bouton.indisponible.statut.montantincorrect: "Le tarif de cette activité n'est pas encore défini, merci de contacter le bureau des sports"
+bouton.indisponible.statut.nbcreneaumaxatteint: "Vous êtes déjà inscrit à %maxCreneau% créneaux. Vous avez atteint le nombre maximum d'inscriptions pour les créneaux"
+bouton.indisponible.statut.nonconnecte: "Il faut être connecté pour pouvoir s'inscrire aux activités"
+bouton.indisponible.statut.profilinvalide: "Cette activité n'est pas autorisée pour votre profil d'utilisateur"
 bouton.log: Historique
 bouton.modifier: Modifier
 bouton.monter: Monter
@@ -68,6 +75,10 @@ bouton.save.previsualiser: Sauvegarder et prévisualiser
 bouton.save: Enregistrer
 bouton.supprimer: Supprimer
 bouton.voir: Voir
+cgv.acceptees: Merci d'avoir accepté les conditions générales de vente
+cgv.information: Veuillez prendre connaissance des conditions générales de vente 
+cgv.refusees: Vous devez cocher la case afin d'accepter les conditions générales de vente
+cgv.validation: J’ai pris connaissance et j’accepte les conditions générales de vente
 classeActivite.list.title: 'Liste des classes d''Activité'
 classeactivite.ajouter.succes: 'Classe d''activité ajoutée avec succès'
 classeactivite.ajouter.title: Ajouter une classe d'activite
@@ -116,6 +127,7 @@ common.date.naissance: 'Date de Naissance'
 common.date: Date
 common.dateCommande: Date de la commande
 common.dateajoutpanier: Date d'ajout au panier
+common.dateinscription: Date d'inscription
 common.datepaiement: Date de paiement
 common.deconnexion: 'Vous avez été deconnecté de l''application. Merci de fermer votre navigateur pour fermer totalement la session.'
 common.description: Description
@@ -136,6 +148,7 @@ common.ht: Hors taxe
 common.indisponible: Indisponible
 common.infospersonnelles: 'Informations Personnelles'
 common.infossupplementaires: Informations supplémentaires
+common.inscriptionsavenir: Bientôt disponible
 common.inscrire: S'inscrire
 common.libelle: Libellé
 common.lieu: Lieu
@@ -145,7 +158,8 @@ common.monday: Lundi
 common.montant: Montant
 common.montants: Montants
 common.moyenpaiement: Moyen de paiement
-common.moyenpaiementautre: Ou valider la commande et payer plus tard
+# common.moyenpaiementautre: Ou valider la commande et payer plus tard
+common.moyenpaiementautre: Valider la commande et payer au bureau des sports
 common.naissance: Date de naissance
 common.niveauSportif: Niveau sportif
 common.nom.utilisateur: Nom d'utilisateur
@@ -196,12 +210,18 @@ common.valide: Validée
 common.wednesday: Mercredi
 confirmation.action.message: Etes-vous certain(e) ? 
 confirmation.action.titre: Fenêtre de confirmation
+contact.compteactif.remplir: Remplissez le formulaire de demande en cliquant sur ce lien
+contact.compteactif: Vous disposez d'un compte unice actif
+contact.compteinactif.remplir: Veuillez formuler votre demande par le formulaire de contact ci-dessous
+contact.compteinactif: Vous ne disposez pas d'un compte unice actif
 contact.demande.success: Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation d'ici quelques minutes.
 contact.email: Votre adresse mail
 contact.envoye.depuis: Mail envoye depuis l'application Uca Sport
+contact.formulaire.nom: Formulaire
 contact.mail.from: Mail de
 contact.message: Message
 contact.objet: Objet de votre message
+contact.phrasedepot: Vous pouvez déposer en ligne vos demandes de service ou d'assistance liées à UCA SPORT
 contact.save: Envoyer
 contact.title: Contact
 creneau.ajouter: 'Ajouter un créneau'
@@ -214,11 +234,11 @@ creneau.list.prochainCours: "Prochain cours"
 creneau.list.reserver: "S'inscrire"
 creneau.liste.titre: 'Liste des créneaux'
 creneau.week.indisponible: Aucun créneau n'est disponible aujourd'hui
-detailscommande.list.title: Détails de commande
-detail.inscription.motifannulation: Motif de l'annulation
 detail.inscription.commentaireannulation: Commentaire
+detail.inscription.motifannulation: Motif de l'annulation
+detailscommande.list.title: Détails de commande
 email.politesse: Bonjour,
-email.preinscription.confirmationDemande: Vottre demande de pré-inscription a bien été prise en compte.
+email.preinscription.confirmationDemande: Votre demande de pré-inscription a bien été prise en compte.
 erreur.403.icon: "fas fa-ban"
 erreur.403.message: "Vous n'êtes pas autorisé à accéder à cette page !"
 erreur.403: "Erreur 403"
@@ -249,9 +269,9 @@ etablissement.supprimer.succes: 'Campus supprimé avec succès'
 etablissement.telephone.libelle: Numéro de téléphone de contact
 evenements.title: Évènements
 footer.accessibilite: "Accessibilité"
-footer.cgu: "CGU"
 footer.cgv: "CGV"
 footer.contact: "Contact"
+footer.donneespersonnelles: Données personnelles
 footer.mentionslegales: "Mentions légales"
 footer.plandusite: "Plan du site"
 footer.reseauxsociaux: "Retrouvez-nous sur : "
@@ -388,6 +408,8 @@ materiel.modifier.succes: 'Matériel modifié avec succès'
 materiel.modifier.title: Modifier un matériel
 materiel.supprimer.erreur: Impossible de supprimer le matériel, des réservations y sont affectées
 materiel.supprimer.succes: 'Matériel supprimé avec succès'
+mentions.informations.validation: "J'accepte les conditions générales de vente"
+mentions.conditions.nonvalide: "Veuillez accepter les conditions générales de vente"
 mescommandes.list.title: Mes commandes
 mesinscriptions.list.title: Mes inscriptions
 message.confirmation.annulation.commande.titre: Confirmez l'annulation
@@ -396,11 +418,16 @@ message.confirmation.annulation.inscription.titre: Confirmez l'annulation
 message.confirmation.annulation.inscription: Aucun remboursement de l'inscription ne sera effectué après l'annulation de celle-ci. Annuler l'inscription ?
 message.confirmation.desinscription.inscription.titre: Confirmez la désinscription
 message.confirmation.desinscription.inscription: Aucun remboursement de l'inscription ne sera effectué après la désinscription. Confirmez la désinscription ?
+message.confirmation.paiement: Confirmer le paiement ?
+message.confirmation.paiementcarte: Confirmez-vous le paiement par carte ?
+message.confirmation.paiementcheque: Confirmez-vous le paiement par chèque ?
+message.confirmation.paiementespece: Confirmez-vous le paiement par espèce ?
 message.confirmation.suppression.titre: "Confirmez la suppression"
 message.confirmation.suppression: "Supprimer l'enregistrement ?"
 modal.error.complet: "Erreur lors de l'inscription : La capacité maximale a été dépassée"
 modal.error.error500: "Erreur lors de l'inscription : si cela persiste, veuillez contacter un administrateur"
-modal.error.inscriptionferme: "Erreur lors de l'inscription : Les inscriptions sont fermés"
+modal.error.inscriptionsavenir: "Erreur lors de l'inscription : Les inscriptions ne sont pas encore ouvertes"
+modal.error.inscriptionsterminees: "Erreur lors de l'inscription : Les inscriptions sont terminées"
 modal.error.inscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
 modal.error.montantincorrect: "Erreur lors de l'inscription : Ce profil n'est pas autorisé"
 modal.error.nbcreneaumaxatteint: "Erreur lors de l'inscription : Nombre maximum de reservations de créneaux dépassé"
@@ -541,14 +568,15 @@ scheduler.message.titre: Confirmez la suppression
 scheduler.message.valider: Enregistrer
 scheduler.message.voirplus: Voir plus
 securite.libelle: Sécurité
-security.login.example.partners: (CNRS, OCA, INRA, ...)
-security.login.external.account: Vous avez un compte partenaire ?
-security.login.noninscrit: Vous n'avez pas de compte partenaire ?
+security.login.external.account: "Vous êtes personnels d'un des établissements suivants : CNRS, OCA, INRA, INRIA, INSERM, IRD ?"
+security.login.inscrit: Vous avez déjà un compte UCA SPORT ?
 security.login.not.register: Pas encore de compte
+security.login.others.account: Ou vous êtes alumni, retraité ou membre d'honneur ?
 security.login.password: Mot de passe
 security.login.remember_me: 'Se souvenir de moi'
-security.login.shibboleth: Vous avez un compte UNS / UCA ?
-security.login.submit.external: Connexion partenaire
+security.login.shibboleth.precision: Utilisez votre <strong>identifiant</strong> et <strong>mot de passe</strong> habituels pour vous connecter
+security.login.shibboleth: Vous êtes <strong>étudiant</strong> ou <strong>personnel</strong> Université Côte d'Azur ?
+security.login.submit.external: Se connecter
 security.login.submit: Connexion
 security.login.username: Nom d'utilisateur
 security.roles.ROLE_ADMIN: Accès UcaGest
@@ -597,8 +625,9 @@ security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
 security.roles.ROLE_USER: Accès UcaWeb
 security.shibboleth.login.submit: 'Se connecter'
 shibboleth.error.doctorant: Veuillez vous connecter avec votre compte étudiant
-shibboleth.error.dossierincomplet: Votre dossier n'est pas complet
-shibboleth.error.profilinconnu: Ce type de profil est inconnu
+shibboleth.error.dossierincomplet: Nous n’arrivons pas à vous identifier comme membre de l’UCA, merci de nous contacter via le formulaire de contact 
+shibboleth.error.profilinconnu: Nous n’arrivons pas à vous identifier comme membre de l’UCA, merci de nous contacter via le formulaire de contact
+shibboleth.error.utilisateurbloque: Problème de connexion – merci de vous diriger vers le bureau des sports 
 sitemap.activite.libelle: Activités
 sitemap.activites.libelle: Activités
 sitemap.actualite.libelle: Actualités
@@ -643,7 +672,7 @@ sitemap.outils.libelle: Outils
 sitemap.panier.libelle: Panier
 sitemap.parametrage.libelle: Paramétrage
 sitemap.parametrage: Paramétrage
-sitemap.preInscription.libelle: "Faire une demande d'inscription"
+sitemap.preInscription.libelle: "Faire une demande de création de compte"
 sitemap.preInscription_confirmation: Confirmation
 sitemap.profilutilisateur.libelle: Profils d'utilisateurs
 sitemap.recapitulatifcommande.libelle: Validation

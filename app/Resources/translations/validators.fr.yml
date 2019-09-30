@@ -110,6 +110,7 @@ utilisateur.firstname.notnull: Le prénom est obligatoire
 utilisateur.mail.existant: L'adresse e-mail est déjà utilisée
 utilisateur.mail.invalide: L'adresse e-mail est invalide
 utilisateur.mail.notnull: L'adresse e-mail est obligatoire
+utilisateur.mail.shibboleth: Vous avez déja un comtpe universitaire
 utilisateur.mail.tropLong: L'adresse e-mail trop long
 utilisateur.mail.tropPetit: L'adresse e-mail trop court
 utilisateur.name.notnull: Le nom est obligatoire

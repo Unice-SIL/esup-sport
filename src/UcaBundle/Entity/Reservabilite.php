@@ -98,17 +98,9 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
         $this->formatActivite = $formatActivite;
     }
 
-    public function dateInscriptionValid()
+    public function dateReservationPasse()
     {
-        return $this->getEvenement()->getDateDebut() >= new \DateTime();
-    }
-
-    public function hasProfil($user)
-    {
-        if ($user === null)
-            return true;
-
-        return $this->ressource->getFormatResa()[0]->getProfilsUtilisateurs()->contains($user->getProfil());
+        return new \DateTime() > $this->getEvenement()->getDateDebut();
     }
 
     public function getArticleMontant($utilisateur)

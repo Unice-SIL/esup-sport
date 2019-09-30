@@ -14,6 +14,12 @@
         {{ flashBag.showAll }}
         <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white justify-content-between card-event">
             {{ emplacement(emplacement) | raw }}
+            {% if form is defined %}
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_widget(form) }}
+                {{ form_end(form) }}
+            {% endif %}
         </div>
     </section>
+
 {% endblock %}

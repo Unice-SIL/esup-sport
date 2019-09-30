@@ -15,11 +15,17 @@ class FlashBag
         $this->requestStack = $requestStack;
     }
 
-    public function addFlashBag($item, $message, $bootstrapColor)
+    public function addTranslatedFlashBag($type, $message)
     {
         $fb = $this->requestStack->getCurrentRequest()->getSession()->getFlashBag();
-        $translatedMessage = $this->translator->trans(Fn::getShortClassName($item) . '.' . $message);
-        $fb->add(strtolower($bootstrapColor), strtolower($translatedMessage));
+        $translatedMessage = $this->translator->trans($message);
+        $fb->add($type, $translatedMessage);
+    }
+
+    public function addFlashBag($item, $message, $bootstrapColor)
+    {
+        $message = Fn::getShortClassName($item) . '.' . $message;
+        $this->addTranslatedFlashBag(strtolower($bootstrapColor), strtolower($message));
     }
 
     public function addActionFlashBag($item, $action)

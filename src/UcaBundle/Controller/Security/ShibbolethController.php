@@ -16,7 +16,7 @@ class ShibbolethController extends Controller
     public function shibLoginAction()
     {
         if ($this->get('uca.shibboleth.provider')->isFirstConnection()) {
-            return $this->redirectToRoute('UcaWeb_MentionsLegales');
+            return $this->redirectToRoute('UcaWeb_CGV');
         } else {
             return $this->redirectToRoute('UcaWeb_Accueil');
         }

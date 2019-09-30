@@ -4,14 +4,12 @@ namespace UcaBundle\Service\Securite;
 
 use Doctrine\ORM\EntityManager;
 use FOS\UserBundle\Model\UserManager;
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
 use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\TypeAutorisation;
 use UcaBundle\Entity\Utilisateur;
-use UcaBundle\Entity\torisation;
-use UniceSIL\ShibbolethBundle\Security\User\ShibbolethUserProviderInterface as SUP;
 use UcaBundle\Exception\ShibbolethException;
+use UniceSIL\ShibbolethBundle\Security\User\ShibbolethUserProviderInterface as SUP;
 
 class GestionnaireUtilisateurShibboleth implements SUP
 {
@@ -32,14 +30,14 @@ class GestionnaireUtilisateurShibboleth implements SUP
 
     public function loadUser(array $credentials)
     {
-        $utilisateur = $this->um->findUserByUsername($credentials['uid']);
+        $utilisateur = $this->um->findUserByEmail($credentials['mail']);
         if (empty($utilisateur)) {
             $this->firstConnection = true;
             $utilisateur = new Utilisateur();
         }
 
         $transco = [
-            'alum' => 8,
+            // 'alum' => 8,
             'student' => 4,
             'faculty' => 8,
             'staff' => 8,
@@ -47,8 +45,8 @@ class GestionnaireUtilisateurShibboleth implements SUP
             // 'member' => 8,
             // 'affiliate' => 8,
             // 'researcher' => 8,
-            'retired' => 8,
-            'emeritus' => 8,
+            // 'retired' => 8,
+            // 'emeritus' => 8,
             'teacher' => 8
         ];
 
@@ -64,7 +62,9 @@ class GestionnaireUtilisateurShibboleth implements SUP
 
         $arrayAffiliationNumber = array_unique($arrayAffiliationNumber);
 
-        if (in_array(4, $arrayAffiliationNumber) && in_array(8, $arrayAffiliationNumber)) {
+        if (!$this->firstConnection && !$utilisateur->isEnabled()) {
+            throw new ShibbolethException('shibboleth.error.utilisateurbloque');
+        } elseif (in_array(4, $arrayAffiliationNumber) && in_array(8, $arrayAffiliationNumber)) {
             throw new ShibbolethException('shibboleth.error.doctorant');
         } elseif (in_array(4, $arrayAffiliationNumber) && $credentials['ptdrouv'] > 0) {
             throw new ShibbolethException('shibboleth.error.dossierincomplet');

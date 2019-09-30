@@ -146,8 +146,8 @@
     - titre: "trans('footer.accessibilite')"
       route: UcaWeb_Accessibilite
       menu: 0
-    - titre: "trans('footer.cgu')"
-      route: UcaWeb_CGU
+    - titre: "trans('footer.donneespersonnelles')"
+      route: UcaWeb_DonneesPersonnelles
       menu: 0
     - titre: "trans('footer.cgv')"
       route: UcaWeb_CGV
