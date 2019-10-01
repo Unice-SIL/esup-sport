@@ -120,7 +120,7 @@ class MonPlanningController extends Controller
                 $setTo[$user->getEmail()] = ucfirst($user->getPrenom()) . ' ' . ucfirst($user->getNom());
              }
             $mailer->sendMailWithTemplate(
-                'demande.validation',
+                'Information sur votre activité',
                 $setTo,
                 '@Uca/Email/Calendrier/MailPourTousLesInscripts.html.twig',
                 ['message' => $message]

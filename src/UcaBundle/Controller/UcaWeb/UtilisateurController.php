@@ -47,7 +47,7 @@ class UtilisateurController extends Controller
             }
          
             $mailer->sendMailWithTemplate(
-                'demande.validation',
+                'Demande de validation',
                 $setTo,
                 '@Uca/Email/PreInscription/DemandeValidationEmail.html.twig',
                 ['id' => $usr->getId(), 'nom' => $usr->getNom(), 'prenom' => $usr->getPrenom()]

@@ -10,25 +10,33 @@
 
 {% block main %}
     <h1 class="h1-light">{{'utilisateur.planning'|trans}}</h1>
-    <section class="container mb-5">        
+    <section class="container mb-5">
 
         {{ flashBag.showAll }}
 
         <div class="container-style bg-white mb-5">
-        
-            <h2 class="hide-border-title fs-21 fw-700 text-uppercase mb-5">{{ eventName }} - {{ evenement.description }}</h2>
+
+            <h2 class="hide-border-title fs-21 fw-700 text-uppercase mb-5">{{ eventName }}
+                -
+                {{ evenement.description }}</h2>
 
             <div class="row mb-5 d-flex flex-wrap">
-                
+
                 <div class="col-12 col-md-6 mb-4">
                     <div class="row">
                         <div class="col-12">
                             <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.horaires"|trans }}</h2>
-                            <p><span class="fw-700">{{ "monPlanning.more.datedebut"|trans }} :</span> {{ evenement.dateDebut|date('d/m/Y H:i:s') }}</p>
-                            <p><span class="fw-700">{{ "monPlanning.more.datefin"|trans }} :</span> {{ evenement.dateFin|date('d/m/Y H:i:s') }}</p>
+                            <p>
+                                <span class="fw-700">{{ "monPlanning.more.datedebut"|trans }}
+                                    :</span>
+                                {{ evenement.dateDebut|date('d/m/Y H:i:s') }}</p>
+                            <p>
+                                <span class="fw-700">{{ "monPlanning.more.datefin"|trans }}
+                                    :</span>
+                                {{ evenement.dateFin|date('d/m/Y H:i:s') }}</p>
                         </div>
                     </div>
-                    {% if isEncadrant and form.appels is not empty %}       
+                    {% if (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is not empty %}
                         <div class="row p-3">
                             <div class="col-12 bg-isabelline p-3 text-center">
                                 <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.mail.titre"|trans }}</h2>
@@ -38,26 +46,26 @@
                     {% endif %}
                 </div>
 
-                {% if isEncadrant %}
-                <div class="col-12 col-md-6 mb-4">
-                    <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
-                    {% if form.appels is empty %}
-                        <p>{{ "monplanning.more.appel.empty"|trans }} </p>
-                    {% else %}
+                {% if isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')  %}
+                    <div class="col-12 col-md-6 mb-4">
+                        <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
+                        {% if form.appels is empty %}
+                            <p>{{ "monplanning.more.appel.empty"|trans }}
+                            </p>
+                        {% else %}
 
-                        <p>{{ "monPlanning.more.appel.texte"|trans }}</p>
+                            <p>{{ "monPlanning.more.appel.texte"|trans }}</p>
 
-                        {{ form_start(form) }}
+                            {{ form_start(form) }}
 
                             {% for appel in form.appels %}
                                 {% set name = form.vars.data.appels[loop.index0].utilisateur.nom ~ " " ~ form.vars.data.appels[loop.index0].utilisateur.prenom %}
                                 {{ form_row(appel.present, {'label': name}) }}
                             {% endfor %}
+                            {{ form_end(form) }}
+                        {% endif %}
 
-                        {{ form_end(form) }}
-                    {% endif %}
-
-                </div>
+                    </div>
                 {% endif %}
 
             </div>
@@ -71,6 +79,6 @@
 
 {% block javascripts %}
     <script>
-        var PATH_SEND_MAIL = '{{ path("UcaWeb_PlanningMore_mail", {id: evenement.id} )}}'
+        var PATH_SEND_MAIL = '{{ path("UcaWeb_PlanningMore_mail", {id: evenement.id} ) }}'
     </script>
 {% endblock %}

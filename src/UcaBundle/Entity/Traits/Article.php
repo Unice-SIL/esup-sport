@@ -6,6 +6,7 @@ use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Reservabilite;
+use UcaBundle\Repository\EntityRepository;
 use UcaBundle\Service\Common\Fn;
 use UcaBundle\Service\Common\Previsualisation;
 
@@ -50,8 +51,10 @@ trait Article
 
     public function isNotFull()
     {
-        return !empty($this->getCapacite()) || $this->getInscriptions()->count() < $this->getCapacite();
+        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit']]]);
+        return !empty($this->getCapacite()) && $this->getInscriptions()->matching($criterias)->count() < $this->getCapacite();
     }
+
 
     public function isFull()
     {
