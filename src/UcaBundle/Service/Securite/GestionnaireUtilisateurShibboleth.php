@@ -65,7 +65,8 @@ class GestionnaireUtilisateurShibboleth implements SUP
 
         if (!$this->firstConnection && !$utilisateur->isEnabled()) {
             throw new ShibbolethException('shibboleth.error.utilisateurbloque');
-        } elseif (in_array(4, $arrayAffiliationNumber) && in_array(8, $arrayAffiliationNumber)) {
+        } elseif (!empty(array_diff($arrayAffiliationText, ['student', 'employee', 'researcher', 'member'])) 
+            || !empty(array_diff(['student', 'employee', 'researcher', 'member'], $arrayAffiliationText))) {
             throw new ShibbolethException('shibboleth.error.doctorant');
         } elseif (in_array(4, $arrayAffiliationNumber) && $credentials['ptdrouv'] > 0) {
             throw new ShibbolethException('shibboleth.error.dossierincomplet');
