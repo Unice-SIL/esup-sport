@@ -44,10 +44,11 @@ class GestionnaireUtilisateurShibboleth implements SUP
             'employee' => 8,
             // 'member' => 8,
             // 'affiliate' => 8,
-            // 'researcher' => 8,
+            'researcher' => 8,
             // 'retired' => 8,
             // 'emeritus' => 8,
-            'teacher' => 8
+            'teacher' => 8,
+            'registered-reader' => 8
         ];
 
         // 4 => Etudiant 

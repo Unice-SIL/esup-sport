@@ -111,6 +111,11 @@
                 </ul>
             {% endif %}
 
+            {% if format == "FormatSimple" %}
+               <a class="btn btn-primary" href="{{ path('UcaWeb_PlanningMore', {id: item.evenement.id }) }}">
+                    {{'monPlanning.more.detail'|trans}}</a>
+            {% endif %}
+
             {% if format == "FormatAvecReservation" %}
                 <h2 class="hide-border-title"> {{'common.ressources.reservees'|trans}} </h2>
                 <ul>

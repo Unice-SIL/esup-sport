@@ -5,6 +5,8 @@ import {Reservation} from "./Reservation";
 import {Serie} from "./Serie.js";
 
 scheduler.config.details_on_create = true;
+scheduler.config.multi_day = true;
+scheduler.config.all_timed = true;
 scheduler.config.details_on_dblclick = true;
 scheduler.config.mode_modification_serie = 'serie'; // choix: occurence|serie
 scheduler.config.first_hour = 6;

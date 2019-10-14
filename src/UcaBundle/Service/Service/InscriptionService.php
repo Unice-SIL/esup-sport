@@ -2,17 +2,13 @@
 
 namespace UcaBundle\Service\Service;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\Inscription;
-use UcaBundle\Service\Common\MailService;
-use UcaBundle\Service\Common\Previsualisation;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UcaBundle\Repository\EntityRepository;
+use UcaBundle\Service\Common\MailService;
 
 class InscriptionService
 {
@@ -46,14 +42,21 @@ class InscriptionService
         $twigConfig['item'] = $this->inscription;
         $twigConfig['form'] = $form->createView();
         $html = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.Formulaire.html.twig', $twigConfig);
-        return ["itemId" => $this->inscription->getItem()->getId(), "statut" => "1", "html" => $html];
+
+        return ['itemId' => $this->inscription->getItem()->getId(), 'statut' => '1', 'html' => $html];
     }
 
     public function getMessagePreInscription()
     {
         $twigConfig['item'] = $this->inscription;
+        $maxCreneauAtteint = $this->user->nbCreneauMaximumAtteint();
         $html = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.ValidationInscription.html.twig', $twigConfig);
-        return ["itemId" => $this->inscription->getItem()->getId(), "statut" => "0", "html" => $html];
+
+        return [
+            'itemId' => $this->inscription->getItem()->getId(),
+            'statut' => '0',
+            'html' => $html,
+            'maxCreneauAtteint' => $maxCreneauAtteint, ];
     }
 
     public function ajoutPanier()
@@ -69,13 +72,13 @@ class InscriptionService
                 ['formatActivite', 'eq', $item->getFormatActivite()],
                 ['creneau', 'eq', null],
                 ['reservabilite', 'eq', null],
-                ['statut', 'notIn', ['annule', 'desinscrit']]
+                ['statut', 'notIn', ['annule', 'desinscrit']],
             ])->first();
             if (empty($inscriptionFormat)) {
                 $inscriptionFormat = new Inscription($item->getFormatActivite(), $user, ['typeInscription' => 'format']);
                 $articleInscriptionFormat = false;
                 $inscriptionFormatValide = false;
-            } elseif ($inscriptionFormat->getStatut() != 'valide') {
+            } elseif ('valide' != $inscriptionFormat->getStatut()) {
                 $articleInscriptionFormat = $panier->getCommandeDetails()->matching(EntityRepository::criteriaBy([['inscription', 'eq', $inscriptionFormat]]))->first();
                 $inscriptionFormatValide = false;
             } else {
@@ -104,14 +107,22 @@ class InscriptionService
 
         $this->em->persist($this->inscription);
         $this->em->persist($panier);
+
         return $articles;
     }
 
     public function getComfirmationPanier($articles)
     {
+        $maxCreneauAtteint = $this->user->nbCreneauMaximumAtteint();
         $twigConfig['articles'] = $articles;
-        $html =  $this->twig->render('@Uca/UcaWeb/Inscription/Modal.ValidationPanier.html.twig', $twigConfig);
-        return ["itemId" => $this->inscription->getItem()->getId(), "statut" => "0", "html" => $html];
+        $html = $this->twig->render('@Uca/UcaWeb/Inscription/Modal.ValidationPanier.html.twig', $twigConfig);
+
+        return [
+            'itemId' => $this->inscription->getItem()->getId(),
+            'statut' => '0',
+            'html' => $html,
+            'maxCreneauAtteint' => $maxCreneauAtteint,
+        ];
     }
 
     public function envoyerMailInscriptionNecessitantValidation()
@@ -124,16 +135,16 @@ class InscriptionService
                 ['inscription' => $this->inscription]
             );
 
-            $destinataires = array();
-            if ($this->inscription->getStatut() == 'attentevalidationencadrant') {
+            $destinataires = [];
+            if ('attentevalidationencadrant' == $this->inscription->getStatut()) {
                 $listUser = $this->inscription->getItem()->getEncadrants();
                 foreach ($listUser as $user) {
-                    $destinataires[$user->getEmail()] = ucfirst($user->getPrenom()) . ' ' . ucfirst($user->getNom());
+                    $destinataires[$user->getEmail()] = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
                 }
-            } else if ($this->inscription->getStatut() == 'attentevalidationgestionnaire') {
+            } elseif ('attentevalidationgestionnaire' == $this->inscription->getStatut()) {
                 $listUser = $this->em->getRepository('UcaBundle:Utilisateur')->findByRole('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION');
                 foreach ($listUser as $user) {
-                    $destinataires[$user['email']] = ucfirst($user['prenom']) . ' ' . ucfirst($user['nom']);
+                    $destinataires[$user['email']] = ucfirst($user['prenom']).' '.ucfirst($user['nom']);
                 }
             }
 
@@ -143,14 +154,14 @@ class InscriptionService
                 '@Uca/Email/Inscription/InscriptionDemandeValidation.html.twig',
                 ['inscription' => $this->inscription]
             );
-        } else if ($this->inscription->getStatut() == 'attenteajoutpanier') {
+        } elseif ('attenteajoutpanier' == $this->inscription->getStatut()) {
             $this->mailer->sendMailWithTemplate(
                 'Demande d\'inscription validée',
                 $this->inscription->getUtilisateur()->getEmail(),
                 '@Uca/Email/Inscription/InscriptionValidee.html.twig',
                 ['inscription' => $this->inscription]
             );
-        } else if ($this->inscription->getStatut() == 'annule') {
+        } elseif ('annule' == $this->inscription->getStatut()) {
             $this->mailer->sendMailWithTemplate(
                 'Demande d\'inscription refusée',
                 $this->inscription->getUtilisateur()->getEmail(),

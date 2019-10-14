@@ -1,6 +1,4 @@
-_uca = {
-}
-
+_uca = {}
 _uca.imgPreview = function (event) {
     let elemId = $(this).attr('id');
     let fileUrl = URL.createObjectURL(event.target.files[0]);
@@ -111,14 +109,28 @@ _uca.inscription.formatAvecReservationValidation = function (data) {
     $('.js-inscription').each(function () {
         $(this).removeData("id");
     });
+    document.getElementById('blocInscription').style.visibility = 'hidden';
 }
 
 _uca.inscription.formatAutreValidation = function (data) {
     let el = $('.js-inscription[data-id="' + data.itemId + '"]');
     $(el.parent()).html($("#js-text-inscrit-clone")[0].innerHTML);
+    if (data.maxCreneauAtteint) {
+        _uca.inscription.maxCreneauAtteint();
+    }
 }
 
-
+_uca.inscription.maxCreneauAtteint = function () {
+    let listeBoutonsInscription = document.querySelectorAll('.js-inscription');
+    let boutonIndisponible = document.getElementById('js-text-indisponible-clone'); 
+    // let boutonIndisponible = document.getElementById('js-text-indisponible-clone').cloneNode(true);
+    listeBoutonsInscription.forEach(function (boutonInscription) {
+        boutonInscription.parentElement.innerHTML = boutonIndisponible.innerHTML;
+        // boutonInscription.parentElement.replaceChild(boutonIndisponible,boutonInscription);
+        // boutonInscription.appendChild(boutonIndisponible);
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+};
 
 _uca.inscription.formValidation = function (data) {
     $('#modalInscription .modal-dialog').html($(data.html).find('.modal-dialog').html());
@@ -155,7 +167,7 @@ _uca.inscription.addButtonEvent = function () {
                 statut: 'validation',
                 type: _uca.inscription.type,
                 id: _uca.inscription.id,
-                idFormat: _uca.inscription.idFormat
+                idFormat: _uca.inscription.idFormat,
             }
         })
             .done(_uca.inscription.formValidation)

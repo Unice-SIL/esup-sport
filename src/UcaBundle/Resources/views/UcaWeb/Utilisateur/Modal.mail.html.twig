@@ -3,7 +3,8 @@
 {% block modalTitle 'monPlanning.modal.mail.title' %}
 {% block modalBody %}
     {{ form_start(form2) }}
-
+    {{ form_label(form2.objet) }}
+    {{ form_widget(form2.objet) }}
     {{ form_label(form2.mail) }}
     {{ form_widget(form2.mail) }}
 {% endblock %}
