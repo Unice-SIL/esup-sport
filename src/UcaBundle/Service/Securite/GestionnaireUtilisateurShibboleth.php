@@ -17,15 +17,15 @@ class GestionnaireUtilisateurShibboleth implements SUP
     private $um;
     private $firstConnection = false;
 
-    public function isFirstConnection()
-    {
-        return $this->firstConnection;
-    }
-
     public function __construct(EntityManager $em, UserManager $um)
     {
         $this->em = $em;
         $this->um = $um;
+    }
+
+    public function isFirstConnection()
+    {
+        return $this->firstConnection;
     }
 
     public function loadUser(array $credentials)
@@ -48,31 +48,36 @@ class GestionnaireUtilisateurShibboleth implements SUP
             // 'retired' => 8,
             // 'emeritus' => 8,
             'teacher' => 8,
-            'registered-reader' => 8
+            'registered-reader' => 8,
         ];
 
-        // 4 => Etudiant 
+        // 4 => Etudiant
         // 8 => Personnel
 
         $arrayAffiliationText = explode(';', $credentials['eduPersonAffiliation']);
         $arrayAffiliationNumber = [];
         foreach ($arrayAffiliationText as $k => $affiliation) {
-            if (isset($transco[$affiliation]))
+            if (isset($transco[$affiliation])) {
                 array_push($arrayAffiliationNumber, $transco[trim($affiliation)]);
+            }
         }
 
         $arrayAffiliationNumber = array_unique($arrayAffiliationNumber);
 
         if (!$this->firstConnection && !$utilisateur->isEnabled()) {
             throw new ShibbolethException('shibboleth.error.utilisateurbloque');
-        } elseif (!empty(array_diff($arrayAffiliationText, ['student', 'employee', 'researcher', 'member'])) 
-            || !empty(array_diff(['student', 'employee', 'researcher', 'member'], $arrayAffiliationText))) {
+        }
+        if (empty(array_diff($arrayAffiliationText, ['student', 'employee', 'researcher', 'member']))
+            && empty(array_diff(['student', 'employee', 'researcher', 'member'], $arrayAffiliationText))) {
             throw new ShibbolethException('shibboleth.error.doctorant');
-        } elseif (in_array(4, $arrayAffiliationNumber) && $credentials['ptdrouv'] > 0) {
+        }
+        if (in_array(4, $arrayAffiliationNumber) && $credentials['ptdrouv'] > 0) {
             throw new ShibbolethException('shibboleth.error.dossierincomplet');
-        } elseif (!in_array(4, $arrayAffiliationNumber) && !in_array(8, $arrayAffiliationNumber)) {
+        }
+        if (!in_array(4, $arrayAffiliationNumber) && !in_array(8, $arrayAffiliationNumber)) {
             throw new ShibbolethException('shibboleth.error.profilinconnu');
-        } elseif (in_array(4, $arrayAffiliationNumber)) {
+        }
+        if (in_array(4, $arrayAffiliationNumber)) {
             $profil = 4;
         } elseif (in_array(8, $arrayAffiliationNumber)) {
             $profil = 8;
@@ -80,8 +85,6 @@ class GestionnaireUtilisateurShibboleth implements SUP
 
         $objProfil = $this->em->getReference(ProfilUtilisateur::class, $profil);
         $objCotisationSportive = $this->em->getReference(TypeAutorisation::class, 2);
-
-
 
         $utilisateur
             ->setUsername($credentials['uid'])
@@ -92,12 +95,14 @@ class GestionnaireUtilisateurShibboleth implements SUP
             ->setNom($credentials['sn'])
             ->setPrenom($credentials['givenName'])
             ->setShibboleth(true)
-            ->setEnabled(true);
+            ->setEnabled(true)
+        ;
         if (!$utilisateur->hasAutorisation($objCotisationSportive) && in_array(4, $arrayAffiliationNumber)) {
             $utilisateur->addAutorisation($objCotisationSportive);
         }
         $this->em->persist($utilisateur);
         $this->em->flush();
+
         return $utilisateur;
     }
 
@@ -107,8 +112,10 @@ class GestionnaireUtilisateurShibboleth implements SUP
     }
 
     public function loadUserByUsername($username)
-    { }
+    {
+    }
 
     public function supportsClass($class)
-    { }
+    {
+    }
 }
