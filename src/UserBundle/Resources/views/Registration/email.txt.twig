@@ -1,16 +1,21 @@
 {% block subject %}
-{{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+  {% if not resending is defined %}
+    {{ 'registration.email.subject'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl}) }}
+  {% endif %}
 {% endblock %}
-
 {% block body_text %}{% endblock %}
 {% block body_html %}
-    {{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl})|nl2br }}
-    <br/>
-    {{ "common.username"|trans }} : {{ user.getUsername() }}
-    <br/>
-    {{ "common.password"|trans }} : {{ user.getPlainPassword() }}
-    <br/>
-
-    {% include "@Uca/Email/TemplateEmail.Signature.html.twig" %}
+  {% set confirmationUrl = app.request.schemeAndHttpHost ~ confirmationUrl %}
+  {{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl})|nl2br }}
+  <br/>
+  {{ "common.username"|trans }}
+  :
+  {{ user.getUsername() }}
+  <br/>
+  {{ "common.password"|trans }}
+  :
+  {{ user.getPlainPassword() }}
+  <br/>
+  {% include "@Uca/Email/TemplateEmail.Signature.html.twig" %}
 
 {% endblock %}

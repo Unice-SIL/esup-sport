@@ -1,0 +1,28 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+  {% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+  {% endblock %}
+  <h1>
+    {{ 'utilisateur.reinitialiser.titre' | trans }}
+  </h1>
+  <section class="container mb-5">
+    <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
+      <div class='row'>
+        <div class='col-sm-12'>
+          <form class="form-inline" action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request">
+            <div class="form-group">
+              <label for="username">{{ 'resetting.request.field'|trans }}</label>
+              <input type="text" id="username" name="username" required="required"/>
+            </div>
+            <input style="margin-right: 5px;" class="btn btn-primary" type="submit" aria-label="{{ 'bouton.ok'|trans }}" value="{{ 'bouton.ok'|trans }}"/>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

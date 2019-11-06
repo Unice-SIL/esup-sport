@@ -1,8 +1,10 @@
+
+
+# common.moyenpaiementautre: Ou valider la commande et payer plus tard
 FormatAchatCarte.button: 'Acheter la carte'
 FormatAvecCreneau.button: 'Voir les créneaux disponibles'
 FormatAvecReservation.button: 'Réserver'
 FormatSimple.button: 'Voir les évènements à venir'
-Utilisater.statu.libelle: Statut de l'utilisateur
 acceuil.evenements.liste: 'Voir tous les évènements'
 acceuil.evenements.zeroEvt: "Aucun événement n'est prévu à l'heure actuelle."
 acceuil.prochainement.consulter: 'Consulter'
@@ -56,8 +58,8 @@ bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportpdf: Export
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
-bouton.indisponible.statut.inscriptionsterminees: Les inscriptions sont terminées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
+bouton.indisponible.statut.inscriptionsterminees: Les inscriptions sont terminées
 bouton.indisponible.statut.montantincorrect: "Le tarif de cette activité n'est pas encore défini, merci de contacter le bureau des sports"
 bouton.indisponible.statut.nbcreneaumaxatteint: "Vous êtes déjà inscrit à %maxCreneau% créneaux. Vous avez atteint le nombre maximum d'inscriptions pour les créneaux"
 bouton.indisponible.statut.nonconnecte: "Il faut être connecté pour pouvoir s'inscrire aux activités"
@@ -158,7 +160,6 @@ common.monday: Lundi
 common.montant: Montant
 common.montants: Montants
 common.moyenpaiement: Moyen de paiement
-# common.moyenpaiementautre: Ou valider la commande et payer plus tard
 common.moyenpaiementautre: Valider la commande et payer au bureau des sports
 common.naissance: Date de naissance
 common.niveauSportif: Niveau sportif
@@ -215,6 +216,7 @@ contact.compteactif: Vous disposez d'un compte unice actif
 contact.compteinactif.remplir: Veuillez formuler votre demande par le formulaire de contact ci-dessous
 contact.compteinactif: Vous ne disposez pas d'un compte unice actif
 contact.demande.success: Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation d'ici quelques minutes.
+contact.destinataires: Destinataires du message
 contact.email: Votre adresse mail
 contact.envoye.depuis: Mail envoye depuis l'application Uca Sport
 contact.formulaire.nom: Formulaire GLPI
@@ -408,8 +410,8 @@ materiel.modifier.succes: 'Matériel modifié avec succès'
 materiel.modifier.title: Modifier un matériel
 materiel.supprimer.erreur: Impossible de supprimer le matériel, des réservations y sont affectées
 materiel.supprimer.succes: 'Matériel supprimé avec succès'
-mentions.informations.validation: "J'accepte les conditions générales de vente"
 mentions.conditions.nonvalide: "Veuillez accepter les conditions générales de vente"
+mentions.informations.validation: "J'accepte les conditions générales de vente"
 mescommandes.list.title: Mes commandes
 mesinscriptions.list.title: Mes inscriptions
 message.confirmation.annulation.commande.titre: Confirmez l'annulation
@@ -531,6 +533,8 @@ reservation.calendrier.disponible: Disponible
 reservation.calendrier.indisponible: Non disponible
 reservation.calendrier.inscrit: inscrit
 reservation.calendrier.titre: Créneaux disponibles
+resetting.check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.        Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe. Remarque : Vous ne pouvez demander un nouveau mot de passe que toutes les %tokenLifetime% heures. Si vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau"
+resetting.request.field: "Nom d'utilisateur ou adresse e-mail"
 ressource.ajouter.succes: 'Ressource ajoutée'
 ressource.capacite: Capacité
 ressource.code.rus: Code RUS
@@ -573,6 +577,7 @@ security.login.inscrit: Vous avez déjà un compte UCA SPORT ?
 security.login.not.register: Pas encore de compte
 security.login.others.account: Ou vous êtes alumni, retraité ou membre d'honneur ?
 security.login.password: Mot de passe
+security.login.reinitialiser: "Mot de passe oublié ?"
 security.login.remember_me: 'Se souvenir de moi'
 security.login.shibboleth.precision: Utilisez votre <strong>identifiant</strong> et <strong>mot de passe</strong> habituels pour vous connecter
 security.login.shibboleth: Vous êtes <strong>étudiant</strong> ou <strong>personnel</strong> Université Côte d'Azur ?
@@ -694,6 +699,9 @@ sitemap.ucagest.libelle: Uca Gestion
 sitemap.ucasport.libelle: Uca Sport
 sitemap.utilisateur.libelle : Utilisateurs
 sitemap.utilisateur.verification: Vérification Email
+sitemap.utlisateur.reinitialiser.reset: Réinitialiser
+sitemap.utlisateur.reinitialiser.verification: Vérification de l'e-mail
+sitemap.utlisateur.reinitialiser: Réinitialisation du mot de passe
 sitemap.validation.libelle: Utilisateurs pré-inscrits
 sitemap.validationcommande.libelle: Paiement
 sitemap.voir: Voir
@@ -756,6 +764,7 @@ typeautorisation.supprimer.succes: 'Autorisation supprimée avec succès'
 typeautorisation.tarif: Tarif
 ucagest.libelle: 'Uca Gest'
 ucasport.libelle: 'Uca Sport'
+utilisater.statu.libelle: Statut de l'utilisateur
 utilisateur.activite.souscrite: Activité souscrite
 utilisateur.adresse.aucune: Aucune adresse enregistrée
 utilisateur.adresse: Adresse
@@ -775,15 +784,20 @@ utilisateur.civilite: Civilité
 utilisateur.codepostal.invalide: 'Code Postal incorrect'
 utilisateur.codepostal: 'Code Postal'
 utilisateur.commande: Commande
+utilisateur.compte.bloque: Votre compte est bloqué – Merci de vous diriger vers le bureau des sports. 
 utilisateur.date.naissance: 'Date de Naissance'
 utilisateur.datedenaissance.aucune: Aucune date de naissance enregistrée
 utilisateur.dbloquer.succes: Utilisateur débloqué avec succès
 utilisateur.description: Description de l'encadrant
+utilisateur.document inexistant.erreur: Document inexistant
 utilisateur.document.afficher: Justificatif
 utilisateur.document.libelle: Justificatif du profil
 utilisateur.droits.de: Droits de
 utilisateur.droits: Droits de l'utilisateur
+utilisateur.envoyer.mailconfirmation.failure: "Echec de l'envoi du courriel"
+utilisateur.envoyer.mailconfirmation.success: Courriel envoyé avec succès
 utilisateur.gestion: 'Gestion des utilisateurs'
+utilisateur.inactif.message: Ce compte n'a pas été activité par l'utilisateur
 utilisateur.inscription.information.aministrative: Informations administratives
 utilisateur.inscription.information.connexion: 'Informations de connexion'
 utilisateur.inscription.information.personnelle: 'Informations personnelles'
@@ -810,6 +824,8 @@ utilisateur.profil: Profil de l'utilisateur
 utilisateur.refus.message: Cet utilisateur a été refusé
 utilisateur.refuser.succes: utilisateur refusé avec succès
 utilisateur.registration.invalide.message: Vous ne pouvez plus valider de compte, ce lien a expiré. 
+utilisateur.reinitialiser.titre: Réinitialisation du mot de passe
+utilisateur.renvoyer.email.activation: renvoyer le mail d'activatiion
 utilisateur.select.profilutilisateur: '- Sélectionner un profil utilisateur -'
 utilisateur.select.statututilisateur: Sélectionnez un statut
 utilisateur.sexe.madame: Madame
@@ -823,4 +839,5 @@ utilisateur.valider.succes: Utilisateur validé avec succès
 utilisateur.verification.title: 'Vérification du courriel'
 utilisateur.ville.aucune: 'Aucne ville enregistrée'
 utilisateur.ville: 'Ville'
+utlisateur.reinitialiser.reset: Réinitialiser le mot de passe
 validations.list.title: Utilisateurs en attente de validation

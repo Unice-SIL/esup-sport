@@ -59,7 +59,7 @@ class MonPlanningController extends Controller
             $inscriptions = $dhtmlxEvenement->getFormatSimple()->getInscriptionsValidee();
             $eventName = $dhtmlxEvenement->getFormatSimple()->getActivite()->getLibelle();
         }
-
+        $destinataires = [];
         $existingAppel = $em->getRepository(Utilisateur::class)->findUtilisateurByEvenement($dhtmlxEvenement->getId());
         foreach ($inscriptions as $key => $inscription) {
             if (!in_array($inscription->getUtilisateur(), $existingAppel)) {
@@ -68,10 +68,13 @@ class MonPlanningController extends Controller
                 $appel->setDhtmlxEvenement($dhtmlxEvenement);
                 $dhtmlxEvenement->addAppel($appel);
             }
+            $user = $inscription->getUtilisateur();
+            $key = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
+            $destinataires[$key] = $user->getEmail();
         }
 
         $form = $this->get('form.factory')->create(EvenementType::class, $dhtmlxEvenement);
-        $form2 = $this->get('form.factory')->create(PlanningMailType::class);
+        $form2 = $this->get('form.factory')->create(PlanningMailType::class, null, ['liste_destinataires' => $destinataires]);
 
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->persist($dhtmlxEvenement);
@@ -102,21 +105,25 @@ class MonPlanningController extends Controller
             $inscriptions = $dhtmlxEvenement->getFormatSimple()->getInscriptionsValidee();
         }
 
-        $form2 = $this->get('form.factory')->create(PlanningMailType::class);
+        $destinataires = [];
+        foreach ($inscriptions as $key => $inscription) {
+            $user = $inscription->getUtilisateur();
+            $key = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
+            $destinataires[$key] = $user->getEmail();
+        }
+        $form2 = $this->get('form.factory')->create(PlanningMailType::class, null, ['liste_destinataires' => $destinataires]);
         if ($request->isMethod('POST') && $form2->handleRequest($request)->isValid()) {
             $message = $form2->getData()['mail'];
             $objet = $form2->getData()['objet'];
+            $setTo = $form2->getData()['destinataires'];
             $mailer = $this->container->get('mailService');
-            $setTo = [];
-            foreach ($inscriptions as $key => $inscription) {
-                $user = $inscription->getUtilisateur();
-                $setTo[$user->getEmail()] = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
-            }
+            $copie =  $this->getUser()->getEmail();
             $mailer->sendMailWithTemplate(
                 $objet,
                 $setTo,
                 '@Uca/Email/Calendrier/MailPourTousLesInscripts.html.twig',
-                ['message' => $message]
+                ['message' => $message],
+                $copie
             );
         }
 

@@ -118,6 +118,7 @@ utilisateur.password.notnull: Le mot de passe est obligatoire
 utilisateur.password.tropPetit: Le mot de passe est trop court
 utilisateur.sexe.notnull: La civilité est obligatoire
 utilisateur.telephone.invalide: Le numéro de téléphone invalide
+utilisateur.username.email: Votre nom d'utilisateur ne doit pas être un e-mail
 utilisateur.username.existant: Le nom d'utilisateur est déjà utilisé
 utilisateur.username.notnull: Le nom d'utilisateur est obligatoire
 utilisateur.username.tropLong: Le nom d'utilisateur est trop long

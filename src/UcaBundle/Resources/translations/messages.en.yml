@@ -3,6 +3,7 @@ FormatAvecCreneau.button: 'See the available slots'
 FormatAvecReservation.button: Book
 FormatSimple.button: See upcoming events
 Utilisater.statu.libelle: User status
+Utilisateur.envoyer.mailconfirmation.success: E-mail sent successfully
 acceuil.evenements.liste: See all events
 acceuil.evenements.zeroEvt: "No events are planned at this time."
 acceuil.prochainement.consulter: Read more
@@ -214,6 +215,7 @@ contact.compteactif: You have an enabled UNice account
 contact.compteinactif.remplir: Write your request by filling the form below
 contact.compteinactif: You don't have an enabled UNice account
 contact.demande.success: Your request has been considered. You will receive a confirmation email within a few minutes.
+contact.destinataires: E-mail's recipients
 contact.email: Your email address
 contact.envoye.depuis: Mail send from Uca Sport application
 contact.formulaire.nom: GPLI Form
@@ -407,8 +409,8 @@ materiel.modifier.succes: Equipment successfully modified
 materiel.modifier.title: Modify a material
 materiel.supprimer.erreur: Cannot delete this material, reservations are assigned
 materiel.supprimer.succes: Equipment successfully deleted
-mentions.informations.validation: "I accept the general conditions of sales"
 mentions.conditions.nonvalide: "Please accept the general conditions of sales"
+mentions.informations.validation: "I accept the general conditions of sales"
 mescommandes.list.title: My orders
 mesinscriptions.list.title: My registrations
 message.confirmation.annulation.commande.titre: Confirm cancellation
@@ -530,6 +532,8 @@ reservation.calendrier.disponible: Available
 reservation.calendrier.indisponible: Not available
 reservation.calendrier.inscrit: Registered
 reservation.calendrier.titre: Slots available
+resetting.check_email: "An email has been sent. It contains a link you must click to reset your password. Note: You can only request a new password once within %tokenLifetime% hours. If you don't get an email check your spam folder or try again."
+resetting.request.field: Username or e-mail's address
 ressource.ajouter.succes: Resource added
 ressource.capacite: Capacity
 ressource.code.rus: RUS code
@@ -572,6 +576,7 @@ security.login.inscrit: Already have a UCA SPORT account?
 security.login.not.register: No account yet
 security.login.others.account: Or are you alumni, retiree or honorary member? 
 security.login.password: Password
+security.login.reinitialiser: forgotten password ?
 security.login.remember_me: 'Remember me'
 security.login.shibboleth.precision: Use your usual <strong>username</strong> and <strong>password</strong> to log in
 security.login.shibboleth: Are you a <strong>student</strong> or <strong>staff</strong> University Côte d'Azur?
@@ -693,6 +698,9 @@ sitemap.ucagest.libelle: Uca Gest
 sitemap.ucasport.libelle: Uca Sport
 sitemap.utilisateur.libelle : Users 
 sitemap.utilisateur.verification: Check email
+sitemap.utlisateur.reinitialiser.reset: Reset
+sitemap.utlisateur.reinitialiser.verification: Check E-mail
+sitemap.utlisateur.reinitialiser: Reset password
 sitemap.validation.libelle: Pre-register users
 sitemap.validationcommande.libelle: Paiement
 sitemap.voir: See
@@ -774,15 +782,20 @@ utilisateur.civilite: Civility
 utilisateur.codepostal.invalide: Zip Code invalid
 utilisateur.codepostal: Zip Code
 utilisateur.commande: Order
+utilisateur.compte.bloque: Your account is blocked – Thanks for heading to the sport's office. 
 utilisateur.date.naissance: Date of Birth
 utilisateur.datedenaissance.aucune: No birth date registered
 utilisateur.dbloquer.succes: User successfully unblocked
 utilisateur.description: Manager description
+utilisateur.document inexistant.erreur: File not found
 utilisateur.document.afficher: Attestation
 utilisateur.document.libelle: Attestation for profile
 utilisateur.droits.de: Rights of
 utilisateur.droits: User rights
+utilisateur.envoyer.mailconfirmation.failure: Failed to send e-mail
+utilisateur.envoyer.mailconfirmation.success: The e-mail was sent successfully
 utilisateur.gestion: Users management
+utilisateur.inactif.message: This account has not been activated by the user
 utilisateur.inscription.information.aministrative: Bureaucratic data
 utilisateur.inscription.information.connexion: Login information
 utilisateur.inscription.information.personnelle: Personal information
@@ -809,6 +822,8 @@ utilisateur.profil: User profile
 utilisateur.refus.message: This user has been refused
 utilisateur.refuser.succes: User successfully refused
 utilisateur.registration.invalide.message: You cannot confirm this account, this link has expired.
+utilisateur.reinitialiser.titre: Reset password
+utilisateur.renvoyer.email.activation: re-send activation e-mail
 utilisateur.select.profilutilisateur: '- Select a user profile -'
 utilisateur.select.statututilisateur: Select a status
 utilisateur.sexe.madame: Female
@@ -822,4 +837,5 @@ utilisateur.valider.succes: User successfully validated
 utilisateur.verification.title: Mail Checking
 utilisateur.ville.aucune: No city registered
 utilisateur.ville: City
+utlisateur.reinitialiser.reset: Resetting the password
 validations.list.title: User waiting for approuval

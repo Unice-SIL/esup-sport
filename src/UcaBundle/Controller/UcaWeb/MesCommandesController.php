@@ -13,6 +13,7 @@ use UcaBundle\Datatables\MesCommandesDatatable;
 use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\Utilisateur;
 use Spipu\Html2Pdf\Html2Pdf;
 use UcaBundle\Form\ValiderPaiementPayboxType;
 

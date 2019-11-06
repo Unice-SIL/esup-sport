@@ -87,7 +87,7 @@ class GestionnaireUtilisateurShibboleth implements SUP
         $objCotisationSportive = $this->em->getReference(TypeAutorisation::class, 2);
 
         $utilisateur
-            ->setUsername($credentials['uid'])
+            ->setUsername($credentials['eppn'])
             ->setPlainPassword(Utilisateur::getRandomPassword())
             ->setEmail($credentials['mail'])
             ->setMatricule($credentials['uid'])

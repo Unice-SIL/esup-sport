@@ -1,0 +1,28 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+  {% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+  {% endblock %}
+  <h1>
+    {{ 'utilisateur.reinitialiser.titre' | trans }}
+  </h1>
+  <section class="container mb-5">
+    <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white">
+      <div class='row'>
+        <div class='col-sm-12'>
+
+          {{ form_start(form, { 'action': path('fos_user_resetting_reset', {'token': token}), 'attr': { 'class': 'fos_user_resetting_reset' } }) }}
+          {{ form_widget(form) }}
+          <div>
+            <input class="btn btn-primary mt-2 px-3 py-2 fs-12" type="submit" value="{{ 'utlisateur.reinitialiser.reset' |trans }}"/>
+          </div>
+          {{ form_end(form) }}
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>{% endblock %}

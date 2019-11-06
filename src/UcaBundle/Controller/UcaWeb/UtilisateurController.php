@@ -35,7 +35,7 @@ class UtilisateurController extends Controller
 
             $mailer = $this->container->get('mailService');
             $mailer->sendMailWithTemplate(
-                'Confirmation.demande.inscription',
+                'Confirmation demande d\'inscription',
                 $usr->getEmail(),
                 '@Uca/Email/PreInscription/PreInscriptionEmail.html.twig',
                 ['nom' => $usr->getNom(), 'prenom' => $usr->getPrenom()]

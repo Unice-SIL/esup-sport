@@ -163,6 +163,28 @@
       route: fos_user_registration_confirmed
       menu: 0
       plansite: 0
+    - titre: "trans('sitemap.utilisateur.changerMotdePasse')"
+      route: fos_user_change_password
+      menu: 0
+      plansite: 0
+    - titre: "trans('sitemap.utlisateur.reinitialiser')"
+      route: fos_user_resetting_request
+      menu: 0
+      plansite: 0
+      items:
+        - titre: "trans('sitemap.utlisateur.reinitialiser.envoyer')"
+          route: fos_user_resetting_send_email
+          menu: 0
+          plansite: 0
+        - titre:  "trans('sitemap.utlisateur.reinitialiser.verification')"
+          route: fos_user_resetting_check_email
+          menu: 0
+          plansite: 0
+        - titre: "trans('sitemap.utlisateur.reinitialiser.reset')"
+          route: fos_user_resetting_reset
+          menu: 0
+          plansite: 0
+
 # Branche Uca Gest
 - titre: "trans('sitemap.ucagest.libelle')"
   menuLevel: 2

@@ -2,11 +2,10 @@
 {% block modalId 'modalMail' %}
 {% block modalTitle 'monPlanning.modal.mail.title' %}
 {% block modalBody %}
-    {{ form_start(form2) }}
-    {{ form_label(form2.objet) }}
-    {{ form_widget(form2.objet) }}
-    {{ form_label(form2.mail) }}
-    {{ form_widget(form2.mail) }}
+    {{ form_start(form2, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_row(form2.destinataires) }}
+    {{ form_row(form2.objet) }}
+    {{ form_row(form2.mail) }}
 {% endblock %}
 {% block modalFooter %}
     {{ form_row(form2.save) }}

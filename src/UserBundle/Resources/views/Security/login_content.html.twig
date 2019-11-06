@@ -55,7 +55,9 @@
                 <div class="text-center">
                     <input class="btn btn-outline-primary mt-3 px-2 py-1 fs-12 mh-40" type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit.external'|trans }}"/>
                 </div>
-
+                <div class="text-center">
+                    <a href="{{ path('fos_user_resetting_request') }}"> {{ 'security.login.reinitialiser' | trans }} </a>
+                </div>
             </form>
 
             <hr class="col-6 my-5 my-md-4">

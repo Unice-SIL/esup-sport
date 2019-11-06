@@ -117,6 +117,7 @@ utilisateur.password.notnull: Password is required
 utilisateur.password.tropPetit: Password is too short
 utilisateur.sexe.notnull: Civility is required
 utilisateur.telephone.invalide: Invalid telephone number
+utilisateur.username.email: Your username should not be an email
 utilisateur.username.existant: The username is already used
 utilisateur.username.notnull: Username is required
 utilisateur.username.tropLong: Username is too long

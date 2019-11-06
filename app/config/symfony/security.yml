@@ -152,5 +152,5 @@ security:
           role: ROLE_GESTION_UTILISATEUR_ECRITURE
         - path: /UcaWeb/ShibLogin
           role: IS_AUTHENTICATED_FULLY 
-        - path: / | /UcaGest/Connexion
+        - path: / | /UcaGest/Connexion | /UcaWeb/Reinitialiser/Envoyer
           role: IS_AUTHENTICATED_ANONYMOUSLY
