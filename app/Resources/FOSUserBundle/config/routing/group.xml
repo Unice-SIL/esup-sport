@@ -5,19 +5,15 @@
     xsi:schemaLocation="http://symfony.com/schema/routing http://symfony.com/schema/routing/routing-1.0.xsd">
 
     <route id="UcaGest_GroupeAjouter" path="/Ajouter" methods="GET POST">
-        <default key="_controller">group.controller:newAction</default>
+        <default key="_controller">fos_user.group.controller:newAction</default>
     </route>
 
     <route id="UcaGest_GroupeVoir" path="/{groupName}" methods="GET">
-        <default key="_controller">group.controller:showAction</default>
+        <default key="_controller">fos_user.group.controller:showAction</default>
     </route>
-
-    <route id="fos_user_group_show" path="/{groupName}" methods="GET">
-        <default key="_controller">group.controller:showAction</default>
-    </route>
-
+    
     <route id="UcaGest_GroupeModifier" path="/Modifier/{groupName}" methods="GET POST">
-        <default key="_controller">group.controller:editAction</default>
+        <default key="_controller">fos_user.group.controller:editAction</default>
     </route>
 
 </routes>

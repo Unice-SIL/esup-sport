@@ -1,0 +1,129 @@
+{% extends "@Uca/Common/Liste/Datatable.html.twig" %}
+
+{% block DatatableHeader %}
+    <div class="well">
+        {{form_start(form)}}
+        <div class="row">        
+            <div class="col-sm-3">
+                {{form_row(form.dateDebut)}}
+            </div>
+            <div class="col-sm-3">
+                {{form_row(form.dateFin)}}
+            </div>
+        </div>
+        {{form_end(form)}}
+    </div>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+    {# Affichage du bouton Exporter tout s'il est défini #}
+    <div class="row">
+        {% if exportAll is defined %}
+            <a href="{{ url('UcaWeb_MesCommandesExportAll') }}" id="bouton_export_all_facture" class="btn btn-primary btn-xs ml-auto mt-3" >{{ 'bouton.exportallfacture.pdf'|trans }}</a>
+        {% endif %}    
+
+        {% if gestionButtons is defined %}
+            <a href="{{url('UcaWeb_MesCommandesExtraire')}}" id="bouton_extraction_excel" class="btn btn-primary mt-3">{{'common.extraire'|trans}}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if gestionButtons is defined %}
+        {# Script qui permet de modifier l'url du bouton Extraire pour lui rajouter/enlever un parametre de recherche #}
+        <script type="text/javascript">        
+            $(document).ready(function(){
+                setUrl();
+                let oTable = $('#sg-datatables-Commande_datatable').DataTable();
+                oTable.column(2).search("", true, false);
+                $("#sg-datatables-Commande_datatable-head-filter-15").on('change', function(){   
+                    setUrl();
+                });
+                $('input[type="search"]').on('change', function(){              
+                    setUrl();                    
+                });
+
+                $('.champRechercheDatatableCommande').on('change', function() {
+                    setUrl();                    
+                    // Initialisation de la recherche (avec une valeur inconnue pour gerer le cas ou il n'y a aucun choix)
+                    var valueSearched = "--";
+
+                    // Parcours des valeurs selectionnees
+                    $('[id^="ucabundle_commande_date"]').each(function(value,index){
+                        valueSearched += "|";
+                        valueSearched += this.value;
+                    })
+
+                    // Indication de la recherche
+                    oTable.column(15).search(valueSearched,true,false);
+                    // Rechargement des donnees avec la recherche
+                    oTable.ajax.reload();
+                });
+
+            });
+
+            function setUrl(){
+                $("#bouton_extraction_excel").attr("href", createUrl($("#sg-datatables-Commande_datatable-head-filter-12").val(), $('input[type="search"]').val(), $("#ucabundle_commande_dateDebut").val(), $("#ucabundle_commande_dateFin").val()));
+            }
+
+            function createUrl(dtDeb, dtFin){
+                let dateFin = null;
+                let dateDebut = null;
+                let url = "{{ url('UcaWeb_MesCommandesExtraire', {'dateDebut': 'date_debut', 'dateFin': 'date_fin' }) }}";
+
+                if(dtFin!=""){
+                    dateFin = dtFin.split('-');
+                    dateFin.reverse();
+                    dateFin = dateFin.join('-');
+                }
+                if(dtDeb!=""){
+                    dateDebut = dtDeb.split('-');
+                    dateDebut.reverse();
+                    dateDebut = dateDebut.join('-');
+                }
+                url = url.replace('date_debut', dateDebut);
+                url = url.replace('date_fin', dateFin);
+                return url;
+            }
+
+        </script>        
+    {% endif %}
+    {% if exportAll is defined %}
+        {# Script qui permet de modifier l'url du bouton Exporter tout pour lui rajouter/enlever un paramétre #}
+        <script type="text/javascript">        
+            $(document).ready(function(){
+                setUrlForExportPDF();
+                $("#sg-datatables-Commande_datatable-head-filter-15").change(function(){
+                    setUrlForExportPDF();
+                });
+                $('input[type="search"]').change(function(){              
+                    setUrlForExportPDF();                    
+                });
+            });
+
+            function setUrlForExportPDF(){
+                $("#bouton_export_all_facture").attr("href", createUrlForExportPDF($("#sg-datatables-Commande_datatable-head-filter-15").val(), $('input[type="search"]').val()));
+                console.log( $("#bouton_export_all_facture").attr("href"));
+            }
+
+            function createUrlForExportPDF(dt, rch){
+                let datePaiement = null;
+                let recherche = null;
+                let url = "{{ url('UcaWeb_MesCommandesExportAll', {'datePaiement': 'valeur_date', 'recherche': 'valeur_recherche' }) }}";
+                if(dt!=""){
+                    datePaiement = dt.split('/');
+                    datePaiement = datePaiement.join('-');
+                }
+                if(rch!=""){
+                    recherche = rch;
+                }
+                url = url.replace('valeur_date', datePaiement);
+                url = url.replace('valeur_recherche', recherche);
+                return url;
+            }
+
+        </script>
+    {% endif %}
+{% endblock %}

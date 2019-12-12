@@ -2,14 +2,12 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\UtilisateurType;
-
-use FOS\UserBundle\Event\GetResponseUserEvent;
 
 /**
  * @Route("UcaWeb")
@@ -43,20 +41,21 @@ class UtilisateurController extends Controller
 
             $listUser = ($em->getRepository('UcaBundle:Utilisateur'))->findByRole('ROLE_GESTION_ACTIVITE_ECRITURE');
             foreach ($listUser as $user) {
-                $setTo[$user['email']] = ucfirst($user['prenom']) . ' ' . ucfirst($user['nom']);
+                $setTo[$user['email']] = ucfirst($user['prenom']).' '.ucfirst($user['nom']);
             }
-         
+
             $mailer->sendMailWithTemplate(
                 'Demande de validation',
                 $setTo,
                 '@Uca/Email/PreInscription/DemandeValidationEmail.html.twig',
                 ['id' => $usr->getId(), 'nom' => $usr->getNom(), 'prenom' => $usr->getPrenom()]
             );
-            
+
             return $this->redirectToRoute('UcaWeb_preInscription_confirmation');
         }
         $twigConfig['item'] = $usr;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaWeb/Utilisateur/Formulaire.html.twig', $twigConfig);
     }
 
@@ -78,15 +77,16 @@ class UtilisateurController extends Controller
         $item = $this->getUser();
         $isEncadrant = $item->hasRole('ROLE_ENCADRANT');
 
-        $twigConfig['type'] = "encadrant";
+        $twigConfig['type'] = 'encadrant';
         if ($isEncadrant) {
-            $twigConfig['role'] = "encadrant";
+            $twigConfig['role'] = 'encadrant';
         } else {
-            $twigConfig['role'] = "user";
+            $twigConfig['role'] = 'user';
         }
 
         $twigConfig['item'] = $item;
         $twigConfig['activiteSouscrite'] = $this->FormatParActivite($item);
+
         return $this->render('@Uca/UcaWeb/Utilisateur/Voir.html.twig', $twigConfig);
     }
 
@@ -102,13 +102,15 @@ class UtilisateurController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->persist($item);
             $em->flush();
+
             return $this->redirectToRoute('UcaWeb_MonCompte');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaWeb/Utilisateur/ModifierMonCompte.html.twig', $twigConfig);
     }
-    
+
     public function FormatParActivite(Utilisateur $item)
     {
         $listeActivite = [];
@@ -118,29 +120,29 @@ class UtilisateurController extends Controller
         foreach ($formatsActivites as $format) {
             $listeActivite[$format->getActivite()->getLibelle()][] = $format->getLibelle();
         }
+
         return $listeActivite;
     }
-    
+
     /**
      * @Route("/Confirmation/Invalide/{token}", name="UtilisateurConfirmationInvalide")
      */
-    public function confirmationExpireeAction(Request $request, String $token)
+    public function confirmationExpireeAction(Request $request, string $token)
     {
         return $this->render('@Uca/UcaWeb/Utilisateur/ConfirmationInvalide.html.twig');
     }
-    
+
     // public function commandeDetailParCommande(Utilisateur $item){
     //     $em = $this->getDoctrine()->getManager();
     //     $commandes = $em->getRepository('UcaBundle:Commande')->findBy(['utilisateur' => $item->getId()]);
-    //     foreach ($commandes as $commande){ 
+    //     foreach ($commandes as $commande){
     //         $commandeDetails = $commande->getCommandeDetail();
     //         foreach ($commandeDetails as $commandeDetail) {
-    //             $listeCommandes[$commande->getId()][] = $commandeDetail; 
+    //             $listeCommandes[$commande->getId()][] = $commandeDetail;
     //         }
     //     }
     //     return $listeCommandes;
     // }
-
     // public function getDate(Utilisateur $item){
 
     // }

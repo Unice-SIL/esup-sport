@@ -3,7 +3,6 @@
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,8 +49,7 @@ class TarifController extends Controller
     }
 
     /** 
-     * @Route("/Ajouter", name="UcaGest_TarifAjouter") 
-     * @Method({"GET", "POST"})
+     * @Route("/Ajouter", name="UcaGest_TarifAjouter", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
     public function ajouterAction(Request $request)
@@ -107,8 +105,7 @@ class TarifController extends Controller
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="UcaGest_TarifModifier",requirements={"id"="\d+"}) 
-     * @Method({"GET", "POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_TarifModifier",requirements={"id"="\d+"}, methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
     public function modifierAction(Request $request, Tarif $item)

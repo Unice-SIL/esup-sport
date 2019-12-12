@@ -3,15 +3,24 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\CommandeDetailRepository")
  */
 class CommandeDetail
 {
-    #region Propriétés
+    /** @ORM\ManyToOne(targetEntity="Commande", inversedBy="commandeDetails") */
+    protected $commande;
+
+    /** @ORM\ManyToOne(targetEntity="Inscription", inversedBy="commandeDetails", cascade={"persist"}) */
+    protected $inscription;
+
+    /** @ORM\ManyToMany(targetEntity="CommandeDetail", inversedBy="ligneCommandeLiees", cascade={"persist"}) */
+    protected $ligneCommandeReferences;
+
+    /** @ORM\ManyToMany(targetEntity="CommandeDetail", mappedBy="ligneCommandeReferences") */
+    protected $ligneCommandeLiees;
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -22,20 +31,8 @@ class CommandeDetail
     /** @ORM\Column(type="string", nullable=true) */
     private $type;
 
-    /** @ORM\ManyToOne(targetEntity="Commande", inversedBy="commandeDetails") */
-    protected $commande;
-
     /** @ORM\Column(type="string", nullable=true) */
     private $hmac;
-
-    /** @ORM\ManyToOne(targetEntity="Inscription", inversedBy="commandeDetails", cascade={"persist"}) */
-    protected $inscription;
-
-    /** @ORM\ManyToMany(targetEntity="CommandeDetail", inversedBy="ligneCommandeLiees", cascade={"persist"}) */
-    protected $ligneCommandeReferences;
-
-    /** @ORM\ManyToMany(targetEntity="CommandeDetail", mappedBy="ligneCommandeReferences") */
-    protected $ligneCommandeLiees;
 
     /** @ORM\ManyToOne(targetEntity="FormatActivite") */
     private $formatActivite;
@@ -78,29 +75,29 @@ class CommandeDetail
 
     /** @ORM\Column(type="string", nullable=true) */
     private $typeArticle;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
 
     public function __construct($commande, $type, $data, $article = null)
     {
         $this->type = $type;
         $this->setCommande($commande);
         $this->setDateAjoutPanier(new \DateTime());
-        if ($type == 'inscription') {
+        if ('inscription' == $type) {
             $inscription = $data;
             $item = $inscription->getItem();
             $this->setInscription($inscription);
             $this->formatActivite = $inscription->getFormatActivite();
             $this->setItem($item);
-        } elseif ($type == 'format') {
+        } elseif ('format' == $type) {
             $inscription = $data;
             $item = $inscription->getItem();
             $this->setInscription($inscription);
             $this->setItem($item);
             $this->addLigneCommandeReference($article);
             $article->addLigneCommandeLiee($this);
-        } elseif ($type == 'autorisation') {
+        } elseif ('autorisation' == $type) {
             $item = $data;
             $this->setItem($item);
             $this->addLigneCommandeReference($article);
@@ -112,8 +109,6 @@ class CommandeDetail
         $commande->updateMontantTotal();
     }
 
-
-
     public function jsonSerializeProperties()
     {
         return ['date', 'statut', 'montant', 'formatActivite', 'creneau', 'typeAutorisaton'];
@@ -123,9 +118,9 @@ class CommandeDetail
     {
         if (is_a($item, FormatActivite::class)) {
             $this->setFormatActivite($item);
-        } else if (is_a($item, Creneau::class)) {
+        } elseif (is_a($item, Creneau::class)) {
             $this->setCreneau($item);
-        } else if (is_a($item, Reservabilite::class)) {
+        } elseif (is_a($item, Reservabilite::class)) {
             $this->setReservabilite($item);
             $this->setFormatActivite($item->getFormatActivite());
         } elseif (is_a($item, TypeAutorisation::class)) {
@@ -137,12 +132,16 @@ class CommandeDetail
     {
         if (!empty($this->creneau)) {
             return $this->creneau;
-        } elseif (!empty($this->reservabilite)) {
+        }
+        if (!empty($this->reservabilite)) {
             $this->reservabilite->setFormatActivite($this->formatActivite);
+
             return $this->reservabilite;
-        } elseif (!empty($this->formatActivite)) {
+        }
+        if (!empty($this->formatActivite)) {
             return $this->formatActivite;
-        } elseif (!empty($this->typeAutorisation)) {
+        }
+        if (!empty($this->typeAutorisation)) {
             return $this->typeAutorisation;
         }
     }
@@ -158,22 +157,22 @@ class CommandeDetail
 
     public function traitementPostPaiement()
     {
-        if ($this->type == 'inscription') {
+        if ('inscription' == $this->type) {
             $this->inscription->setStatut('valide');
-        } elseif ($this->type == 'format') {
+        } elseif ('format' == $this->type) {
             $this->inscription->setStatut('valide');
-        } elseif ($this->type == 'autorisation') {
+        } elseif ('autorisation' == $this->type) {
             $this->commande->getUtilisateur()->addAutorisation($this->getTypeAutorisation());
         }
     }
 
     public function traitementPostAnnulation($options)
     {
-        if ($this->type == 'inscription') {
+        if ('inscription' == $this->type) {
             $this->inscription->setStatut('annule', $options);
-        } elseif ($this->type == 'format') {
+        } elseif ('format' == $this->type) {
             $this->inscription->setStatut('annule', $options);
-        } elseif ($this->type == 'autorisation') {
+        } elseif ('autorisation' == $this->type) {
             // NA
         }
     }
@@ -187,43 +186,45 @@ class CommandeDetail
 
     public function isRemovable()
     {
-        return $this->getType() == 'autorisation' && $this->getLigneCommandeReferences()->isEmpty()
-            || $this->getType() == 'format' && $this->getLigneCommandeReferences()->isEmpty()
-            || $this->getType() == 'inscription';
+        return 'autorisation' == $this->getType() && $this->getLigneCommandeReferences()->isEmpty()
+            || 'format' == $this->getType() && $this->getLigneCommandeReferences()->isEmpty()
+            || 'inscription' == $this->getType();
     }
 
     public function traitementPostSuppressionPanier($options = [])
     {
-        if ($this->getType() == 'autorisation') {
+        if ('autorisation' == $this->getType()) {
             if (!$this->getLigneCommandeReferences()->isEmpty()) {
                 return false;
-            } else {
-                $this->remove();
-                return true;
             }
-        } elseif ($this->getType() == 'format') {
+            $this->remove();
+
+            return true;
+        }
+        if ('format' == $this->getType()) {
             if (!$this->getLigneCommandeReferences()->isEmpty()) {
                 return false;
-            } else {
-                $this->getInscription()->setStatut('annule',  $options);
-                $this->remove();
-                return true;
             }
-        } elseif ($this->getType() == 'inscription') {
+            $this->getInscription()->setStatut('annule', $options);
+            $this->remove();
+
+            return true;
+        }
+        if ('inscription' == $this->getType()) {
             if (!$this->getLigneCommandeLiees()->isEmpty()) {
                 foreach ($this->getLigneCommandeLiees() as $commandeDetail) {
                     $commandeDetail->removeLigneCommandeReference($this);
                     $this->removeLigneCommandeLiee($commandeDetail);
                 }
             }
-            $this->getInscription()->setStatut('annule',  $options);
+            $this->getInscription()->setStatut('annule', $options);
             $this->remove();
+
             return true;
         }
     }
 
-    #endregion
-
+    //endregion
 
     /**
      * Get id.
@@ -238,7 +239,7 @@ class CommandeDetail
     /**
      * Set type.
      *
-     * @param string|null $type
+     * @param null|string $type
      *
      * @return CommandeDetail
      */
@@ -262,7 +263,7 @@ class CommandeDetail
     /**
      * Set hmac.
      *
-     * @param string|null $hmac
+     * @param null|string $hmac
      *
      * @return CommandeDetail
      */
@@ -286,7 +287,7 @@ class CommandeDetail
     /**
      * Set dateAjoutPanier.
      *
-     * @param \DateTime|null $dateAjoutPanier
+     * @param null|\DateTime $dateAjoutPanier
      *
      * @return CommandeDetail
      */
@@ -358,7 +359,7 @@ class CommandeDetail
     /**
      * Set jourCreneau.
      *
-     * @param string|null $jourCreneau
+     * @param null|string $jourCreneau
      *
      * @return CommandeDetail
      */
@@ -382,7 +383,7 @@ class CommandeDetail
     /**
      * Set horaireCreneau.
      *
-     * @param string|null $horaireCreneau
+     * @param null|string $horaireCreneau
      *
      * @return CommandeDetail
      */
@@ -406,7 +407,7 @@ class CommandeDetail
     /**
      * Set libelle.
      *
-     * @param string|null $libelle
+     * @param null|string $libelle
      *
      * @return CommandeDetail
      */
@@ -430,7 +431,7 @@ class CommandeDetail
     /**
      * Set description.
      *
-     * @param string|null $description
+     * @param null|string $description
      *
      * @return CommandeDetail
      */
@@ -454,7 +455,7 @@ class CommandeDetail
     /**
      * Set dateDebut.
      *
-     * @param \DateTime|null $dateDebut
+     * @param null|\DateTime $dateDebut
      *
      * @return CommandeDetail
      */
@@ -478,7 +479,7 @@ class CommandeDetail
     /**
      * Set dateFin.
      *
-     * @param \DateTime|null $dateFin
+     * @param null|\DateTime $dateFin
      *
      * @return CommandeDetail
      */
@@ -502,7 +503,7 @@ class CommandeDetail
     /**
      * Set typeArticle.
      *
-     * @param string|null $typeArticle
+     * @param null|string $typeArticle
      *
      * @return CommandeDetail
      */
@@ -526,11 +527,11 @@ class CommandeDetail
     /**
      * Set commande.
      *
-     * @param \UcaBundle\Entity\Commande|null $commande
+     * @param null|\UcaBundle\Entity\Commande $commande
      *
      * @return CommandeDetail
      */
-    public function setCommande(\UcaBundle\Entity\Commande $commande = null)
+    public function setCommande(Commande $commande = null)
     {
         $this->commande = $commande;
 
@@ -550,11 +551,11 @@ class CommandeDetail
     /**
      * Set inscription.
      *
-     * @param \UcaBundle\Entity\Inscription|null $inscription
+     * @param null|\UcaBundle\Entity\Inscription $inscription
      *
      * @return CommandeDetail
      */
-    public function setInscription(\UcaBundle\Entity\Inscription $inscription = null)
+    public function setInscription(Inscription $inscription = null)
     {
         $this->inscription = $inscription;
 
@@ -578,7 +579,7 @@ class CommandeDetail
      *
      * @return CommandeDetail
      */
-    public function addLigneCommandeReference(\UcaBundle\Entity\CommandeDetail $ligneCommandeReference)
+    public function addLigneCommandeReference(CommandeDetail $ligneCommandeReference)
     {
         $this->ligneCommandeReferences[] = $ligneCommandeReference;
 
@@ -590,9 +591,9 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeReference
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeLigneCommandeReference(\UcaBundle\Entity\CommandeDetail $ligneCommandeReference)
+    public function removeLigneCommandeReference(CommandeDetail $ligneCommandeReference)
     {
         return $this->ligneCommandeReferences->removeElement($ligneCommandeReference);
     }
@@ -614,7 +615,7 @@ class CommandeDetail
      *
      * @return CommandeDetail
      */
-    public function addLigneCommandeLiee(\UcaBundle\Entity\CommandeDetail $ligneCommandeLiee)
+    public function addLigneCommandeLiee(CommandeDetail $ligneCommandeLiee)
     {
         $this->ligneCommandeLiees[] = $ligneCommandeLiee;
 
@@ -626,9 +627,9 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeLiee
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeLigneCommandeLiee(\UcaBundle\Entity\CommandeDetail $ligneCommandeLiee)
+    public function removeLigneCommandeLiee(CommandeDetail $ligneCommandeLiee)
     {
         return $this->ligneCommandeLiees->removeElement($ligneCommandeLiee);
     }
@@ -646,11 +647,11 @@ class CommandeDetail
     /**
      * Set formatActivite.
      *
-     * @param \UcaBundle\Entity\FormatActivite|null $formatActivite
+     * @param null|\UcaBundle\Entity\FormatActivite $formatActivite
      *
      * @return CommandeDetail
      */
-    public function setFormatActivite(\UcaBundle\Entity\FormatActivite $formatActivite = null)
+    public function setFormatActivite(FormatActivite $formatActivite = null)
     {
         $this->formatActivite = $formatActivite;
 
@@ -670,11 +671,11 @@ class CommandeDetail
     /**
      * Set creneau.
      *
-     * @param \UcaBundle\Entity\Creneau|null $creneau
+     * @param null|\UcaBundle\Entity\Creneau $creneau
      *
      * @return CommandeDetail
      */
-    public function setCreneau(\UcaBundle\Entity\Creneau $creneau = null)
+    public function setCreneau(Creneau $creneau = null)
     {
         $this->creneau = $creneau;
 
@@ -694,11 +695,11 @@ class CommandeDetail
     /**
      * Set reservabilite.
      *
-     * @param \UcaBundle\Entity\Reservabilite|null $reservabilite
+     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
      *
      * @return CommandeDetail
      */
-    public function setReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite = null)
+    public function setReservabilite(Reservabilite $reservabilite = null)
     {
         $this->reservabilite = $reservabilite;
 
@@ -718,11 +719,11 @@ class CommandeDetail
     /**
      * Set typeAutorisation.
      *
-     * @param \UcaBundle\Entity\TypeAutorisation|null $typeAutorisation
+     * @param null|\UcaBundle\Entity\TypeAutorisation $typeAutorisation
      *
      * @return CommandeDetail
      */
-    public function setTypeAutorisation(\UcaBundle\Entity\TypeAutorisation $typeAutorisation = null)
+    public function setTypeAutorisation(TypeAutorisation $typeAutorisation = null)
     {
         $this->typeAutorisation = $typeAutorisation;
 

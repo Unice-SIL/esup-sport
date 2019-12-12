@@ -2,19 +2,18 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use UcaBundle\Datatables\MesInscriptionsDatatable;
 use UcaBundle\Datatables\GestionInscriptionDatatable;
+use UcaBundle\Datatables\MesInscriptionsDatatable;
+use UcaBundle\Entity\Activite;
+use UcaBundle\Entity\ClasseActivite;
+use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\Inscription;
-use UcaBundle\Entity\CommandeDetail;
-use UcaBundle\Entity\Commande;
-
+use UcaBundle\Entity\TypeActivite;
+use UcaBundle\Form\GestionInscriptionType;
 
 /**
  * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
@@ -27,15 +26,28 @@ class MesInscriptionsController extends Controller
      */
     public function listerAction(Request $request)
     {
-        if($request->get('_route') == 'UcaGest_GestionInscription' && !$this->isGranted('ROLE_GESTION_INSCRIPTION')){
+        $em = $this->getDoctrine()->getManager();
+        if ('UcaGest_GestionInscription' == $request->get('_route') && !$this->isGranted('ROLE_GESTION_INSCRIPTION')) {
             return $this->redirectToRoute('UcaWeb_MesInscriptions');
         }
         $this->get('uca.timeout')->nettoyageCommandeEtInscription();
         $isAjax = $request->isXmlHttpRequest();
-        if($request->get('_route') == 'UcaGest_GestionInscription'){
+        if ('UcaGest_GestionInscription' == $request->get('_route')) {
             $datatable = $this->get('sg_datatables.factory')->create(GestionInscriptionDatatable::class);
             $twigConfig['codeListe'] = 'GestionInscription';
-        }else{
+            $form = $this->get('form.factory')->create(
+                GestionInscriptionType::class,
+                [
+                    'typeActivite' => $em->getRepository(TypeActivite::class)->findAll(),
+                    'classeActivite' => $em->getRepository(ClasseActivite::class)->findAll(),
+                    'listeActivite' => $em->getRepository(Activite::class)->findAll(),
+                    'listeFormatActivite' => $em->getRepository(FormatActivite::class)->findAll(),
+                    'data_class' => null,
+                    'em' => $em,
+                ]
+            );
+            $twigConfig['form'] = $form->createView();
+        } else {
             $datatable = $this->get('sg_datatables.factory')->create(MesInscriptionsDatatable::class);
             $twigConfig['codeListe'] = 'MesInscriptions';
         }
@@ -46,15 +58,20 @@ class MesInscriptionsController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
-            if($request->get('_route') == 'UcaWeb_MesInscriptions'){
+            if ('UcaWeb_MesInscriptions' == $request->get('_route')) {
                 $qb->andWhere('utilisateur = :objectId');
                 $qb->setParameter('objectId', $this->getUser()->getId());
             }
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
         $twigConfig['noAddButton'] = true;
-        return $this->render('@Uca/Common/Liste/Datatable_UcaWeb.html.twig', $twigConfig);
+        if ('UcaWeb_MesInscriptions' == $request->get('_route')) {
+            return $this->render('@Uca/Common/Liste/Datatable_UcaWeb.html.twig', $twigConfig);
+        }
+
+        return $this->render('@Uca/UcaGest/Reporting/Inscriptions/Datatable.html.twig', $twigConfig);
     }
 
     /**
@@ -63,14 +80,15 @@ class MesInscriptionsController extends Controller
     public function annulerAction(Request $request, Inscription $inscription)
     {
         $em = $this->getDoctrine()->getManager();
-        if($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))){
-            $inscription->setStatut('annule',  ['motifAnnulation' => 'annulationutilisateur']);
+        if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
+            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationutilisateur']);
             $redirect = $this->redirectToRoute('UcaWeb_MesInscriptions');
-        }else if($this->isGranted('ROLE_GESTION_INSCRIPTION')){
-            $inscription->setStatut('annule',  ['motifAnnulation' => 'annulationgestionnaire']);
+        } elseif ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
+            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationgestionnaire']);
             $redirect = $this->redirectToRoute('UcaGest_GestionInscription');
         }
         $em->flush();
+
         return $redirect;
     }
 
@@ -85,9 +103,10 @@ class MesInscriptionsController extends Controller
         $inscriptionService->ajoutPanier($inscription);
         $inscription->setStatut('attentepaiement');
         $em->flush();
-        if($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))){
+        if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
             return $this->redirectToRoute('UcaWeb_Panier');
-        }else if($this->isGranted('ROLE_GESTION_INSCRIPTION')){
+        }
+        if ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
             return $this->redirectToRoute('UcaGest_GestionInscription');
         }
     }
@@ -97,22 +116,27 @@ class MesInscriptionsController extends Controller
      */
     public function seDesinscrireAction(Request $request, Inscription $inscription)
     {
-        $inscriptionService = $this->get('uca.inscription');
-        $inscriptionService->setInscription($inscription);
-        $inscriptionService->mailDesinscription($inscription);
+        if ($this->isGranted('ROLE_GESTION_INSCRIPTION') or $this->isGranted('ROLE_ENCADRANT') or $inscription->getUtilisateur() == $this->getUser()) {
+            $inscriptionService = $this->get('uca.inscription');
+            $inscriptionService->setInscription($inscription);
+            $inscriptionService->mailDesinscription($inscription);
 
-        $em = $this->getDoctrine()->getManager();
-        $inscription->setStatut('desinscrit');
-        $inscription->setDateDesinscription(new \DateTime());
-        $em->flush();
-        if($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))){
+            $em = $this->getDoctrine()->getManager();
+            $inscription->setStatut('desinscrit');
+            $inscription->setDateDesinscription(new \DateTime());
+            $em->flush();
+            if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
+                return $this->redirectToRoute('UcaWeb_MesInscriptions');
+            }
+            if ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
+                return $this->redirectToRoute('UcaGest_GestionInscription');
+            }
+        } else {
             return $this->redirectToRoute('UcaWeb_MesInscriptions');
-        }else if($this->isGranted('ROLE_GESTION_INSCRIPTION')){
-            return $this->redirectToRoute('UcaGest_GestionInscription');
         }
     }
 
-     /**
+    /**
      * @Route("UcaWeb/MesInscriptions/{id}",name="UcaWeb_MesInscriptionsVoir")
      * @Route("UcaGest/GestionInscription/{id}",name="UcaGest_GestionInscriptionVoir")
      */
@@ -121,15 +145,15 @@ class MesInscriptionsController extends Controller
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
         $twigConfig['noAddButton'] = true;
-        $twigConfig["codeListe"] = 'Inscription';
+        $twigConfig['codeListe'] = 'Inscription';
         $twigConfig['retourBouton'] = true;
-        $twigConfig["inscription"] = $inscription;
-        if($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))){
-            $twigConfig["source"] = 'mesinscriptions';
-        }else if($this->isGranted('ROLE_GESTION_INSCRIPTION')){
-            $twigConfig["source"] = 'gestioninscription';
+        $twigConfig['inscription'] = $inscription;
+        if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
+            $twigConfig['source'] = 'mesinscriptions';
+        } elseif ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
+            $twigConfig['source'] = 'gestioninscription';
         }
+
         return $this->render('@Uca/UcaWeb/Inscription/DetailInscription.html.twig', $twigConfig);
     }
-
 }

@@ -8,6 +8,7 @@ $("#mailButton").on("click", function(){
     console.log("save button is pressed");
     console.log( $( this ).serialize() );
 }); */
+/*
 $(function() {
     $('form[name="ucabundle_mail"]').on("submit", function(e){
         e.preventDefault();
@@ -30,3 +31,4 @@ var sendForm = function(data){
     }).done(function(){
     }).fail(_uca.ajax.fail);
 }
+*/

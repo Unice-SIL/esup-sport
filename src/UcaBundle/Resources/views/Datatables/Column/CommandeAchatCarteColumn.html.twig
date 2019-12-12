@@ -1,0 +1,5 @@
+{% for commandeDetail in row.commandeDetails %}
+    {% if commandeDetail.typeArticle == 'FormatAchatCarte' %}
+        {{commandeDetail.libelle}}
+    {% endif %}    
+{% endfor %}

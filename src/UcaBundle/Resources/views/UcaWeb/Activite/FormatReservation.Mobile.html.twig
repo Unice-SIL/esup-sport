@@ -37,7 +37,7 @@
                     {% set hidden = "week-active" %}
                 {% endif %}
 
-                <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index0 }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
+                <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
                     {% set isDispo = false %}
                     {% for reservabilite in day %}
                         {% if reservabilite.getInscriptionInformations(app.user, item).statut == 'disponible' %}
@@ -47,7 +47,6 @@
                     {% endfor %}
 
                     <div class="row mt-1">
-
                         {% if loop.index < premierJourSemaineCreneau %}
                             <div class="col-12 text-center">
                                 <p>{{ "creneau.week.indisponible"|trans }}</p>
@@ -81,6 +80,19 @@
             {% endfor %}
 
         </div>
+    </div>
+
+     <div class="col-12">
+        {% if nextCreneau is defined and nextCreneau is not null and premierJourSemaineCreneau == 0 %}
+            <div class="col-12 text-center">
+                <p>{{ "creneau.week.indisponible"|trans }}</p>
+                <p>
+                    <a href="{{path('UcaWeb_FormatActiviteReservationDetailAnneeSemaine',{ 'idCa' : idCa, 'idA' : idA, 'id' : id, 'idRessource' : idRessource, 'year_week' : nextCreneau|dateFormat('Y_ww') })}}">
+                        <button class="btn btn-primary" id="changeWeek">{{ "creneau.list.next"|trans }}</button>
+                    </a>
+                </p>
+            </div>
+        {% endif %}
     </div>
 
 </div>

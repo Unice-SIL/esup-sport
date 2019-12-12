@@ -52,9 +52,11 @@ bouton.annuler: Cancel
 bouton.bloquer: Block
 bouton.debloquer: Unblock
 bouton.descendre: Drop
+bouton.deselectionner.tout: Unselect all
 bouton.desinscrire.inscription: Unsubscribe
 bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
+bouton.exportallfacture.pdf: Export bills
 bouton.exportpdf: Export
 bouton.indisponible.inscriptionsterminees: Registration closed
 bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
@@ -74,6 +76,7 @@ bouton.retour.listeClasse: Back to activities
 bouton.retour: Back
 bouton.save.previsualiser: Save and preview
 bouton.save: Save
+bouton.selectionner.tout: Select all
 bouton.supprimer: Delete
 bouton.voir: See
 cgv.acceptees: Thank you for accepting the general terms and conditions of sale 
@@ -114,11 +117,14 @@ common.attentepaiement: Pending for payment
 common.attentevalidationencadrant: Pending for a supervisor validation
 common.attentevalidationgestionnaire: Pending for an administrator validation
 common.aucun: '- None -'
+common.aucune.facture: No invoice available for this date or for this person
 common.autorisations: Authorizations
 common.capacite: Capacity
+common.carte: Card
 common.cb: Credit Card
 common.chargement: Loading...
 common.cheque: Cheque
+common.classe.activite: Activity class
 common.commandeencours: Ongoing orders
 common.coordonnees: Coordinates
 common.creneaux: Time slots
@@ -140,6 +146,7 @@ common.encadrants: Supervisors
 common.espece: Cash
 common.et: '{0} | ]0,Inf[ and '
 common.evenement: Event
+common.extraire: Extract
 common.facture: Invoice
 common.friday: Friday
 common.groups: Groups
@@ -153,6 +160,7 @@ common.inscriptionsavenir: Soon available
 common.inscrire: Register
 common.libelle: Label
 common.lieu: Place
+common.liste.inscription: List of registrants 
 common.mobile: Mobile
 common.modifications: Changes
 common.monday: Monday
@@ -164,6 +172,8 @@ common.naissance: Birth Date
 common.niveauSportif: Sport level
 common.nom.utilisateur: Username
 common.nom: Name
+common.nomencaisseur: Cashier First name
+common.nomencaisseur: Cashier Name
 common.non: 'No'
 common.numerocommande: Order Number
 common.numerorecu: Bill Number
@@ -463,6 +473,7 @@ monPlanning.more.description: Description
 monPlanning.more.detail: Detail
 monPlanning.more.horaires: schedule
 monPlanning.more.mail.button: Send mail
+monPlanning.more.mail.send.success: Your message has been sent
 monPlanning.more.mail.titre: "Need to send a mail to the subscribers ?"
 monplanning.list.title: My schedule
 monplanning.more.appel.empty: No subscribers for this activity

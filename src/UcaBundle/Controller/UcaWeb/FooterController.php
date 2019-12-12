@@ -29,7 +29,7 @@ class FooterController extends Controller
     }
 
     /**
-     * @Route("/MentionsLegales", name="UcaWeb_MentionsLegales")
+     * @Route("/MentionsLegales", name="UcaWeb_MentionsInformations")
      */
     public function mentionsLegalesAction()
     {
@@ -60,6 +60,7 @@ class FooterController extends Controller
             }
         }
         $twigConfig['emplacement'] = 'CGV';
+
         return $this->render('@Uca/UcaWeb/Footer/EmplacementTexte.html.twig', $twigConfig);
     }
 
@@ -68,6 +69,6 @@ class FooterController extends Controller
      */
     public function DonneesPersonnellesAction()
     {
-        return $this->render('@Uca/UcaWeb/Footer/EmplacementTexte.html.twig', ['emplacement'=> 'Données Personnelles']);
+        return $this->render('@Uca/UcaWeb/Footer/EmplacementTexte.html.twig', ['emplacement' => 'Données Personnelles']);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace UcaBundle\Service\Listener\Entity;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Service\Common\MailService;
@@ -10,7 +9,7 @@ use UcaBundle\Service\Common\MailService;
 class CommandeListener
 {
     private $mailer;
-    
+
     public function __construct(MailService $mailer)
     {
         $this->mailer = $mailer;
@@ -20,11 +19,11 @@ class CommandeListener
     {
         $em = $event->getEntityManager();
         if ($event->hasChangedField('statut')) {
-            if ($event->getOldValue('statut') != 'apayer' && $event->getNewValue('statut') == 'apayer') {
+            if ('apayer' != $event->getOldValue('statut') && 'apayer' == $event->getNewValue('statut')) {
                 $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
                 $commande->setNumeroCommande($numero);
 
-                if ($event->getOldValue('typePaiement') != 'BDS' && $event->getNewValue('typePaiement') == 'BDS') {
+                if ('BDS' != $event->getOldValue('typePaiement') && 'BDS' == $event->getNewValue('typePaiement')) {
                     $this->mailer->sendMailWithTemplate(
                         'Commande à régler au bureau des sports',
                         $commande->getUtilisateur()->getEmail(),
@@ -33,12 +32,15 @@ class CommandeListener
                     );
                 }
             }
-            if ($event->getOldValue('statut') != 'termine' && $event->getNewValue('statut') == 'termine') {
-                if($event->getNewValue('montantTotal') != 0){
+            if ('termine' != $event->getOldValue('statut') && 'termine' == $event->getNewValue('statut')) {
+                if (0 != $event->getNewValue('montantTotal')) {
                     $numero = $em->getRepository(Commande::class)->max('numeroRecu') + 1;
                     $commande->setNumeroRecu($numero);
+                } else {
+                    $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
+                    $commande->setNumeroCommande($numero);
                 }
-                
+
                 $this->mailer->sendMailWithTemplate(
                     'Validation de la commande',
                     $commande->getUtilisateur()->getEmail(),
@@ -46,7 +48,7 @@ class CommandeListener
                     ['commande' => $commande]
                 );
             }
-            if ($event->getOldValue('statut') != 'annule' && $event->getNewValue('statut') == 'annule') {
+            if ('annule' != $event->getOldValue('statut') && 'annule' == $event->getNewValue('statut')) {
                 $this->mailer->sendMailWithTemplate(
                     'Annulation de la commande',
                     $commande->getUtilisateur()->getEmail(),

@@ -28,6 +28,6 @@ class AppelType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'ucabundle_imagefond';
+        return 'ucabundle_appel';
     }
 }

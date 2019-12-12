@@ -19,24 +19,26 @@ class PlanningMailType extends AbstractType
         $builder
             ->add('destinataires', ChoiceType::class, [
                 'choices' => $liste,
-                //'choice_attr' => ['checked' => 'checked'],
                 'label_format' => 'contact.destinataires',
                 'multiple' => true,
                 'expanded' => true,
                 'required' => true,
-                'constraints' => new Assert\NotBlank(['message' => 'mail.destinataires.notBlank']),
+                'constraints' => new Assert\NotBlank(['groups' => 'default', 'message' => 'mail.destinataires.notBlank']),
             ])
 
             ->add('objet', TextType::class, [
                 'label_format' => 'contact.objet',
-                'constraints' => new Assert\NotBlank(['message' => 'mail.objet.notBlank']),
+                'required' => true,
+                'constraints' => new Assert\NotBlank(['groups' => 'default', 'message' => 'mail.objet.notBlank']),
             ])
             ->add('mail', TextareaType::class, [
                 'label_format' => 'contact.message',
-                'constraints' => new Assert\NotBlank(['message' => 'mail.message.notBlank']),
+                'required' => true,
+                'constraints' => new Assert\NotBlank(['groups' => 'default', 'message' => 'mail.message.notBlank']),
             ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'contact.save',
+                'validation_groups' => 'default',
             ])
         ;
     }
@@ -45,6 +47,8 @@ class PlanningMailType extends AbstractType
     {
         $resolver->setDefaults([
             'liste_destinataires' => null,
+            'validation_groups' => 'default',
+            'csrf_protection' => false,
         ]);
     }
 

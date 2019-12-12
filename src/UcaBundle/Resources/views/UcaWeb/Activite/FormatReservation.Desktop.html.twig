@@ -57,18 +57,4 @@
             </a>
         </div>
     </div>
-
-    <div class="row mt-1">
-        {% if nextCreneau is defined and nextCreneau is not null and premierJourSemaineCreneau == 0 %}
-            <div class="col-12 text-center">
-                <p>{{ "creneau.week.indisponible"|trans }}</p>
-                <p>
-                    <a href="{{path('UcaWeb_FormatActiviteReservationDetailAnneeSemaine',{ 'idCa' : idCa, 'idA' : idA, 'id' : id, 'idRessource' : idRessource, 'year_week' : nextCreneau|dateFormat('Y_ww') })}}">
-                        <button class="btn btn-primary" id="changeWeek">{{ "creneau.list.next"|trans }}</button>
-                    </a>
-                </p>
-            </div>
-        {% endif %}
-    </div>
-
 </div>

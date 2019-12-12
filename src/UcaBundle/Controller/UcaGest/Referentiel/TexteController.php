@@ -6,7 +6,6 @@ namespace UcaBundle\Controller\UcaGest\Referentiel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Entity\Texte;
@@ -43,8 +42,7 @@ class TexteController extends Controller
 
 
     /**
-     * @Route("/{id}/Modifier", name="UcaGest_TexteModifier")
-     * @Method({"GET""POST"})
+     * @Route("/{id}/Modifier", name="UcaGest_TexteModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TEXTE_ECRITURE")
      */
     public function modifierAction(Request $request, Texte $texte)

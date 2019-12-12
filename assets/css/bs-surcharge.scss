@@ -1416,3 +1416,7 @@ legend {
         max-height: 50vh;
     }
 }
+
+li[aria-disabled="true"]{
+    display:none!important;
+}

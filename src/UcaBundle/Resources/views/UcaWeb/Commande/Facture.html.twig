@@ -34,9 +34,6 @@
         border-top: none;
         border-bottom: none;
     }
-    .space {
-        padding-top: 250px;
-    }
 
     .10p {
         width: 10%;
@@ -61,9 +58,9 @@
     }
 </style>
 <page backbottom="10mm" backleft="10mm" backright="10mm" backtop="10mm">
-    <page_header>
-        <img alt="image_activite" src="{{ serverPathToWeb() ~ 'build/images/logo_black.png'}}" style="align:left;">
-    </page_header>
+    
+    <img alt="image_activite" src="{{ serverPathToWeb() ~ 'build/images/logo_black.png'}}" style="align:left;">
+    
     <table style="vertical-align:top;width:100%;margin-top:70px;">
         <tr>
             <td class="50p">
@@ -85,20 +82,20 @@
             <td class="50p">
                 <h2>{{'common.facture'|trans}} n°{{commande.numeroRecu}}</h2>
             </td>
-            <td class="50p" style="text-align: right;">{{ "now"|date("d/m/y")}}</td>
+            <td class="50p" style="text-align: right;">{{ commande.datePaiement|date("d/m/y")}}</td>
         </tr>
         <tr>
-            <td class="20p">{{'common.payeavec'|trans }}&nbsp;{{commande.moyenPaiement}}</td>
+            <td class="20p">{{'common.payeavec'|trans }} {{commande.moyenPaiement}} {{commande.typePaiement == 'PAYBOX' ? 'en ligne' : '' }} le {{commande.datePaiement|date('d/m/Y')}}</td>
         </tr>
         <tr>
-            <td class="50p">{{'utilisateur.commande'|trans}}&nbsp;n°&nbsp;{{commande.numeroCommande}}</td>
+            <td class="50p">{{'utilisateur.commande'|trans}}&nbsp;n°{{commande.numeroCommande}}</td>
         </tr>
     </table>
 
     <table class="border" style="margin-top: 30px;">
         <thead>
             <tr>
-                <th class="50p">{{'common.description'|trans}}</th>
+                <th class="60p">{{'common.description'|trans}}</th>
                 <th class="15p">{{'common.prixunitaire'|trans}}</th>
                 <th class="25p">{{'common.montant'|trans}}</th>
             </tr>
@@ -106,16 +103,12 @@
         <tbody>
             {% for article in commande.commandeDetails %}
                 <tr>
-                    <td>{{article.libelle}}</td>
+                    <td class="60p">{{article.libelle}}</td>
                     <td>{{article.montant}}&nbsp;€</td>
                     <td>{{article.montant}}&nbsp;€</td>
                 </tr>
             {% endfor %}
-            <tr>
-                <td class="space"></td>
-                <td></td>
-                <td></td>
-            </tr>
+            
             {% if commande.tva == 0 %}
                 <tr>
                     <td class="no-border" colspan="1"></td>

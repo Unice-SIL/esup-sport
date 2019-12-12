@@ -25,18 +25,18 @@ trait Article
     {
         if (!empty($this->getTarif())) {
             return $this->getTarif()->getMontantUtilisateur($utilisateur);
-        } else {
-            return -1;
         }
+
+        return -1;
     }
 
     public function getArticleTva($utilisateur)
     {
         if (!empty($this->getTarif())) {
             return $this->getTarif()->getTvaUtilisateur($utilisateur);
-        } else {
-            return 0;
         }
+
+        return 0;
     }
 
     public function inscriptionsTerminees()
@@ -52,9 +52,9 @@ trait Article
     public function isNotFull()
     {
         $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit']]]);
+
         return !empty($this->getCapacite()) && $this->getInscriptions()->matching($criterias)->count() < $this->getCapacite();
     }
-
 
     public function isFull()
     {
@@ -94,13 +94,13 @@ trait Article
             $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $format);
             $inscriptions = $utilisateur->getInscriptionsByCriteria([
                 [Inscription::getItemColumn($this), 'eq', $this],
-                ['statut', 'notIn', ['annule', 'desinscrit']]
+                ['statut', 'notIn', ['annule', 'desinscrit']],
             ]);
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';
-            } elseif (!$inscriptions->isEmpty() && $inscriptions->first()->getStatut() == 'valide') {
+            } elseif (!$inscriptions->isEmpty() && 'valide' == $inscriptions->first()->getStatut()) {
                 $resultat['statut'] = 'inscrit';
-            } elseif (!$inscriptions->isEmpty() && $inscriptions->first()->getStatut() != 'valide') {
+            } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
                 $resultat['statut'] = 'preinscrit';
             } elseif ($this->isFull()) {
                 $resultat['statut'] = 'complet';
@@ -127,8 +127,9 @@ trait Article
         $montant = 0;
         foreach ($this->getArticleAutorisations()->getIterator() as $autorisation) {
             $m = 0;
-            if (!$utilisateur->hasAutorisation($autorisation))
+            if (!$utilisateur->hasAutorisation($autorisation)) {
                 $m = $autorisation->getArticleMontant($utilisateur);
+            }
             if ($m >= 0) {
                 $montant += $m;
             } else {
@@ -152,13 +153,13 @@ trait Article
             ['formatActivite', 'eq', $format],
             ['creneau', 'eq', null],
             ['reservabilite', 'eq', null],
-            ['statut', 'eq', 'valide']
+            ['statut', 'eq', 'valide'],
         ])) {
             $montant['format'] = $format->getArticleMontant($utilisateur);
         } else {
             $montant['format'] = 0;
         }
-        if ($montant['article'] != -1 && $montant['autorisations'] != -1 && $montant['format'] != -1) {
+        if (-1 != $montant['article'] && -1 != $montant['autorisations'] && -1 != $montant['format']) {
             $montant['total'] = $montant['article'] + $montant['autorisations'] + $montant['format'];
         }
 

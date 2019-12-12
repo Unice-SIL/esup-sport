@@ -7,7 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use UcaBundle\Datatables\ProfilUtilisateurDatatable;
 use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Tarif;

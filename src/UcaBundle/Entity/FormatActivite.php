@@ -5,12 +5,9 @@ namespace UcaBundle\Entity;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Service\Common\Fn;
-use UcaBundle\Service\Common\Previsualisation;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -18,7 +15,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="format", type="string")
  * @ORM\DiscriminatorMap( {
- *   "FormatSimple" = "FormatSimple", 
+ *   "FormatSimple" = "FormatSimple",
  *   "FormatAvecCreneau" = "FormatAvecCreneau",
  *   "FormatAvecReservation" = "FormatAvecReservation",
  *   "FormatAchatCarte" = "FormatAchatCarte"
@@ -33,13 +30,28 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     use \UcaBundle\Entity\Traits\JsonSerializable;
     use \UcaBundle\Entity\Traits\Article;
 
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Inscription", mappedBy="formatActivite")
+     */
+    protected $inscriptions;
+
+    protected $type;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="complement.capacite.notblank")
+     * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
+     */
+    protected $capacite;
 
     /**
      * @Gedmo\Translatable
@@ -53,83 +65,78 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @Gedmo\Translatable
      * @Gedmo\Versioned
      * @ORM\Column(type="text")
-     * @Assert\NotBlank(message="formatactivite.description.notblank") 
+     * @Assert\NotBlank(message="formatactivite.description.notblank")
      */
     private $description;
 
-    /** 
+    /**
      * @ORM\ManyToOne(targetEntity="Activite", inversedBy="formatsActivite", fetch="EAGER")
      */
     private $activite;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $lienHtml;
 
-    /** 
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $lienPdf;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime") 
-     * @Assert\NotBlank(message="formatactivite.dateDebutPublication.notblank") 
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="formatactivite.dateDebutPublication.notblank")
      */
     private $dateDebutPublication;
 
-    /** 
+    /**
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="formatactivite.dateFinPublication.notblank") 
+     * @Assert\NotBlank(message="formatactivite.dateFinPublication.notblank")
      * @Assert\Expression("this.getDateFinPublication() >= this.getDateDebutPublication()", message="message.erreur.datefin")
      */
     private $dateFinPublication;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime") 
-     * @Assert\NotBlank(message="formatactivite.dateDebutInscription.notblank") 
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="formatactivite.dateDebutInscription.notblank")
      * @Assert\Expression("this.getDateDebutPublication()<=this.getDateDebutInscription()", message="message.erreur.datedebutinscription.publication")
      */
     private $dateDebutInscription;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime") 
-     * @Assert\NotBlank(message="formatactivite.dateFinInscription.notblank") 
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="formatactivite.dateFinInscription.notblank")
      * @Assert\Expression("this.getDateFinInscription() >= this.getDateDebutInscription()", message="message.erreur.datefin")
      * @Assert\Expression("this.getDateFinInscription()<=this.getDateFinPublication()", message="message.erreur.datefininscription.publication")
      * @Assert\Expression("this.getDateFinInscription()<=this.getDateFinEffective()",message="message.erreur.datefininscription.effective")
      */
     private $dateFinInscription;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="datetime") 
-     * @Assert\NotBlank(message="formatactivite.dateDebutEffective.notblank") 
+     * @ORM\Column(type="datetime")
+     * @Assert\NotBlank(message="formatactivite.dateDebutEffective.notblank")
      * @Assert\Expression("this.getDateFinEffective() > this.getDateDebutEffective()", message="message.erreur.datedebut")
      */
     private $dateDebutEffective;
 
-    /** 
+    /**
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime")
-     * @Assert\NotBlank(message="formatactivite.dateFinEffective.notblank") 
+     * @Assert\NotBlank(message="formatactivite.dateFinEffective.notblank")
      * @Assert\Expression("this.getDateFinEffective() > this.getDateDebutEffective()", message="message.erreur.datefin")
      */
     private $dateFinEffective;
 
-    /** 
-     * @ORM\OneToMany(targetEntity="Inscription", mappedBy="formatActivite") 
-     */
-    protected $inscriptions;
-
     /** @ORM\Column(type="string", length=255) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      *  @Assert\File(
      *      mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *      mimeTypesMessage = "formatactivite.image.format"
@@ -141,21 +148,19 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /** @ORM\Column(type="datetime",nullable=true) */
     private $updatedAt;
 
-    /** @ORM\ManyToMany(targetEntity="Lieu", inversedBy="formatsActivite") 
+    /** @ORM\ManyToMany(targetEntity="Lieu", inversedBy="formatsActivite")
      * @Assert\NotNull(message="formatactivite.lieu.notnull")
      * @Assert\Count(min = 1, minMessage = "formatactivite.lieu.notnull")
      */
     private $lieu;
+    //endregion
 
-    protected $type;
-    #endregion
-
-    #region Propriétés communes Creneaux
+    //region Propriétés communes Creneaux
 
     /** @ORM\ManyToMany(targetEntity="TypeAutorisation", inversedBy="formatsActivite") */
     private $autorisations;
 
-    /** @ORM\ManyToMany(targetEntity="NiveauSportif") 
+    /** @ORM\ManyToMany(targetEntity="NiveauSportif")
      * @Assert\NotBlank(message="complement.niveauxsportifs.notblank")
      * @Assert\Count(min = 1, minMessage = "complement.niveauxsportifs.notblank")
      */
@@ -171,8 +176,8 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
     private $estPayant;
 
-    /** 
-     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="formatsActivite", fetch="EAGER") 
+    /**
+     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="formatsActivite", fetch="EAGER")
      * @Assert\Expression("!this.getEstPayant() || this.getTarif()", message="complement.tarif.notblank")
      */
     private $tarif;
@@ -181,19 +186,11 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="boolean", nullable=false, options={"default":0}) */
     private $estEncadre;
 
-    /** 
-     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="formatsActivite") 
+    /**
+     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="formatsActivite")
      * @Assert\Expression("!this.getEstEncadre() || !this.getEncadrants().isEmpty()", message="complement.encadrant.notblank")
      */
     private $encadrants;
-
-    /** 
-     * @Gedmo\Versioned
-     * @ORM\Column(type="integer") 
-     * @Assert\NotBlank(message="complement.capacite.notblank")
-     * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
-     */
-    protected $capacite;
 
     /** @Gedmo\Versioned
      * @ORM\Column(type="integer") */
@@ -229,10 +226,24 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="text")
      */
     private $listeEncadrants;
+    //endregion
 
-    #endregion
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->lieu = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->autorisations = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->niveauxSportifs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->encadrants = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
-    #region Méthodes
+    //endregion
+
+    //region Méthodes
 
     public function getClasseActiviteLibelle()
     {
@@ -267,8 +278,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function setImageFile(File $image = null)
     {
         $this->imageFile = $image;
-        if ($image)
+        if ($image) {
             $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getImageFile()
@@ -290,9 +302,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     {
         if (!$this->estPayant) {
             return 0;
-        } else {
-            return $this->getArticleMontantDefaut($utilisateur);
         }
+
+        return $this->getArticleMontantDefaut($utilisateur);
     }
 
     public function getArticleLibelle()
@@ -327,7 +339,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
     public function updateTarifLibelle()
     {
-        if ($this->getTarif() != null) {
+        if (null != $this->getTarif()) {
             $this->tarifLibelle = $this->getTarif()->getLibelle();
         } else {
             $this->tarifLibelle = '';
@@ -341,7 +353,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         $this->listeLieux = '';
         foreach ($this->getLieu() as $lieu) {
             if (!empty($this->listeLieux)) {
-                $this->listeLieux .= ", ";
+                $this->listeLieux .= ', ';
             }
             $this->listeLieux .= $lieu->getLibelle();
         }
@@ -354,7 +366,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         $this->listeAutorisations = '';
         foreach ($this->getAutorisations() as $autorisation) {
             if (!empty($this->listeAutorisations)) {
-                $this->listeAutorisations .= ", ";
+                $this->listeAutorisations .= ', ';
             }
             $this->listeAutorisations .= $autorisation->getLibelle();
         }
@@ -367,7 +379,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         $this->listeNiveauxSportifs = '';
         foreach ($this->getNiveauxSportifs() as $niveauSportif) {
             if (!empty($this->listeNiveauxSportifs)) {
-                $this->listeNiveauxSportifs .= ", ";
+                $this->listeNiveauxSportifs .= ', ';
             }
             $this->listeNiveauxSportifs .= $niveauSportif->getLibelle();
         }
@@ -380,7 +392,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         $this->listeProfils = '';
         foreach ($this->getProfilsUtilisateurs() as $profil) {
             if (!empty($this->listeProfils)) {
-                $this->listeProfils .= ", ";
+                $this->listeProfils .= ', ';
             }
             $this->listeProfils .= $profil->getLibelle();
         }
@@ -393,9 +405,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         $this->listeEncadrants = '';
         foreach ($this->getEncadrants() as $encadrant) {
             if (!empty($this->listeEncadrants)) {
-                $this->listeEncadrants .= ", ";
+                $this->listeEncadrants .= ', ';
             }
-            $this->listeEncadrants .= $encadrant->getPrenom() . ' ' . $encadrant->getNom();
+            $this->listeEncadrants .= $encadrant->getPrenom().' '.$encadrant->getNom();
         }
 
         return $this;
@@ -404,7 +416,21 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function getInscriptionsValidee()
     {
         $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('statut', "valide"));
+            ->andWhere(Criteria::expr()->eq('statut', 'valide'))
+        ;
+
+        return $this->getInscriptions()->matching($criteria);
+    }
+
+    public function getAllInscriptions()
+    {
+        $criteria = Criteria::create()
+            ->orWhere(Criteria::expr()->eq('statut', 'valide'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentepaiement'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentevalidationencadrant'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attenteajoutpanier'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentevalidationgestionnaire'))
+        ;
 
         return $this->getInscriptions()->matching($criteria);
     }
@@ -413,26 +439,12 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     {
         if (empty($options)) {
             return $this->autorisations;
-        } else {
-            return $this->autorisations->filter(function ($item) use ($options) {
-                return !(isset($options['comportement']) && !in_array($item->getComportement()->getCodeComportement(), $options['comportement']))
-                    && !(isset($options['utilisateur']) && $options['utilisateur']->hasAutorisation($item));
-            });
         }
-    }
-    #endregion
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->lieu = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->autorisations = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->niveauxSportifs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->encadrants = new \Doctrine\Common\Collections\ArrayCollection();
+        return $this->autorisations->filter(function ($item) use ($options) {
+            return !(isset($options['comportement']) && !in_array($item->getComportement()->getCodeComportement(), $options['comportement']))
+                    && !(isset($options['utilisateur']) && $options['utilisateur']->hasAutorisation($item));
+        });
     }
 
     /**
@@ -496,7 +508,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Set lienHtml.
      *
-     * @param string|null $lienHtml
+     * @param null|string $lienHtml
      *
      * @return FormatActivite
      */
@@ -520,7 +532,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Set lienPdf.
      *
-     * @param string|null $lienPdf
+     * @param null|string $lienPdf
      *
      * @return FormatActivite
      */
@@ -712,7 +724,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return FormatActivite
      */
@@ -832,11 +844,11 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Set activite.
      *
-     * @param \UcaBundle\Entity\Activite|null $activite
+     * @param null|\UcaBundle\Entity\Activite $activite
      *
      * @return FormatActivite
      */
-    public function setActivite(\UcaBundle\Entity\Activite $activite = null)
+    public function setActivite(Activite $activite = null)
     {
         $this->activite = $activite;
 
@@ -860,7 +872,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function addInscription(Inscription $inscription)
     {
         $this->inscriptions[] = $inscription;
 
@@ -872,9 +884,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\Inscription $inscription
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function removeInscription(Inscription $inscription)
     {
         return $this->inscriptions->removeElement($inscription);
     }
@@ -896,7 +908,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addLieu(\UcaBundle\Entity\Lieu $lieu)
+    public function addLieu(Lieu $lieu)
     {
         $this->lieu[] = $lieu;
 
@@ -908,9 +920,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\Lieu $lieu
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeLieu(\UcaBundle\Entity\Lieu $lieu)
+    public function removeLieu(Lieu $lieu)
     {
         return $this->lieu->removeElement($lieu);
     }
@@ -932,7 +944,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addAutorisation(\UcaBundle\Entity\TypeAutorisation $autorisation)
+    public function addAutorisation(TypeAutorisation $autorisation)
     {
         $this->autorisations[] = $autorisation;
 
@@ -944,9 +956,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\TypeAutorisation $autorisation
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeAutorisation(\UcaBundle\Entity\TypeAutorisation $autorisation)
+    public function removeAutorisation(TypeAutorisation $autorisation)
     {
         return $this->autorisations->removeElement($autorisation);
     }
@@ -958,7 +970,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    public function addNiveauxSportif(NiveauSportif $niveauxSportif)
     {
         $this->niveauxSportifs[] = $niveauxSportif;
 
@@ -970,9 +982,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\NiveauSportif $niveauxSportif
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    public function removeNiveauxSportif(NiveauSportif $niveauxSportif)
     {
         return $this->niveauxSportifs->removeElement($niveauxSportif);
     }
@@ -994,7 +1006,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addProfilsUtilisateur(\UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur)
+    public function addProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
     {
         $this->profilsUtilisateurs[] = $profilsUtilisateur;
 
@@ -1006,9 +1018,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeProfilsUtilisateur(\UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur)
+    public function removeProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
     {
         return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
     }
@@ -1026,11 +1038,11 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Set tarif.
      *
-     * @param \UcaBundle\Entity\Tarif|null $tarif
+     * @param null|\UcaBundle\Entity\Tarif $tarif
      *
      * @return FormatActivite
      */
-    public function setTarif(\UcaBundle\Entity\Tarif $tarif = null)
+    public function setTarif(Tarif $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -1054,7 +1066,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    public function addEncadrant(Utilisateur $encadrant)
     {
         $this->encadrants[] = $encadrant;
 
@@ -1066,9 +1078,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @param \UcaBundle\Entity\Utilisateur $encadrant
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    public function removeEncadrant(Utilisateur $encadrant)
     {
         return $this->encadrants->removeElement($encadrant);
     }

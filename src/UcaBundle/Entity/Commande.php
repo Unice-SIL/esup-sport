@@ -3,8 +3,6 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use UcaBundle\Service\Common\Parametrage;
 
 /**
@@ -13,7 +11,11 @@ use UcaBundle\Service\Common\Parametrage;
  */
 class Commande
 {
-    #region Propriétés
+    // valeurs : cheque, cb, espece
+
+    /** @ORM\Column(type="boolean") */
+    protected $cgvAcceptees = false;
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -50,7 +52,7 @@ class Commande
 
     /** @ORM\Column(type="string", nullable=true) */
     private $statut;
-    /* valeurs : panier, apayer, termine, annule */
+    // valeurs : panier, apayer, termine, annule
 
     /** @ORM\Column(type="string", nullable=true) */
     private $matricule;
@@ -72,17 +74,22 @@ class Commande
 
     /** @ORM\Column(type="string", nullable=true) */
     private $typePaiement;
-    /* valeurs : PAYBOX, BDS, NA => NA: Non applicable / Paiment d'un panier gratuir */
+    // valeurs : PAYBOX, BDS, NA => NA: Non applicable / Paiment d'un panier gratuir
 
     /** @ORM\Column(type="string", nullable=true) */
     private $moyenPaiement;
-    /* valeurs : cheque, cb, espece */
 
-    /** @ORM\Column(type="boolean") */
-    protected $cgvAcceptees = false;
-    #endregion
+    /** @ORM\ManyToOne(targetEntity="Utilisateur") */
+    private $utilisateurEncaisseur;
 
-    #region Méthodes
+    /** @ORM\Column(type="string", nullable=true) */
+    private $prenomEncaisseur;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $nomEncaisseur;
+    //endregion
+
+    //region Méthodes
     public function __construct($utilisateur)
     {
         $this->commandeDetails = new \Doctrine\Common\Collections\ArrayCollection();
@@ -112,25 +119,30 @@ class Commande
     public function changeStatut($statut, $options = [])
     {
         $this->statut = $statut;
-        if (isset($options['typePaiement']))
+        if (isset($options['typePaiement'])) {
             $this->typePaiement = $options['typePaiement'];
-        if (isset($options['moyenPaiement']))
+        }
+        if (isset($options['moyenPaiement'])) {
             $this->moyenPaiement = $options['moyenPaiement'];
+        }
         $this->updateMontantTotal();
 
-        if ($statut == 'panier') {
+        if ('panier' == $statut) {
             $this->datePanier = new \DateTime();
             $this->sauvegardeInformations();
-        } elseif ($statut == 'apayer') {
+        } elseif ('apayer' == $statut) {
             $this->dateCommande = new \DateTime();
             $this->sauvegardeInformations();
-        } elseif ($statut == 'termine') {
+        } elseif ('termine' == $statut) {
             if (empty($this->dateCommande)) {
                 $this->dateCommande = new \DateTime();
             }
+            if (0 == $this->montantTotal) {
+                $this->sauvegardeInformations();
+            }
             $this->datePaiement = new \DateTime();
             $this->traitementPostPaiement();
-        } elseif ($statut == 'annule') {
+        } elseif ('annule' == $statut) {
             $this->dateAnnulation = new \DateTime();
             $this->traitementPostAnnulation($options);
         }
@@ -160,18 +172,18 @@ class Commande
 
     public function getHmac()
     {
-        return $this->typePaiement == 'PAYBOX' && $this->moyenPaiement == 'CB' ? $this->hmac : null;
+        return 'PAYBOX' == $this->typePaiement && 'CB' == $this->moyenPaiement ? $this->hmac : null;
     }
 
-    function getTimeout()
+    public function getTimeout()
     {
-        if ($this->getStatut() == 'panier') {
+        if ('panier' == $this->getStatut()) {
             $dateValeur = $this->getDatePanier();
             $dateLimite = Parametrage::getDateDebutPanierLimite();
-        } elseif ($this->getStatut() == 'apayer' && $this->getTypePaiement() == 'PAYBOX') {
+        } elseif ('apayer' == $this->getStatut() && 'PAYBOX' == $this->getTypePaiement()) {
             $dateValeur = $this->getDateCommande();
             $dateLimite = Parametrage::getDateDebutCbLimite();
-        } elseif ($this->getStatut() == 'apayer' && $this->getTypePaiement() == 'BDS') {
+        } elseif ('apayer' == $this->getStatut() && 'BDS' == $this->getTypePaiement()) {
             $dateValeur = $this->getDateCommande();
             $dateLimite = Parametrage::getDateDebutBdsLimite();
         } else {
@@ -180,11 +192,11 @@ class Commande
         if ($dateValeur < $dateLimite) {
             return null;
         }
+
         return $dateValeur->diff($dateLimite);
     }
 
-    #endregion
-
+    //endregion
 
     /**
      * Get id.
@@ -199,7 +211,7 @@ class Commande
     /**
      * Set numeroCommande.
      *
-     * @param int|null $numeroCommande
+     * @param null|int $numeroCommande
      *
      * @return Commande
      */
@@ -223,7 +235,7 @@ class Commande
     /**
      * Set numeroRecu.
      *
-     * @param int|null $numeroRecu
+     * @param null|int $numeroRecu
      *
      * @return Commande
      */
@@ -247,7 +259,7 @@ class Commande
     /**
      * Set datePanier.
      *
-     * @param \DateTime|null $datePanier
+     * @param null|\DateTime $datePanier
      *
      * @return Commande
      */
@@ -271,7 +283,7 @@ class Commande
     /**
      * Set dateCommande.
      *
-     * @param \DateTime|null $dateCommande
+     * @param null|\DateTime $dateCommande
      *
      * @return Commande
      */
@@ -295,7 +307,7 @@ class Commande
     /**
      * Set datePaiement.
      *
-     * @param \DateTime|null $datePaiement
+     * @param null|\DateTime $datePaiement
      *
      * @return Commande
      */
@@ -319,7 +331,7 @@ class Commande
     /**
      * Set dateAnnulation.
      *
-     * @param \DateTime|null $dateAnnulation
+     * @param null|\DateTime $dateAnnulation
      *
      * @return Commande
      */
@@ -343,7 +355,7 @@ class Commande
     /**
      * Set statut.
      *
-     * @param string|null $statut
+     * @param null|string $statut
      *
      * @return Commande
      */
@@ -367,7 +379,7 @@ class Commande
     /**
      * Set matricule.
      *
-     * @param string|null $matricule
+     * @param null|string $matricule
      *
      * @return Commande
      */
@@ -391,7 +403,7 @@ class Commande
     /**
      * Set prenom.
      *
-     * @param string|null $prenom
+     * @param null|string $prenom
      *
      * @return Commande
      */
@@ -415,7 +427,7 @@ class Commande
     /**
      * Set nom.
      *
-     * @param string|null $nom
+     * @param null|string $nom
      *
      * @return Commande
      */
@@ -439,7 +451,7 @@ class Commande
     /**
      * Set email.
      *
-     * @param string|null $email
+     * @param null|string $email
      *
      * @return Commande
      */
@@ -511,7 +523,7 @@ class Commande
     /**
      * Set typePaiement.
      *
-     * @param string|null $typePaiement
+     * @param null|string $typePaiement
      *
      * @return Commande
      */
@@ -535,7 +547,7 @@ class Commande
     /**
      * Set moyenPaiement.
      *
-     * @param string|null $moyenPaiement
+     * @param null|string $moyenPaiement
      *
      * @return Commande
      */
@@ -559,11 +571,11 @@ class Commande
     /**
      * Set utilisateur.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
      *
      * @return Commande
      */
-    public function setUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur = null)
+    public function setUtilisateur(Utilisateur $utilisateur = null)
     {
         $this->utilisateur = $utilisateur;
 
@@ -587,7 +599,7 @@ class Commande
      *
      * @return Commande
      */
-    public function addCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    public function addCommandeDetail(CommandeDetail $commandeDetail)
     {
         $this->commandeDetails[] = $commandeDetail;
 
@@ -599,9 +611,9 @@ class Commande
      *
      * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    public function removeCommandeDetail(CommandeDetail $commandeDetail)
     {
         return $this->commandeDetails->removeElement($commandeDetail);
     }
@@ -615,7 +627,7 @@ class Commande
     {
         return $this->commandeDetails;
     }
-    
+
     /**
      * Set cgvAcceptees.
      *
@@ -638,5 +650,77 @@ class Commande
     public function getCgvAcceptees()
     {
         return $this->cgvAcceptees;
+    }
+
+    /**
+     * Set prenomEncaisseur.
+     *
+     * @param null|string $prenomEncaisseur
+     *
+     * @return Commande
+     */
+    public function setPrenomEncaisseur($prenomEncaisseur = null)
+    {
+        $this->prenomEncaisseur = $prenomEncaisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get prenomEncaisseur.
+     *
+     * @return string|null
+     */
+    public function getPrenomEncaisseur()
+    {
+        return $this->prenomEncaisseur;
+    }
+
+    /**
+     * Set nomEncaisseur.
+     *
+     * @param null|string $nomEncaisseur
+     *
+     * @return Commande
+     */
+    public function setNomEncaisseur($nomEncaisseur = null)
+    {
+        $this->nomEncaisseur = $nomEncaisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get nomEncaisseur.
+     *
+     * @return string|null
+     */
+    public function getNomEncaisseur()
+    {
+        return $this->nomEncaisseur;
+    }
+
+    /**
+     * Set utilisateurEncaisseur.
+     *
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateurEncaisseur
+     *
+     * @return Commande
+     */
+    public function setUtilisateurEncaisseur(Utilisateur $utilisateurEncaisseur = null)
+    {
+        $this->utilisateurEncaisseur = $utilisateurEncaisseur;
+
+        return $this;
+    }
+
+    /**
+     * Get utilisateurEncaisseur.
+     *
+     * @return \UcaBundle\Entity\Utilisateur|null
+     */
+    public function getUtilisateurEncaisseur()
+    {
+        return $this->utilisateurEncaisseur;
     }
 }

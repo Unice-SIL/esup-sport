@@ -13,6 +13,9 @@
   <section class="container mb-5">
 
     {{ flashBag.showAll }}
+    <div class="alert alert-success d-none" id="messageConfirmationMailSend" role="alert">
+        {{ "monPlanning.more.mail.send.success"|trans }}
+    </div>
 
     <div class="container-style bg-white mb-5">
 
@@ -45,24 +48,52 @@
             </div>
           {% endif %}
         </div>
-
         {% if isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')  %}
           <div class="col-12 col-md-6 mb-4">
-            <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
+
             {% if form.appels is empty %}
-              <p>{{ "monplanning.more.appel.empty"|trans }}
-              </p>
+                <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
+                <p>{{ "monplanning.more.appel.empty"|trans }}</p>
             {% else %}
+                <h2 class="hide-border-title fs-21 fw-700">
+                    {{ "monPlanning.more.appel.titre"|trans }} 
+                    <a class="btn-sm btn-primary btn-form" href='{{ path("UcaWeb_PlanningMore_listePdf", {id: evenement.id} )}}' title="{{'bouton.exportpdf'|trans}}" id="btn_export_liste_pdf">
+                        <span class="fas fa-file-download"></span>
+                    </a>                                                     
+                </h2>
+                <p>{{ "monPlanning.more.appel.texte"|trans }}</p>
 
-              <p>{{ "monPlanning.more.appel.texte"|trans }}</p>
-
-              {{ form_start(form) }}
-
-              {% for appel in form.appels %}
-                {% set name = form.vars.data.appels[loop.index0].utilisateur.nom ~ " " ~ form.vars.data.appels[loop.index0].utilisateur.prenom %}
-                {{ form_row(appel.present, {'label': name}) }}
-              {% endfor %}
-              {{ form_end(form) }}
+                {{ form_start(form) }}
+                <table style="width: 100%">
+                    {% for appel in form.appels %}
+                        <tr>
+                            {% if inscriptions[loop.index0].statut == 'valide' %}
+                                {% if inscriptions[loop.index0].utilisateur.telephone != null %}
+                                    {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom ~ ' (' ~ inscriptions[loop.index0].utilisateur.telephone|telephone ~ ')' %}
+                                    <td style="width: 70%">
+                                        {{ form_row(appel.present, {'label': name}) }}
+                                    </td>
+                                {% else %}
+                                    {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom  %}
+                                    <td style="width: 70%">
+                                        {{ form_row(appel.present, {'label': name}) }}
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                                {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom ~ " (" ~ "creneau.list.preinscrit"|trans ~ ")" %}
+                                <td style="width: 70%">
+                                    {{ form_row(appel.present, {'label': name}) }}
+                                </td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ path('UcaWeb_PlanningMore_Desinscrire', {'user': inscriptions[loop.index0].utilisateur.id, 'evenement': evenement.id}) }}" style="color: white" class="btn btn-danger btn-form" title="{{"bouton.desinscrire"|trans}}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>                                   
+                        </tr>
+                    {% endfor %}
+                </table>     
+                {{ form_end(form) }}
             {% endif %}
 
           </div>
@@ -78,7 +109,49 @@
 {% endblock %}
 
 {% block javascripts %}
-  <script>
+  <script type="text/javascript">
+    {% if not formMail.vars.valid %}
+        $('#mailButton').click();
+    {% endif %}
+   
     var PATH_SEND_MAIL = '{{ path("UcaWeb_PlanningMore_mail", {id: evenement.id} ) }}'
+    
+    function  cocherDecocherTout(param) {
+      destinataires = document.querySelectorAll( "input[id^='ucabundle_mail_destinataires']" );
+      if (param == 'cocher') {
+        destinataires.forEach( function ( elem ) {
+          if ( ! elem.checked ) elem.checked = true;
+        } )
+      } else if ( param == 'decocher' ) {
+        destinataires.forEach( function ( elem ) {
+          if ( elem.checked ) elem.checked = false;
+        } )
+      }
+    }
+    $("#mailButton").on("click", function(){
+      $('#modalMail').modal();
+    });
+    
+    $(document).on('submit','#modalMailForm',function(event) {
+      event.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: PATH_SEND_MAIL,
+        data: $(this).serialize(),
+      }).done(function(resultat) {
+        if(resultat.sucess){
+          $('#modalMail').modal('toggle');
+          $('#messageConfirmationMailSend').removeClass('d-none');
+        } else{
+          $("#modalMail form").replaceWith(resultat.form);
+        }
+      }).fail(_uca.ajax.fail);
+    });
+
+    $(document).on('click', '#ucabundle_mail_save', function(event){
+      event.preventDefault();
+      $("#modalMailForm").submit();
+    })
+
   </script>
 {% endblock %}

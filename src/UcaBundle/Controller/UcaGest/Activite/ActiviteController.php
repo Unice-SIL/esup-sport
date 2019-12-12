@@ -5,7 +5,6 @@ namespace UcaBundle\Controller\UcaGest\Activite;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -24,8 +23,7 @@ use UcaBundle\Service\Common\FlashBag;
 class ActiviteController extends Controller
 {
     /**
-     * @Route("/", name="UcaGest_ActiviteLister", options = {"expose" = true} , requirements={"id"="\d+"})
-     * @Method("GET")
+     * @Route("/", name="UcaGest_ActiviteLister", options = {"expose" = true} , requirements={"id"="\d+"}, methods={"GET"})
      * @Isgranted("ROLE_GESTION_ACTIVITE_LECTURE")
      */
     public function listerAction(Request $request)
@@ -50,8 +48,7 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
-     * @Route("/Ajouter", name="UcaGest_ActiviteAjouter")
-     * @Method({"GET", "POST"})
+     * @Route("/Ajouter", name="UcaGest_ActiviteAjouter", methods={"GET", "POST"})
      */
     public function ajouterAction(Request $request)
     {
@@ -74,8 +71,7 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
-     * @Route("/{id}/Modifier", name="UcaGest_ActiviteModifier")
-     * @Method({"GET", "POST"})
+     * @Route("/{id}/Modifier", name="UcaGest_ActiviteModifier", methods={"GET", "POST"})
      */
     public function modifierAction(Request $request, Activite $activite)
     {
@@ -113,8 +109,7 @@ class ActiviteController extends Controller
 
     /**
      * @Isgranted("ROLE_GESTION_ACTIVITE_LECTURE")
-     * @Route("/{id}", name="UcaGest_ActiviteVoir")
-     * @Method("GET")
+     * @Route("/{id}", name="UcaGest_ActiviteVoir", methods={"GET"})
      */
     public function voirAction(Request $request, Activite $activite)
     {

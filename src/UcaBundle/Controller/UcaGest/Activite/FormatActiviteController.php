@@ -3,7 +3,6 @@
 namespace UcaBundle\Controller\UcaGest\Activite;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +24,7 @@ class FormatActiviteController extends Controller
 {
 
     /**
-     * @Route("/Voir/{id}", name="UcaGest_FormatActiviteVoir")
-     * @Method("GET")
+     * @Route("/Voir/{id}", name="UcaGest_FormatActiviteVoir", methods={"GET"})
      * @Isgranted("ROLE_GESTION_FORMAT_ACTIVITE_LECTURE")
      */
     public function voirAction(Request $request, $idActivite, FormatActivite $item)
@@ -126,8 +124,7 @@ class FormatActiviteController extends Controller
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="UcaGest_FormatActiviteModifier")
-     * @Method({"GET""POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_FormatActiviteModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE")
      */
     public function modifierAction(Request $request, $idActivite, FormatActivite $item)

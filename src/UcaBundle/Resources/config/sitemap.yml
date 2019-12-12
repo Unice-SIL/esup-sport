@@ -138,7 +138,7 @@
           route: UcaWeb_preInscription_confirmation
 
     - titre: "trans('footer.mentionslegales')"
-      route: UcaWeb_MentionsLegales
+      route: UcaWeb_MentionsInformations
       menu: 0
     - titre: "trans('footer.plandusite')"
       route: UcaWeb_PlanSite

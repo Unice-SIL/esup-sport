@@ -3,21 +3,27 @@
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
+use Sg\DatatablesBundle\Datatable\Column\Column;
 use UcaBundle\Datatables\Button\InscriptionAjouterPanierButton;
 use UcaBundle\Datatables\Button\InscriptionAnnulerButton;
+use UcaBundle\Datatables\Button\InscriptionDesinscrireButton;
 use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigDataColumn;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
+use UcaBundle\Datatables\Filter\ActivitiesFilter;
 use UcaBundle\Entity\Inscription;
-use Sg\DatatablesBundle\Datatable\Column\Column;
-use UcaBundle\Datatables\Button\InscriptionDesinscrireButton;
 
 class GestionInscriptionDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
-        $this->setUcaDefault();
-
+        $this->setUcaDefault(['options' => [
+            'individual_filtering' => true,
+            'order_cells_top' => true,
+            'global_search_type' => 'like',
+        ],
+        'features' => ['state_save' => false],
+        ]);
         $this->addInvisibleColumns([
             'id',
             'statut',
@@ -27,27 +33,31 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
             'creneau.serie.evenements.dateFin',
             'formatActivite.activite.libelle',
             'formatActivite.libelle',
+            'formatActivite',
             'reservabilite.evenement.dateDebut',
             'reservabilite.evenement.dateFin',
             'reservabilite.ressource.libelle',
         ]);
-        
-         $qb = $this->em->createQueryBuilder();
-         $qb1 = $this->em->createQueryBuilder();
+
+        $qb = $this->em->createQueryBuilder();
+        $qb1 = $this->em->createQueryBuilder();
 
         $this->columnBuilder
-            ->add('utilisateur.nom', Column::class, array(
+            ->add('utilisateur.nom', Column::class, [
                 'title' => $this->translator->trans('common.nom'),
                 'searchable' => true,
-            ))
-            ->add('utilisateur.prenom', Column::class, array(
+            ])
+            ->add('utilisateur.prenom', Column::class, [
                 'title' => $this->translator->trans('common.prenom'),
                 'searchable' => true,
-            ))
+            ])
             ->add('Activite', TwigVirtualColumn::class, [
-                'title' => "Activités",
+                'title' => 'Activités',
                 'twigTemplate' => 'InscriptionData',
                 'class_name' => 'hide-column-sm',
+                'searchable' => true,
+                'search_column' => 'formatActivite',
+                'filter' => [ActivitiesFilter::class, []],
             ])
             ->add('date', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.date'),
@@ -62,34 +72,29 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                 'search_column' => 'statut',
             ])
             ->add('creneauActivite', TwigDataColumn::class, [
-                'dql' => 
-                "(".$qb->select('a.libelle')
-                ->from('UcaBundle:inscription', 'i')
-                ->leftjoin('i.creneau', 'c')
-                ->leftjoin('c.formatActivite', 'f')
-                ->leftjoin('f.activite', 'a')
-                ->andWhere("i.id = inscription.id")
-                ->getDQL().")"
-                ,
+                'dql' => '('.$qb->select('a.libelle')
+                    ->from('UcaBundle:inscription', 'i')
+                    ->leftjoin('i.creneau', 'c')
+                    ->leftjoin('c.formatActivite', 'f')
+                    ->leftjoin('f.activite', 'a')
+                    ->andWhere('i.id = inscription.id')
+                    ->getDQL().')',
 
                 'type_of_field' => 'string',
                 'visible' => false,
-                'searchable' => false
+                'searchable' => false,
             ])
             ->add('reservabiliteActivite', TwigDataColumn::class, [
-                'dql' => 
-                "(".$qb1->select('a1.libelle')
-                ->from('UcaBundle:inscription', 'i1')
-                ->leftjoin('i1.formatActivite', 'f1')
-                ->leftjoin('f1.activite', 'a1')
-                ->andWhere("i1.id = inscription.id")
-                ->getDQL().")"   
-                ,
+                'dql' => '('.$qb1->select('a1.libelle')
+                    ->from('UcaBundle:inscription', 'i1')
+                    ->leftjoin('i1.formatActivite', 'f1')
+                    ->leftjoin('f1.activite', 'a1')
+                    ->andWhere('i1.id = inscription.id')
+                    ->getDQL().')',
                 'type_of_field' => 'string',
                 'visible' => false,
-                'searchable' => false
-            ])   
-
+                'searchable' => false,
+            ])
 
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
@@ -98,8 +103,9 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                     (new InscriptionAjouterPanierButton($this, 'UcaWeb_MesInscriptionsAjoutPanier', ['id' => 'id']))->getConfig(),
                     (new InscriptionDesinscrireButton($this, 'UcaWeb_MesInscriptionsSeDesinscrire', ['id' => 'id']))->getConfig(),
                     //(new VoirButton($this, 'UcaGest_GestionInscriptionVoir', ['id' => 'id']))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

@@ -1,11 +1,7 @@
-{% extends "@FOSUser/layout.html.twig" %}
-
-{% block fos_user_content %}
     {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
 
-    <h1>{{'groupe.ajouter.title'|trans}}</h1>
+    <h1>{{ titrePage | trans}}</h1>
 
-    <!-- Message de saisie incorrecte -->
     {% if not form.vars.valid %}
         <div class="alert alert-danger" role="alert" sr-only="">
             {{ 'erreur.formulaire.champ.incorrect' | trans }}
@@ -15,10 +11,9 @@
     <div class="well">
     <div class="row">
         <div class="col-sm-12 col-lg-6"> 
-        {{ form_start(form, { 'action': path('UcaGest_GroupeAjouter'), 'attr': { 'novalidate': 'novalidate' } }) }}
+        {{ form_start(form, { 'action': formPath, 'attr': { 'novalidate': 'novalidate' } }) }}
         {{ form_widget(form) }}
         {{ form_end(form) }}
         </div>
     </div>
     </div>
-{% endblock fos_user_content %}

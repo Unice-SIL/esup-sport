@@ -3,14 +3,11 @@
 namespace UcaBundle\Service\Common;
 
 use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use Twig\TwigFilter;
-use UcaBundle\UcaBundle;
-use UcaBundle\Service\Common\Parametrage;
+use Twig\TwigFunction;
 
 class TwigExtensions extends AbstractExtension
 {
-
     public function __construct(\Doctrine\ORM\EntityManagerInterface $em, \Symfony\Component\HttpFoundation\RequestStack $requestStack)
     {
         $this->em = $em;
@@ -33,23 +30,44 @@ class TwigExtensions extends AbstractExtension
     {
         return [
             new TwigFilter('dateFormat', [$this, 'dateFormat']),
+            new TwigFilter('telephone', [$this, 'telephoneFilter']),
         ];
     }
 
-    public function getTexte($name, $type = "text")
+    public function telephoneFilter($numeroTelephone)
+    {
+        if (null == $numeroTelephone || 0 == strlen($numeroTelephone)) {
+            return $numeroTelephone;
+        }
+
+        $indexSeparateurInPhoneNumber = 2;
+        if (12 == strlen($numeroTelephone)) {
+            $indexSeparateurInPhoneNumber = 4;
+        }
+
+        return substr($numeroTelephone, 0, $indexSeparateurInPhoneNumber).' '
+            .substr($numeroTelephone, $indexSeparateurInPhoneNumber, 2).' '
+            .substr($numeroTelephone, $indexSeparateurInPhoneNumber + 2, 2).' '
+            .substr($numeroTelephone, $indexSeparateurInPhoneNumber + 4, 2).' '
+            .substr($numeroTelephone, $indexSeparateurInPhoneNumber + 6, 2).' '
+            .substr($numeroTelephone, $indexSeparateurInPhoneNumber + 8, 2);
+    }
+
+    public function getTexte($name, $type = 'text')
     {
         $emplacement = $this->em->getRepository('UcaBundle:Texte')->findOneByEmplacement($name);
-        if (is_null($emplacement))
-            return "";
-
+        if (is_null($emplacement)) {
+            return '';
+        }
         switch ($type) {
             case 'title':
-                $text =  $emplacement->getTitre();
-                break;
+                $text = $emplacement->getTitre();
 
-            case "text":
+                break;
+            case 'text':
             default:
-                $text =  $emplacement->getTexte();
+                $text = $emplacement->getTexte();
+
                 break;
         }
 
@@ -78,14 +96,14 @@ class TwigExtensions extends AbstractExtension
 
     public function serverPathToWeb()
     {
-
         $result = $_SERVER['DOCUMENT_ROOT'];
         if (isset($_SERVER['BASE'])) {
             $result .= $_SERVER['BASE'];
         }
-        if (substr($result, -1) != '/') {
+        if ('/' != substr($result, -1)) {
             $result .= '/';
         }
+
         return $result;
     }
 

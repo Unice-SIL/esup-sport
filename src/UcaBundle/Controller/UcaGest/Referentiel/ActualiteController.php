@@ -5,7 +5,6 @@ namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -49,8 +48,7 @@ class ActualiteController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="UcaGest_ActualiteAjouter")
-     * @Method({"GET""POST"})
+     * @Route("/Ajouter", name="UcaGest_ActualiteAjouter", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
      */
     public function ajouterAction(Request $request)
@@ -87,8 +85,7 @@ class ActualiteController extends Controller
     }
 
     /** 
-     * @Route("/Modifier/{id}", name="UcaGest_ActualiteModifier",requirements={"id"="\d+"}) 
-     * @Method({"GET", "POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_ActualiteModifier",requirements={"id"="\d+"}, methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
     */
     public function modifierAction(Request $request, Actualite $actualite)
@@ -107,8 +104,7 @@ class ActualiteController extends Controller
     }
 
     /** 
-     * @Route("/ActualiteModifierOrdre/{id}/{action}", name="UcaGest_ActualiteModifierOrdre", options={"expose"=true}, requirements={"id"="\d+"})
-     * @Method({"GET"})
+     * @Route("/ActualiteModifierOrdre/{id}/{action}", name="UcaGest_ActualiteModifierOrdre", options={"expose"=true}, requirements={"id"="\d+"}, methods={"GET"})
      * @Isgranted("ROLE_GESTION_ACTUALITE_ECRITURE")
     */
     public function monterOrdreActualite(Request $request, Actualite $actualite, $action){

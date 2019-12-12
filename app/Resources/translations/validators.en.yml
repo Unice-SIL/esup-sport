@@ -58,6 +58,9 @@ lieu.codepostal.invalide: The post code is invalid, it must contain 5 digits
 lieu.codepostal.notblank: The place's postal code is required
 lieu.libelle.notblank: The place's label is required
 lieu.ville.notblank: The place's city is required
+mail.destinataires.notBlank: It is mandatory to select at least one recipient
+mail.message.notBlank: The message is required
+mail.objet.notBlank: The subject of your message is required
 materiel.libelle.notblank: The material label is required
 materiel.quantite.notblank: Please enter an available quantity
 message.erreur.datedebut: The start date must be lower than the end date

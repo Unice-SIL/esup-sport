@@ -2,15 +2,12 @@
 
 namespace UcaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Repository\EntityRepository;
 use UcaBundle\Service\Common\Fn;
-use UcaBundle\Service\Common\Previsualisation;
 
 /**
  * @ORM\Entity
@@ -21,7 +18,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     use \UcaBundle\Entity\Traits\JsonSerializable;
     use \UcaBundle\Entity\Traits\Article;
 
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -29,9 +26,9 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      */
     private $id;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Lieu") 
+     * @ORM\ManyToOne(targetEntity="Lieu")
      */
     private $lieu;
 
@@ -46,42 +43,52 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      */
     private $serie;
 
-    #endregion
+    //endregion
 
-    #region Propriétés communes FormatActivite
+    //region Propriétés communes FormatActivite
 
     /** @ORM\ManyToMany(targetEntity="ProfilUtilisateur", inversedBy="creneaux", fetch="EAGER")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank") */
     private $profilsUtilisateurs;
 
-
     /** @ORM\ManyToMany(targetEntity="NiveauSportif", inversedBy="creneaux", fetch="EAGER")
      * @Assert\NotBlank(message="complement.niveauSportif.notblank") */
     private $niveauxSportifs;
 
-
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="creneaux", fetch="EAGER") 
+     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="creneaux", fetch="EAGER")
      * @Assert\Expression("!this.getEstPayant() || this.getTarif()", message="complement.tarif.notblank")
      */
     private $tarif;
 
-    /** 
-     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="creneaux") 
+    /**
+     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="creneaux")
      * @Assert\Expression("!this.getEstEncadre() || this.getEncadrants()", message="complement.encadrant.notblank") */
     private $encadrants;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="integer") 
-     * @Assert\NotBlank(message="complement.capacite.notblank") 
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="complement.capacite.notblank")
      */
     private $capacite;
 
-    #endregion
+    //endregion
 
-    #region Méthodes
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->encadrants = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
 
     public function jsonSerializeProperties()
     {
@@ -97,10 +104,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     {
         $dateDebut = $this->getSerieEvenements()->first()->getDateDebut();
         $dateFin = $this->getSerieEvenements()->first()->getDateFin();
+
         return $this->getFormatActivite()->getLibelle()
-            . ' [' . Fn::intlDateFormat($dateDebut, 'cccc')
-            . ' ' . $dateDebut->format('H:i')
-            . ' - ' . $dateFin->format('H:i') . ']';
+            .' ['.Fn::intlDateFormat($dateDebut, 'cccc')
+            .' '.$dateDebut->format('H:i')
+            .' - '.$dateFin->format('H:i').']';
     }
 
     public function getArticleDescription()
@@ -141,22 +149,23 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     public function getInscriptionsValidee()
     {
         $criteria = Criteria::create()
-            ->andWhere(Criteria::expr()->eq('statut', "valide"));
+            ->andWhere(Criteria::expr()->eq('statut', 'valide'))
+        ;
 
         return $this->getInscriptions()->matching($criteria);
     }
 
-    #endregion
-
-
-    /**
-     * Constructor
-     */
-    public function __construct()
+    public function getAllInscriptions()
     {
-        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->encadrants = new \Doctrine\Common\Collections\ArrayCollection();
+        $criteria = Criteria::create()
+            ->orWhere(Criteria::expr()->eq('statut', 'valide'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentepaiement'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentevalidationencadrant'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attenteajoutpanier'))
+            ->orWhere(Criteria::expr()->eq('statut', 'attentevalidationgestionnaire'))
+        ;
+
+        return $this->getInscriptions()->matching($criteria);
     }
 
     /**
@@ -196,11 +205,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Set lieu.
      *
-     * @param \UcaBundle\Entity\Lieu|null $lieu
+     * @param null|\UcaBundle\Entity\Lieu $lieu
      *
      * @return Creneau
      */
-    public function setLieu(\UcaBundle\Entity\Lieu $lieu = null)
+    public function setLieu(Lieu $lieu = null)
     {
         $this->lieu = $lieu;
 
@@ -220,11 +229,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Set formatActivite.
      *
-     * @param \UcaBundle\Entity\FormatAvecCreneau|null $formatActivite
+     * @param null|\UcaBundle\Entity\FormatAvecCreneau $formatActivite
      *
      * @return Creneau
      */
-    public function setFormatActivite(\UcaBundle\Entity\FormatAvecCreneau $formatActivite = null)
+    public function setFormatActivite(FormatAvecCreneau $formatActivite = null)
     {
         $this->formatActivite = $formatActivite;
 
@@ -248,7 +257,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function addInscription(Inscription $inscription)
     {
         $this->inscriptions[] = $inscription;
 
@@ -260,9 +269,9 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @param \UcaBundle\Entity\Inscription $inscription
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function removeInscription(Inscription $inscription)
     {
         return $this->inscriptions->removeElement($inscription);
     }
@@ -280,11 +289,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Set serie.
      *
-     * @param \UcaBundle\Entity\DhtmlxSerie|null $serie
+     * @param null|\UcaBundle\Entity\DhtmlxSerie $serie
      *
      * @return Creneau
      */
-    public function setSerie(\UcaBundle\Entity\DhtmlxSerie $serie = null)
+    public function setSerie(DhtmlxSerie $serie = null)
     {
         $this->serie = $serie;
 
@@ -308,7 +317,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addProfilsUtilisateur(\UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur)
+    public function addProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
     {
         $this->profilsUtilisateurs[] = $profilsUtilisateur;
 
@@ -320,9 +329,9 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeProfilsUtilisateur(\UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur)
+    public function removeProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
     {
         return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
     }
@@ -344,22 +353,21 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addNiveauSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportifs)
+    public function addNiveauSportif(NiveauSportif $niveauxSportifs)
     {
         $this->niveauxSportifs[] = $niveauxSportifs;
 
         return $this;
     }
 
-
     /**
      * Remove niveauxSportifs.
      *
      * @param \UcaBundle\Entity\NiveauSportif $niveauxSportifs
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeNiveauSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportifs)
+    public function removeNiveauSportif(NiveauSportif $niveauxSportifs)
     {
         return $this->niveauxSportifs->removeElement($niveauxSportifs);
     }
@@ -377,11 +385,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Set tarif.
      *
-     * @param \UcaBundle\Entity\Tarif|null $tarif
+     * @param null|\UcaBundle\Entity\Tarif $tarif
      *
      * @return Creneau
      */
-    public function setTarif(\UcaBundle\Entity\Tarif $tarif = null)
+    public function setTarif(Tarif $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -405,7 +413,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    public function addEncadrant(Utilisateur $encadrant)
     {
         $this->encadrants[] = $encadrant;
 
@@ -417,9 +425,9 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @param \UcaBundle\Entity\Utilisateur $encadrant
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeEncadrant(\UcaBundle\Entity\Utilisateur $encadrant)
+    public function removeEncadrant(Utilisateur $encadrant)
     {
         return $this->encadrants->removeElement($encadrant);
     }
@@ -441,7 +449,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    public function addNiveauxSportif(NiveauSportif $niveauxSportif)
     {
         $this->niveauxSportifs[] = $niveauxSportif;
 
@@ -453,9 +461,9 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @param \UcaBundle\Entity\NiveauSportif $niveauxSportif
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeNiveauxSportif(\UcaBundle\Entity\NiveauSportif $niveauxSportif)
+    public function removeNiveauxSportif(NiveauSportif $niveauxSportif)
     {
         return $this->niveauxSportifs->removeElement($niveauxSportif);
     }

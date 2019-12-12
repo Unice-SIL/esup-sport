@@ -19,11 +19,36 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
                 )
             )
         );
+
         return $criteria;
     }
 
     public function aNettoyer()
     {
         return $this->matching(self::criteriaANettoyer());
+    }
+
+    public function findUtilisateurPourDesinscriptionCreneau($creneau, $user)
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->where('i.creneau = :creneau')
+            ->setParameter('creneau', $creneau)
+            ->andWhere('i.utilisateur = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findUtilisateurPourDesinscriptionFormat($format, $user)
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->where('i.formatActivite = :format')
+            ->setParameter('format', $format)
+            ->andWhere('i.utilisateur = :user')
+            ->setParameter('user', $user)
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

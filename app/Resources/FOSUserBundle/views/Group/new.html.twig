@@ -1,0 +1,8 @@
+{% extends "@FOSUser/layout.html.twig" %}
+
+{% block fos_user_content %}
+    {% include "@Uca/UcaGest/Securite/Groupe/Formulaire.html.twig" 
+        with {'action': 'ajouter', 'titrePage': 'groupe.ajouter.title', 'formPath': path('UcaGest_GroupeAjouter')}%}
+{% endblock %}
+
+

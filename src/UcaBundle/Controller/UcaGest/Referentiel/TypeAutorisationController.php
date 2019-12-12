@@ -5,7 +5,6 @@ namespace UcaBundle\Controller\UcaGest\Referentiel;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Datatables\TypeAutorisationDatatable;
@@ -45,8 +44,7 @@ class TypeAutorisationController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="UcaGest_TypeAutorisationAjouter")
-     * @Method({"GET""POST"})
+     * @Route("/Ajouter", name="UcaGest_TypeAutorisationAjouter", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
      */
     public function ajouterAction(Request $request)
@@ -66,8 +64,7 @@ class TypeAutorisationController extends Controller
     }
 
     /**
-     * @Route("/Modifier/{id}", name="UcaGest_TypeAutorisationModifier")
-     * @Method({"GET""POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_TypeAutorisationModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
     */
     public function modifierAction(Request $request, TypeAutorisation $item)

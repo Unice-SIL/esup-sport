@@ -9,9 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Appel
 {
-
     /**
-     * 
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -24,10 +22,8 @@ class Appel
     /** @ORM\ManyToOne(targetEntity="DhtmlxEvenement", inversedBy="appels") */
     private $dhtmlxEvenement;
 
-    /** @ORM\Column(type="boolean", nullable=false) */    
+    /** @ORM\Column(type="boolean", nullable=false) */
     private $present;
-
-
 
     /**
      * Get id.
@@ -66,11 +62,11 @@ class Appel
     /**
      * Set utilisateur.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
      *
      * @return Appel
      */
-    public function setUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur = null)
+    public function setUtilisateur(Utilisateur $utilisateur = null)
     {
         $this->utilisateur = $utilisateur;
 
@@ -90,11 +86,11 @@ class Appel
     /**
      * Set dhtmlxEvenement.
      *
-     * @param \UcaBundle\Entity\DhtmlxEvenement|null $dhtmlxEvenement
+     * @param null|\UcaBundle\Entity\DhtmlxEvenement $dhtmlxEvenement
      *
      * @return Appel
      */
-    public function setDhtmlxEvenement(\UcaBundle\Entity\DhtmlxEvenement $dhtmlxEvenement = null)
+    public function setDhtmlxEvenement(DhtmlxEvenement $dhtmlxEvenement = null)
     {
         $this->dhtmlxEvenement = $dhtmlxEvenement;
 

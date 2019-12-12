@@ -7,6 +7,7 @@
 {% block stylesheets %}
     {{ parent() }}
     {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+
 {% endblock %}
 
 {% block main %}
@@ -25,22 +26,24 @@
     <section class="container">
         {{ flashBag.showAll }}
         <div class="row">
-        <div class="w-100 mb-5 p-md-5 container-style bg-white justify-content-between card-event">
-            {% if retourBouton is defined %}
-                {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-            {% endif %}
 
-            {% block DatatableHeader %}
-                {% if not noAddButton is defined %}
-                    <div class="row">
-                        <a href="{{ url(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
-                    </div>
+            <div class="w-100 mb-5 p-md-5 container-style bg-white justify-content-between card-event">
+
+                {% if retourBouton is defined %}
+                    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
                 {% endif %}
-            {% endblock %}
 
-            {{ Datatable.showDatatable(datatable) }}
+                {% block DatatableHeader %}
+                    {% if not noAddButton is defined %}
+                        <div class="row">
+                            <a href="{{ url(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+                        </div>
+                    {% endif %}
+                {% endblock %}
 
-        </div>
+                {{ Datatable.showDatatable(datatable) }}
+
+            </div>
         </div>
     </section>
 

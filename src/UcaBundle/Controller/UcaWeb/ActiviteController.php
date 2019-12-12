@@ -7,7 +7,6 @@ use UcaBundle\Entity\FormatActivite;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use UcaBundle\Entity\FormatAchatCarte;
@@ -22,8 +21,7 @@ use UcaBundle\Entity\Ressource;
 class ActiviteController extends Controller
 {
   /**
-   * @Route("/ClasseActiviteLister", name="UcaWeb_ClasseActiviteLister")
-   * @Method("GET")
+   * @Route("/ClasseActiviteLister", name="UcaWeb_ClasseActiviteLister", methods={"GET"})
    */
   public function ClasseActiviteListerAction()
   {
@@ -35,8 +33,7 @@ class ActiviteController extends Controller
   }
 
   /**
-   * @Route("/ClasseActivite/{id}/ActiviteLister", name="UcaWeb_ActiviteLister")
-   * @Method("GET")
+   * @Route("/ClasseActivite/{id}/ActiviteLister", name="UcaWeb_ActiviteLister", methods={"GET"})
    */
   public function ActiviteListerAction($id)
   {
@@ -48,8 +45,7 @@ class ActiviteController extends Controller
   }
 
   /**
-   * @Route("/ClasseActivite/{idCa}/Activite/{id}/FormatActiviteLister", name="UcaWeb_FormatActiviteLister")
-   * @Method("GET")
+   * @Route("/ClasseActivite/{idCa}/Activite/{id}/FormatActiviteLister", name="UcaWeb_FormatActiviteLister", methods={"GET"})
    */
   public function FormatActiviteListerAction($idCa, $id)
   {
@@ -63,9 +59,8 @@ class ActiviteController extends Controller
   }
 
   /**
-   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}/day/{day}", name="UcaWeb_FormatActiviteDetailJour")
-   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}", name="UcaWeb_FormatActiviteDetail")
-   * @Method("GET")
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}/day/{day}", name="UcaWeb_FormatActiviteDetailJour", methods={"GET"})
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetail/{id}", name="UcaWeb_FormatActiviteDetail", methods={"GET"})
    */
   public function FormatActiviteDetailAction($idCa, $idA, $id, $day = 1, $yearWeek = null)
   {
@@ -130,10 +125,9 @@ class ActiviteController extends Controller
   }
 
   /**
-   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}", name="UcaWeb_FormatActiviteReservationDetail")
-   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaine")
-   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}/dayWeek/{day_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour")
-   * @Method("GET") 
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}", name="UcaWeb_FormatActiviteReservationDetail", methods={"GET"})
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaine", methods={"GET"})
+   * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}/yearWeek/{year_week}/dayWeek/{day_week}", name="UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour", methods={"GET"})
    */
   public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, $id, $idRessource, $year_week = null, $day_week = null)
   {

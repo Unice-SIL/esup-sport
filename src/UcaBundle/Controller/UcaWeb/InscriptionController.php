@@ -2,7 +2,6 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -25,8 +24,7 @@ class InscriptionController extends Controller
         return $response;
     }
     /**
-     * @Route("/Inscription", name="UcaWeb_Inscription", options={"expose"=true})
-     * @Method("POST")
+     * @Route("/Inscription", name="UcaWeb_Inscription", options={"expose"=true}, methods={"POST"})
      */
     public function inscriptionAction(Request $request)
     {

@@ -14,7 +14,6 @@ use UcaBundle\Entity\Materiel;
 use UcaBundle\Entity\ReferentielImmobilier;
 use UcaBundle\Entity\Fichier;
 use UcaBundle\Form\FichierType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Liip\ImagineBundle\Config\Filter\Argument\Size;
@@ -71,8 +70,7 @@ class RessourceController extends Controller
     }
 
     /**
-     * @Route("/Ajouter", name="UcaGest_RessourceAjouter")
-     * @Method({"GET""POST"})
+     * @Route("/Ajouter", name="UcaGest_RessourceAjouter", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
      */
     public function ajouterAction(Request $request)
@@ -118,8 +116,7 @@ class RessourceController extends Controller
     }
 
     /**
-     * @Route("/Modifier/{id}", name="UcaGest_RessourceModifier")
-     * @Method({"GET""POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_RessourceModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_RESSOURCE_ECRITURE")
      */
     public function modifierAction(Request $request, Ressource $item)

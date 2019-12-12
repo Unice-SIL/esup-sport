@@ -5,7 +5,6 @@ namespace UcaBundle\Controller\UcaGest\Parametrage;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -33,8 +32,7 @@ class ParametrageController extends Controller
     }
     
     /** 
-     * @Route("/Modifier/{id}", name="UcaGest_ParametrageModifier",requirements={"id"="\d+"}) 
-     * @Method({"GET", "POST"})
+     * @Route("/Modifier/{id}", name="UcaGest_ParametrageModifier",requirements={"id"="\d+"}, methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_PARAMETRAGE")
     */
     public function modifierAction(Request $request, Parametrage $item)

@@ -5,7 +5,6 @@ namespace UcaBundle\Controller\UcaWeb;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Datatables\GestionPanierDatatable;
@@ -68,9 +67,8 @@ class GestionnairePanierController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="UcaWeb_CommandeEnAttenteVoir")
+     * @Route("/{id}", name="UcaWeb_CommandeEnAttenteVoir", methods={"GET"})
      * @Isgranted("ROLE_GESTION_PAIEMENT_COMMANDE")
-     * @Method("GET")
     */
     public function voirAction(Request $request, Commande $commande)
     {

@@ -1,6 +1,4 @@
 
-
-# common.moyenpaiementautre: Ou valider la commande et payer plus tard
 FormatAchatCarte.button: 'Acheter la carte'
 FormatAvecCreneau.button: 'Voir les créneaux disponibles'
 FormatAvecReservation.button: 'Réserver'
@@ -53,9 +51,11 @@ bouton.annuler: Annuler
 bouton.bloquer: Bloquer
 bouton.debloquer: Débloquer
 bouton.descendre: Descendre
+bouton.deselectionner.tout: Désélectionner tout
 bouton.desinscrire.inscription: Désinscrire
 bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
+bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
@@ -75,6 +75,7 @@ bouton.retour.listeClasse: Retour aux activités
 bouton.retour: Retour
 bouton.save.previsualiser: Sauvegarder et prévisualiser
 bouton.save: Enregistrer
+bouton.selectionner.tout: Sélectionner tout
 bouton.supprimer: Supprimer
 bouton.voir: Voir
 cgv.acceptees: Merci d'avoir accepté les conditions générales de vente
@@ -115,11 +116,14 @@ common.attentepaiement: En attente de paiement
 common.attentevalidationencadrant: En attente de validation encadrant
 common.attentevalidationgestionnaire: En attente de validation gestionnaire
 common.aucun: '- Aucun -'
+common.aucune.facture: Aucune facture disponible pour cette personne ou à cette date
 common.autorisations: Autorisations
 common.capacite: Capacité
+common.carte: Carte
 common.cb: Carte Bancaire
 common.chargement: Chargement...
 common.cheque: Chèque
+common.classe.activite: Classe d'activité
 common.commandeencours: Commande en cours
 common.coordonnees: Coordonnées
 common.creneaux: Créneaux
@@ -141,6 +145,7 @@ common.encadrants: Encadrants
 common.espece: Espèce
 common.et: '{0} | ]0,Inf[ et '
 common.evenement: Évènement
+common.extraire: Extraire
 common.facture: Facture
 common.friday: Vendredi
 common.groups: Groupes
@@ -154,6 +159,7 @@ common.inscriptionsavenir: Bientôt disponible
 common.inscrire: S'inscrire
 common.libelle: Libellé
 common.lieu: Lieu
+common.liste.inscription: Liste des inscrits
 common.mobile: Mobile
 common.modifications: Modifications
 common.monday: Lundi
@@ -165,6 +171,7 @@ common.naissance: Date de naissance
 common.niveauSportif: Niveau sportif
 common.nom.utilisateur: Nom d'utilisateur
 common.nom: Nom
+common.nomencaisseur: Nom Encaisseur
 common.non: 'Non'
 common.numerocommande: Numéro de Commande
 common.numerorecu: Numéro de Reçu
@@ -174,6 +181,7 @@ common.paiementcb: Payer par carte bancaire
 common.password: Mot de passe
 common.payeavec: Payée avec
 common.prenom: Prénom
+common.prenomencaisseur: Prénom Encaisseur
 common.prixunitaire: Prix Unitaire
 common.profil: Profil
 common.profils.autorises: 'Profils autorisés'
@@ -308,7 +316,7 @@ format.statut.publie: Publié
 format.statut: Statut
 format.tarif.placeholder: '- Sélectionner un Tarif -'
 format.tarif: Tarif
-formatCarte.list.inscrit: carte achétée
+formatCarte.list.inscrit: carte achetée
 formatCarte.list.preinscrit: carte commandée
 formatCreneau.list.inscrit: inscrit
 formatCreneau.list.preinscrit: pré-inscrit
@@ -464,6 +472,7 @@ monPlanning.more.description: Description
 monPlanning.more.detail: Detail
 monPlanning.more.horaires: Horaires
 monPlanning.more.mail.button: Envoyer un mail
+monPlanning.more.mail.send.success: Votre message a bien été envoyé
 monPlanning.more.mail.titre: "Besoin d'envoyer un mail aux participants ?"
 monplanning.list.title: Mon planning
 monplanning.more.appel.empty: Aucun inscrit pour cette activité
