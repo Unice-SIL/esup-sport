@@ -51,4 +51,30 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findInscriptionCreneauxBascule($listeActivite)
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->innerJoin('UcaBundle\Entity\FormatActivite', 'formAct', 'WITH', 'i.formatActivite = formAct.id')
+            ->where('i.creneau IS NOT NULL')
+            ->andWhere('i.statut NOT IN (:listeStatut)')
+            ->andWhere('formAct.activite IN (:listeActivite)')
+            ->setParameter('listeStatut', ['desinscrit', 'annule', 'ancienneinscription'])
+            ->setParameter('listeActivite', $listeActivite)
+    ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function inscriptionParCreneauStatut($creneau, $statut)
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->where('i.creneau = :creneau')
+            ->andWhere('i.statut LIKE :statut1')
+            ->setParameter('statut1', '%'.$statut.'%')
+            ->setParameter('creneau', $creneau)
+        ;
+
+        return count($qb->getQuery()->getResult()) > 0;
+    }
 }

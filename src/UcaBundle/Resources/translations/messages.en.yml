@@ -37,6 +37,7 @@ activite.simple.ajouter: Add simple activity
 activite.supprimer.erreur: 'Cannot delete activity, activities format are assigned'
 activite.supprimer.succes: Activity successfully deleted
 activites.sportives: Sports activities
+activites.liste: 'Activities list'
 actualite.ajouter.succes: News successfully added
 actualite.ajouter.title: Add news
 actualite.image.libelle: Select an image
@@ -45,6 +46,7 @@ actualite.modifier.succes: News successfully modified
 actualite.modifier.title: Edit news
 actualite.supprimer.erreur: Cannot delete news
 actualite.supprimer.succes: News successfully deleted
+bascule.success: The swing was successfull
 bouton.ajouter: Add
 bouton.annuler.commande: Cancel order
 bouton.annuler.inscription: Cancel registration
@@ -110,6 +112,7 @@ commande.timeout.timer: You have %temps% left to finalize your %typecommande% an
 common.acces.rapide: Quick access
 common.accueil.retour: 'Go back to the home page'
 common.all: All
+common.ancienneinscription: Old registration
 common.annule: Canceled
 common.apayer: Order to pay
 common.attenteajoutpanier: Pending to be added to basket
@@ -139,6 +142,7 @@ common.datepaiement: Payment date
 common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
 common.description: Description
 common.desinscrit: Unsubscribed
+common.eligible: Eligible for bonus
 common.email: Email
 common.emplacement: Location
 common.encadrants.aucun: no supervisor
@@ -457,6 +461,7 @@ modalinscription.mention.document.telechargement: ' - Download document below'
 modalinscription.mention.information.importante: 'Important information !'
 modalinscription.mention.obligatoire: 'Required'
 modalinscription.panier.voir: See basket
+modalinscription.titre.ancienneinscription: Old registration
 modalinscription.titre.attentevalidationencadrant: Registration waiting for approuval
 modalinscription.titre.attentevalidationgestionnaire: Registration waiting for approuval
 modalinscription.titre.initialise: subscription
@@ -572,15 +577,20 @@ scheduler.action.update: Update
 scheduler.error.field: Field
 scheduler.error.isEmpty: is empty
 scheduler.error.type: "don't have the right type"
+scheduler.error.occurence.prolongation: The repeat field is empty or is less than 1
+scheduler.error.date.prolongation: The date field is empty
+scheduler.error.suppression.inscrit: Impossible to delete this serie for there's subscribers
 scheduler.message.action.debut: Confirm
 scheduler.message.action.occurence: occurence
 scheduler.message.action.serie: all the series 
 scheduler.message.annuler: Cancel
 scheduler.message.inscrit_list: Subscribers list
+scheduler.message.prolonger: Extend slot
 scheduler.message.send_mail: Send a mail to the subscribers
 scheduler.message.titre: Confirm the deletion
 scheduler.message.valider: Save
 scheduler.message.voirplus: See more
+scheduler.warning.suppression.inscrit: Do you want to delete this serie despite the pre-registrations awaiting ?
 securite.libelle: Security
 security.login.external.account: "You are a member of one of the following institutions: CNRS, OCA, INRA, INRIA, INSERM, IRD?"
 security.login.inscrit: Already have a UCA SPORT account?
@@ -616,6 +626,7 @@ security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Manage Background pictures (read
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Manage Background pictures (read only)
 security.roles.ROLE_GESTION_INSCRIPTION: Manage registrations
 security.roles.ROLE_GESTION_LOG_LECTURE: Manage Logs (read only)
+security.roles.ROLE_GESTION_BASCULE: Manage swing
 security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Cash manager
 security.roles.ROLE_GESTION_PARAMETRAGE: Manage settings
 security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Manage profils (read/write)
@@ -683,7 +694,7 @@ sitemap.moncompte.changermotdepasse: Change password
 sitemap.moncompte.libelle: My Account
 sitemap.moncompte.modifier.libelle: Edit
 sitemap.monplanning.libelle: My schedule
-sitemap.outils.libelle: Tools
+sitemap.bascule.libelle: Swing
 sitemap.panier.libelle: Basket
 sitemap.parametrage.libelle: Settings
 sitemap.parametrage: Settings

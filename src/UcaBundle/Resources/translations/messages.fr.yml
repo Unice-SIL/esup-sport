@@ -35,6 +35,7 @@ activite.reservation.ajouter: 'Ajouter Activité avec Réservation'
 activite.simple.ajouter: 'Ajouter Activité Simple'
 activite.supprimer.erreur: Impossible de supprimer cette activité, des formats d'activités y sont affectés
 activite.supprimer.succes: 'Activité supprimée avec succès'
+activites.liste: 'Liste des activités'
 activites.sportives: 'Activités Sportives'
 actualite.ajouter.succes: Actualité ajoutée avec succès
 actualite.ajouter.title: Ajouter une activité
@@ -44,6 +45,7 @@ actualite.modifier.succes: Actualité modifiée avec succès
 actualite.modifier.title: Modifier une activité
 actualite.supprimer.erreur: Impossible de supprimer cette activité
 actualite.supprimer.succes: Actualité supprimée avec succès
+bascule.success: Réussite de la bascule
 bouton.ajouter: Ajouter
 bouton.annuler.commande: Annuler la commande
 bouton.annuler.inscription: Annuler l'inscription
@@ -109,6 +111,7 @@ commande.timeout.timer: Il vous reste %temps% pour finaliser votre %typecommande
 common.acces.rapide: Accès rapide
 common.accueil.retour: 'Retour à la page d''accueil'
 common.all: Tous
+common.ancienneinscription: Ancienne inscription
 common.annule: Annulée
 common.apayer: Commande à payer
 common.attenteajoutpanier: Attente d'ajout au panier
@@ -138,6 +141,7 @@ common.datepaiement: Date de paiement
 common.deconnexion: 'Vous avez été deconnecté de l''application. Merci de fermer votre navigateur pour fermer totalement la session.'
 common.description: Description
 common.desinscrit: Désinscrit
+common.eligible: Éligible au bonus
 common.email: Email
 common.emplacement: Emplacement
 common.encadrants.aucun: aucun encadrant
@@ -456,6 +460,7 @@ modalinscription.mention.document.telechargement: ' - Document à télécharger 
 modalinscription.mention.information.importante: 'Information importante !'
 modalinscription.mention.obligatoire: 'Obligatoire'
 modalinscription.panier.voir: Voir le panier
+modalinscription.titre.ancienneinscription: Ancienne inscription
 modalinscription.titre.attentevalidationencadrant: Inscription en attente de validation
 modalinscription.titre.attentevalidationgestionnaire: Inscription en attente de validation
 modalinscription.titre.initialise: inscription
@@ -568,18 +573,23 @@ scheduler.action.title.delete: la suppresion
 scheduler.action.title.save: l'enregistrement
 scheduler.action.title.update: la mise à jour
 scheduler.action.update: Mettre à jour
-scheduler.error.field: Le champs
+scheduler.error.field: Le champ
 scheduler.error.isEmpty: est vide
 scheduler.error.type: "n'est pas du bon type"
 scheduler.message.action.debut: Confirmer
 scheduler.message.action.occurence: l’occurence
+scheduler.error.occurence.prolongation: Le champ répéter est vide ou inférieur à 1
+scheduler.error.date.prolongation: Le champ date est vide
+scheduler.error.suppression.inscrit: Impossible de supprimer la série car il y a des inscrits
 scheduler.message.action.serie: toute la série
 scheduler.message.annuler: Annuler
 scheduler.message.inscrit_list: Liste des inscrits
+scheduler.message.prolonger: Prolonger l'évènement
 scheduler.message.send_mail: Envoyer un mail à tous les inscrits de ce créneau
 scheduler.message.titre: Confirmez la suppression
 scheduler.message.valider: Enregistrer
 scheduler.message.voirplus: Voir plus
+scheduler.warning.suppression.inscrit: Voulez-vous supprimer la série malgré les pré-inscriptions en attente ?
 securite.libelle: Sécurité
 security.login.external.account: "Vous êtes personnels d'un des établissements suivants : CNRS, OCA, INRA, INRIA, INSERM, IRD ?"
 security.login.inscrit: Vous avez déjà un compte UCA SPORT ?
@@ -615,6 +625,7 @@ security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Gestion des images de fond (lect
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Gestion des images de fond (lecture seule)
 security.roles.ROLE_GESTION_INSCRIPTION: Gestion des inscriptions
 security.roles.ROLE_GESTION_LOG_LECTURE: Gestion des logs (lecture seule)
+security.roles.ROLE_GESTION_BASCULE: Gestion de la bascule
 security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Gestionnaire de caisse
 security.roles.ROLE_GESTION_PARAMETRAGE: Gestion du paramétrage
 security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Gestion des profils (lecture/écriture)
@@ -682,6 +693,7 @@ sitemap.moncompte.changermotdepasse: Modifier mot de passe
 sitemap.moncompte.libelle: Mon Compte
 sitemap.moncompte.modifier.libelle: Modifier
 sitemap.monplanning.libelle: Mon planning
+sitemap.bascule.libelle: Bascule
 sitemap.outils.libelle: Outils
 sitemap.panier.libelle: Panier
 sitemap.parametrage.libelle: Paramétrage

@@ -4,7 +4,7 @@
 		Bonjour,
 		<span></br></br></span>
         <p>
-            Le {{ inscription.date | date("d/m/Y à H:i") }}, {{ inscription.utilisateur.prenom }} {{ inscription.utilisateur.nom }} a souhaité s'inscrire à l'activité suivante:
+            Le {{ inscription.date | date("d/m/Y à H:i") }}, {{ inscription.utilisateur.prenom }} {{ inscription.utilisateur.nom }} ({{ inscription.utilisateur.email }})  a souhaité s'inscrire à l'activité suivante:
             <span style="font-weight: bold;">
                 {% include "@Uca/Datatables/Column/InscriptionDataColumn.html.twig" 
                     with { 'row': inscription } %}

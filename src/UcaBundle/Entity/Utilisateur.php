@@ -230,7 +230,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     {
         return $this->getInscriptionsByCriteria([
             ['creneau', 'neq', null],
-            ['statut', 'notIn', ['annule', 'desinscrit']],
+            ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
         ])->count();
     }
 

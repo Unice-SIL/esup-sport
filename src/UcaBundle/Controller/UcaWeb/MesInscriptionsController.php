@@ -124,6 +124,9 @@ class MesInscriptionsController extends Controller
             $em = $this->getDoctrine()->getManager();
             $inscription->setStatut('desinscrit');
             $inscription->setDateDesinscription(new \DateTime());
+            $inscription->setUtilisateurDesinscription($this->getUser());
+            $inscription->setNomDesinscription($this->getUser()->getNom());
+            $inscription->setPrenomDesinscription($this->getUser()->getPrenom());
             $em->flush();
             if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
                 return $this->redirectToRoute('UcaWeb_MesInscriptions');

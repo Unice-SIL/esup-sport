@@ -4,7 +4,6 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\DhtmlxEvenementRepository")
@@ -13,13 +12,6 @@ use Gedmo\Translatable\Translatable;
 class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
-    #region Propriétés
-
-    /** @ORM\ManyToOne(targetEntity="DhtmlxSerie", inversedBy="evenements", fetch="EAGER") */
-    private $serie;
-
-    /** @ORM\Column(type="boolean", options={"default" : false}) */
-    private $dependanceSerie;
 
     /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
     protected $reservabilite;
@@ -32,16 +24,35 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER") */
     protected $appels;
-    #endregion
+    //region Propriétés
 
-    #region Méthodes
+    /** @ORM\ManyToOne(targetEntity="DhtmlxSerie", inversedBy="evenements", fetch="EAGER") */
+    private $serie;
+
+    /** @ORM\Column(type="boolean", options={"default" : false}) */
+    private $dependanceSerie;
+
+    /** @ORM\Column(type="boolean", options={"default" : false}) */
+    private $eligibleBonus;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->appels = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action'];
+        return ['dateDebut', 'dateFin', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action', 'serie', 'eligibleBonus'];
     }
 
-    #endregion
+    //endregion
 
     /**
      * Set dependanceSerie.
@@ -94,11 +105,11 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Set serie.
      *
-     * @param \UcaBundle\Entity\DhtmlxSerie|null $serie
+     * @param null|\UcaBundle\Entity\DhtmlxSerie $serie
      *
      * @return DhtmlxEvenement
      */
-    public function setSerie(\UcaBundle\Entity\DhtmlxSerie $serie = null)
+    public function setSerie(DhtmlxSerie $serie = null)
     {
         $this->serie = $serie;
 
@@ -118,11 +129,11 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Set reservabilite.
      *
-     * @param \UcaBundle\Entity\Reservabilite|null $reservabilite
+     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
      *
      * @return DhtmlxEvenement
      */
-    public function setReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite = null)
+    public function setReservabilite(Reservabilite $reservabilite = null)
     {
         $this->reservabilite = $reservabilite;
 
@@ -142,11 +153,11 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Set formatSimple.
      *
-     * @param \UcaBundle\Entity\FormatSimple|null $formatSimple
+     * @param null|\UcaBundle\Entity\FormatSimple $formatSimple
      *
      * @return DhtmlxEvenement
      */
-    public function setFormatSimple(\UcaBundle\Entity\FormatSimple $formatSimple = null)
+    public function setFormatSimple(FormatSimple $formatSimple = null)
     {
         $this->formatSimple = $formatSimple;
 
@@ -166,11 +177,11 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Set appels.
      *
-     * @param \UcaBundle\Entity\Appel|null $appels
+     * @param null|\UcaBundle\Entity\Appel $appels
      *
      * @return DhtmlxEvenement
      */
-    public function setAppels(\UcaBundle\Entity\Appel $appels = null)
+    public function setAppels(Appel $appels = null)
     {
         $this->appels = $appels;
 
@@ -186,13 +197,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     {
         return $this->appels;
     }
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->appels = new \Doctrine\Common\Collections\ArrayCollection();
-    }
 
     /**
      * Add appel.
@@ -201,7 +205,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
      *
      * @return DhtmlxEvenement
      */
-    public function addAppel(\UcaBundle\Entity\Appel $appel)
+    public function addAppel(Appel $appel)
     {
         $this->appels[] = $appel;
 
@@ -213,10 +217,34 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
      *
      * @param \UcaBundle\Entity\Appel $appel
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeAppel(\UcaBundle\Entity\Appel $appel)
+    public function removeAppel(Appel $appel)
     {
         return $this->appels->removeElement($appel);
+    }
+
+    /**
+     * Set eligibleBonus.
+     *
+     * @param bool $eligibleBonus
+     *
+     * @return DhtmlxEvenement
+     */
+    public function setEligibleBonus($eligibleBonus)
+    {
+        $this->eligibleBonus = $eligibleBonus;
+
+        return $this;
+    }
+
+    /**
+     * Get eligibleBonus.
+     *
+     * @return bool
+     */
+    public function getEligibleBonus()
+    {
+        return $this->eligibleBonus;
     }
 }

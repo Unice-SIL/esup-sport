@@ -1,3 +1,4 @@
+activite.bascule.notBlank: Il est obligatoire de sélectionner au moins une activité
 activite.classeactivite.notnull: Une classe d'activité doit être sélectionnée
 activite.description.notblank: La description de l'activité est obligatoire
 activite.image.format: 'L''image de l''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'

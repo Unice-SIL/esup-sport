@@ -3,25 +3,15 @@
 namespace UcaBundle\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Method;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Annotation\Template;
-use UcaBundle\Entity\IntervalleDate;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\DhtmlxDate;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
-use UcaBundle\Entity\DhtmlxDate;
-use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\Inscription;
-use UcaBundle\Entity\Ressource;
-use UcaBundle\Entity\Tarif;
-use UcaBundle\Entity\ProfilUtilisateur;
-use UcaBundle\Entity\Utilisateur;
-use UcaBundle\Entity\Reservabilite;
-use UcaBundle\Entity\Traits\JsonSerializable;
 
 class DhtmlxController extends Controller
 {
@@ -30,20 +20,20 @@ class DhtmlxController extends Controller
      */
     public function getEventAction(Request $request)
     {
-        $id = $request->query->get("activite");
-        $type = $request->query->get("type");
+        $id = $request->query->get('activite');
+        $type = $request->query->get('type');
         $em = $this->getDoctrine()->getManager();
 
         //get the DhtmlxDate by FormatActivite
         //this return serie and event of the serie
 
         $series = [];
-        if ($type == "ressource" || $type == 'FormatActivite') {
+        if ('ressource' == $type || 'FormatActivite' == $type) {
             $events = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxDateByReference($type, $id);
             $series = $em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReference($type, $id);
-        } elseif ($type == "encadrant" || $type == "user") {
+        } elseif ('encadrant' == $type || 'user' == $type) {
             $user = $this->getUser();
-            if ($user == null) {
+            if (null == $user) {
                 return false;
             }
 
@@ -63,16 +53,13 @@ class DhtmlxController extends Controller
         return new JsonResponse(['evenements' => $events, 'series' => $series]);
     }
 
-
     /**
      * @Route("/DhtmlxSendMail", methods={"POST"}, name="DhtmlxSendMail", options={"expose"=true})
      */
     public function sendMail(Request $request)
     {
-
-        $id = $request->request->get("id");
-        $text = $request->request->get("text");
-
+        $id = $request->request->get('id');
+        $text = $request->request->get('text');
 
         $em = $this->getDoctrine()->getManager();
 
@@ -82,20 +69,20 @@ class DhtmlxController extends Controller
         $c = $ev->getSerie()->getCreneau();
         $inscriptions = $c->getInscriptions();
 
-        $emailToSend = array();
+        $emailToSend = [];
         foreach ($inscriptions as $key => $i) {
             $emailToSend[] = $i->getUtilisateur()->getEmail();
         }
-        
+
         $mailer = $this->container->get('mailService');
         $mailer->sendMailWithTemplate(
-            "",// Préciser dans le sujet, le titre de l'inscription
+            '',// Préciser dans le sujet, le titre de l'inscription
             $emailToSend,
             '@Uca/Email/PreInscription/MailPourTousLesInscripts.html.twig',// Préciser dans le contenu, le titre de l'inscription
             ['message' => $text]
         );
 
-        return new JsonResponse(json_encode(array("mesage" => "send")));
+        return new JsonResponse(json_encode(['mesage' => 'send']));
     }
 
     /**
@@ -105,16 +92,70 @@ class DhtmlxController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ev = $request->request->get('evenement');
-        $c = new DhtmlxCommand($em, $ev);
-        if ($ev['action'] == 'delete') {
+        if ('delete' == $ev['action']) {
+            $c = new DhtmlxCommand($em, $ev);
             $res = $c->getResult();
             $c->execute();
             $em->flush();
+        } elseif ('extend' == $ev['action']) {
+            $newCreneau = [];
+            for ($i = 0; $i < $ev['nbRepetition']; ++$i) {
+                $creneau = new DhtmlxEvenement();
+                $creneau = clone $em->getRepository(DhtmlxEvenement::class)->findOneById($ev['id']);
+                $numberWeek = 0;
+                $numberWeek = ($i > 0 ? $i : 0);
+                $dateRepetition = date('Y-m-d', strtotime('+'.$numberWeek.' week ', strtotime($ev['dateDebutRepetition'])));
+
+                $heureDebutCreneau = date('H:i', strtotime($ev['dateDebut']));
+                $heureFinCreneau = date('H:i', strtotime($ev['dateFin']));
+
+                $creneau->setDateDebut(new \DateTime($dateRepetition.' '.$heureDebutCreneau));
+                $creneau->setDateFin(new \DateTime($dateRepetition.' '.$heureFinCreneau));
+                $em->persist($creneau);
+                $newCreneau[] = $creneau;
+            }
+            $em->flush();
+
+            return $this->redirectToRoute('DhtmlxApi', ['activite' => $ev['itemId'], 'type' => $ev['typeA']]);
         } else {
+            $c = new DhtmlxCommand($em, $ev);
             $c->execute();
             $em->flush();
             $res = $c->getResult();
         }
+
         return new JsonResponse($res);
+    }
+
+    /**
+     * @Route("/DhtmlxSerieInscrit", methods={"POST"}, name="DhtmlxSerieInscrit", options={"expose"=true})
+     */
+    public function isInscritForSerie(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $serie = $em->getRepository(DhtmlxSerie::class)->findOneById($request->request->get('id'));
+
+        return new JsonResponse($em->getRepository(Inscription::class)->inscriptionParCreneauStatut($serie->getCreneau(), $request->request->get('statut')));
+    }
+
+    /**
+     * @Route("/DhtmlxAnnulerInscription", methods={"POST"}, name="DhtmlxAnnulerInscription", options={"expose"=true})
+     */
+    public function annulerInscription(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $serie = $em->getRepository(DhtmlxSerie::class)->findOneById($request->request->get('id'));
+        $listeInscriptionAAnnuler = $em->getRepository(Inscription::class)->findByCreneau($serie->getCreneau());
+        foreach ($listeInscriptionAAnnuler as $inscription) {
+            $listeCommandeDetail = $em->getRepository(CommandeDetail::class)->findBy(['type' => 'inscription', 'inscription' => $inscription->getId(), 'creneau' => $serie->getCreneau()]);
+            foreach ($listeCommandeDetail as $commandeDetail) {
+                $em->remove($commandeDetail);
+            }
+            $inscription->setCreneau(null);
+            $inscription->setStatut('annule', ['motifAnnulation' => 'suppressionserie']);
+        }
+        $em->flush();
+
+        return new JsonResponse(200);
     }
 }

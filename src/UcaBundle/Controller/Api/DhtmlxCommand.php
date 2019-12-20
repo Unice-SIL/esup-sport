@@ -7,13 +7,13 @@ use UcaBundle\Entity\DhtmlxDate;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
 use UcaBundle\Entity\FormatActivite;
+use UcaBundle\Entity\Lieu;
+use UcaBundle\Entity\NiveauSportif;
 use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Reservabilite;
 use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\Tarif;
 use UcaBundle\Entity\Utilisateur;
-use UcaBundle\Entity\NiveauSportif;
-use UcaBundle\Entity\Lieu;
 
 class DhtmlxCommand
 {
@@ -31,7 +31,7 @@ class DhtmlxCommand
         if (in_array($data['action'], ['insert', 'update', 'delete'])) {
             $this->action = $data['action'];
         } else {
-            throw new \Exception("L'action " . $data['action'] . " n'est pas valide !");
+            throw new \Exception("L'action ".$data['action']." n'est pas valide !");
         }
         $this->initItemAndCommands($parent);
     }
@@ -43,16 +43,21 @@ class DhtmlxCommand
 
     public function execute()
     {
-
-        if ($this->action == 'delete') {
+        if ('delete' == $this->action) {
             $this->em->remove($this->item);
         } else {
             $this->item->setDateDebut(new \DateTime($this->data['dateDebut']));
             $this->item->setDateFin(new \DateTime($this->data['dateFin']));
-            if (get_class($this->item) == 'UcaBundle\Entity\DhtmlxEvenement') {
+            if ('UcaBundle\Entity\DhtmlxEvenement' == get_class($this->item)) {
                 $this->item->setDescription($this->data['text']);
-                $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && $this->data['dependanceSerie'] == 'true');
-            } elseif (get_class($this->item) == 'UcaBundle\Entity\DhtmlxSerie') {
+                $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && 'true' == $this->data['dependanceSerie']);
+                if ('true' == $this->data['eligible_bonus']) {
+                    $this->item->setEligibleBonus(true);
+                } else {
+                    $this->item->setEligibleBonus(false);
+                }
+            }
+            if ('UcaBundle\Entity\DhtmlxSerie' == get_class($this->item)) {
                 if (isset($this->data['recurrence'])) {
                     $this->recurrence = $this->data['recurrence'];
                 }
@@ -76,22 +81,28 @@ class DhtmlxCommand
     public function getResult()
     {
         $res = $this->item->jsonSerialize();
-        if ($this->action == 'delete') {
+        if ('delete' == $this->action) {
             $res['id'] = null;
         }
         if (!empty($res['evenements'])) {
             $res['enfants'] = $res['evenements'];
         }
+
         return $res;
     }
 
     private function initItemAndCommands($parent)
     {
-        if ($this->action == 'insert' && isset($this->data['enfants'])) {
+        if ('insert' == $this->action && isset($this->data['enfants'])) {
             $this->item = new DhtmlxSerie($this->data);
             $this->createReference();
-        } elseif ($this->action == 'insert' && !isset($this->data['enfants'])) {
+        } elseif ('insert' == $this->action && !isset($this->data['enfants'])) {
             $this->item = new DhtmlxEvenement($this->data);
+            if ('true' == $this->data['eligible_bonus']) {
+                $this->item->setEligibleBonus(true);
+            } else {
+                $this->item->setEligibleBonus(false);
+            }
             if (!empty($parent)) {
                 $this->item->setSerie($parent->getItem());
                 $parent->getItem()->addEvenement($this->item);
@@ -113,29 +124,32 @@ class DhtmlxCommand
     private function isCreneauEvent()
     {
         return isset($this->data['enfants']) && (
-            (isset($this->data['evenementType']) && $this->data['evenementType'] == 'creneau')
+            (isset($this->data['evenementType']) && 'creneau' == $this->data['evenementType'])
             || isset($this->data['creneau'])
-            || (isset($this->data['reference_class']) && $this->data['reference_class'] == 'UcaBundle\Entity\FormatAvecCreneau'));
+            || (isset($this->data['reference_class']) && 'UcaBundle\Entity\FormatAvecCreneau' == $this->data['reference_class'])
+        );
     }
 
     private function isRessourceEvent()
     {
         return !isset($this->data['enfants']) && (
-            (isset($this->data['evenementType']) && $this->data['evenementType'] == 'ressource')
+            (isset($this->data['evenementType']) && 'ressource' == $this->data['evenementType'])
             || isset($this->data['reservabilite'])
-            || (isset($this->data['reference_class']) && $this->data['reference_class'] == 'UcaBundle\Entity\Lieu')
-            || (isset($this->data['reference_class']) && $this->data['reference_class'] == 'UcaBundle\Entity\Materiel'));
+            || (isset($this->data['reference_class']) && 'UcaBundle\Entity\Lieu' == $this->data['reference_class'])
+            || (isset($this->data['reference_class']) && 'UcaBundle\Entity\Materiel' == $this->data['reference_class'])
+        );
     }
 
     private function getReferenceItem()
     {
         if ($this->isCreneauEvent()) {
             return  $this->item->getCreneau();
-        } elseif ($this->isRessourceEvent()) {
-            return $this->item->getReservabilite();
-        } else {
-            return null;
         }
+        if ($this->isRessourceEvent()) {
+            return $this->item->getReservabilite();
+        }
+
+        return null;
     }
 
     private function createReference()
@@ -173,13 +187,12 @@ class DhtmlxCommand
     {
         $item = $this->getReferenceItem();
         if (!empty($item) && method_exists($item, 'getProfilsUtilisateurs')) {
-
-            if ($item->getProfilsUtilisateurs() !== null) {
+            if (null !== $item->getProfilsUtilisateurs()) {
                 foreach ($item->getProfilsUtilisateurs() as $key => $profil) {
                     $item->removeProfilsUtilisateur($profil);
                 }
             }
-            if (isset($this->data['profil_ids']) && $this->data['profil_ids'] !== '') {
+            if (isset($this->data['profil_ids']) && '' !== $this->data['profil_ids']) {
                 foreach (explode(',', $this->data['profil_ids']) as $key => $profil) {
                     $item->addProfilsUtilisateur($this->em->getReference(ProfilUtilisateur::class, $profil));
                 }
@@ -192,13 +205,12 @@ class DhtmlxCommand
         $item = $this->getReferenceItem();
 
         if (!empty($item) && $this->isCreneauEvent()) {
-
-            if ($item->getNiveauxSportifs() !== null) {
+            if (null !== $item->getNiveauxSportifs()) {
                 foreach ($item->getNiveauxSportifs() as $key => $niveau) {
                     $item->removeNiveauSportif($niveau);
                 }
             }
-            if (isset($this->data['niveau_sportif_ids']) && $this->data['niveau_sportif_ids'] !== '') {
+            if (isset($this->data['niveau_sportif_ids']) && '' !== $this->data['niveau_sportif_ids']) {
                 foreach (explode(',', $this->data['niveau_sportif_ids']) as $key => $niveau) {
                     $item->addNiveauSportif($this->em->getReference(NiveauSportif::class, $niveau));
                 }
@@ -210,12 +222,12 @@ class DhtmlxCommand
     {
         $item = $this->getReferenceItem();
         if (!empty($item) && $this->isCreneauEvent()) {
-            if ($item->getEncadrants() !== null) {
+            if (null !== $item->getEncadrants()) {
                 foreach ($item->getEncadrants() as $key => $encadrant) {
                     $item->removeEncadrant($encadrant);
                 }
             }
-            if (isset($this->data['encadrant_ids']) && $this->data['encadrant_ids'] !== '') {
+            if (isset($this->data['encadrant_ids']) && '' !== $this->data['encadrant_ids']) {
                 foreach (explode(',', $this->data['encadrant_ids']) as $key => $encadrant) {
                     $item->addEncadrant($this->em->getReference(Utilisateur::class, $encadrant));
                 }

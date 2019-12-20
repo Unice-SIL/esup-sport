@@ -39,6 +39,7 @@ class GestionInscriptionType extends AbstractType
                 'common.attentepaiement' => 'attentepaiement',
                 'common.attentevalidationencadrant' => 'attentevalidationencadrant',
                 'common.attentevalidationgestionnaire' => 'attentevalidationgestionnaire',
+                'common.ancienneinscription' => 'ancienneinscription',
             ],
             'attr' => ['class' => 'champRechercheDatatableInscription'],
         ]);

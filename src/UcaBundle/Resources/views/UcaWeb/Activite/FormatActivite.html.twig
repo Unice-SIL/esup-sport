@@ -69,12 +69,25 @@
           <div class="col-6 col-lg-2 order-1 p-2 p-lg-0 align-self-center fw-800">
             <p class="m-0">{{ event.creneau.dateDebut|date("H:i") }}
               -
-              {{ event.creneau.dateFin|date("H:i") }}</p>
-          </div>
+              {{ event.creneau.dateFin|date("H:i") }}              
+              </p>
+              {% if event.creneau.eligibleBonus == true %}
+                <div class="mr-auto">
+                  <p class="m-0 fw-800 text-uppercase" style="color: orange; position: absolute; left:30px;">
+                    <span title="{{ "common.eligible"|trans }}"><i class="fas fa-star mr-1"></i></span>
+                  </p>
+                </div>
+              {% endif %}
+          </div>          
           <div class="col-6 col-md-4 col-lg-3 order-3 p-2 p-lg-0">
-            <p class="m-0 fw-800 color-blue text-uppercase">
-              <i class="fas fa-map-marker-alt mr-1"></i>
-              {{ "format.lieu"|trans }}</p>
+            <div class="d-flex">              
+                <div class="mr-auto">
+                  <p class="m-0 fw-800 color-blue text-uppercase">
+                    <i class="fas fa-map-marker-alt mr-1"></i>
+                    {{ "format.lieu"|trans }}                    
+                  </p>
+                </div>                
+            </div>
             {% if creneau.lieu and creneau.lieu.etablissement %}
               <p class="m-0">{{ creneau.lieu.etablissement.libelle }}
                 -
@@ -169,9 +182,11 @@
   <div id="js-text-indisponible-clone" class="d-none">
     <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">
       {{ 'common.indisponible' | trans | upper }}
-      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ 'bouton.indisponible.statut.nbcreneaumaxatteint' | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions}) }}" aria-label="{{  'bouton.indisponible.statut.nbcreneaumaxatteint' | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions}) }}">
-        <i class="fas fa-question-circle"></i>
-      </span>
+      {% if app.user  %}
+        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ 'bouton.indisponible.statut.nbcreneaumaxatteint' | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions}) }}" aria-label="{{  'bouton.indisponible.statut.nbcreneaumaxatteint' | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions}) }}">
+          <i class="fas fa-question-circle"></i>
+        </span>
+      {% endif  %}
     </p>
   </div>
 {% endblock %}

@@ -15,19 +15,20 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
 
     public function findCommandeDetails($date_debut = null, $date_fin = null, $montantPaye = null)
     {
-        $today = date('d-m-Y', time());
-        $dateDebutTime = strtotime($date_debut);
-        $dateFinTime = strtotime($date_fin);
-        $timeToday = strtotime($today);
-        $dateFinToday = ($dateFinTime > $timeToday || $dateFinTime == $timeToday) ? null : $dateFinTime;
         $dateDebut = \DateTime::createFromFormat('d-m-Y', $date_debut);
         $dateFin = \DateTime::createFromFormat('d-m-Y', $date_fin);
 
+        if ('null' == $date_debut) {
+            $date_debut = null;
+        }
+        if ('null' == $date_fin) {
+            $date_fin = null;
+        }
         $qb = $this->createQueryBuilder('cd');
         $qb->leftJoin('UcaBundle\Entity\Commande', 'c', 'WITH', 'c.id = cd.commande');
         $qb->where('c.datePaiement IS NOT NULL');
 
-        if (null != $dateDebutTime and null != $dateFinToday) {
+        if (null != $date_debut and null != $date_fin) {
             $qb->add(
                 'where',
                 $qb->expr()->between(
@@ -38,11 +39,11 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
             )
                 ->setParameters(['from' => $dateDebut, 'to' => $dateFin])
                     ;
-        } elseif (null != $dateDebutTime and null == $dateFinToday) {
+        } elseif (null != $date_debut and null == $date_fin) {
             $qb->where('c.datePaiement > :dateDebut')
                 ->setParameter('dateDebut', $dateDebut)
             ;
-        } elseif (null == $dateDebutTime and null != $dateFinToday) {
+        } elseif (null == $date_debut and null != $date_fin) {
             $qb->where('c.datePaiement < :dateFin')
                 ->setParameter('dateFin', $dateFin)
             ;

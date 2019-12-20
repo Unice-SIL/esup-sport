@@ -1,0 +1,44 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block main %}
+    {{ flashBag.showAll }}
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+     <div class="">
+            <p>
+                <button id='boutonCocher' class='btn btn-primary' onclick="cocherDecocherTout('cocher');" />
+                {{ 'bouton.selectionner.tout' | trans }} </button>
+                <button id='boutonDecocher' class='btn btn-outline-primary' onclick="cocherDecocherTout('decocher');" />
+                {{ 'bouton.deselectionner.tout' | trans }} </button>    
+            </p>
+            {{ form_start(form, {'attr': {'id': 'basculeForm', 'novalidate': 'novalidate'}}) }}
+            {{ form_end(form) }}
+    </div>
+{% endblock %} 
+
+{% block javascripts %}
+    <script type="text/javascript">
+   
+        function  cocherDecocherTout(param) {
+            destinataires = document.querySelectorAll( "input[id^='ucabundle_bascule_activites_activites']" );
+            if (param == 'cocher') {
+                destinataires.forEach( function ( elem ) {
+                if ( ! elem.checked ) elem.checked = true;
+                } )
+            } else if ( param == 'decocher' ) {
+                destinataires.forEach( function ( elem ) {
+                if ( elem.checked ) elem.checked = false;
+                } )
+            }
+        }
+
+       
+
+    </script>
+{% endblock %}

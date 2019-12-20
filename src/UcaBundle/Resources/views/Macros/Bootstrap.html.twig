@@ -1,4 +1,4 @@
-{% macro accordionItem(id, expanded, title, text, parent) %}
+{% macro accordionItem(id, expanded, title, text, mobile, texte_mobile, parent) %}
     <div class="card card-install custom-card bg-white mb-4">
         <div class="card-header" id="heading{{id}}">
             <a aria-controls="collapse{{id}}" aria-expanded="{{expanded ? 'true' : 'false'}}" class="col-12 {{expanded ? '' : 'collapsed'}}" data-target="#collapse{{id}}" data-toggle="collapse">
@@ -12,7 +12,11 @@
         </div>
         <div aria-labelledby="heading{{id}}" class="card-body collapse {{expanded ? 'show' : ''}}" data-parent="#{{parent}}" id="collapse{{id}}">
             <div class="install-activity p-3 color-dark-gray">
-                {{ text | raw }}
+                {% if mobile == 0 or ((mobile == 1  or mobile == 2) and 'Windows' in app.request.headers.get('User-Agent')) %}
+                    {{ text | raw }}
+                {% elseif mobile == 1 and 'Windows' not in app.request.headers.get('User-Agent')  %}
+                    {{ texte_mobile | raw }}
+                {% endif %}
             </div>
         </div>
     </div>

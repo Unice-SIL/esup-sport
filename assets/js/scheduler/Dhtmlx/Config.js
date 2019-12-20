@@ -3,6 +3,7 @@ import {ACL} from "./ACL.js";
 import {Creneau} from "./Creneau.js";
 import {Reservation} from "./Reservation";
 import {Serie} from "./Serie.js";
+import {Prolongation} from "./Prolongation.js";
 
 scheduler.config.details_on_create = true;
 scheduler.config.multi_day = true;
@@ -28,16 +29,21 @@ scheduler.config.buttons_left = [];
 scheduler.config.buttons_right = ["dhx_save_btn","dhx_cancel_btn"];
 scheduler.config.include_end_by = true;
 scheduler.config.repeat_precise = true;
+scheduler.config.icons_select = [
+    "icon_details",
+    "icon_delete",
+    "icon_prolonger"
+];
+scheduler.locale.labels.icon_prolonger = "Prolonger";
 Load.start();
 
 //hide left toolbar
 if(role == "user")
-    scheduler.xy.menu_width = 0; 
+scheduler.xy.menu_width = 0; 
 
 //remove icon_edit
 var index =  scheduler.config.icons_select.indexOf("icon_edit");
 if (index !== -1)  scheduler.config.icons_select.splice(index, 1);
-
 scheduler.config.icons_select.splice(1,0)
 
 ACL.init();
@@ -179,7 +185,6 @@ var itemType = function(){
     let type;
 
     if(item.serie != null){
-        console.log(item);
         if(scheduler._series[item.serie.id].creneau != null){
             type = "creneau";
         }

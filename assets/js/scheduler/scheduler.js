@@ -27,3 +27,4 @@ import * as date from "./Dhtmlx/Date.js";
 
 global.show_minical = date.show_minical;
 global.show_end_date_minical = date.show_end_date_minical;
+global.show_extend_date_minical = date.show_extend_date_minical;

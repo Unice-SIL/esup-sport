@@ -45,6 +45,7 @@ var Serie = {
         this.end_date = transformDate(data.dateFin);
         this.dateDebut = data.dateDebut;
         this.dateFin = data.dateFin;
+        this.eligible_bonus = data.eligibleBonus;
 
         this.event_pid = null;
     },
@@ -103,6 +104,7 @@ var Serie = {
                     ev.profil_ids = data.profil_ids;
                     ev.capacite = data.capacite;
                     ev.text = data.text;
+                    ev.eligible_bonus = data.eligible_bonus;
 
                     ev.niveau_sportif_ids = data.niveau_sportif_ids;
 

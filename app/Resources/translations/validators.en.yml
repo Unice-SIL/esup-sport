@@ -1,3 +1,4 @@
+activite.bascule.notBlank: It is mandatory to select at least one activity
 activite.classeactivite.notnull: An activity class must be selected
 activite.description.notblank: The description of the activity is required
 activite.image.format: 'The picture of the activity is not in the right format. (Expected: PNG|JPEG|TIFF)'

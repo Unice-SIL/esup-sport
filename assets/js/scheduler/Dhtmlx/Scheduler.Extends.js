@@ -1,5 +1,6 @@
 import {loadData} from "./Config"
 import {changeColor} from "./Events"
+import { AST_Atom } from "terser";
 
 scheduler.getEvent_old = scheduler.getEvent;
 scheduler.getEvent = function (id) {
@@ -58,8 +59,33 @@ scheduler.displaySerieModalBox = function (action, ev) {
             //callback with the data of the modal
             if (rep == 0) {
                 let event = scheduler._events[ev.id];
-                event.dependanceSerie = true;
-                event.getParent().updateSerie(event, action);
+                if(action == "delete"){
+                    let serieId = event.evenement.serie.id;
+                    isThereInscritValide(serieId, function(result){
+                        if(result){
+                            messageErreurSuppression('impossible');
+                        }else{
+                            isThereInscritAttente(serieId, function(result){
+                                if(result){
+                                    messageErreurSuppression('prevention', function(result){
+                                        if(result == 0){
+                                            suppressionInscriptionAttente(serieId, function(){
+                                                event.dependanceSerie = true;
+                                                event.getParent().updateSerie(event, action);
+                                            });
+                                        }
+                                    });
+                                }else{
+                                    event.dependanceSerie = true;
+                                    event.getParent().updateSerie(event, action);
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    event.dependanceSerie = true;
+                    event.getParent().updateSerie(event, action);
+                }
             } else if (rep == 1) {
                 let event = scheduler._events[ev.id];
                 if(action == "delete"){
@@ -67,7 +93,6 @@ scheduler.displaySerieModalBox = function (action, ev) {
                 }
                 else{
                     event.update();
-
                 }
             } else {
                 loadData(scheduler._events[ev.id]);
@@ -89,3 +114,78 @@ scheduler.displayDeleteModalBox = function (callback) {
         callback: callback
     });
 };
+
+function isThereInscritValide(serieId, callback){
+    $.ajax({
+        method: "POST",
+        url: Routing.generate('DhtmlxSerieInscrit'),
+        data: {
+            id: serieId,
+            statut: 'valide'
+        },
+        success : function(code_html, statut){
+        },
+        error : function(resultat, statut, erreur){
+        },
+        complete : function(resultat, statut){
+            callback(resultat.responseJSON);
+        }
+    });
+}
+
+function isThereInscritAttente(serieId, callback){
+    $.ajax({
+        method: "POST",
+        url: Routing.generate('DhtmlxSerieInscrit'),
+        data: {
+            id: serieId,
+            statut: 'attente'
+        },
+        success : function(code_html, statut){
+        },
+        error : function(resultat, statut, erreur){
+        },
+        complete : function(resultat, statut){
+            callback(resultat.responseJSON);
+        }
+    });
+}
+
+function messageErreurSuppression(erreur, callback){
+    if($('.dhtmlx_modal_box')[0]){
+        return false;
+    }
+    if(erreur == 'impossible'){
+        displayErrorMessage(Translator.trans("scheduler.error.suppression.inscrit"));
+        return false;
+    }else if(erreur == 'prevention'){
+        dhtmlx.modalbox({
+            text: Translator.trans("scheduler.warning.suppression.inscrit"),
+            width: "500px",
+            position: "middle",
+            buttons:[Translator.trans("common.oui"), Translator.trans("common.non")],
+			callback:function(index){
+				callback(index);
+			}
+        });
+        return false;
+    }
+}
+
+function suppressionInscriptionAttente(serieId, callback){
+    $.ajax({
+        method: "POST",
+        url: Routing.generate('DhtmlxAnnulerInscription'),
+        data: {
+            id: serieId
+        },
+        success : function(code_html, statut){
+        },
+        error : function(resultat, statut, erreur){
+        },
+        complete : function(resultat, statut){
+            callback();
+        }
+    });
+}
+

@@ -72,7 +72,7 @@ class InscriptionService
                 ['formatActivite', 'eq', $item->getFormatActivite()],
                 ['creneau', 'eq', null],
                 ['reservabilite', 'eq', null],
-                ['statut', 'notIn', ['annule', 'desinscrit']],
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
             ])->first();
             if (empty($inscriptionFormat)) {
                 $inscriptionFormat = new Inscription($item->getFormatActivite(), $user, ['typeInscription' => 'format']);

@@ -12,7 +12,12 @@
             <br/>
             Cette inscription nécessite la validation d'un
             {% if inscription.statut == 'attentevalidationencadrant' %}
-                encadrant.
+                encadrant :
+                {% for encadrant in inscription.encadrants %}
+                </br><span>
+                    {{ encadrant.prenom }} {{ encadrant.nom }} ({{ encadrant.email }})
+                </span>
+                {% endfor %}
             {% elseif inscription.statut == 'attentevalidationgestionnaire' %}
                 gestionnaire.
             {% endif %}

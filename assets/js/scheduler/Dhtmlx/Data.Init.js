@@ -43,8 +43,8 @@ $.post(DATAAPI, {
 
     if(scheduler.data.item.type == "creneau"){
         scheduler.config.lightbox.toDisplay = {
-            new: ['description', 'tarif', 'profils',  'capacite', 'niveauSportif','encadrant', 'lieu', 'recurring', 'time'],
-            update:['description', 'tarif',  'capacite', 'profils', 'niveauSportif', 'encadrant', 'lieu', 'time']
+            new: ['description', 'tarif', 'profils',  'capacite', 'niveauSportif','encadrant', 'lieu', 'recurring', 'eligibilite', 'time'],
+            update:['description', 'tarif',  'capacite', 'profils', 'niveauSportif', 'encadrant', 'lieu', 'eligibilite', 'time']
         };
     }
     else if(scheduler.data.item.type == "reservation"){

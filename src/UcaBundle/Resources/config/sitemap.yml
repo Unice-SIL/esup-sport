@@ -265,6 +265,10 @@
             - titre: "trans('sitemap.modifier')"
               route: UcaGest_TraductionModifier
 
+          droit: ROLE_GESTION_BASCULE
+        - titre: "trans('sitemap.bascule.libelle')"
+          route: UcaGest_BasculeAccueil
+          
     - titre: "trans('sitemap.referentiel.libelle')"
       route: null
 

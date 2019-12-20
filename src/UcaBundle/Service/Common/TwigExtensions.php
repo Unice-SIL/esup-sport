@@ -64,6 +64,14 @@ class TwigExtensions extends AbstractExtension
                 $text = $emplacement->getTitre();
 
                 break;
+            case 'mobile':
+                $text = $emplacement->getMobile();
+
+                break;
+            case 'texte_mobile':
+                $text = $emplacement->getTexteMobile();
+
+                break;
             case 'text':
             default:
                 $text = $emplacement->getTexte();

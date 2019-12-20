@@ -21,10 +21,12 @@
         <div class="accordion" id="accordionInfosPratiques">
             {% for i in 1..5 %}
                 {% set emplacementName = "Infos pratiques - %02d"|format(i) %}
-                {% set titre = emplacement(emplacementName, "title") %}
+                {% set titre = emplacement(emplacementName,'title') %}
                 {% set texte = emplacement(emplacementName) %}
+                {% set mobile = emplacement(emplacementName, 'mobile') %}
+                {% set texte_mobile = emplacement(emplacementName, 'texte_mobile') %}
                 {% if titre is not empty %}
-                    {{ Bootstrap.accordionItem(i, loop.first, titre, texte, 'accordionInfosPratiques') }}
+                    {{ Bootstrap.accordionItem(i, loop.first, titre, texte, mobile, texte_mobile, 'accordionInfosPratiques') }}
                 {% endif %}
             {% endfor %}
         </div>

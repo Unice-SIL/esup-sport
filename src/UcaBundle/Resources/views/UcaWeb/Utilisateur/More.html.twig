@@ -9,6 +9,7 @@
 {% endblock %}
 
 {% block main %}
+  {% include "@Uca/UcaWeb/Inscription/Modal.Desinscription.html.twig" %}
   <h1 class="h1-light">{{'utilisateur.planning'|trans}}</h1>
   <section class="container mb-5">
 
@@ -86,7 +87,7 @@
                                 </td>
                             {% endif %}
                             <td>
-                                <a href="{{ path('UcaWeb_PlanningMore_Desinscrire', {'user': inscriptions[loop.index0].utilisateur.id, 'evenement': evenement.id}) }}" style="color: white" class="btn btn-danger btn-form" title="{{"bouton.desinscrire"|trans}}">
+                                <a href="{{ path('UcaWeb_PlanningMore_Desinscrire', {'user': inscriptions[loop.index0].utilisateur.id, 'evenement': evenement.id}) }}" data-toggle='modal' data-target='#modalDesinscription' style="color: white" class="btn btn-danger btn-form" title="{{"bouton.desinscrire"|trans}}">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>                                   
@@ -110,6 +111,8 @@
 
 {% block javascripts %}
   <script type="text/javascript">
+    {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}
+    
     {% if not formMail.vars.valid %}
         $('#mailButton').click();
     {% endif %}

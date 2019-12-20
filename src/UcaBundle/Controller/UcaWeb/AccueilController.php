@@ -14,14 +14,15 @@ class AccueilController extends Controller
     public function accueilAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        
-        $twigConfig["item_format_activite"] = $em->getRepository('UcaBundle:FormatSimple')->findByPromouvoir($this->getUser());
-        
-        $twigConfig["item_class_activite"] = $em->getRepository('UcaBundle:ClasseActivite')->findAll();
-        $twigConfig["item_actualite"] = $em->getRepository('UcaBundle:Actualite')->findBy(
-            array(),
-            array('ordre' => 'ASC')
+
+        $twigConfig['item_format_activite'] = $em->getRepository('UcaBundle:FormatSimple')->findByPromouvoir();
+
+        $twigConfig['item_class_activite'] = $em->getRepository('UcaBundle:ClasseActivite')->findAll();
+        $twigConfig['item_actualite'] = $em->getRepository('UcaBundle:Actualite')->findBy(
+            [],
+            ['ordre' => 'ASC']
         );
+
         return $this->render('@Uca/UcaWeb/Accueil/Main.html.twig', $twigConfig);
     }
 }

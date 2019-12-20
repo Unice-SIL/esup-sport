@@ -111,6 +111,9 @@ scheduler.config.lightbox.get = {
     recurring: function () {
         return {name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring", form: "myForm"};
     },
+    eligibilite: function () {
+        return {name: Translator.trans("common.eligible"), type: "checkbox", map_to: "eligible_bonus"}
+    },
     time: function () {
         return {name: "time", height: 72, type: "calendar_time", map_to: "auto"};
     }
@@ -129,6 +132,10 @@ scheduler.config.lightbox.control = function(params, isNew){
     for(var idElement in scheduler.config.lightbox.get){
         let element = scheduler.config.lightbox.get[idElement]();
         let typeEvent = isNew ? "new" : "update"; 
+
+        if($('.dhtmlx_modal_box')[0]){
+            return false;
+        }
 
         if(scheduler.config.lightbox.toDisplay[typeEvent].indexOf(idElement) == -1){
             continue;

@@ -33,7 +33,12 @@ var Creneau = {
         this.text = this.evenement.text;
         this.dependanceSerie = data.dependanceSerie;
 
-
+        if(data.eligibleBonus != undefined){
+            this.eligible_bonus = data.eligibleBonus;
+        }else{
+            this.eligible_bonus = data.eligible_bonus;
+        }
+        
         //if action is insert, creneau don't have serie parent yet 
         if(typeof this.evenement.serie != "undefined"){
 
@@ -59,6 +64,8 @@ var Creneau = {
                     this.encadrant_ids.push(element.id);
                 }
                 this.encadrant_ids = this.encadrant_ids.join(",");
+
+                this.eligible_bonus = data.eligibleBonus;
             }
             else{
                 this.encadrant_ids = "";
@@ -111,6 +118,7 @@ var Creneau = {
         this.dateFin = dateToStr(this.end_date);
         this.evenement.text = this.text;
         this.dependanceSerie = false;
+        this.evenement.eligible_bonus = this.eligible_bonus;
 
         this.save("update");
     },

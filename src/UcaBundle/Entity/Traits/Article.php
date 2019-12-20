@@ -51,7 +51,7 @@ trait Article
 
     public function isNotFull()
     {
-        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit']]]);
+        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']]]);
 
         return !empty($this->getCapacite()) && $this->getInscriptions()->matching($criterias)->count() < $this->getCapacite();
     }
@@ -94,7 +94,7 @@ trait Article
             $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $format);
             $inscriptions = $utilisateur->getInscriptionsByCriteria([
                 [Inscription::getItemColumn($this), 'eq', $this],
-                ['statut', 'notIn', ['annule', 'desinscrit']],
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
             ]);
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';

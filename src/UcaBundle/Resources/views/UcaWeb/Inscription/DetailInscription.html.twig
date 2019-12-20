@@ -36,6 +36,10 @@
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.valide"|trans}}</p>
             {% elseif inscription.statut == 'attentevalidationencadrant' %}
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationencadrant"|trans}}</p>
+            {% elseif inscription.statut == 'attentevalidationgestionnaire' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationgestionnaire"|trans}}</p>
+            {% elseif inscription.statut == 'ancienneinscription' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.ancienneinscription"|trans}}</p>
             {% elseif inscription.statut == 'desinscrit' %}
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscrit"|trans}}</p>
             {% endif %}

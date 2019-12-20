@@ -110,6 +110,9 @@ security:
         
         #Previsualisation
         ROLE_PREVISUALISATION: ROLE_ADMIN
+
+        #Bascule
+        ROLE_GESTION_BASCULE: ROLE_ADMIN
         
         # Tous les groupes:
         ROLE_SUPER_ADMIN : [
@@ -137,7 +140,8 @@ security:
             ROLE_GESTION_COMMANDES,
             ROLE_GESTION_PARAMETRAGE,
             ROLE_PREVISUALISATION,
-            ROLE_GESTION_INSCRIPTION]
+            ROLE_GESTION_INSCRIPTION,
+            ROLE_GESTION_BASCULE]
 
         #ACCES_HISTORIQUE_COMMANDE: ROLE_USER
         #ACCES_PLANNING: ROLE_USER

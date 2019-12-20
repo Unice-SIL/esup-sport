@@ -3,6 +3,7 @@
 namespace UcaBundle\Controller\UcaWeb;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -129,7 +130,7 @@ class MesCommandesController extends Controller
     }
 
     /**
-     *  @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire")
+     *  @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire", options={"expose"=true})
      *
      * @param null|mixed $dateDebut
      * @param null|mixed $dateFin
@@ -147,7 +148,7 @@ class MesCommandesController extends Controller
         $today = date('d-m-Y', time());
         $dateDebutTime = strtotime($dateDebut);
         $dateFinTime = strtotime($dateFin);
-        $timeToday = strtotime($dateFin);
+        $timeToday = strtotime($today);
         $dateFinToday = ($dateFinTime > $timeToday || $dateFinTime == $timeToday) ? null : $dateFinTime;
         $dateDebut = \DateTime::createFromFormat('d-m-Y', $dateDebut);
         $dateFin = \DateTime::createFromFormat('d-m-Y', $dateFin);
@@ -232,7 +233,7 @@ class MesCommandesController extends Controller
         foreach ($listeCommandeDetail as $detail) {
             $commande = $detail->getCommande();
             $cmd = [$commande->getNomEncaisseur(), $commande->getPrenomEncaisseur(), $commande->getNumeroRecu(), $commande->getNumeroCommande(), $detail->getLibelle()];
-            $montant = $detail->getMontant().'€';
+            $montant = $detail->getMontant();
             switch ($commande->getTypePaiement()) {
                     case 'BDS':
                         switch ($commande->getMoyenPaiement()) {
@@ -273,6 +274,9 @@ class MesCommandesController extends Controller
                 foreach (range('A', 'K') as $col) {
                     $sheet->setCellValue($col.$idCol, $cmd[$index]);
                     $sheet->getStyle($col.$idCol)->applyFromArray($styleArray);
+                    if ('G' == $col || 'H' == $col || 'I' == $col || 'K' == $col) {
+                        $sheet->getStyle($col.$idCol)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
+                    }
                     ++$index;
                 }
                 ++$idCol;

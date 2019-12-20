@@ -45,6 +45,11 @@ var Evenement = {
         this.dateDebut = data.dateDebut;
         this.end_date = transformDate(data.dateFin);
         this.dateFin = data.dateFin;
+        if(data.eligibleBonus != undefined){
+            this.eligible_bonus = data.eligibleBonus;
+        }else{
+            this.eligible_bonus = data.eligibleBonus = data.eligible_bonus;
+        }
         this.event_pid = null;
         if(data.description != null){
             this.text = data.description;

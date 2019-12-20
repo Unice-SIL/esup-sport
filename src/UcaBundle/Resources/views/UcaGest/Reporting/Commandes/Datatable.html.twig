@@ -20,7 +20,7 @@
     {# Affichage du bouton Exporter tout s'il est défini #}
     <div class="row">
         {% if exportAll is defined %}
-            <a href="{{ url('UcaWeb_MesCommandesExportAll') }}" id="bouton_export_all_facture" class="btn btn-primary btn-xs ml-auto mt-3" >{{ 'bouton.exportallfacture.pdf'|trans }}</a>
+            <a href="{{ url('UcaWeb_MesCommandesExportAll') }}" id="bouton_export_all_facture" class="btn btn-primary ml-md-auto mt-3" >{{ 'bouton.exportallfacture.pdf'|trans }}</a>
         {% endif %}    
 
         {% if gestionButtons is defined %}
@@ -65,14 +65,13 @@
             });
 
             function setUrl(){
-                $("#bouton_extraction_excel").attr("href", createUrl($("#sg-datatables-Commande_datatable-head-filter-12").val(), $('input[type="search"]').val(), $("#ucabundle_commande_dateDebut").val(), $("#ucabundle_commande_dateFin").val()));
+                $("#bouton_extraction_excel").attr("href", createUrl($("#ucabundle_commande_dateDebut").val(), $("#ucabundle_commande_dateFin").val()));
             }
 
             function createUrl(dtDeb, dtFin){
                 let dateFin = null;
                 let dateDebut = null;
                 let url = "{{ url('UcaWeb_MesCommandesExtraire', {'dateDebut': 'date_debut', 'dateFin': 'date_fin' }) }}";
-
                 if(dtFin!=""){
                     dateFin = dtFin.split('-');
                     dateFin.reverse();
@@ -105,7 +104,6 @@
 
             function setUrlForExportPDF(){
                 $("#bouton_export_all_facture").attr("href", createUrlForExportPDF($("#sg-datatables-Commande_datatable-head-filter-15").val(), $('input[type="search"]').val()));
-                console.log( $("#bouton_export_all_facture").attr("href"));
             }
 
             function createUrlForExportPDF(dt, rch){
