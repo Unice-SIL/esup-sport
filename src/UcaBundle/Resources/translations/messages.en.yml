@@ -592,7 +592,7 @@ scheduler.message.valider: Save
 scheduler.message.voirplus: See more
 scheduler.warning.suppression.inscrit: Do you want to delete this serie despite the pre-registrations awaiting ?
 securite.libelle: Security
-security.login.external.account: "You are a member of one of the following institutions: CNRS, OCA, INRA, INRIA, INSERM, IRD?"
+security.login.external.account: "You are a member of one of the following institutions: Villa Arson, ERAC, CNRS, OCA, INRA, INRIA, INSERM, IRD?"
 security.login.inscrit: Already have a UCA SPORT account?
 security.login.not.register: No account yet
 security.login.others.account: Or are you alumni, retiree or honorary member? 
