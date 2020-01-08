@@ -591,10 +591,10 @@ scheduler.message.valider: Enregistrer
 scheduler.message.voirplus: Voir plus
 scheduler.warning.suppression.inscrit: Voulez-vous supprimer la série malgré les pré-inscriptions en attente ?
 securite.libelle: Sécurité
-security.login.external.account: "Vous êtes personnels ou étudiant d'un des établissements suivants : Villa Arson, ERAC, CNRS, OCA, INRA, INRIA, INSERM, IRD ?"
+security.login.external.account: "Vous êtes personnel ou étudiant.e d'un des établissement suivants : Villa Arson, ERAC, CNRS, OCA, INRA, INRIA, INSERM, IRD ?"
 security.login.inscrit: Vous avez déjà un compte UCA SPORT ?
 security.login.not.register: Pas encore de compte
-security.login.others.account: Ou vous êtes alumni, retraité ou membre d'honneur ?
+security.login.others.account: Ou vous êtes retraité.e, alumni ou membre d'honneur ?
 security.login.password: Mot de passe
 security.login.reinitialiser: "Mot de passe oublié ?"
 security.login.remember_me: 'Se souvenir de moi'
