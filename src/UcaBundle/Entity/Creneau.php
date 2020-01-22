@@ -102,13 +102,18 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     public function getArticleLibelle()
     {
-        $dateDebut = $this->getSerieEvenements()->first()->getDateDebut();
-        $dateFin = $this->getSerieEvenements()->first()->getDateFin();
+        if (false !== $this->getSerieEvenements()->first()) {
+            $dateDebut = $this->getSerieEvenements()->first()->getDateDebut();
+            $dateFin = $this->getSerieEvenements()->first()->getDateFin();
+
+            return $this->getFormatActivite()->getLibelle()
+                .' ['.Fn::intlDateFormat($dateDebut, 'cccc')
+                .' '.$dateDebut->format('H:i')
+                .' - '.$dateFin->format('H:i').']';
+        }
 
         return $this->getFormatActivite()->getLibelle()
-            .' ['.Fn::intlDateFormat($dateDebut, 'cccc')
-            .' '.$dateDebut->format('H:i')
-            .' - '.$dateFin->format('H:i').']';
+            .' []';
     }
 
     public function getArticleDescription()
