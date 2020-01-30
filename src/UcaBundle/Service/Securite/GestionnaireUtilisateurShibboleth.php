@@ -32,6 +32,9 @@ class GestionnaireUtilisateurShibboleth implements SUP
     {
         $utilisateur = $this->um->findUserByUsername($credentials['eppn']);
         if (empty($utilisateur)) {
+            $utilisateur = $this->um->findUserByEmail($credentials['mail']);
+        }
+        if (empty($utilisateur)) {
             $this->firstConnection = true;
             $utilisateur = new Utilisateur();
         }
