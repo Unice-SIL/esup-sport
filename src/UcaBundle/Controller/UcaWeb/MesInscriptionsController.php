@@ -86,6 +86,8 @@ class MesInscriptionsController extends Controller
         } elseif ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
             $inscription->setStatut('annule', ['motifAnnulation' => 'annulationgestionnaire']);
             $redirect = $this->redirectToRoute('UcaGest_GestionInscription');
+        } else {
+            $redirect = $this->redirectToRoute('UcaWeb_MesInscriptions');
         }
         $em->flush();
 
@@ -155,6 +157,8 @@ class MesInscriptionsController extends Controller
             $twigConfig['source'] = 'mesinscriptions';
         } elseif ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
             $twigConfig['source'] = 'gestioninscription';
+        } else {
+            return $this->redirectToRoute('UcaWeb_MesInscriptions');
         }
 
         return $this->render('@Uca/UcaWeb/Inscription/DetailInscription.html.twig', $twigConfig);

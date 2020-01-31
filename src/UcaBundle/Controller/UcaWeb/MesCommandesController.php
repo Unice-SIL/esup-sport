@@ -59,6 +59,9 @@ class MesCommandesController extends Controller
      */
     public function voirAction(Request $request, Commande $commande)
     {
+        if ($commande->getUtilisateur() != $this->getUser()) {
+            return $this->redirectToRoute('UcaWeb_MesCommandes');
+        }
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
         $datatable = $this->get('sg_datatables.factory')->create(DetailsCommandeDatatable::class);
@@ -99,6 +102,9 @@ class MesCommandesController extends Controller
      */
     public function annulerAction(Request $request, Commande $commande)
     {
+        if ($commande->getUtilisateur() != $this->getUser()) {
+            return $this->redirectToRoute('UcaWeb_MesCommandes');
+        }
         $em = $this->getDoctrine()->getManager();
         if (!$commande) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($commande, 'Supprimer');
@@ -116,6 +122,10 @@ class MesCommandesController extends Controller
      */
     public function exportAction(Request $request, Commande $commande)
     {
+        if ($commande->getUtilisateur() != $this->getUser() && !$this->get('security.authorization_checker')->isGranted('ROLE_GESTION_COMMANDES')) {
+            return $this->redirectToRoute('UcaWeb_MesCommandes');
+        }
+
         $content = $this->renderView('@Uca/UcaWeb/Commande/Facture.html.twig', ['commande' => $commande]);
 
         try {
@@ -130,7 +140,8 @@ class MesCommandesController extends Controller
     }
 
     /**
-     *  @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire", options={"expose"=true})
+     * @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire", options={"expose"=true})
+     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
      *
      * @param null|mixed $dateDebut
      * @param null|mixed $dateFin
@@ -303,6 +314,7 @@ class MesCommandesController extends Controller
 
     /**
      * @Route("ExportAll/{datePaiement}/{recherche}",name="UcaWeb_MesCommandesExportAll", options={"expose"=true})
+     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
      *
      * @param null|mixed $datePaiement
      * @param null|mixed $recherche

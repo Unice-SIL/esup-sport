@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Appel;
 use UcaBundle\Entity\DhtmlxEvenement;
+use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\EvenementType;
 use UcaBundle\Form\PlanningMailType;
@@ -54,6 +55,12 @@ class MonPlanningController extends Controller
             if (null != $dhtmlxEvenement->getSerie()->getCreneau()) {
                 $inscriptions = $dhtmlxEvenement->getSerie()->getCreneau()->getAllInscriptions();
                 $eventName = $dhtmlxEvenement->getSerie()->getCreneau()->getFormatActivite()->getActivite()->getLibelle();
+
+                if (!$this->getUser()->isEncadrantEvenement($dhtmlxEvenement)) {
+                    if (empty($em->getRepository(Inscription::class)->findBy(['creneau' => $dhtmlxEvenement->getSerie()->getCreneau(), 'utilisateur' => $this->getUser()->getId()]))) {
+                        return $this->redirectToRoute('UcaWeb_MonPlanning');
+                    }
+                }
             }
         }
         if ($dhtmlxEvenement->getFormatSimple()) {
