@@ -57,7 +57,7 @@ class MonPlanningController extends Controller
                 $eventName = $dhtmlxEvenement->getSerie()->getCreneau()->getFormatActivite()->getActivite()->getLibelle();
 
                 if (!$this->getUser()->isEncadrantEvenement($dhtmlxEvenement)) {
-                    if (empty($em->getRepository(Inscription::class)->findBy(['creneau' => $dhtmlxEvenement->getSerie()->getCreneau(), 'utilisateur' => $this->getUser()->getId()]))) {
+                    if (!$this->isGranted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE') && empty($em->getRepository(Inscription::class)->findBy(['creneau' => $dhtmlxEvenement->getSerie()->getCreneau(), 'utilisateur' => $this->getUser()->getId()]))) {
                         return $this->redirectToRoute('UcaWeb_MonPlanning');
                     }
                 }
