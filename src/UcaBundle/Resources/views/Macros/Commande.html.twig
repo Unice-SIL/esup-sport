@@ -52,7 +52,7 @@
 
                 {% if commande.statut == 'apayer' and source == 'mescommandes' or commande.statut == 'panier' and source == 'monpanier' %}
                     {% if commande.montantTotal != 0 %}
-                        {# {% if form is not null %}
+                        {% if form is not null %}
                                 {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
                                 <div class="d-flex">
                                     <div class="ml-auto p-2">
@@ -60,11 +60,10 @@
                                     </div>
                                 </div>
                                 {{ form_end(form) }}
-                        {% endif %} #}
+                        {% endif %}
                      
                         {% if source == 'monpanier' %}
-                            <a class="btn btn-primary" href="{{url('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
-                            <p>Le paiement en ligne sera bientôt de nouveau disponible</p>
+                            <a href="{{url('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
                         {% endif %}
                     {% else %}
                         <a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement: 'NA', source: source })}}">{{ 'paiement.gratuit.validation' | trans }}</a>
