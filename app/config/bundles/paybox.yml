@@ -1,10 +1,10 @@
 lexik_paybox:
     parameters:
         production:  true        # Switches between Paybox test and production servers (preprod-tpe <> tpe)
-        site:        '2395917'   # Site number provided by the bank
+        site:        '2399431'   # Site number provided by the bank
         rank:        '01'        # Rank number provided by the bank
-        login:       '239591701' # Customer's login provided by Paybox
+        login:       '168448267' # Customer's login provided by Paybox
         hmac:
-            key: '649E8E791D3455CD78BCF5CF6DC74CF60ABFFE3887886BBD23DB847540447CD6924EBCFEAC10894FDB2B14E1AACDB78DC18772C39E6429965FEBF71456C54875' # Key used to compute the hmac hash, provided by Paybox
+            key: '3E2BB6A7390A15DAC35187C4E8A7B8404C123D330389ECAE8578BBE657C56B065D00299599D23B488A4A610E994D2F8F69ADED946F2CFEF6EE551FC3B13C3AC8' # Key used to compute the hmac hash, provided by Paybox
         currencies:  
             - '978'  # EUR
