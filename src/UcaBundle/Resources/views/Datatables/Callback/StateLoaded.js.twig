@@ -1,16 +1,3 @@
-function StateLoaded() {
-    var oTable = $('.dataTable').DataTable();
-    var state = oTable.state.loaded();
-    if (state) {
-        oTable.columns().eq(0).each(function (colIdx) {
-            var colSearch = state.columns[colIdx].search;
-
-            if (colSearch.search !== "") {
-                $('input[data-search-column-index="' + colIdx + '"]').val(colSearch.search);
-                $('select[data-search-column-index="' + colIdx + '"]').val(colSearch.search).trigger('change');
-
-            }
-        });
-        //oTable.draw();
-    }
+function () {
+ _uca.datatable.stateLoaded();
 }

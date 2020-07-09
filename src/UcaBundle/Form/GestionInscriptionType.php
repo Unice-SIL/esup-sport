@@ -12,8 +12,11 @@ use UcaBundle\Entity\ClasseActivite;
 use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
+use UcaBundle\Entity\Etablissement;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\FormatAvecCreneau;
+use UcaBundle\Entity\Groupe;
+use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\TypeActivite;
 
 class GestionInscriptionType extends AbstractType
@@ -40,6 +43,7 @@ class GestionInscriptionType extends AbstractType
                 'common.attentevalidationencadrant' => 'attentevalidationencadrant',
                 'common.attentevalidationgestionnaire' => 'attentevalidationgestionnaire',
                 'common.ancienneinscription' => 'ancienneinscription',
+                'common.desinscriptionadministrative' => 'desinscriptionadministrative',
             ],
             'attr' => ['class' => 'champRechercheDatatableInscription'],
         ]);
@@ -139,6 +143,52 @@ class GestionInscriptionType extends AbstractType
                     : ['data-format_activite-id' => 0, 'data-type' => 'creneau'];
                 },
                 'attr' => ['class' => 'hidden champRechercheDatatableInscription'],
+            ]
+        );
+
+        $encadrants = ['traduction.tous' => 0];
+        foreach ($em->getRepository(Groupe::class)->findByLibelle('Encadrant')[0]->getUtilisateurs() as $encadrant) {
+            $encadrants[$encadrant->getPrenom().' '.$encadrant->getNom()] = $encadrant->getId();
+        }
+        $builder->add(
+            'encadrants',
+            ChoiceType::class,
+            [
+                'label_format' => 'common.encadrant',
+                'choices' => $encadrants,
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ]
+        );
+
+        $etablissements = ['traduction.tous' => 0];
+        foreach ($em->getRepository(Etablissement::class)->findAll() as $etablissement) {
+            $etablissements[$etablissement->getLibelle()] = $etablissement->getId();
+        }
+        $builder->add(
+            'etablissements',
+            ChoiceType::class,
+            [
+                'label_format' => 'etablissement.libelle',
+                'choices' => $etablissements,
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ]
+        );
+
+        $lieux = ['traduction.tous' => 0];
+        foreach ($em->getRepository(Ressource::class)->findAllLieu() as $lieu) {
+            $lieux[$lieu->getLibelle()] = $lieu->getId();
+        }
+        $builder->add(
+            'lieux',
+            ChoiceType::class,
+            [
+                'label_format' => 'common.lieu',
+                'choices' => $lieux,
+                'choice_attr' => function ($val, $key) use ($em) {
+                    return 0 != $val ? ['data-lieux-id' => $val, 'data-etablissements-id' => $em->getRepository(Ressource::class)->findOneById($val)->getEtablissement()->getId()]
+                    : ['data-lieux-id' => 0, 'data-etablissements-id' => 0];
+                },
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
             ]
         );
     }

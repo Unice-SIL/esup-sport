@@ -249,10 +249,10 @@ order: 8;
 .dhx_cal_header {
   height: 32px!important;
   border-bottom: 1px solid #CECECE;
-  top: 100px !important;
+  top: 149px !important;
 }
 .dhx_multi_day {
-  top: 133px !important;
+  top: 153px !important;
 }
 .dhx_cal_data{
   top: 182px!important;
@@ -261,6 +261,7 @@ order: 8;
 @include media-breakpoint-down(xs) {
 .dhx_cal_navline .dhx_cal_date {
   flex-basis: 100%;
+  font-size: 1em;
 }
 .dhx_cal_navline .dhx_minical_icon {
   flex-basis: 10%;
@@ -271,7 +272,7 @@ order: 8;
   flex-basis: 25%;
 }
 .dhx_cal_navline .dhx_cal_today_button {
-  flex-basis: 30%;
+  flex-basis: 100%;
 }
 .dhx_cal_navline .dhx_minical_icon {
   order: 2;
@@ -288,18 +289,23 @@ order: 8;
 .dhx_cal_header {
   height: 32px!important;
   border-bottom: 1px solid #CECECE;
-  top: 130px !important;
+  top: 249px !important;
 }
 .dhx_multi_day {
   height: 49px!important;
-  top: 163px !important;
+  top: 263px !important;
   }
   .dhx_cal_data{
-    top: 212px!important;
+    top: 282px!important;
 }
 .dhx_cal_data{
-  top: 212px!important;
+  top: 282px!important;
 }
+.dhx_minical_popup {
+  left: 50px;
+  top: 536px;  
+}
+
 }
 
 // Responsive Lightbox

@@ -13,22 +13,13 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
         ;
     }
 
-    public function findCommandeDetails($date_debut = null, $date_fin = null, $montantPaye = null)
+    public function findCommandeDetails($dateDebut, $dateFin, $montantPaye)
     {
-        $dateDebut = \DateTime::createFromFormat('d-m-Y', $date_debut);
-        $dateFin = \DateTime::createFromFormat('d-m-Y', $date_fin);
-
-        if ('null' == $date_debut) {
-            $date_debut = null;
-        }
-        if ('null' == $date_fin) {
-            $date_fin = null;
-        }
         $qb = $this->createQueryBuilder('cd');
         $qb->leftJoin('UcaBundle\Entity\Commande', 'c', 'WITH', 'c.id = cd.commande');
         $qb->where('c.datePaiement IS NOT NULL');
 
-        if (null != $date_debut and null != $date_fin) {
+        if (null != $dateDebut and null != $dateFin) {
             $qb->add(
                 'where',
                 $qb->expr()->between(
@@ -39,12 +30,12 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
             )
                 ->setParameters(['from' => $dateDebut, 'to' => $dateFin])
                     ;
-        } elseif (null != $date_debut and null == $date_fin) {
-            $qb->where('c.datePaiement > :dateDebut')
+        } elseif (null != $dateDebut and null == $dateFin) {
+            $qb->where('c.datePaiement >= :dateDebut')
                 ->setParameter('dateDebut', $dateDebut)
             ;
-        } elseif (null == $date_debut and null != $date_fin) {
-            $qb->where('c.datePaiement < :dateFin')
+        } elseif (null == $dateDebut and null != $dateFin) {
+            $qb->where('c.datePaiement <= :dateFin')
                 ->setParameter('dateFin', $dateFin)
             ;
         }
@@ -54,5 +45,24 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findCommandeDetailPourAncienneCommandeGratuite()
+    {
+        $qb = $this->createQueryBuilder('cd');
+        $qb->leftJoin('UcaBundle\Entity\Commande', 'c', 'WITH', 'c.id = cd.commande');
+        $qb->where("c.statut = 'termine'");
+        $qb->andWhere('cd.libelle IS NULL OR cd.description IS NULL OR cd.typeArticle IS NULL');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function max($field)
+    {
+        $qb = $this->createQueryBuilder('c');
+        $qb->select('MAX(c.'.$field.')');
+        $res = $qb->getQuery()->getSingleScalarResult();
+
+        return empty($res) ? 0 : $res;
     }
 }

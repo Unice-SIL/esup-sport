@@ -3,17 +3,15 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @ORM\Entity
- * @Vich\Uploadable 
+ * @Vich\Uploadable
  */
 class ReferentielImmobilier
 {
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -21,49 +19,52 @@ class ReferentielImmobilier
      */
     private $id;
 
-    /** 
-     * @ORM\Column(type="string") 
+    /**
+     * @ORM\Column(type="string")
      */
     private $libelle;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $description;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $codeRus;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $nomCampus;
 
-    /** 
-     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true) 
+    /**
+     * @ORM\Column(type="decimal", precision=10, scale=2, nullable=true)
      */
     private $superficie;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $latitude;
 
-    /** 
-     * @ORM\Column(type="string", nullable=true) 
+    /**
+     * @ORM\Column(type="string", nullable=true)
      */
     private $longitude;
 
-    /** 
-     * @ORM\Column(type="integer", nullable=true) 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $capacite;
 
-    #endregion
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $visiteVirtuelle;
 
-    
+    //endregion
 
     /**
      * Get id.
@@ -102,7 +103,7 @@ class ReferentielImmobilier
     /**
      * Set description.
      *
-     * @param string|null $description
+     * @param null|string $description
      *
      * @return ReferentielImmobilier
      */
@@ -126,7 +127,7 @@ class ReferentielImmobilier
     /**
      * Set codeRus.
      *
-     * @param string|null $codeRus
+     * @param null|string $codeRus
      *
      * @return ReferentielImmobilier
      */
@@ -150,7 +151,7 @@ class ReferentielImmobilier
     /**
      * Set nomCampus.
      *
-     * @param string|null $nomCampus
+     * @param null|string $nomCampus
      *
      * @return ReferentielImmobilier
      */
@@ -174,7 +175,7 @@ class ReferentielImmobilier
     /**
      * Set superficie.
      *
-     * @param string|null $superficie
+     * @param null|string $superficie
      *
      * @return ReferentielImmobilier
      */
@@ -198,7 +199,7 @@ class ReferentielImmobilier
     /**
      * Set latitude.
      *
-     * @param string|null $latitude
+     * @param null|string $latitude
      *
      * @return ReferentielImmobilier
      */
@@ -222,7 +223,7 @@ class ReferentielImmobilier
     /**
      * Set longitude.
      *
-     * @param string|null $longitude
+     * @param null|string $longitude
      *
      * @return ReferentielImmobilier
      */
@@ -246,7 +247,7 @@ class ReferentielImmobilier
     /**
      * Set capacite.
      *
-     * @param int|null $capacite
+     * @param null|int $capacite
      *
      * @return ReferentielImmobilier
      */
@@ -265,5 +266,29 @@ class ReferentielImmobilier
     public function getCapacite()
     {
         return $this->capacite;
+    }
+
+    /**
+     * Set visiteVirtuelle.
+     *
+     * @param null|mixed $visiteVirtuelle
+     *
+     * @return ReferentielImmobilier
+     */
+    public function setVisiteVirtuelle($visiteVirtuelle = null)
+    {
+        $this->visiteVirtuelle = $visiteVirtuelle;
+
+        return $this;
+    }
+
+    /**
+     * Get visiteVirtuelle.
+     *
+     * @return string|null
+     */
+    public function getVisiteVirtuelle()
+    {
+        return $this->visiteVirtuelle;
     }
 }

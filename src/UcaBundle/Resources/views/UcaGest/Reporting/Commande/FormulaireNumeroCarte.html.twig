@@ -1,0 +1,42 @@
+  {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+
+{% import 'LexikPayboxBundle:Macro:paybox.html.twig' as paybox %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+  {{ flashBag.showAll }}
+  <h1 class="h1-light"> {{ 'commandedetail.informationscarte.titre' | trans }} </h2>
+  <section class="container">
+    <div class="row">
+      <div class="col-12 mb-4 pl-3 p-xl-0">
+        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+      </div>
+    </div>
+    
+    <div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+      <div class="col-12 col-sm-8">
+        <h2 class="hide-border-title"> {{ commandeDetail.inscription.formatActivite.libelle }}</h2>
+          <p class="p-0 m-0">
+            <strong>{{ 'common.datepaiement' | trans }} :</strong>
+            {{  commandeDetail.commande.datePaiement | dateFormat('dd MMM Y') }}
+          </p>
+          <br>
+          {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            {{ form_row(form.numeroCarte) }}
+          {{ form_row(form.dateCarteFinValidite) }}
+          {{ form_row(form.etablissementRetraitCarte )}}
+          {{ form_row(form.save) }}
+          {{ form_end(form,{'render_rest': false}) }}
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block javascirpts %}
+{% endblock %}

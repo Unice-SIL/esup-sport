@@ -34,6 +34,10 @@
 > yarn encore production
 > yarn install
 
+* Commande pour base de données statistique
+> php bin/console doctrine:database:create --connection=statistique
+> php bin/console doctrine:schema:update --force --em=statistique
+
 * Utilitaires de debugage Symfony
 > php bin/console debug:container > ~debug_sevices.txt
 > php bin/console debug:event-dispatcher > ~debug_envent-dispacher.txt

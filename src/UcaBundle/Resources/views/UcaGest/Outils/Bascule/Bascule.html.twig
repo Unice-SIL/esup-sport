@@ -12,9 +12,9 @@
     {% endif %}
      <div class="">
             <p>
-                <button id='boutonCocher' class='btn btn-primary' onclick="cocherDecocherTout('cocher');" />
+                <button id='boutonCocher' class='btn btn-primary toutCocherDecocher' data-action="cocher"/>
                 {{ 'bouton.selectionner.tout' | trans }} </button>
-                <button id='boutonDecocher' class='btn btn-outline-primary' onclick="cocherDecocherTout('decocher');" />
+                <button id='boutonDecocher' class='btn btn-outline-primary toutCocherDecocher' data-action="decocher"/>
                 {{ 'bouton.deselectionner.tout' | trans }} </button>    
             </p>
             {{ form_start(form, {'attr': {'id': 'basculeForm', 'novalidate': 'novalidate'}}) }}
@@ -24,21 +24,9 @@
 
 {% block javascripts %}
     <script type="text/javascript">
-   
-        function  cocherDecocherTout(param) {
-            destinataires = document.querySelectorAll( "input[id^='ucabundle_bascule_activites_activites']" );
-            if (param == 'cocher') {
-                destinataires.forEach( function ( elem ) {
-                if ( ! elem.checked ) elem.checked = true;
-                } )
-            } else if ( param == 'decocher' ) {
-                destinataires.forEach( function ( elem ) {
-                if ( elem.checked ) elem.checked = false;
-                } )
-            }
-        }
-
-       
-
+        'use_strict';
+        activites = document.querySelectorAll( "input[id^='ucabundle_bascule_activites_activites']" );
+        boutons = document.querySelectorAll(".toutCocherDecocher");
+        _uca.common.toutCocherDecocherListener(boutons, activites);
     </script>
 {% endblock %}

@@ -21,153 +21,12 @@
     {{ item.description|nl2br }}
   </section>
   {% include '@Uca/UcaWeb/Activite/BlocTarif.html.twig' with { format: item } %}
-  <section class="pb-5 mb-5">
-    <div class="container mb-2">
-      <div class="row d-flex justify-content-between">
-        {% for day in days %}
-          {% if currentDay == loop.index % 7 %}
-            {% set active = "bg-dark-gray" %}
-          {% else %}
-            {% set active = "" %}
-          {% endif %}
-          <div class="d-none d-md-block flex-fill">
-            {% if nombreEvenement[loop.index % 7] is not defined or nombreEvenement[loop.index % 7] == 0 %}
-              <a class="d-block text-center">
-                <button class="btn px-3 px-lg-4 px-xl-5 {{ active }} bg-white" disabled>
-                  {{ ("common."~day)|lower|trans }}
-                </button>
-              </a>
-            {% else %}
-              <a class="d-block text-center" href="{{ path('UcaWeb_FormatActiviteDetailJour', {'day': loop.index % 7, 'idCa': idCa, 'idA': idA, 'id': id}) }}">
-                <button class="btn px-3 px-lg-4 px-xl-5 {{ active }} bg-white">
-                  {{ ("common."~day)|lower|trans }}
-                </button>
-              </a>
-            {% endif %}
-          </div>
-        {% endfor %}
-
-        <div class="d-md-none col-12 text-center">
-          <select class="text-uppercase fs-12 fw-500" id="selectDays">
-            {% for day in days %}
-              {% set selected = "" %}
-              {% if currentDay == loop.index %}
-                {% set selected = "selected" %}
-              {% endif %}
-              <option {{ selected }} value="{{ loop.index }}" url="{{ path('UcaWeb_FormatActiviteDetailJour', {'idCa': idCa, 'idA': idA, 'day': loop.index,'id': id }) }}">{{ ("common."~day)|lower|trans }}</option>
-            {% endfor %}
-          </select>
-        </div>
-      </div>
-    </div>
-
-    {% for event in events %}
-      {% set creneau = event.creneau.serie.creneau %}
-      {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
-      <div class="container container-style container-style-border-none bg-white mb-3 px-4 py-3">
-        <div class="row d-flex px-3">
-          <div class="col-6 col-lg-2 order-1 p-2 p-lg-0 align-self-center fw-800">
-            <p class="m-0">{{ event.creneau.dateDebut|date("H:i") }}
-              -
-              {{ event.creneau.dateFin|date("H:i") }}              
-              </p>
-              {% if event.creneau.eligibleBonus == true %}
-                <div class="mr-auto">
-                  <p class="m-0 fw-800 text-uppercase" style="color: orange; position: absolute; left:30px;">
-                    <span title="{{ "common.eligible"|trans }}"><i class="fas fa-star mr-1"></i></span>
-                  </p>
-                </div>
-              {% endif %}
-          </div>          
-          <div class="col-6 col-md-4 col-lg-3 order-3 p-2 p-lg-0">
-            <div class="d-flex">              
-                <div class="mr-auto">
-                  <p class="m-0 fw-800 color-blue text-uppercase">
-                    <i class="fas fa-map-marker-alt mr-1"></i>
-                    {{ "format.lieu"|trans }}                    
-                  </p>
-                </div>                
-            </div>
-            {% if creneau.lieu and creneau.lieu.etablissement %}
-              <p class="m-0">{{ creneau.lieu.etablissement.libelle }}
-                -
-                {{ creneau.lieu.libelle }}</p>
-            {% elseif creneau.lieu %}
-              <p class="m-0">{{ creneau.lieu.libelle }}</p>
-            {% else %}
-              <p class="m-0">{{'formatactivite.lieu.aucun' | trans}}</p>
-            {% endif %}
-          </div>
-          <div class="col-6 col-md-3 col-lg-2 order-4 p-2 p-lg-0">
-            <p class="m-0 fw-800 color-blue text-uppercase">
-              <i class="fas fa-user-friends mr-1"></i>
-              {{ "common.encadrants"|trans }}</p>
-            <p class="m-0">
-              {% for encadrant in creneau.encadrants %}
-                {{ encadrant.nom }}
-                {{ encadrant.prenom }}<br/>
-              {% endfor %}
-            </p>
-          </div>
-          <div class="col-6 col-md-3 col-lg-2 order-5 p-2 p-lg-0">
-            <p class="m-0 fw-800 color-blue text-uppercase">{{ "creneau.list.prochainCours"|trans }}</p>
-            {% if event.nextCreneauDebut is defined and event.nextCreneauDebut is not null %}
-              <p class="m-0">{{ event.nextCreneauDebut|dateFormat('dd MMM Y H:mm') }}</p>
-            {% else %}
-              <p class="m-0">{{ "common.aucun"|trans }}</p>
-            {% endif %}
-          </div>
-          <div class="col-6 col-md-2 col-lg-1 order-6 p-2 p-lg-0">
-            <p class="m-0 fw-800 color-blue text-uppercase">
-              <i class="fas fa-euro-sign mr-1"></i>
-              {{ "common.tarif"|trans }}</p>
-            <p class="m-0">
-              {% if inscriptionInformations.montant.article >= 0 %}
-                {{ inscriptionInformations.montant.article }}&nbsp;€
-              {% endif %}
-            </p>
-          </div>
-          <div
-            class="col-6 col-lg-2 order-2 order-lg-7 p-2 p-lg-0 align-self-center text-right text-lg-center">
-            <!-- {{ inscriptionInformations.statut }} -->
-            {% if inscriptionInformations.statut in ['previsualisation'] %}
-              <button class="btn btn-success disabled">{{ 'common.inscrire' | trans }}</button>
-            {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
-              <p class="m-0 fs-14 fw-500 color-blue">
-                <i class="fas fa-check-circle"></i>
-                {{ ('formatCreneau.list.' ~ inscriptionInformations.statut) | trans | upper }}
-              </p>
-            {% elseif inscriptionInformations.statut in ['complet'] %}
-              <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
-            {% elseif inscriptionInformations.statut in ['inscriptionsavenir'] %}
-              <button class="btn btn-info disabled">{{ 'common.inscriptionsavenir' | trans | upper }}</button>
-            {% elseif inscriptionInformations.statut in ['inscriptionsterminees'] %}
-              <button class="btn btn-info disabled">{{ 'bouton.indisponible.inscriptionsterminees' | trans | upper }}</button>
-            {% elseif inscriptionInformations.statut in ['disponible'] %}
-              <button class="btn btn-success js-inscription" data-type="UcaBundle:Creneau" data-id="{{ creneau.id }}">{{ "creneau.list.reserver"|trans }}</button>
-            {% elseif inscriptionInformations.statut in ['nbcreneaumaxatteint', 'profilinvalide', 'nonconnecte', 'montantincorrect', 'cgvnonacceptees'] %}
-              {% if inscriptionInformations.statut == 'nbcreneaumaxatteint' %}
-                {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions})) %}
-              {% else %}
-                {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans) %}
-              {% endif %}
-              <p id="{{ 'indisponible-'~ inscriptionInformations.statut }}" class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">
-                {{ 'common.indisponible' | trans | upper }}
-                <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ tooltipMessage }}" aria-label="{{ tooltipMessage }}">
-                  <i class="fas fa-question-circle"></i>
-                </span>
-              </p>
-            {% else %}
-              <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">
-                {{ 'common.indisponible' | trans | upper }}
-              </p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-    {% endfor %}
- 
-   </section>
+  
+  {# TODO : revoir style #}
+  <section class="container-style bg-white mb-5" id="sectionCalendrier" style="">
+    {% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig' %}
+  </section>
+  
   {{ Inscription.HtmlModal }}
   
   {% include '@Uca/UcaWeb/Activite/BlocReservation.html.twig' %}
@@ -200,7 +59,120 @@
   <script>
     $( document ).ready( function () 
     {
+      createMap();
       $( '[data-toggle="tooltip"]' ).tooltip();
     } );
+  </script>
+
+
+
+  <script>
+    
+    var api_url = "{{ path('api_activite_creneau') }}";
+
+    function hideLoader(){
+      $("#load").hide();
+    }
+    function showLoader(){
+      $("#load").show();
+    }
+
+    $(document).ready(function (){
+      loadData();
+    });
+
+    $(window).resize(function(){
+      $('.modal').modal('hide');
+      loadData();
+    })
+
+    function changeTypeVisualisation(newTypeVisualisation){
+      typeVisualisation = newTypeVisualisation;
+      loadData();
+    }
+
+    function changePeriode(forNextPeriode, nbDays){
+      var date = new Date(currentDate.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"));
+
+      var facteur = forNextPeriode ? 1 : -1;
+      if(typeVisualisation == "semaine"){
+        date.setDate(date.getDate() + nbDays * facteur);
+      } else if(typeVisualisation == "jour"){
+        date.setDate(date.getDate() + 1 * facteur);
+      } else if(typeVisualisation == "mois"){
+        var oldMonth = date.getMonth();
+        date.setMonth(date.getMonth() + 1 * facteur);
+        while (date.getMonth() != oldMonth + 1 * facteur){
+          date.setDate(date.getDate() - 1 * facteur * (date.getMonth() - oldMonth + 1 * facteur));
+        }
+      }
+
+      var options = { day: '2-digit', year: 'numeric', month: '2-digit'};
+      currentDate = date.toLocaleDateString("fr-FR", options);
+
+      loadData();
+    }
+
+    function loadData(){
+      let valueHeightDiv = [];
+      let widthWindow = $(window).width();
+      showLoader();
+      $.post(api_url, {
+        data: {
+          itemId: itemId,
+          typeVisualisation: typeVisualisation,
+          currentDate: currentDate,
+          typeFormat: typeFormat,
+          idRessource: idRessource,
+          widthWindow: widthWindow,
+        }
+      }, function (data) {
+        $("#sectionCalendrier").text('');
+        $("#sectionCalendrier").append(data.content);
+        hideLoader();
+
+        $('.js-inscription').each(_uca.inscription.addButtonEvent);
+        $( '[data-toggle="tooltip"]' ).tooltip();
+
+        $(".data-div").each(function(){
+          valueHeightDiv.push($(this).height());
+        })
+        $('.cell-col-center').height(Math.max.apply(Math, valueHeightDiv));
+
+        createMap();
+
+      }).fail(_uca.ajax.fail);
+    }
+
+    function sendMail(idEvent, idEncadrant){
+      let id = "#contactEncadrant"+idEvent+idEncadrant;
+      let textareaId= "#textcontactEncadrant"+idEvent+idEncadrant;
+      let message = $(textareaId).val();
+      $.ajax({
+        url: Routing.generate("api_mailencadrant"),
+        type: "POST",
+        data: {
+          message: message,
+          event: idEvent,
+          encadrant: idEncadrant,
+        },
+      }).done(function(data){
+        if(data!=null){
+          if(data['response'] == "success"){
+            setTimeout(function() {alert("{{ 'mail.success'|trans }}")}, 2000);
+            $(textareaId).val("");
+            $(id).removeClass("show");
+          } else {
+            setTimeout(function() {alert("{{ 'mail.error'|trans }}")}, 2000);
+          }
+          
+        }
+      }).fail(_uca.ajax.fail);
+    }
+
+    function createMap(){
+      _uca.openlayersmap.init();
+      $('.js-openlayersmap').each(_uca.openlayersmap.createmap);
+    }
   </script>
 {% endblock %}

@@ -10,37 +10,39 @@ use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Activite;
 use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\FormatActivite;
+use UcaBundle\Entity\FormatActiviteProfilUtilisateur;
 use UcaBundle\Entity\FormatAvecCreneau;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\FormatSimple;
-use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\NiveauSportif;
 
-/** 
- * @Route("UcaGest/Activite/{idActivite}/FormatActivite", requirements={"idActivite"="\d+"}) 
+/**
+ * @Route("UcaGest/Activite/{idActivite}/FormatActivite", requirements={"idActivite"="\d+"})
  * @Security("has_role('ROLE_ADMIN')")
  */
 class FormatActiviteController extends Controller
 {
-
     /**
      * @Route("/Voir/{id}", name="UcaGest_FormatActiviteVoir", methods={"GET"})
      * @Isgranted("ROLE_GESTION_FORMAT_ACTIVITE_LECTURE")
+     *
+     * @param mixed $idActivite
      */
     public function voirAction(Request $request, $idActivite, FormatActivite $item)
     {
         $twigConfig['item'] = $item;
-        $twigConfig['type'] = "FormatActivite";
-        $twigConfig['role'] = "admin";
-        $twigConfig['format'] =  explode('\\', get_class($item))[2];
+        $twigConfig['type'] = 'FormatActivite';
+        $twigConfig['role'] = 'admin';
+        $twigConfig['format'] = explode('\\', get_class($item))[2];
 
-
-        if (($item instanceof FormatAvecCreneau) && $this->isGranted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))
+        if (($item instanceof FormatAvecCreneau) && $this->isGranted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE')) {
             $twigConfig['Scheduler'] = true;
-        elseif ($item instanceof FormatSimple || $item instanceof FormatAchatCarte || $item instanceof FormatAvecReservation)
+        } elseif ($item instanceof FormatSimple || $item instanceof FormatAchatCarte || $item instanceof FormatAvecReservation) {
             $twigConfig['Scheduler'] = false;
-        else
+        } else {
             $twigConfig['Scheduler'] = false;
+        }
+
         return $this->render('@Uca/UcaGest/Activite/FormatActivite/Voir.html.twig', $twigConfig);
     }
 
@@ -55,23 +57,25 @@ class FormatActiviteController extends Controller
                 'urlRetourPrevisualisation' => $this->generateUrl('UcaGest_FormatActiviteModifier', [
                     'idActivite' => $formatActivite->getActivite()->getId(),
                     'id' => $formatActivite->getId(),
-                    'previsualisation' => 'off'
-                ])
+                    'previsualisation' => 'off',
+                ]),
             ]);
-        } else {
-            return $this->redirectToRoute(
-                'UcaGest_FormatActiviteVoir',
-                [
-                    'idActivite' => $formatActivite->getActivite()->getId(),
-                    'id' => $formatActivite->getId()
-                ]
-            );
         }
+
+        return $this->redirectToRoute(
+            'UcaGest_FormatActiviteVoir',
+            [
+                'idActivite' => $formatActivite->getActivite()->getId(),
+                'id' => $formatActivite->getId(),
+            ]
+        );
     }
 
     /**
      * @Security("is_granted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE') and is_granted('ROLE_GESTION_ACTIVITE_ECRITURE')")
      * @Route("/Ajouter", name="UcaGest_FormatActiviteAjouter")
+     *
+     * @param mixed $idActivite
      */
     public function ajouterAction(Request $request, $idActivite)
     {
@@ -95,78 +99,121 @@ class FormatActiviteController extends Controller
             $item->setActivite($activite);
             $item->setImage($activite->getImage());
             $item->setLibelle($activite->getLibelle());
-            if (!$request->isMethod('POST')) {
-                $profils = $this->getDoctrine()->getRepository(ProfilUtilisateur::class)->findAll();
-                foreach ($profils as $profil) {
-                    $item->addProfilsUtilisateur($profil);
-                }
-                $niveaux = $this->getDoctrine()->getRepository(NiveauSportif::class)->findAll();
-                foreach ($niveaux as $niveau) {
-                    $item->addNiveauxSportif($niveau);
-                }
+            //if (!$request->isMethod('POST')) {
+            // Liste profils pour le collectionType
+            $tousProfils = $em->getRepository('UcaBundle:ProfilUtilisateur')->findAll();
+            foreach ($tousProfils as $profil) {
+                $formatProfil = new FormatActiviteProfilUtilisateur($item, $profil, 0);
+                $item->addProfilsUtilisateur($formatProfil);
             }
+            $niveaux = $this->getDoctrine()->getRepository(NiveauSportif::class)->findAll();
+            foreach ($niveaux as $niveau) {
+                $item->addNiveauxSportif($niveau);
+            }
+            //}
             $typeClassName = $tools->getClassName($format, 'FormType');
         } else {
-            throw new \Exception("Format <$format> d'activité non valide");
+            throw new \Exception("Format <{$format}> d'activité non valide");
         }
+
         $form = $this->get('form.factory')->create($typeClassName, $item);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $item->verifieCoherenceDonnees();
-            $em->persist($item);
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-            return $this->redirectAfterCommit($form, $item);
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $profilsExistants = [];
+            foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
+                $profilsExistants[] = $formatProfil->getProfilUtilisateur()->getLibelle();
+            }
+            $twigConfig['profilsExistants'] = $profilsExistants;
+
+            if ($form->isValid()) {
+                $item->verifieCoherenceDonnees();
+                $em->persist($item);
+                $em->flush();
+                $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
+                return $this->redirectAfterCommit($form, $item);
+            }
         }
         $twigConfig['FormatClassName'] = $className;
+        $twigConfig['tousProfils'] = $tousProfils;
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Activite/FormatActivite/Formulaire.html.twig', $twigConfig);
     }
 
-    /** 
+    /**
      * @Route("/Modifier/{id}", name="UcaGest_FormatActiviteModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE")
+     *
+     * @param mixed $idActivite
      */
     public function modifierAction(Request $request, $idActivite, FormatActivite $item)
     {
-        $tools = $this->get('uca.tools');
         $em = $this->getDoctrine()->getManager();
+        $tools = $this->get('uca.tools');
+
+        $item->updateListeProfils();
+        $tousProfils = $em->getRepository('UcaBundle:ProfilUtilisateur')->findAll();
+        $profilsExistants = explode(', ', $item->getListeProfils());
+
         $className = get_class($item);
         $path = explode('\\', $className);
-        $item_class = $path[2];
         $typeClassName = $tools->getClassName(array_pop($path), 'FormType');
+        $form = $this->get('form.factory')->create($typeClassName, $item); //['transformer' => null]); //, ['sub_class' => get_class($item)]);
 
-        $form = $this->get('form.factory')->create($typeClassName, $item); //, ['sub_class' => get_class($item)]);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $item->verifieCoherenceDonnees();
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectAfterCommit($form, $item);
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            $profilsExistants = [];
+            $tabProfil = [];
+            foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
+                $tabProfil[$formatProfil->getProfilUtilisateur()->getId()] = $formatProfil->getProfilUtilisateur()->getLibelle();
+                ksort($tabProfil);
+            }
+            foreach ($tabProfil as $profil) {
+                $profilsExistants[] = $profil;
+            }
+
+            if ($form->isValid()) {
+                $item->verifieCoherenceDonnees();
+                $em->flush();
+                $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
+                return $this->redirectAfterCommit($form, $item);
+            }
         }
         $twigConfig['FormatClassName'] = $className;
         $twigConfig['item'] = $item;
+        $twigConfig['profilsExistants'] = $profilsExistants;
+        $twigConfig['tousProfils'] = $tousProfils;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Activite/FormatActivite/Formulaire.html.twig', $twigConfig);
     }
 
     /**
      * @Security("is_granted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE') and is_granted('ROLE_GESTION_ACTIVITE_ECRITURE')")
      * @Route("/Supprimer/{id}", name="UcaGest_FormatActiviteSupprimer")
+     *
+     * @param mixed $idActivite
      */
     public function supprimerAction(Request $request, $idActivite, FormatActivite $formatActivite)
     {
         $em = $this->getDoctrine()->getManager();
         if (!$formatActivite->getInscriptions()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($formatActivite, 'Supprimer');
-            return $this->redirectToRoute("UcaGest_ActiviteVoir", array("id" => $idActivite));
+
+            return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
         }
         if ($formatActivite instanceof FormatAvecCreneau && !$formatActivite->getCreneaux()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($formatActivite, 'Supprimer');
-            return $this->redirectToRoute("UcaGest_ActiviteVoir", array("id" => $idActivite));
+
+            return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
         }
         $em->remove($formatActivite);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($formatActivite, 'Supprimer');
-        return $this->redirectToRoute('UcaGest_ActiviteVoir', array('id' => $idActivite));
+
+        return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
     }
 }

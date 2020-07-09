@@ -12,6 +12,11 @@ classeactivite.image.notnull: A picture must be selected for the activity class
 classeactivite.libelle.notblank: The activity class label is required
 classeactivite.typeactivite.notnull: An activity type must be selected
 classeactivite.uniqueentity: An activity class already exists with this label
+commande.numero.cheque.notBlank: Cheque's number is mandatory
+commandedetail.informationscarte.datefin.incorrecte: Expiration date cannot be lower than payment's date
+commandedetail.informationscarte.datefin.notBlank: Expiration date is mandatory
+commandedetail.informationscarte.etablissement.notBlank: Campus is mandatory
+commandedetail.informationscarte.numero.notBlank: Card's number is mandatory
 complement.capacite.notblank: Please enter a capacity 
 complement.encadrant.notblank: For a framed format, at least one supervisor must be selected
 complement.niveauxsportifs.notblank: You must enter at least one sport level
@@ -29,10 +34,13 @@ etablissement.email.invalide: Invalid email
 etablissement.image.format: 'The campus picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
 etablissement.image.notnull: A picture must be selected
 etablissement.libelle.notblank: The campus label is required
+etablissement.notblank: A campus is required
 etablissement.telephone.invalide: Invalid phone number
 etablissement.uniqueentity: A campus already exists with this label
 etablissement.ville.notblank: The campus city is required
 formatactivite.achatcarte.carte.notnull: You must choose a card
+formatactivite.capaciteprofil.invalide: Total capacity is inferior to the profil's capacities
+formatactivite.capaciteprofil.notnull: THe profil's capacity cannot be blank
 formatactivite.dateDebutEffective.notblank: Effective start date is required
 formatactivite.dateDebutInscription.notblank: Registration start date is required
 formatactivite.dateDebutPublication.notblank: Publication start date is required
@@ -51,14 +59,20 @@ groupe.name.tropLong: Group name is too long
 groupe.name.tropPetit: Group name is too short
 groupe.roles.notnull: Rigths is required
 groupe.uniqueentity: An group already exists with this name
+highlight.urlvideo.notblank: The video url is required
+highlight.urlvideo.invalid: The url entered is not a valid url. The url must correspond to that of a Youtube, Dailymotion or Vimeo video.
 imagefond.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
 imagefond.image.notnull: A picture must be selected
 imagefond.titre.notnull: The title is required
+imagesupplementaire.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
 lieu.adresse.notblank: The place's address is required
 lieu.codepostal.invalide: The post code is invalid, it must contain 5 digits
 lieu.codepostal.notblank: The place's postal code is required
 lieu.libelle.notblank: The place's label is required
 lieu.ville.notblank: The place's city is required
+logopartenaire.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+logopartenaire.image.notnull: A picture must be selected
+logopartenaire.nom.notBlank: The name is required
 mail.destinataires.notBlank: It is mandatory to select at least one recipient
 mail.message.notBlank: The message is required
 mail.objet.notBlank: The subject of your message is required
@@ -73,11 +87,18 @@ message.parametrage.timercb.timerpaybox: The payment time by credit card must be
 message.parametrage.timerpaybox.timercb: The Paybox time payment must be longer than the payment time by credit card
 message.typeinvalide.double: The value {{ value }} is not a valid number
 message.typeinvalide.entier: The value {{ value }} is not a valid integer
+parametrage.adressefacturation.notblank: A billing adress is required
+parametrage.anneeuniversitaire.notblank: The academic year is required
+parametrage.anneeuniversitaire.type: This value must be a number
+parametrage.anneeuniversitaire.greaterthan: The value must be greater than 2019
 parametrage.facebook.notblank: A facebook link is required
 parametrage.instagram.notblank: An Instagram link is required
+parametrage.libelleadresse.notblank: A label for the address is required
 parametrage.lien.noturl: This is not a valid URL
 parametrage.mailcontact.notblank: An email address is required
 parametrage.mailcontact.notemail: This is not a valid email address
+parametrage.siret.format: The SIRET must be composed of 14 digits
+parametrage.siret.notblank: The SIRET number is required
 parametrage.timer.type: The value must be a number
 parametrage.timer.zero: The value must be greater than 0
 parametrage.timerbds.notblank: Sports office timer is required

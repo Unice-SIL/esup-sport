@@ -12,6 +12,11 @@ classeactivite.image.notnull: Une image doit être sélectionnée pour la classe
 classeactivite.libelle.notblank: Le libellé de la classe d'activité est obligatoire
 classeactivite.typeactivite.notnull: Un type d'activité doit être sélectionné
 classeactivite.uniqueentity: Une classe d'activité existe déjà avec ce libellé
+commande.numero.cheque.notBlank: Le numero de chèque est obligatoire
+commandedetail.informationscarte.datefin.incorrecte: La date de validité ne peut être inférieure à la date de paiement
+commandedetail.informationscarte.datefin.notBlank: La date de validité est obligatoire
+commandedetail.informationscarte.etablissement.notBlank: Le campus de retrait est obligatoire
+commandedetail.informationscarte.numero.notBlank: Le numéro de carte est obligatoire
 complement.capacite.notblank: Veuillez saisir une capacité 
 complement.encadrant.notblank: Pour un format encadré, au moins un encadrant doit être sélectionné
 complement.niveauxsportifs.notblank: Vous devez saisir au moins un niveau sportif
@@ -29,10 +34,13 @@ etablissement.email.invalide: Email Invalide
 etablissement.image.format: 'L''image n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
 etablissement.image.notnull: Une image doit être sélectionnée
 etablissement.libelle.notblank: Le libellé du campus est obligatoire
+etablissement.notblank: Un établissement doit être renseigné
 etablissement.telephone.invalide: Numéro de téléphone invalide
 etablissement.uniqueentity: Un établissment existe déjà avec ce libellé
 etablissement.ville.notblank: La ville du campus est obligatoire
 formatactivite.achatcarte.carte.notnull: Vous devez choisir une carte
+formatactivite.capaciteprofil.invalide: La capacité totale est inférieure aux capacités par profil
+formatactivite.capaciteprofil.notnull: La capacité par profil ne peut pas être vide
 formatactivite.dateDebutEffective.notblank: La date de début effective est obligatoire
 formatactivite.dateDebutInscription.notblank: La date de début d'inscription est obligatoire
 formatactivite.dateDebutPublication.notblank: La date de début de publication est obligatoire
@@ -51,14 +59,20 @@ groupe.name.tropLong: Le nom du groupe est trop long
 groupe.name.tropPetit: Le nom du groupe est trop petit
 groupe.roles.notnull: Le rôle est obligatoire
 groupe.uniqueentity: Un groupe existe déjà avec ce nom
+highlight.urlvideo.notblank: L'url de la vidéo est obligatoire
+highlight.urlvideo.invalid: L'url saisie n'est pas une url valide. L'url doit correspondre à celle d'une vidéo Youtube, Dailymotion ou Vimeo.
 imagefond.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
 imagefond.image.notnull: Une image doit être sélectionnée
 imagefond.titre.notnull: Le titre est obligatoire
+imagesupplementaire.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|JPG|TIFF)"
 lieu.adresse.notblank: L'adresse du lieu est obligatoire
 lieu.codepostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
 lieu.codepostal.notblank: Le code postal du lieu est obligatoire
 lieu.libelle.notblank: Le libellé du lieu est obligatoire
 lieu.ville.notblank: La ville du lieu est obligatoire
+logopartenaire.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
+logopartenaire.image.notnull: Une image doit être sélectionnée
+logopartenaire.nom.notBlank: Le nom est obligatoire
 mail.destinataires.notBlank: Il est obligatoire de sélectionner au moins un destinataire
 mail.message.notBlank: Le message est obligatoire
 mail.objet.notBlank: L'objet de votre message est obligatoire
@@ -73,11 +87,18 @@ message.parametrage.timercb.timerpaybox: Le délai de paiement par CB doit être
 message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être inférieur au délai de paiement par CB
 message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
 message.typeinvalide.entier: La valeur {{ value }} n'est pas un entier valide
+parametrage.adressefacturation.notblank: L'adresse de facturation doit être renseignée
+parametrage.anneeuniversitaire.notblank: L'année universitaire est obligatoire
+parametrage.anneeuniversitaire.type: Cette valeur doit être un nombre
+parametrage.anneeuniversitaire.greaterthan: Cette valeur doit être supérieure à 2019
 parametrage.facebook.notblank: Un lien Facebook doit être renseigné
 parametrage.instagram.notblank: Un lien Instagram doit être renseigné
+parametrage.libelleadresse.notblank: Un libelle pour l'adresse doit être renseigné
 parametrage.lien.noturl: Il ne s'agit pas d'une URL valide
 parametrage.mailcontact.notblank: Une adresse email doit être renseignée
 parametrage.mailcontact.notemail: Il ne s'agit pas d'une adresse email valide
+parametrage.siret.format: Le SIRET doit être composé de 14 chiffres
+parametrage.siret.notblank: Un numéro de SIRET doit être renseigné
 parametrage.timer.type: Cette valeur doit être un nombre
 parametrage.timer.zero: Cette valeur doit être supérieure à 0
 parametrage.timerbds.notblank: Le délai de paiement au Bureau des sports doit être renseigné
@@ -125,4 +146,4 @@ utilisateur.username.email: Votre nom d'utilisateur ne doit pas être un e-mail
 utilisateur.username.existant: Le nom d'utilisateur est déjà utilisé
 utilisateur.username.notnull: Le nom d'utilisateur est obligatoire
 utilisateur.username.tropLong: Le nom d'utilisateur est trop long
-utilisateur.username.tropPetit: Le nom d'utilisateur est trop court
+utilisateur.username.tropPetit: "Le nom d'utilisateur est trop court"

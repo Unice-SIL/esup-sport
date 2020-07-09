@@ -30,14 +30,14 @@ class ActivitiesFilter extends TextFilter
             // Quelle activite le datatable doit renvoyer
             if ('Activite' == $arrayIdFormat['recherche']) {
                 $qb->innerJoin('UcaBundle\Entity\Activite', 'act', 'WITH', 'act.id = formAct.activite');
-                $qb->where('formAct.activite = :activite');
+                $qb->andWhere('formAct.activite = :activite');
                 $qb->setParameter('activite', $arrayIdFormat['id']);
             }
             // Quelle classe d'activite le datatable doit renvoyer
             if ('ClasseActivite' == $arrayIdFormat['recherche']) {
                 $qb->innerJoin('UcaBundle\Entity\Activite', 'act', 'WITH', 'act.id = formAct.activite');
                 $qb->innerJoin('UcaBundle\Entity\ClasseActivite', 'classe', 'WITH', 'classe.id = act.classeActivite');
-                $qb->where('classe = :activite');
+                $qb->andWhere('classe = :activite');
                 $qb->setParameter('activite', $arrayIdFormat['id']);
             }
             // Quel type d'activite le datatable doit renvoyer
@@ -45,12 +45,12 @@ class ActivitiesFilter extends TextFilter
                 $qb->innerJoin('UcaBundle\Entity\Activite', 'act', 'WITH', 'act.id = formAct.activite');
                 $qb->innerJoin('UcaBundle\Entity\ClasseActivite', 'classe', 'WITH', 'classe.id = act.classeActivite');
                 $qb->innerJoin('UcaBundle\Entity\TypeActivite', 'type', 'WITH', 'type.id = classe.typeActivite');
-                $qb->where('type = :activite');
+                $qb->andWhere('type = :activite');
                 $qb->setParameter('activite', $arrayIdFormat['id']);
             }
             // Quel format d'activite le datatable doit renvoyer
             elseif ('FormatActivite' == $arrayIdFormat['recherche']) {
-                $qb->where('formAct = :activite');
+                $qb->andWhere('formAct = :activite');
                 $qb->setParameter('activite', $arrayIdFormat['id']);
             }
             ++$parameterCounter;
@@ -62,7 +62,7 @@ class ActivitiesFilter extends TextFilter
                 ++$parameterCounter;
             } elseif ('Creneau' == $arrayIdFormat['recherche']) {
                 $qb->innerJoin('UcaBundle\Entity\DhtmlxSerie', 'serie', 'WITH', 'serie.creneau = inscription.creneau');
-                $qb->where('serie = :event');
+                $qb->andWhere('serie = :event');
                 $qb->setParameter('event', $arrayIdFormat['id']);
                 ++$parameterCounter;
             }

@@ -2,6 +2,7 @@
 
 {% block modal %}
     {% include "@Uca/Common/Modal/Modal.Confirmation.html.twig" %}
+    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
 {% endblock %}
 {% block DatatableHeader%}
     {% if not noAddButton is defined %}
@@ -13,6 +14,4 @@
     {% endif %}
 {% endblock %}
 {% block javascript %}
-    <script>
-        {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}</script>
 {% endblock %}

@@ -2,25 +2,19 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Spipu\Html2Pdf\Html2Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Datatables\MesCommandesDatatable;
 use UcaBundle\Entity\Commande;
-use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\Parametrage;
 use UcaBundle\Form\ValiderPaiementPayboxType;
 
 /**
- * @Route("UcaWeb/MesCommandes")
+ * @Route("UcaWeb/MesCommandes/")
  * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  */
 class MesCommandesController extends Controller
@@ -126,7 +120,8 @@ class MesCommandesController extends Controller
             return $this->redirectToRoute('UcaWeb_MesCommandes');
         }
 
-        $content = $this->renderView('@Uca/UcaWeb/Commande/Facture.html.twig', ['commande' => $commande]);
+        $parametrage = $this->getDoctrine()->getRepository(Parametrage::class)->findOneById(1);
+        $content = $this->renderView('@Uca/UcaWeb/Commande/Facture.html.twig', ['commande' => $commande, 'parametrage' => $parametrage]);
 
         try {
             $pdf = new HTML2PDF('p', 'A4', 'fr');
@@ -140,210 +135,26 @@ class MesCommandesController extends Controller
     }
 
     /**
-     * @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire", options={"expose"=true})
-     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
+     * @Route("Export/{id}/Avoir/{refAvoir}",name="UcaWeb_MesAvoirsExport", options={"expose"=true})
      *
-     * @param null|mixed $dateDebut
-     * @param null|mixed $dateFin
+     * @param mixed $refAvoir
      */
-    public function exctractAction(Request $request, $dateDebut = null, $dateFin = null)
+    public function exportAvoirAction(Request $request, Commande $commande, $refAvoir)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $commandes = $em->getRepository(CommandeDetail::class)->findCommandeDetails($dateDebut, $dateFin, false);
-
-        $commandesNonGratuites = $em->getRepository(CommandeDetail::class)->findCommandeDetails($dateDebut, $dateFin, true);
-
-        $translator = $this->get('translator');
-
-        $today = date('d-m-Y', time());
-        $dateDebutTime = strtotime($dateDebut);
-        $dateFinTime = strtotime($dateFin);
-        $timeToday = strtotime($today);
-        $dateFinToday = ($dateFinTime > $timeToday || $dateFinTime == $timeToday) ? null : $dateFinTime;
-        $dateDebut = \DateTime::createFromFormat('d-m-Y', $dateDebut);
-        $dateFin = \DateTime::createFromFormat('d-m-Y', $dateFin);
-
-        if (!empty($commandesNonGratuites) && !empty($commandes)) {
-            $titleColumn = [
-                $translator->trans('common.nomencaisseur'),
-                $translator->trans('common.prenomencaisseur'),
-                $translator->trans('common.numerorecu'),
-                'Numéro de commande',
-                'Designation',
-                'N° carte',
-                'Paybox',
-                $translator->trans('common.cb'),
-                $translator->trans('common.espece'),
-                'N° chèque',
-                $translator->trans('common.cheque'),
-            ];
-
-            $styleArray = $this->setStyleArrayForExcel(true, 10);
-
-            $spreadsheet = new Spreadsheet();
-            $spreadsheet->removeSheetByIndex(0);
-            foreach (['Fiche de caisse', 'Liste commandes'] as $worksheet) {
-                $sheet = new Worksheet();
-
-                $sheet->setTitle($worksheet);
-                //En-tête du fichier excel
-                $logo = new Drawing();
-                $logo->setName('Logo');
-                $logo->setPath('build/images/logo-UCA-large-transp.png');
-                $logo->setCoordinates('A1');
-                $logo->setWorksheet($sheet, true);
-
-                $spreadsheet->addSheet($sheet);
-                $sheet->setCellValue('E3', 'DVU Sport');
-
-                if (null != $dateDebutTime and null != $dateFinToday) {
-                    $sheet->setCellValue('A6', $worksheet.' du '.$dateDebut->format('d/m/Y').' au '.$dateFin->format('d/m/Y'));
-                } elseif (null != $dateDebutTime and null == $dateFinToday) {
-                    $sheet->setCellValue('A6', $worksheet.' du '.$dateDebut->format('d/m/Y').' au '.date('d/m/Y', $timeToday));
-                } elseif (null == $dateDebutTime and null != $dateFinToday) {
-                    $sheet->setCellValue('A6', $worksheet.' jusqu\'au '.$dateFin->format('d/m/Y'));
-                } else {
-                    $sheet->setCellValue('A6', $worksheet.' jusqu\'au '.date('d/m/Y', $timeToday));
-                }
-
-                $index = 0;
-
-                //Définition des titres des colonnes
-                foreach (range('A', 'K') as $col) {
-                    $sheet->getColumnDimension($col)->setAutoSize(true);
-                    $sheet->setCellValue($col.'7', $titleColumn[$index]);
-                    $sheet->getStyle($col.'7')->applyFromArray($styleArray);
-                    ++$index;
-                }
-
-                $sheet = ('Liste commandes' == $worksheet ? $this->createWorksheet($commandes, $sheet) : $this->createWorksheet($commandesNonGratuites, $sheet));
-            }
-            $writer = new Xlsx($spreadsheet);
-            $response = new StreamedResponse(
-                function () use ($writer) {
-                    $writer->save('php://output');
-                }
-            );
-            $filename = 'extract_commande_'.date('Y-m-d').'_'.date('H-i-s').'.xlsx';
-            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
-
-            return $response;
+        if ($commande->getUtilisateur() != $this->getUser() && !$this->get('security.authorization_checker')->isGranted('ROLE_GESTION_COMMANDES')) {
+            return $this->redirectToRoute('UcaWeb_MesCredits');
         }
 
-        return $this->redirectToRoute('UcaGest_ReportingCommandes');
-    }
+        $content = $this->renderView('@Uca/UcaWeb/Commande/Avoir.html.twig', ['commande' => $commande, 'refAvoir' => $refAvoir]);
 
-    public function createWorksheet($listeCommandeDetail, $sheet)
-    {
-        $cmd = [];
-        $idCol = 8;
-        $styleArray = $this->setStyleArrayForExcel(false, 10);
-        //Définitions des lignes de commandes
-        foreach ($listeCommandeDetail as $detail) {
-            $commande = $detail->getCommande();
-            $cmd = [$commande->getNomEncaisseur(), $commande->getPrenomEncaisseur(), $commande->getNumeroRecu(), $commande->getNumeroCommande(), $detail->getLibelle()];
-            $montant = $detail->getMontant();
-            switch ($commande->getTypePaiement()) {
-                    case 'BDS':
-                        switch ($commande->getMoyenPaiement()) {
-                                case 'cb':
-                                    $cmd = array_merge($cmd, ['', '', $montant, '', '', '']);
-
-                                    break;
-                                case 'espece':
-                                    $cmd = array_merge($cmd, ['', '', '', $montant, '', '']);
-
-                                    break;
-                                case 'cheque':
-                                    $cmd = array_merge($cmd, ['', '', '', '', '', $montant]);
-
-                                    break;
-                                case null:
-                                    $cmd = array_merge($cmd, ['', '', '', '', '', '', '']);
-
-                                break;
-                        }
-
-                        break;
-                    case 'PAYBOX':
-                        $cmd = array_merge($cmd, ['', $montant, '', '', '', '']);
-
-                        break;
-                    case 'NA':
-                        $cmd = array_merge($cmd, ['', '', '', '', '', '']);
-
-                    break;
-                    case null:
-                        $cmd = array_merge($cmd, ['', '', '', '', '', '', '']);
-
-                        break;
-                }
-            if (!empty($cmd)) {
-                $index = 0;
-                foreach (range('A', 'K') as $col) {
-                    $sheet->setCellValue($col.$idCol, $cmd[$index]);
-                    $sheet->getStyle($col.$idCol)->applyFromArray($styleArray);
-                    if ('G' == $col || 'H' == $col || 'I' == $col || 'K' == $col) {
-                        $sheet->getStyle($col.$idCol)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE);
-                    }
-                    ++$index;
-                }
-                ++$idCol;
-            }
-        }
-
-        return $sheet;
-    }
-
-    public function setStyleArrayForExcel($bold, $size): array
-    {
-        return [
-            'font' => [
-                'bold' => $bold,
-                'size' => $size,
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @Route("ExportAll/{datePaiement}/{recherche}",name="UcaWeb_MesCommandesExportAll", options={"expose"=true})
-     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
-     *
-     * @param null|mixed $datePaiement
-     * @param null|mixed $recherche
-     */
-    public function exportAllAction(Request $request, $datePaiement = null, $recherche = null)
-    {
-        $em = $this->getDoctrine()->getManager();
-        $commandes = $em->getRepository('UcaBundle:Commande')->findAllFacture($datePaiement, $recherche);
-        $i = 0;
-        foreach ($commandes as $commande) {
-            $content[$i] = $this->renderView('@Uca/UcaWeb/Commande/Facture.html.twig', ['commande' => $commande]);
-            ++$i;
-        }
-        if (isset($content)) {
-            try {
-                $pdf = new HTML2PDF('p', 'A4', 'fr');
-                $pdf->pdf->SetAuthor('Université de Nice');
-                $pdf->pdf->SetTitle('Facture');
-                for ($i = 0; $i < sizeof($content); ++$i) {
-                    $pdf->writeHTML($content[$i]);
-                }
-                $pdf->Output('Factures.pdf');
-            } catch (HTML2PDF_exception $e) {
-                die($e);
-            }
-        } else {
-            $this->get('uca.flashbag')->addMessageFlashBag('common.aucune.facture', 'danger');
-
-            return $this->redirectToRoute('UcaGest_ReportingCommandes');
+        try {
+            $pdf = new HTML2PDF('p', 'A4', 'fr');
+            $pdf->pdf->SetAuthor('Université de Nice');
+            $pdf->pdf->SetTitle('Avoir');
+            $pdf->writeHTML($content);
+            $pdf->Output('Avoir.pdf');
+        } catch (HTML2PDF_exception $e) {
+            die($e);
         }
     }
 }

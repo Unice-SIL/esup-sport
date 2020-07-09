@@ -4,7 +4,6 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -13,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Lieu extends Ressource
 {
-    #region Propriétés
+    //region Propriétés
 
     /** @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true) */
@@ -43,49 +42,59 @@ class Lieu extends Ressource
      * @Assert\Type(type="double", message="message.typeinvalide.double")
      */
     private $longitude;
-    
 
-    /** 
-    * @ORM\ManyToMany(targetEntity="FormatActivite", mappedBy="lieu") 
-    */
-     private $formatsActivite;
-    
+    /**
+     * @ORM\ManyToMany(targetEntity="FormatActivite", mappedBy="lieu")
+     */
+    private $formatsActivite;
+
     /** @Gedmo\Versioned
-     * @ORM\Column(type="string", nullable=true) 
-     * @Assert\NotBlank(message="lieu.adresse.notblank") 
-    */
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank(message="lieu.adresse.notblank")
+     */
     private $adresse;
 
     /** @Gedmo\Versioned
-     * @ORM\Column(type="string", nullable=true ,length=5) 
+     * @ORM\Column(type="string", nullable=true ,length=5)
      * @Assert\NotBlank(message="lieu.codepostal.notblank")
      * @Assert\Regex(pattern="/^[0-9]{5}$/", message="lieu.codepostal.invalide")
      */
     private $codePostal;
 
-    /**  @Gedmo\Versioned
-     * @ORM\Column(type="string", nullable=true) 
-     * @Assert\NotBlank(message="lieu.ville.notblank") 
-    */
-    private $ville;    
-    
-    #endregion
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="string", nullable=true)
+     * @Assert\NotBlank(message="lieu.ville.notblank")
+     */
+    private $ville;
 
-    #region Méthodes
-    
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $accesPMR;
+
+    /** @ORM\OneToMany(targetEntity="ImageSupplementaire", mappedBy="lieu" , fetch="EXTRA_LAZY", orphanRemoval=true, cascade={"persist","remove"}) */
+    private $imagesSupplementaires;
+
+    /**
+     * @ORM\Column(type="string", nullable=true)
+     */
+    private $visiteVirtuelle;
+
+    //endregion
+    //region Méthodes
+
     public function getCapacite()
     {
         return 1;
     }
 
-    #endregion
-
-
+    //endregion
 
     /**
      * Set nomenclatureRus.
      *
-     * @param string|null $nomenclatureRus
+     * @param null|string $nomenclatureRus
      *
      * @return Lieu
      */
@@ -109,7 +118,7 @@ class Lieu extends Ressource
     /**
      * Set superficie.
      *
-     * @param string|null $superficie
+     * @param null|string $superficie
      *
      * @return Lieu
      */
@@ -133,7 +142,7 @@ class Lieu extends Ressource
     /**
      * Set capaciteAccueil.
      *
-     * @param int|null $capaciteAccueil
+     * @param null|int $capaciteAccueil
      *
      * @return Lieu
      */
@@ -157,7 +166,7 @@ class Lieu extends Ressource
     /**
      * Set latitude.
      *
-     * @param string|null $latitude
+     * @param null|string $latitude
      *
      * @return Lieu
      */
@@ -181,7 +190,7 @@ class Lieu extends Ressource
     /**
      * Set longitude.
      *
-     * @param string|null $longitude
+     * @param null|string $longitude
      *
      * @return Lieu
      */
@@ -205,7 +214,7 @@ class Lieu extends Ressource
     /**
      * Set adresse.
      *
-     * @param string|null $adresse
+     * @param null|string $adresse
      *
      * @return Lieu
      */
@@ -229,7 +238,7 @@ class Lieu extends Ressource
     /**
      * Set codePostal.
      *
-     * @param string|null $codePostal
+     * @param null|string $codePostal
      *
      * @return Lieu
      */
@@ -253,7 +262,7 @@ class Lieu extends Ressource
     /**
      * Set ville.
      *
-     * @param string|null $ville
+     * @param null|string $ville
      *
      * @return Lieu
      */
@@ -281,7 +290,7 @@ class Lieu extends Ressource
      *
      * @return Lieu
      */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function addFormatsActivite(FormatActivite $formatsActivite)
     {
         $this->formatsActivite[] = $formatsActivite;
 
@@ -293,9 +302,9 @@ class Lieu extends Ressource
      *
      * @param \UcaBundle\Entity\FormatActivite $formatsActivite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function removeFormatsActivite(FormatActivite $formatsActivite)
     {
         return $this->formatsActivite->removeElement($formatsActivite);
     }
@@ -308,5 +317,104 @@ class Lieu extends Ressource
     public function getFormatsActivite()
     {
         return $this->formatsActivite;
+    }
+
+    /**
+     * Set accesPMR.
+     *
+     * @param null|bool $accesPMR
+     *
+     * @return Lieu
+     */
+    public function setAccesPMR($accesPMR = null)
+    {
+        $this->accesPMR = $accesPMR;
+
+        return $this;
+    }
+
+    /**
+     * Get accesPMR.
+     *
+     * @return bool|null
+     */
+    public function getAccesPMR()
+    {
+        return $this->accesPMR;
+    }
+
+    /**
+     * Add imagesSupplementaire.
+     *
+     * @param \UcaBundle\Entity\ImageSupplementaire $imagesSupplementaire
+     *
+     * @return Lieu
+     */
+    public function addImagesSupplementaire(ImageSupplementaire $imagesSupplementaire)
+    {
+        $this->imagesSupplementaires[] = $imagesSupplementaire;
+        if (null == $imagesSupplementaire->getLieu()) {
+            $imagesSupplementaire->setLieu($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove imagesSupplementaire.
+     *
+     * @param \UcaBundle\Entity\ImageSupplementaire $imagesSupplementaire
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeImagesSupplementaires(ImageSupplementaire $imagesSupplementaire)
+    {
+        return $this->imagesSupplementaires->removeElement($imagesSupplementaire);
+    }
+
+    /**
+     * Get imagesSupplementaires.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getImagesSupplementaires()
+    {
+        return $this->imagesSupplementaires;
+    }
+
+    /**
+     * Remove imagesSupplementaire.
+     *
+     * @param \UcaBundle\Entity\ImageSupplementaire $imagesSupplementaire
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeImagesSupplementaire(ImageSupplementaire $imagesSupplementaire)
+    {
+        return $this->imagesSupplementaires->removeElement($imagesSupplementaire);
+    }
+
+    /**
+     * Set visiteVirtuelle.
+     *
+     * @param null|mixed $visiteVirtuelle
+     *
+     * @return Lieu
+     */
+    public function setVisiteVirtuelle($visiteVirtuelle = null)
+    {
+        $this->visiteVirtuelle = $visiteVirtuelle;
+
+        return $this;
+    }
+
+    /**
+     * Get visiteVirtuelle.
+     *
+     * @return string|null
+     */
+    public function getVisiteVirtuelle()
+    {
+        return $this->visiteVirtuelle;
     }
 }

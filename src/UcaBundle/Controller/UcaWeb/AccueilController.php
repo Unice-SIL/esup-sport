@@ -5,11 +5,12 @@ namespace UcaBundle\Controller\UcaWeb;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use UcaBundle\Service\Service\SelectionProfil;
 
 class AccueilController extends Controller
 {
     /**
-     * @Route("/", name="UcaWeb_Accueil")
+     * @Route("/", name="UcaWeb_Accueil", methods={"GET","HEAD"}))
      */
     public function accueilAction(Request $request)
     {
@@ -24,5 +25,16 @@ class AccueilController extends Controller
         );
 
         return $this->render('@Uca/UcaWeb/Accueil/Main.html.twig', $twigConfig);
+    }
+
+    /**
+     * @Route("/Connexion/SelectionProfil", name="UcaWeb_ConnexionSelectionProfil", methods={"GET","HEAD"})
+     */
+    public function selectionProfilAction(Request $request)
+    {
+        $selectionProfil = $this->container->get('uca.selection.profil');
+        $twigConfig['selectionProfil'] = $selectionProfil;
+
+        return $this->render('@Uca/UcaWeb/Utilisateur/LoginSelectionProfil.html.twig', $twigConfig);
     }
 }

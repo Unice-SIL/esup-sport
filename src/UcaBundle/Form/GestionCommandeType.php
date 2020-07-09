@@ -15,12 +15,21 @@ class GestionCommandeType extends AbstractType
             'widget' => 'single_text',
             'label_format' => 'common.date.debut',
             'attr' => ['class' => 'champRechercheDatatableCommande'],
+            'required' => false,
         ]);
 
         $builder->add('dateFin', DateType::class, [
             'widget' => 'single_text',
             'label_format' => 'common.date.fin',
             'attr' => ['class' => 'champRechercheDatatableCommande'],
+            'required' => false,
+        ]);
+
+        $builder->add('datePaiement', DateType::class, [
+            'widget' => 'single_text',
+            'label_format' => 'common.datepaiement',
+            'attr' => ['class' => 'champRechercheDatatableCommande'],
+            'required' => false,
         ]);
     }
 

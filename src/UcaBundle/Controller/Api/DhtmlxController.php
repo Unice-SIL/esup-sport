@@ -6,7 +6,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\DhtmlxDate;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
@@ -92,8 +91,8 @@ class DhtmlxController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ev = $request->request->get('evenement');
+        $c = new DhtmlxCommand($em, $ev);
         if ('delete' == $ev['action']) {
-            $c = new DhtmlxCommand($em, $ev);
             $res = $c->getResult();
             $c->execute();
             $em->flush();

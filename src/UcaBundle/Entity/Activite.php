@@ -4,29 +4,36 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Table(name="activite")
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\ActiviteRepository")
  * @Vich\Uploadable
- * @Gedmo\Loggable   
+ * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="activite.uniqueentity")
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\ActiviteListener"})
  */
-class Activite
+class Activite implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
-    #region Propriétés
+    use \UcaBundle\Entity\Traits\JsonSerializable;
+
+    //region Propriétés
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $ordre;
 
     /** @Gedmo\Translatable
      * @Gedmo\Versioned
@@ -51,7 +58,7 @@ class Activite
     /** @ORM\Column(type="string", length=255) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *     mimeTypesMessage = "activite.image.format"
@@ -68,43 +75,55 @@ class Activite
      * @ORM\Column(type="text")
      */
     private $classeActiviteLibelle;
-    #endregion
 
+    //endregion
 
-    #region Méthodes
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
+    public function jsonSerializeProperties()
+    {
+        return ['id', 'libelle', 'description', 'image', 'classeActivite'];
+    }
+
     public function getClasseActiviteLibelle()
     {
         return $this->classeActivite->getClasseActiviteLibelle();
     }
+
     public function getActiviteLibelle()
     {
         return $this->getLibelle();
     }
+
     public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
-        if ($imageFile)
+        if ($imageFile) {
             $this->updatedAt = new \DateTime('now');
+        }
+
         return $this;
     }
+
     public function getImageFile()
     {
         return $this->imageFile;
     }
+
     public function updateClasseActiviteLibelle()
     {
         $this->classeActiviteLibelle = $this->getClasseActivite()->getLibelle();
 
         return $this;
-    }
-    #endregion
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -192,7 +211,7 @@ class Activite
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Activite
      */
@@ -216,11 +235,11 @@ class Activite
     /**
      * Set classeActivite.
      *
-     * @param \UcaBundle\Entity\ClasseActivite|null $classeActivite
+     * @param null|\UcaBundle\Entity\ClasseActivite $classeActivite
      *
      * @return Activite
      */
-    public function setClasseActivite(\UcaBundle\Entity\ClasseActivite $classeActivite = null)
+    public function setClasseActivite(ClasseActivite $classeActivite = null)
     {
         $this->classeActivite = $classeActivite;
 
@@ -244,7 +263,7 @@ class Activite
      *
      * @return Activite
      */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function addFormatsActivite(FormatActivite $formatsActivite)
     {
         $this->formatsActivite[] = $formatsActivite;
 
@@ -256,9 +275,9 @@ class Activite
      *
      * @param \UcaBundle\Entity\FormatActivite $formatsActivite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function removeFormatsActivite(FormatActivite $formatsActivite)
     {
         return $this->formatsActivite->removeElement($formatsActivite);
     }
@@ -273,7 +292,6 @@ class Activite
         return $this->formatsActivite;
     }
 
-
     /**
      * Set classeActiviteLibelle.
      *
@@ -286,5 +304,29 @@ class Activite
         $this->classeActiviteLibelle = $classeActiviteLibelle;
 
         return $this;
+    }
+
+    /**
+     * Set ordre.
+     *
+     * @param int $ordre
+     *
+     * @return Activite
+     */
+    public function setOrdre($ordre)
+    {
+        $this->ordre = $ordre;
+
+        return $this;
+    }
+
+    /**
+     * Get ordre.
+     *
+     * @return int
+     */
+    public function getOrdre()
+    {
+        return $this->ordre;
     }
 }

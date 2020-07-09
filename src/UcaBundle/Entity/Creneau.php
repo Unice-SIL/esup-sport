@@ -10,7 +10,7 @@ use UcaBundle\Repository\EntityRepository;
 use UcaBundle\Service\Common\Fn;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\CreneauRepository")
  * @Gedmo\Loggable
  */
 class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
@@ -47,7 +47,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     //region Propriétés communes FormatActivite
 
-    /** @ORM\ManyToMany(targetEntity="ProfilUtilisateur", inversedBy="creneaux", fetch="EAGER")
+    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="creneau", cascade={"persist", "remove"},fetch="EAGER")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank") */
     private $profilsUtilisateurs;
 
@@ -171,6 +171,28 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
         ;
 
         return $this->getInscriptions()->matching($criteria);
+    }
+
+    public function getCapaciteTousProfil()
+    {
+        $capaciteTotale = 0;
+
+        foreach ($this->getProfilsUtilisateurs() as $creneauProfil) {
+            $capaciteTotale += (is_integer($creneauProfil->getCapaciteProfil()) ? $creneauProfil->getCapaciteProfil() : 0);
+        }
+
+        return $capaciteTotale;
+    }
+
+    public function getCapaciteProfil($profilUtilisateur)
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profilUtilisateur', $profilUtilisateur));
+        $result = $this->getProfilsUtilisateurs()->matching($criteria);
+        if (!$result->isEmpty()) {
+            return $result->first()->getCapaciteProfil();
+        }
+
+        return false;
     }
 
     /**
@@ -322,7 +344,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return Creneau
      */
-    public function addProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
+    public function addProfilsUtilisateur(CreneauProfilUtilisateur $profilsUtilisateur)
     {
         $this->profilsUtilisateurs[] = $profilsUtilisateur;
 
@@ -336,7 +358,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
+    public function removeProfilsUtilisateur(CreneauProfilUtilisateur $profilsUtilisateur)
     {
         return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
     }

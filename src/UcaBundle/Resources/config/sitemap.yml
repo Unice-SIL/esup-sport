@@ -34,14 +34,26 @@
                       route: UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour
                     - titre: "libelleRessource"
                       route: UcaWeb_FormatActiviteReservationDetail
-    - titre: "trans('sitemap.installations.libelle')"
-      route: UcaWeb_InstallationsSportives 
+                    - titre: "libelleRessource"
+                      route: UcaWeb_FormatActiviteReservationDetailRessource
+      
 
     - titre: "trans('sitemap.evenements.libelle')"
       route: UcaWeb_Evenement
       param: { page: '1' }
+    - titre: "trans('sitemap.highlights.libelle')"
+      route: UcaWeb_Highlights
     - titre: "trans('sitemap.sporthautniveau.libelle')"
       route: UcaWeb_SportVoir
+      items:
+        - titre: "trans('sportdehautniveau.accompagnements')"
+          route: UcaWeb_Accompagnements
+        - titre: "trans('sportdehautniveau.representer')"
+          route: UcaWeb_Representer
+        - titre: "trans('sportdehautniveau.highlights')"
+          route: UcaWeb_ShnuHighlights
+        - titre: "trans('sportdehautniveau.partenaires')"
+          route: UcaWeb_Partenaires
 
     - titre: "trans('sitemap.infospratiques.libelle')"
       route: UcaWeb_InfosPratiques
@@ -50,9 +62,16 @@
     - titre: "trans('sitemap.connexion')"
       menu: 0
       route: fos_user_security_login
+    - titre: "trans('sitemap.connexion.selectionprofil')"
+      menu: 0
+      route: UcaWeb_ConnexionSelectionProfil
     - titre: "trans('sitemap.panier.libelle')"
       menu: 0
       route: UcaWeb_Panier
+      droit: IS_AUTHENTICATED_FULLY
+    - titre: "trans('sitemap.mescredits.libelle')" 
+      menu: 0
+      route: UcaWeb_MesCredits
       droit: IS_AUTHENTICATED_FULLY
     - titre: "trans('sitemap.moncompte.libelle')"
       menu: 0
@@ -96,6 +115,10 @@
               route: UcaWeb_PaiementValidation
               droit: IS_AUTHENTICATED_FULLY
               params: { id: id }
+            - titre: "trans('sitemap.validationcommande.libelle')"
+              route: UcaWeb_PaiementValidationCheque
+              droit: IS_AUTHENTICATED_FULLY
+              params: { id: id , source: source}
             - titre: "trans('sitemap.validationcommande.libelle')"
               route: UcaWeb_PaiementRetourPaybox
               droit: IS_AUTHENTICATED_FULLY
@@ -264,10 +287,18 @@
           items:
             - titre: "trans('sitemap.modifier')"
               route: UcaGest_TraductionModifier
-
-          droit: ROLE_GESTION_BASCULE
-        - titre: "trans('sitemap.bascule.libelle')"
+          
+        - titre: "trans('sitemap.bascule.semestre.libelle')"
           route: UcaGest_BasculeAccueil
+          droit: ROLE_GESTION_BASCULE
+
+        - titre: "trans('sitemap.bascule.annee.universitaire.libelle')"
+          route: UcaGest_BasculeAnneeUniversitaireAccueil
+          droit: ROLE_GESTION_BASCULE
+        
+        - titre: "trans('sitemap.emailing.libelle')"
+          route: UcaGest_Emailing
+          droit: ROLE_GESTION_EMAILING
           
     - titre: "trans('sitemap.referentiel.libelle')"
       route: null
@@ -364,6 +395,36 @@
             - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
               route: UcaGest_ImageFondModifier
 
+        - titre: "trans('sitemap.highlight.libelle')"
+          route: UcaGest_HighlightLister
+          droit: ROLE_GESTION_HIGHLIGHT_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: UcaGest_HighlightAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
+              route: UcaGest_HighlightModifier
+
+        - titre: "trans('sitemap.shnu.highlight.libelle')"
+          route: UcaGest_Shnu_HighlightLister
+          droit: ROLE_GESTION_SHNU_HIGHLIGHT_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: UcaGest_ShnuHighlightAjouter
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getTitre()"
+              route: UcaGest_ShnuHighlightModifier
+
+        - titre: "trans('sitemap.logopartenaire.libelle')"
+          route: UcaGest_LogoPartenaireLister
+
+          droit: ROLE_GESTION_LOGOPARTENAIRE_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: UcaGest_LogoPartenaireAjouter
+
+            - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getNom()"
+              route: UcaGest_LogoPartenaireModifier
+
     - titre: "trans('sitemap.securite.libelle')"
       route: null
       items:
@@ -386,6 +447,10 @@
               items:
                 - titre: "trans('sitemap.utilisateur.verification')"
                   route: fos_user_registration_check_email
+            - titre: "trans('sitemap.utilisateur.credit.ajouter')"
+              route: UcaGest_UtilisateurCreditAjouter
+              params: { id: id }
+              droit: ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE
 
         - titre: "trans('sitemap.groupe.libelle')"
           route: UcaGest_GroupeLister
@@ -409,7 +474,23 @@
           items:
             - titre: "trans('sitemap.detailscommande.libelle')"
               route: UcaGest_ReportingCommandeDetails
-              params: { id: id }
+              params: { id: idCommande }
+              items: 
+                - titre: "trans('sitemap.detailscommande.informationscarte')"
+                  route: UcaGest_CommandeDetails_InformationsCarte
+                  params: { idCommande: idCommande, id: id }
+            - titre: "trans('sitemap.commande.avoir.ajouter')"
+              route: 'UcaGest_AvoirAjouter'
+              # droit: ROLE_GESTION_AVOIR
+              params:  { id: id }
+            - titre: "trans('sitemap.detailsAvoir.libelle')"
+              route: "UcaGest_AvoirDetails"
+              params: { id: id, refAvoir: refAvoir }
+              # droit: ROLE_GESTION_AVOIR
+        - titre: "trans('sitemap.reportingcredits.libelle')"
+          route: UcaGest_ReportingCredit
+          droit: ROLE_GESTION_CREDIT_UTILISATEUR_LECTURE
+
         - titre: "trans('sitemap.gestioninscription.libelle')"
           droit: ROLE_GESTION_INSCRIPTION
           route: UcaGest_GestionInscription
@@ -418,6 +499,13 @@
               route: UcaGest_GestionInscriptionVoir
               droit: ROLE_GESTION_INSCRIPTION
               params: { id: id }
+        - titre: "trans('sitemap.extraction')"
+          route: UcaGest_Extraction
+          droit: ROLE_GESTION_EXTRACTION
+        - titre: "trans('sitemap.statistique.KPI.libelle')"
+          route: UcaGest_Statistique_KPI
+          droit: ROLE_GESTION_EXTRACTION
+          
     - titre: "trans('sitemap.parametrage.libelle')"
       route: null
       droit: ROLE_GESTION_PARAMETRAGE

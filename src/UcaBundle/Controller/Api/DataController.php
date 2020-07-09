@@ -3,13 +3,9 @@
 namespace UcaBundle\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Method;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Annotation\Template;
-use UcaBundle\Entity\IntervalleDate;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 
 class DataController extends Controller
 {
@@ -20,16 +16,13 @@ class DataController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $res = [];
-        foreach($request->get('lists') as $key => $list) {
-            if(!isset($list['findBy'])){
+        foreach ($request->get('lists') as $key => $list) {
+            if (!isset($list['findBy'])) {
                 $res[$key] = $em->getRepository($list['class'])->findAll();
-
-            }
-            else{
-                $repo = $list["findBy"]["repository"];
-                $param = $list["findBy"]["param"];
-                $res[$key] = $em->getRepository($list['class'])->$repo($param);
-            
+            } else {
+                $repo = $list['findBy']['repository'];
+                $param = $list['findBy']['param'];
+                $res[$key] = $em->getRepository($list['class'])->{$repo}($param);
             }
         }
 

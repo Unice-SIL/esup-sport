@@ -12,6 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\UtilisateurDatatable;
 use UcaBundle\Entity\StatutUtilisateur;
 use UcaBundle\Entity\Utilisateur;
+use UcaBundle\Entity\UtilisateurCreditHistorique;
 use UcaBundle\Form\UtilisateurType;
 
 /**
@@ -273,6 +274,33 @@ class UtilisateurController extends Controller
         }
 
         return $this->redirectToRoute('UcaGest_UtilisateurLister');
+    }
+
+    /**
+     * @Route("/Credit/{id}/Ajouter/{montant]", name="UcaGest_UtilisateurCreditAjouter", methods={"GET","POST"})
+     * @Isgranted("ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE")
+     *
+     * @param null|mixed $montant
+     */
+    public function ajouterCreditAction(Request $request, Utilisateur $item, $montant = 0)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $credit = new UtilisateurCreditHistorique($item, $request->get('montant'), null, 'credit', 'Ajout manuel de crédit');
+        $form = $this->createForm('UcaBundle\Form\UtilisateurCreditHistoriqueType', $credit);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid() && $request->isMethod('POST')) {
+            $em->persist($credit);
+            $em->flush();
+            $this->get('uca.flashbag')->addActionFlashBag($credit, 'Ajouter');
+
+            return $this->redirectToRoute('UcaGest_ReportingCredit');
+        }
+
+        $twigConfig['credit'] = $credit;
+        $twigConfig['form'] = $form->createView();
+
+        return $this->render('@Uca/UcaGest/Securite/Utilisateur/FormulaireAjouterCredit.html.twig', $twigConfig);
     }
 
     public function envoyerEmailConfirmation(Utilisateur $user, $cc = null)

@@ -33,10 +33,11 @@ class CommandeListener
                 }
             }
             if ('termine' != $event->getOldValue('statut') && 'termine' == $event->getNewValue('statut')) {
-                if (0 != $event->getNewValue('montantTotal')) {
+                // condition supplémentaire pour les avoirs ?
+                if ($event->hasChangedField('montantTotal') && 0 != $event->getNewValue('montantTotal')) {
                     $numero = $em->getRepository(Commande::class)->max('numeroRecu') + 1;
                     $commande->setNumeroRecu($numero);
-                } else {
+                } elseif ('avoir' != $event->getNewValue('statut')) {
                     $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
                     $commande->setNumeroCommande($numero);
                 }

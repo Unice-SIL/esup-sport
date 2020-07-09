@@ -2,14 +2,18 @@
 
 namespace UcaBundle\Service\Listener\Entity;
 
-use UcaBundle\Entity\Activite;
 use Doctrine\ORM\Event\PreFlushEventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use UcaBundle\Entity\Activite;
 
 class ActiviteListener
 {
-    public function preFlush(Activite $classActivite, PreFlushEventArgs $event)
+    public function preFlush(Activite $activite, PreFlushEventArgs $event)
     {
-        $classActivite->updateClasseActiviteLibelle();
+        $activite->updateClasseActiviteLibelle();
+        $maxOrdreActivite = (($event->getEntityManager())->getRepository(Activite::class))->maxOrdreActivite();
+        if (null === $activite->getOrdre()) {
+            $ordre = (null !== $maxOrdreActivite) ? $maxOrdreActivite + 1 : 0;
+            $activite->setOrdre($ordre);
+        }
     }
 }

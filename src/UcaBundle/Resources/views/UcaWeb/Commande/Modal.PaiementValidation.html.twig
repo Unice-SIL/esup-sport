@@ -1,7 +1,28 @@
 {% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
-{% block modalId 'modalValidationPaiement' ~ typePaiement %}
+
+{% block modalId 'modalValidationPaiement' ~ moyenPaiement %}
 {% block modalTitle 'message.confirmation.paiement' %}
+
 {% block modalBody %}
-    <div style="text-align:left;">{{ ('message.confirmation.paiement' ~ typePaiement)|trans }}</div>
+  <div style="text-align:left;">{{ ('message.confirmation.paiement' ~ moyenPaiement)|trans }}</div> 
+  {% if 'cheque' == moyenPaiement and 'gestioncaisse' == source %}
+ 		<hr> <div style="text-align:left;">
+			{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.Form.html.twig" %}
+		</div>
+  {% endif %}
 {% endblock %}
-{% block modalBoutonActionLibelle 'common.oui' | trans %}
+
+{% block modalFooter %}
+	  {% if 'cheque' == moyenPaiement and 'gestioncaisse' == source %}
+			{{ form_row(form.save, {'attr': {'role': 'button'}}) }}
+		{% else %}
+			<a class="btn btn-primary mb-0 js-bouton-action" type="button">{{ 'common.oui' | trans }}</a>
+			
+		{% endif %}
+{% endblock %}
+
+{% block modalFormEnd %} 	
+	{% if 'cheque' == moyenPaiement and 'gestiioncaisse' == source %}
+		 {{ form_end(form) }} 
+	{% endif %}
+{% endblock %}

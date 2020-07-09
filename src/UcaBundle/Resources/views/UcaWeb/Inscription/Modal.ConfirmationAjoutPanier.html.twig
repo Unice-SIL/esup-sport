@@ -1,0 +1,18 @@
+{% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalInscription' %}
+{% block modalTitle 'modalinscription.panier.ajouter' %}
+{% block modalBody %}
+    <p>{{'modalinscription.message.confirmation.ajoutpanier'|trans}}</p>
+    <ul>
+        {% for article in articles %}
+            <li><strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€</li>        
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block modalFooter %}
+    <button class="btn btn-outline-primary btn-confirmation" data-dismiss="modal" type="button" value="false">
+        {{'bouton.annuler' | trans }}
+    </button>
+    <button class="btn btn-primary btn-confirmation" type="button" value="true">
+        {{'modalinscription.panier.ajouter' | trans }}</button>
+{% endblock %}

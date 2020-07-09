@@ -42,6 +42,8 @@
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.ancienneinscription"|trans}}</p>
             {% elseif inscription.statut == 'desinscrit' %}
                 <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscrit"|trans}}</p>
+            {% elseif inscription.statut == 'desinscriptionadministrative' %}
+                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscriptionadministrative"|trans}}</p>
             {% endif %}
 
             {{ "common.dateinscription"|trans }} : {{inscription.date|date("d/m/Y")}}

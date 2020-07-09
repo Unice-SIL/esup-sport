@@ -5,6 +5,7 @@ parameters:
     database_name: uca
     database_user: root
     database_password: --
+    database_statistiques_name: uca_statistique
     mailer_transport: smtp
     mailer_host: mail.laynis.com
     mailer_port: 587

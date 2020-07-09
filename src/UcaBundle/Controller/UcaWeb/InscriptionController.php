@@ -14,15 +14,6 @@ use UcaBundle\Form\InscriptionType;
  */
 class InscriptionController extends Controller
 {
-
-    private function convertResultToJsonTextResponse($form, $result)
-    {
-        $response = new JsonResponse($result);
-        if ($form->isSubmitted()) {
-            $response->headers->set('Content-Type', 'text/plain');
-        }
-        return $response;
-    }
     /**
      * @Route("/Inscription", name="UcaWeb_Inscription", options={"expose"=true}, methods={"POST"})
      */
@@ -31,24 +22,25 @@ class InscriptionController extends Controller
         $em = $this->getDoctrine()->getManager();
         $this->get('uca.timeout')->nettoyageCommandeEtInscription();
         $inscriptionService = $this->get('uca.inscription');
-        $id = $request->get("id");
-        $type = $request->get("type");
-        $idFormat = $request->get("idFormat");
+        $id = $request->get('id');
+        $type = $request->get('type');
+        $idFormat = $request->get('idFormat');
 
         $item = $em->getRepository($type)->find($id);
         $format = null;
-        if (!empty($idFormat))
+        if (!empty($idFormat)) {
             $format = $em->getRepository('UcaBundle:FormatAvecReservation')->find($idFormat);
+        }
 
-            
         $inscriptionInformations = $item->getInscriptionInformations($this->getUser(), $format);
-        if ($inscriptionInformations['statut'] != 'disponible') {
+        if ('disponible' != $inscriptionInformations['statut']) {
             $result['itemId'] = $item->getId();
             $result['statut'] = '-1';
             $result['html'] = $this->get('twig')->render(
                 '@Uca/UcaWeb/Inscription/Modal.Error.html.twig',
-                ["title" => "modal.error", "message" => "modal.error." . $inscriptionInformations['statut']]
+                ['title' => 'modal.error', 'message' => 'modal.error.'.$inscriptionInformations['statut']]
             );
+
             return new JsonResponse($result);
         }
 
@@ -59,24 +51,54 @@ class InscriptionController extends Controller
 
         $inscriptionService->setInscription($inscription);
 
-        if ($inscription->getStatut() == 'initialise') {
+        if ('initialise' == $inscription->getStatut()) {
+            if ('confirmation' == $request->get('statut')) {
+                $twigConfig['articles'] = $inscriptionService->ajoutPanier(true);
+
+                return new JsonResponse($this->get('twig')->render('@Uca/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig', $twigConfig));
+            }
             $result = $inscriptionService->getFormulaire($form);
+
             return $this->convertResultToJsonTextResponse($form, $result);
-        } elseif (in_array($inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
+        }
+        if (in_array($inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
+            if ('confirmation' == $request->get('statut')) {
+                $twigConfig['articles'] = $inscriptionService->ajoutPanier(true);
+
+                return new JsonResponse($this->get('twig')->render('@Uca/UcaWeb/Inscription/Modal.ValidationArticle.html.twig', $twigConfig));
+            }
             $em->persist($inscription);
             $result = $inscriptionService->getMessagePreInscription();
             $em->flush();
             $inscriptionService->envoyerMailInscriptionNecessitantValidation();
+
             return $this->convertResultToJsonTextResponse($form, $result);
-        } elseif ($inscription->getStatut() == 'attentepaiement') {
+        }
+        if ('attentepaiement' == $inscription->getStatut()) {
+            if ('confirmation' == $request->get('statut')) {
+                $twigConfig['articles'] = $inscriptionService->ajoutPanier(true);
+
+                return new JsonResponse($this->get('twig')->render('@Uca/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig', $twigConfig));
+            }
+
             $em->persist($inscription);
             $articles = $inscriptionService->ajoutPanier();
             $result = $inscriptionService->getComfirmationPanier($articles);
             $em->flush();
+
             return $this->convertResultToJsonTextResponse($form, $result);
-        } else {
-            dump($inscription);
-            die;
         }
+        dump($inscription);
+        die;
+    }
+
+    private function convertResultToJsonTextResponse($form, $result)
+    {
+        $response = new JsonResponse($result);
+        if ($form->isSubmitted()) {
+            $response->headers->set('Content-Type', 'text/plain');
+        }
+
+        return $response;
     }
 }

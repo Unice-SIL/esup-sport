@@ -3,32 +3,44 @@
 {% import '@Uca/Macros/Bootstrap.html.twig' as Bootstrap %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ ImageAsset.imageFondCssWithEmplacement('Sport de haut niveau') }}
+	{{ parent() }}
+	{{ ImageAsset.imageFondCssWithEmplacement('Sport de haut niveau') }}
 {% endblock %}
 
 {% block main %}
+  {% set urlImageAccompagnement = emplacementImageFond('SHN - Accompagnement').image %}
+  {% set urlImageCandidater = emplacementImageFond('SHN - Candidater').image %}
+  {% set urlImageHighlights = emplacementImageFond('SHN - Highlights').image %}
+  {% set urlImageRepresenter = emplacementImageFond('SHN - Representer').image %} 
+  {% set urlImagePartenaires = emplacementImageFond('SHN - Partenaires').image %}
 
-    <h1 class="h1-light">{{'sportdehautniveau.title'|trans}}</h1>
-
-    {% if emplacement("Sport de haut niveau - Introduction") is not empty %}
-    <section class="container container-style bg-white mb-5">
-        {{ emplacement("Sport de haut niveau - Introduction")|raw }}
-    </section>
-    {% endif %}
-
-    <section class="container">
-        <div class="accordion" id="accordionSportHautNiveau">
-            {% for i in 1..5 %}
-                {% set emplacementName = "Sport de haut niveau - %02d"|format(i) %}
-                {% set titre = emplacement(emplacementName, "title") %}
-                {% set texte = emplacement(emplacementName) %}
-                {% set mobile = emplacement(emplacementName, 'mobile') %}
-                {% set texte_mobile = emplacement(emplacementName, 'texte_mobile') %}
-                {% if titre is not empty %}
-                    {{ Bootstrap.accordionItem(i, loop.first, titre, texte, mobile, texte_mobile,'accordionSportHautNiveau') }}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </section>
+  <section class="container">
+	<div class="row mb-5 d-flex flex-wrap justify-content-around">
+	  <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageAccompagnement) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+		<a href="{{ path('UcaWeb_Accompagnements') }}" class="align-self-center text-center">
+		  {{ 'sportdehautniveau.accompagnements'|trans|upper }}
+		</a>
+	  </div>
+	  <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageCandidater) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+		<a href="https://shnu.univ-cotedazur.fr/" class="align-self-center text-center">
+		  {{ 'sportdehautniveau.candidater'|trans|upper }}
+		</a>
+	  </div>
+      <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageHighlights) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+        <a href="{{ path('UcaWeb_ShnuHighlights') }}" class="align-self-center text-center">
+		  {{ 'sportdehautniveau.highlights'|trans|upper }}
+		</a>
+	  </div>
+      <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageRepresenter) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+	    <a href="{{ path('UcaWeb_Representer') }}" class="align-self-center text-center">
+		  {{ 'sportdehautniveau.representer'|trans|upper }}
+		</a>
+	  </div>
+      <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImagePartenaires) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+	    <a href="{{ path('UcaWeb_Partenaires') }}" class="align-self-center text-center">
+		  {{ 'sportdehautniveau.partenaires'|trans|upper }}
+		</a>
+	  </div>
+	</div>
+  </section>
 {% endblock %}

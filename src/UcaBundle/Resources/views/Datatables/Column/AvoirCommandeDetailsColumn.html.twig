@@ -1,0 +1,7 @@
+
+{% if not row.avoirCommandeDetails is empty %}
+  <span class="fa fa-check-circle" alt="{{ 'common.oui' | trans }}"> </span>
+{% else %}
+  <span class="fa fa-times-circle" alt="{{ 'common.non' | trans }}"> </span>
+{% endif %}
+

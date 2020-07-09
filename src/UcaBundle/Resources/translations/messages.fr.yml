@@ -1,42 +1,44 @@
 
-FormatAchatCarte.button: 'Acheter la carte'
-FormatAvecCreneau.button: 'Voir les créneaux disponibles'
-FormatAvecReservation.button: 'Réserver'
-FormatSimple.button: 'Voir les évènements à venir'
-acceuil.evenements.liste: 'Voir tous les évènements'
+FormatAchatCarte.button: "Acheter la carte"
+FormatAvecCreneau.button: "Voir les créneaux disponibles"
+FormatAvecReservation.button: "Réserver"
+FormatSimple.button: "Voir les évènements à venir"
+acceuil.evenements.liste: "Voir tous les évènements"
 acceuil.evenements.zeroEvt: "Aucun événement n'est prévu à l'heure actuelle."
-acceuil.prochainement.consulter: 'Consulter'
-accueil.classeActivite.title: 'Activités sportives'
-accueil.connexion: 'Se connecter'
-accueil.cotisations.infos: 'En savoir plus sur les cotisations'
+acceuil.prochainement.consulter: "Consulter"
+accueil.activite.title: "Activités sportives"
+accueil.classeActivite.title: "Classes d'activités sportives"
+accueil.connexion: "Se connecter"
+accueil.cotisations.infos: "En savoir plus sur les cotisations"
 accueil.demander.inscription: "Faire une demande de création de compte"
-accueil.inscription.title: 'Inscription'
-accueil.prochainement.title: 'Prochainement'
-activite.ajouter.succes: 'Activité ajoutée avec succès'
+accueil.inscription.title: "Inscription"
+accueil.prochainement.title: "Prochainement"
+accueil.ucagest.title: Bienvenue sur UCA Sport
+activite.ajouter.succes: "Activité ajoutée avec succès"
 activite.ajouter.title: Ajouter une activite
 activite.autreReservation: Autres réservations possibles pour cette activité
-activite.classeactivite.placeholder: '- Sélectionner une classe d''activité -'
-activite.creneau.ajouter: 'Ajouter Activité avec Créneaux'
-activite.format.ajouter: 'Ajouter un format'
+activite.classeactivite.placeholder: "- Sélectionner une classe d'activité -"
+activite.creneau.ajouter: "Ajouter Activité avec Créneaux"
+activite.format.ajouter: "Ajouter un format"
 activite.format.disponible: Format(s) disponible(s)
-activite.formatachatcarte.ajouter: 'Achat de Carte'
-activite.formataveccreneau.ajouter: 'Réservation de créneaux'
-activite.formatavecreservation.ajouter: 'Réservation de ressource'
-activite.formats.disponibles.aucun: 'Aucun format disponible'
-activite.formats.disponibles: 'Formats disponibles'
+activite.formatachatcarte.ajouter: "Achat de Carte"
+activite.formataveccreneau.ajouter: "Réservation de créneaux"
+activite.formatavecreservation.ajouter: "Réservation de ressource"
+activite.formats.disponibles.aucun: "Aucun format disponible"
+activite.formats.disponibles: "Formats disponibles"
 activite.formatsimple.ajouter: Évènement
-activite.gestion: 'Gestion des activités'
-activite.image.libelle: 'Sélectionner une image'
+activite.gestion: "Gestion des activités"
+activite.image.libelle: "Sélectionner une image"
 activite.libelle: Activité
 activite.list.title: Activités
-activite.modifier.succes: 'Activité modifiée avec succès'
+activite.modifier.succes: "Activité modifiée avec succès"
 activite.modifier.title: Modifier une activite
-activite.reservation.ajouter: 'Ajouter Activité avec Réservation'
-activite.simple.ajouter: 'Ajouter Activité Simple'
+activite.reservation.ajouter: "Ajouter Activité avec Réservation"
+activite.simple.ajouter: "Ajouter Activité Simple"
 activite.supprimer.erreur: Impossible de supprimer cette activité, des formats d'activités y sont affectés
-activite.supprimer.succes: 'Activité supprimée avec succès'
-activites.liste: 'Liste des activités'
-activites.sportives: 'Activités Sportives'
+activite.supprimer.succes: "Activité supprimée avec succès"
+activites.liste: "Liste des activités"
+activites.sportives: "Activités Sportives"
 actualite.ajouter.succes: Actualité ajoutée avec succès
 actualite.ajouter.title: Ajouter une activité
 actualite.image.libelle: Sélectionner une image
@@ -45,12 +47,25 @@ actualite.modifier.succes: Actualité modifiée avec succès
 actualite.modifier.title: Modifier une activité
 actualite.supprimer.erreur: Impossible de supprimer cette activité
 actualite.supprimer.succes: Actualité supprimée avec succès
+avoir.ajouter.success: Avoir ajouté avec succès
+bascule.aucun.choix: Aucun choix sélectionné
+bascule.carte.cotisation.supprimer: Supprimer les cartes et cotisations utilisateurs 
+bascule.cotisation: Cotisation sportive
+bascule.creneau.dupliquer: Dupliquer les créneaux
+bascule.creneau.option: Options créneaux
+bascule.creneau.supprimer: Supprimer les créneaux
+bascule.evenement.statut: Modifier le statut des inscriptions
+bascule.reservation.supprimer: Supprimer les réservations de salles et équipements
 bascule.success: Réussite de la bascule
+bouton.ajouter.credit: Ajouter un crédit
 bouton.ajouter: Ajouter
 bouton.annuler.commande: Annuler la commande
 bouton.annuler.inscription: Annuler l'inscription
 bouton.annuler: Annuler
+bouton.basculer: Basculer
 bouton.bloquer: Bloquer
+bouton.confirmer: Confirmer
+bouton.creer: Créer
 bouton.debloquer: Débloquer
 bouton.descendre: Descendre
 bouton.deselectionner.tout: Désélectionner tout
@@ -61,9 +76,11 @@ bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
+bouton.indisponible.statut.desinscriptionadministrative: Vous avez été désinscrit par l'administration
 bouton.indisponible.statut.inscriptionsterminees: Les inscriptions sont terminées
 bouton.indisponible.statut.montantincorrect: "Le tarif de cette activité n'est pas encore défini, merci de contacter le bureau des sports"
 bouton.indisponible.statut.nbcreneaumaxatteint: "Vous êtes déjà inscrit à %maxCreneau% créneaux. Vous avez atteint le nombre maximum d'inscriptions pour les créneaux"
+bouton.indisponible.statut.nonconnecte.envoimail: "Il faut être connecté pour pouvoir envoyer un mail"
 bouton.indisponible.statut.nonconnecte: "Il faut être connecté pour pouvoir s'inscrire aux activités"
 bouton.indisponible.statut.profilinvalide: "Cette activité n'est pas autorisée pour votre profil d'utilisateur"
 bouton.log: Historique
@@ -72,6 +89,8 @@ bouton.monter: Monter
 bouton.ok: Ok
 bouton.panier.ajouter: Ajouter au panier
 bouton.panier.indisponible: Indisponible
+bouton.reinitialiser: Réinitialiser
+bouton.reportavoir: Reporter l'avoir
 bouton.retour.element: Retour vers %element%
 bouton.retour.listeClasse: Retour aux activités
 bouton.retour: Retour
@@ -79,93 +98,160 @@ bouton.save.previsualiser: Sauvegarder et prévisualiser
 bouton.save: Enregistrer
 bouton.selectionner.tout: Sélectionner tout
 bouton.supprimer: Supprimer
+bouton.tout.supprimer: Tout supprimer
 bouton.voir: Voir
 cgv.acceptees: Merci d'avoir accepté les conditions générales de vente
-cgv.information: Veuillez prendre connaissance des conditions générales de vente 
+cgv.information: Veuillez prendre connaissance des conditions générales de vente
 cgv.refusees: Vous devez cocher la case afin d'accepter les conditions générales de vente
 cgv.validation: J’ai pris connaissance et j’accepte les conditions générales de vente
-classeActivite.list.title: 'Liste des classes d''Activité'
-classeactivite.ajouter.succes: 'Classe d''activité ajoutée avec succès'
+classeActivite.list.title: "Liste des classes d'Activité"
+classeactivite.ajouter.succes: "Classe d'activité ajoutée avec succès"
 classeactivite.ajouter.title: Ajouter une classe d'activite
-classeactivite.gestion: 'Gestion des classes d''activité'
-classeactivite.image.libelle: 'Sélectionner une image'
-classeactivite.libelle: 'Classe d''activité'
-classeactivite.list.title: 'Gestion des classes d''activité'
-classeactivite.modifier.succes: 'Classe d''activité modifiée avec succès'
+classeactivite.gestion: "Gestion des classes d'activité"
+classeactivite.image.libelle: "Sélectionner une image"
+classeactivite.libelle: "Classe d'activité"
+classeactivite.list.title: "Gestion des classes d'activité"
+classeactivite.modifier.succes: "Classe d'activité modifiée avec succès"
 classeactivite.modifier.title: Modifier une classe d'activite
 classeactivite.supprimer.erreur: Impossible de supprimer cette classe, des activités y sont affectées
-classeactivite.supprimer.succes: 'Classe d''activité supprimée avec succès'
-classeactivite.typeactivite.placeholder: '- Sélectionner un type d''activité -'
+classeactivite.supprimer.succes: "Classe d'activité supprimée avec succès"
+classeactivite.typeactivite.placeholder: "- Sélectionner un type d'activité -"
 column.champ: Champ
-column.ckeditor: 'Champ Enrichi'
+column.ckeditor: "Champ Enrichi"
 column.entite: Entité
-column.entityid: 'Id de l''entité'
+column.entityid: "Id de l'entité"
 column.valen: Anglais
 column.valfr: Français
 column.valit: Italien
+comamndedetail.informationscarte.etablissement: Campus de retrait de la carte
+commande.avoir.ajouter.titre: Faire un avoir
+commande.avoir.libelle: Avoir 
+commande.avoir.lister: Liste des avoirs
+commande.avoir.posseder: Possède avoir(s)
+commande.avoirdetails.libelle: Détails de l'avoir
+commande.avoirdetails.referenceavoir: Référence de l'avoir
+commande.avoirdetails.titre: Eléments de l'avoir
+commande.details.avoir.message: Cet élement fait l'objet d'un avoir
+commande.informations: Informations de la commande
 commande.libelle: Commande
+commande.numero.cheque: Numéro de chèque
+commande.numero.commande: Numéro de commande
+commande.paybox: PayBox
 commande.supprimer.succes: La commande a été supprimée
-commande.timeout.commande.expiration : Passé ce delai, Votre commande et vos inscriptions annulées seront annulées.
-commande.timeout.panier.expiration : Passé ce delai, votre panier sera automatiquement vidé et vos inscriptions annulées.
-commande.timeout.timer: Il vous reste %temps% pour finaliser votre %typecommande% et valider votre inscription. 
+commande.timeout.commande.expiration: Passé ce delai, Votre commande et vos inscriptions annulées seront annulées.
+commande.timeout.panier.expiration: Passé ce delai, votre panier sera automatiquement vidé et vos inscriptions annulées.
+commande.timeout.timer: Il vous reste %temps% pour finaliser votre %typecommande% et valider votre inscription.
+commandedetail.informationscarte.ajouter: Saisir les informations
+commandedetail.informationscarte.datefin: Date de fin de validité
+commandedetail.informationscarte.etablissement: '- Sélectionner un campus de retrait -'
+commandedetail.informationscarte.message.bds: Vous venez de valider une commande de carte. Veuillez saisir les informations de cette carte. 
+commandedetail.informationscarte.message.vide: Les informations de cette carte n'ont pas été saisies. 
+commandedetail.informationscarte.numero: Numéro de la carte
+commandedetail.informationscarte.titre: Modifier les informations de la carte
+commandedetail.modifier.succes: Détails de la commande modifiés avec succès
+common.a.venir: À venir
 common.acces.rapide: Accès rapide
-common.accueil.retour: 'Retour à la page d''accueil'
+common.accueil.retour: "Retour à la page d'accueil"
 common.all: Tous
 common.ancienneinscription: Ancienne inscription
+common.and: et
 common.annule: Annulée
 common.apayer: Commande à payer
+common.april: Avril
 common.attenteajoutpanier: Attente d'ajout au panier
 common.attentepaiement: En attente de paiement
 common.attentevalidationencadrant: En attente de validation encadrant
 common.attentevalidationgestionnaire: En attente de validation gestionnaire
-common.aucun: '- Aucun -'
+common.aucun: "- Aucun -"
 common.aucune.facture: Aucune facture disponible pour cette personne ou à cette date
+common.august: Août
 common.autorisations: Autorisations
+common.avoir: Avoir
+common.capacite.totale: Capacité totale
 common.capacite: Capacité
+common.carte.acheter: Carte à acheter
 common.carte: Carte
 common.cb: Carte Bancaire
 common.chargement: Chargement...
 common.cheque: Chèque
 common.classe.activite: Classe d'activité
 common.commandeencours: Commande en cours
+common.coordonnees.adresse: Adresse
+common.coordonnees.codepostal.abrege: CP
+common.coordonnees.codepostal: Code postal
+common.coordonnees.ville: Ville
 common.coordonnees: Coordonnées
+common.credit: Crédit
+common.creneaux.details: Détails des créneaux
 common.creneaux: Créneaux
 common.date.debut: Date de début
+common.date.effectives: Dates effectives
 common.date.fin: Date de fin
-common.date.naissance: 'Date de Naissance'
+common.date.inscriptions: Dates inscriptions
+common.date.naissance: "Date de Naissance"
+common.date.publication: Date de publication
 common.date: Date
 common.dateCommande: Date de la commande
 common.dateajoutpanier: Date d'ajout au panier
+common.datedesinscription: Date de désinscription
 common.dateinscription: Date d'inscription
 common.datepaiement: Date de paiement
-common.deconnexion: 'Vous avez été deconnecté de l''application. Merci de fermer votre navigateur pour fermer totalement la session.'
+common.datevalidation: Date de validation
+common.december: Décembre
+common.deconnexion: "Vous avez été deconnecté de l'application. Merci de fermer votre navigateur pour fermer totalement la session."
 common.description: Description
+common.desinscriptionadministrative: Désincription administrative
 common.desinscrit: Désinscrit
 common.eligible: Éligible au bonus
 common.email: Email
 common.emplacement: Emplacement
+common.encadrant: Encadrant
 common.encadrants.aucun: aucun encadrant
 common.encadrants: Encadrants
 common.espece: Espèce
-common.et: '{0} | ]0,Inf[ et '
+common.et: "{0} | ]0,Inf[ et "
 common.evenement: Évènement
+common.extraction.liste.encadrants: Extraction de la liste des encadrants
+common.extraction.personnalisee: Extraction personnalisée
 common.extraire: Extraire
 common.facture: Facture
+common.february: Février
+common.fermer: "Fermer"
+common.format.activite.details: Détail des formats d'activités
 common.friday: Vendredi
 common.groups: Groupes
 common.horaires.ouverture: "Horaires d'ouverture"
 common.horaires: Horaires
 common.ht: Hors taxe
 common.indisponible: Indisponible
-common.infospersonnelles: 'Informations Personnelles'
+common.infospersonnelles: "Informations Personnelles"
 common.infossupplementaires: Informations supplémentaires
+common.inscription.details: Détail des inscriptions
 common.inscriptionsavenir: Bientôt disponible
 common.inscrire: S'inscrire
+common.january: Janvier
+common.july: Juillet
+common.june: Juin
 common.libelle: Libellé
 common.lieu: Lieu
 common.liste.inscription: Liste des inscrits
+common.march: Mars
+common.materiel: Matériel
+common.may: Mai
 common.mobile: Mobile
 common.modifications: Modifications
+common.mois.aout: Août
+common.mois.avril: Avril
+common.mois.decembre: Décembre
+common.mois.fevrier: Février
+common.mois.janvier: Janvier
+common.mois.juillet: Juillet
+common.mois.juin: Juin
+common.mois.mai: Mai
+common.mois.mars: Mars
+common.mois.novembre: Novembre
+common.mois.octobre: Octobre
+common.mois.septembre: Septembre
 common.monday: Lundi
 common.montant: Montant
 common.montants: Montants
@@ -173,38 +259,49 @@ common.moyenpaiement: Moyen de paiement
 common.moyenpaiementautre: Valider la commande et payer au bureau des sports
 common.naissance: Date de naissance
 common.niveauSportif: Niveau sportif
+common.nom.prenom: Nom et prénom
 common.nom.utilisateur: Nom d'utilisateur
 common.nom: Nom
 common.nomencaisseur: Nom Encaisseur
-common.non: 'Non'
+common.non: "Non"
+common.nonrenseigne: Non renseigné
+common.november: Novembre
 common.numerocommande: Numéro de Commande
 common.numerorecu: Numéro de Reçu
+common.october: Octobre
+common.operation: Opération
 common.ordre: Ordre
-common.oui: 'Oui'
+common.oui: "Oui"
 common.paiementcb: Payer par carte bancaire
 common.password: Mot de passe
+common.payant: Payant
 common.payeavec: Payée avec
+common.periode: Période
+common.precedent: Précédent
 common.prenom: Prénom
-common.prenomencaisseur: Prénom Encaisseur
+common.prenomencaisseur: Prénom encaisseur
 common.prixunitaire: Prix Unitaire
 common.profil: Profil
-common.profils.autorises: 'Profils autorisés'
+common.profils.autorises: "Profils autorisés"
 common.profils: Profils
+common.rechercher: Rechercher
 common.reservabilites: Réservabilités
 common.ressources.reservees: Ressources réservées
 common.ressources: Ressources
 common.role: Rôle
 common.saturday: Samedi
-common.select.emptyValue: '- Sélectionner une valeur -'
+common.select.emptyValue: "- Sélectionner une valeur -"
+common.september: Septembre
 common.statut: Statut
+common.suivant: Suivant
 common.sunday: Dimanche
 common.tarif.gratuit: Gratuit
 common.tarif.inconnu: Tarif inconnu
 common.tarif: Tarif
 common.telephone.placeholder: XXXXXXXXXX
 common.telephone: Téléphone
-common.temps.heure: '{0} | {1} une heure | ]1,Inf[ %count% heures'
-common.temps.minute: '{0} | {1} une minute | ]1,Inf[ %count% minutes'
+common.temps.heure: "{0} | {1} une heure | ]1,Inf[ %count% heures"
+common.temps.minute: "{0} | {1} une minute | ]1,Inf[ %count% minutes"
 common.termine: Commande terminée
 common.texte: Texte
 common.thursday: Jeudi
@@ -215,21 +312,26 @@ common.ttc: TTC
 common.tuesday: Mardi
 common.tva.nonapplicable: TVA non applicable
 common.tva: TVA
-common.type.activite: 'Type d''activité'
+common.type.activite: "Type d'activité"
 common.type: Type
+common.url: Url
 common.username: Login
 common.utilisateur: Utilisateur
 common.valide: Validée
 common.wednesday: Mercredi
-confirmation.action.message: Etes-vous certain(e) ? 
+confirmation.action.message: Etes-vous certain(e) ?
 confirmation.action.titre: Fenêtre de confirmation
 contact.compteactif.remplir: Remplissez le formulaire de demande en cliquant sur ce lien
 contact.compteactif: Vous disposez d'un compte unice actif
 contact.compteinactif.remplir: Veuillez formuler votre demande par le formulaire de contact ci-dessous
 contact.compteinactif: Vous ne disposez pas d'un compte unice actif
 contact.demande.success: Votre demande a bien été prise en compte. Vous allez recevoir un email de confirmation d'ici quelques minutes.
+contact.destinataires.total.message: Nombre de destinataires
+contact.destinataires.vide: Aucun destinataires pour ce message
 contact.destinataires: Destinataires du message
 contact.email: Votre adresse mail
+contact.encadrant.error: Echec de l'envoi du mail
+contact.encadrant.success: Mail envoyé avec succès
 contact.envoye.depuis: Mail envoye depuis l'application Uca Sport
 contact.formulaire.nom: Formulaire GLPI
 contact.mail.from: Mail de
@@ -238,7 +340,7 @@ contact.objet: Objet de votre message
 contact.phrasedepot: Vous pouvez déposer en ligne vos demandes de service ou d'assistance liées à UCA SPORT
 contact.save: Envoyer
 contact.title: Contact
-creneau.ajouter: 'Ajouter un créneau'
+creneau.ajouter: "Ajouter un créneau"
 creneau.list.complet: "Complet"
 creneau.list.indisponible: "Indisponible"
 creneau.list.inscrit: inscrit
@@ -246,13 +348,14 @@ creneau.list.next: Prochain jour de cours
 creneau.list.preinscrit: "Pré-inscrit"
 creneau.list.prochainCours: "Prochain cours"
 creneau.list.reserver: "S'inscrire"
-creneau.liste.titre: 'Liste des créneaux'
+creneau.liste.titre: "Liste des créneaux"
 creneau.week.indisponible: Aucun créneau n'est disponible aujourd'hui
 detail.inscription.commentaireannulation: Commentaire
 detail.inscription.motifannulation: Motif de l'annulation
 detailscommande.list.title: Détails de commande
 email.politesse: Bonjour,
 email.preinscription.confirmationDemande: Votre demande de pré-inscription a bien été prise en compte.
+emailing.list.title: Gestion des e-mails
 erreur.403.icon: "fas fa-ban"
 erreur.403.message: "Vous n'êtes pas autorisé à accéder à cette page !"
 erreur.403: "Erreur 403"
@@ -263,25 +366,26 @@ erreur.500.icon: "fas fa-exclamation-circle"
 erreur.500.message: "Une erreur interne s'est produite."
 erreur.500: "Erreur 500"
 erreur.button: "Retour sur le site"
-erreur.formulaire.champ.incorrect: 'Un ou plusieurs champs est (sont) incorrect(s)'
+erreur.formulaire.champ.incorrect: "Un ou plusieurs champs est (sont) incorrect(s)"
 erreur.generale.icon: "fas fa-question-circle"
 erreur.generale.message: "Une erreur s'est produite. Si cela se reproduit, veuillez nous contacter."
 erreur.generale: "Erreur"
-etablissement.ajouter.succes: 'Campus ajouté avec succès'
+etablissement.ajouter.succes: "Campus ajouté avec succès"
 etablissement.ajouter.title: Ajouter un Campus
 etablissement.code: Code du campus (référentiel immobilier)
 etablissement.email.libelle: Email de contact
-etablissement.gestion: 'Gestion des campus'
+etablissement.gestion: "Gestion des campus"
 etablissement.horaires.ouverture.libelle: Horaires d'ouverture
-etablissement.image.libelle: 'Sélectionner une image'
+etablissement.image.libelle: "Sélectionner une image"
 etablissement.libelle: Campus
-etablissement.list.title: 'Gestion des Campus'
-etablissement.modifier.succes: 'Campus modifié avec succès'
+etablissement.list.title: "Gestion des Campus"
+etablissement.modifier.succes: "Campus modifié avec succès"
 etablissement.modifier.title: Modifier un campus
 etablissement.supprimer.erreur: Impossible de supprimer le campus, des ressources y sont affectées
-etablissement.supprimer.succes: 'Campus supprimé avec succès'
+etablissement.supprimer.succes: "Campus supprimé avec succès"
 etablissement.telephone.libelle: Numéro de téléphone de contact
 evenements.title: Évènements
+extraction.title: Extraction
 footer.accessibilite: "Accessibilité"
 footer.cgv: "CGV"
 footer.contact: "Contact"
@@ -290,9 +394,10 @@ footer.mentionslegales: "Mentions légales"
 footer.plandusite: "Plan du site"
 footer.reseauxsociaux: "Retrouvez-nous sur : "
 format.achat.carte.autorisation: Sélectionner la carte à acheter
-format.autorisations.placeholder: '- Aucune autorisation sélectionnée -'
+format.achat.carte.libelle: Achat d'une carte
+format.autorisations.placeholder: "- Aucune autorisation sélectionnée -"
 format.autorisations: Autorisations requises
-format.date.debut: 'Activité du'
+format.date.debut: "Activité du"
 format.date.effective.debut: Date de début effective
 format.date.effective.fin: Date de fin effective
 format.date.fin: au
@@ -300,16 +405,17 @@ format.date.inscription.debut: Date de début des inscriptions
 format.date.inscription.fin: Date de fin des inscriptions
 format.date.publication.debut: Date de début de publication
 format.date.publication.fin: Date de fin de publication
-format.encadrants.placeholder: '- Sélectionnez au moins un encadrant -'
+format.encadrants.placeholder: "- Sélectionnez au moins un encadrant -"
 format.encadrants: Encadrants
 format.encadre: Ce format est-il encadré ?
 format.image.libelle: Sélectionner une image
-format.inscription.date.debut: 'Inscriptions à partir du'
+format.inscription.date.debut: "Inscriptions à partir du"
 format.inscription.date.fin: au
-format.lieu.placeholder: '- Sélectionner un lieu -'
+format.lieu.placeholder: "- Sélectionner un lieu -"
 format.lieu: Lieu
 format.niveau.sportif: Niveau sportif requis
 format.payant: Ce format est-il payant ?
+format.profils.utilisateur.capacite: Nombre de places
 format.profils.utilisateur: Profils d'utilisateurs autorisés
 format.promouvoir: Faire apparaître l'évènement sur la page d'accueil
 format.publication.date.debut: Publication du
@@ -318,7 +424,7 @@ format.reservation.ressource: Ressources à réserver
 format.statut.brouillon: En cours de saisie
 format.statut.publie: Publié
 format.statut: Statut
-format.tarif.placeholder: '- Sélectionner un Tarif -'
+format.tarif.placeholder: "- Sélectionner un Tarif -"
 format.tarif: Tarif
 formatCarte.list.inscrit: carte achetée
 formatCarte.list.preinscrit: carte commandée
@@ -326,15 +432,16 @@ formatCreneau.list.inscrit: inscrit
 formatCreneau.list.preinscrit: pré-inscrit
 formatSimple.list.inscrit: Inscrit
 formatSimple.list.preinscrit: pré-inscrit
-formatachatcarte.ajouter.succes: 'Format achat de carte ajouté avec succès'
-formatachatcarte.carte.placeholder: '- Sélectionner une carte -'
+formatachatcarte.ajouter.succes: "Format achat de carte ajouté avec succès"
+formatachatcarte.carte.placeholder: "- Sélectionner une carte -"
 formatachatcarte.modalites: Modalités
-formatachatcarte.modifier.succes: 'Format achat de carte modifié avec succès'
+formatachatcarte.modifier.succes: "Format achat de carte modifié avec succès"
 formatachatcarte.supprimer.erreur: Impossible de supprimer ce format. Il y a encore des inscriptions associées à supprimer
-formatachatcarte.supprimer.succes: 'Format achat de carte supprimé avec succès'
-formatachatcarte.title: 'Achat de Carte'
+formatachatcarte.supprimer.succes: "Format achat de carte supprimé avec succès"
+formatachatcarte.title: "Achat de Carte"
 formatachatcarte.validite: Valable jusqu'au
 formatactivite.autorisation.aucune: Pas d'autorisation requise
+formatactivite.capacite.error: La somme des capacités par profils doit être inférieure ou égal à la capacité du format d'activité.
 formatactivite.carte.ajouter.title: Ajouter un format avec achat de carte
 formatactivite.carte.modifier.title: Modifier un format avec achat de carte
 formatactivite.creneau.ajouter.title: Ajouter un format avec créneaux
@@ -347,55 +454,71 @@ formatactivite.fraiscomplementaires.montantsinclus.evenementsimple: "* Ce tarif 
 formatactivite.fraiscomplementaires.texteinformatif: "Ces éléments ne sont payables qu'une seule fois et seront automatiquement ajoutés au panier si nécessaire."
 formatactivite.fraiscomplementaires.titre: "Frais complémentaires"
 formatactivite.horaires: Horaires
-formatactivite.libelle: 'Format d''activité'
+formatactivite.libelle: "Format d'activité"
 formatactivite.lieu.aucun: Aucun lieu défini
 formatactivite.profil.utilisateur.aucun: Aucun profil autorisé
 formatactivite.reservation.ajouter.title: Ajouter un format avec réservation de ressource
 formatactivite.reservation.modifier.title: Modifier un format avec réservation de ressource
 formatactivite.simple.ajouter.title: Ajouter un évènement
-formatactivite.simple.modifier.title: Modifier un évènement 
+formatactivite.simple.modifier.title: Modifier un évènement
 formatactivite.title: "Inscription et réservation"
-formataveccreneau.ajouter.succes: 'Format avec créneau ajouté avec succès'
-formataveccreneau.modifier.succes: 'Format avec créneau modifié avec succès'
+formataveccreneau.ajouter.succes: "Format avec créneau ajouté avec succès"
+formataveccreneau.modifier.succes: "Format avec créneau modifié avec succès"
 formataveccreneau.supprimer.erreur: Impossible de supprimer ce format. Il y a encore des inscriptions ou des créneaux associés à supprimer
-formataveccreneau.supprimer.succes: 'Format avec créneau supprimé avec succès'
-formataveccreneau.title: 'Réservation de créneaux'
-formatavecreservation.ajouter.succes: 'Format avec réservation ajouté avec succès'
-formatavecreservation.modifier.succes: 'Format avec réservation modifié avec succès'
+formataveccreneau.supprimer.succes: "Format avec créneau supprimé avec succès"
+formataveccreneau.title: "Réservation de créneaux"
+formatavecreservation.ajouter.succes: "Format avec réservation ajouté avec succès"
+formatavecreservation.modifier.succes: "Format avec réservation modifié avec succès"
 formatavecreservation.supprimer.erreur: Impossible de supprimer ce format. Il y a encore des inscriptions associées à supprimer
-formatavecreservation.supprimer.succes: 'Format avec réservation supprimé avec succès'
+formatavecreservation.supprimer.succes: "Format avec réservation supprimé avec succès"
 formatavecreservation.tarif.ajouttarifressource: plus montant de la réservation de ressource
-formatavecreservation.title: 'Réservation de ressource'
-formatsimple.ajouter.succes: 'Évènement ajouté avec succès'
-formatsimple.modifier.succes: 'Évènement modifié avec succès'
+formatavecreservation.title: "Réservation de ressource"
+formatsimple.ajouter.succes: "Évènement ajouté avec succès"
+formatsimple.modifier.succes: "Évènement modifié avec succès"
 formatsimple.supprimer.erreur: Impossible de supprimer ce format. Il y a encore des inscriptions associées à supprimer
-formatsimple.supprimer.succes: 'Évènement supprimé avec succès'
+formatsimple.supprimer.succes: "Évènement supprimé avec succès"
 formatsimple.title: Évènement
 gestioncommande.list.title: Commandes en attente de paiement
 gestioninscription.list.title: Gestion des inscriptions
 groupe.ajouter.succes: Groupe ajouté avec succès
-groupe.ajouter.title: 'Ajouter un groupe'
+groupe.ajouter.title: "Ajouter un groupe"
 groupe.libelle: Groupe
-groupe.list.title: 'Gestion des groupes de droits'
+groupe.list.title: "Gestion des groupes de droits"
 groupe.modifier.succes: Groupe modifié avec succès
-groupe.modifier.title: 'Modifier un groupe'
-groupe.roles.placeholder: '- Sélectionnez un ou plusieurs rôles -'
+groupe.modifier.title: "Modifier un groupe"
+groupe.roles.placeholder: "- Sélectionnez un ou plusieurs rôles -"
 groupe.supprimer.danger: Impossible de supprimer ce groupe, des utilisateur y sont affectés
 groupe.supprimer.succes: Groupe supprimé avec succès
+highlight.ajouter.succes: Highlight ajoutée avec succès
+highlight.ajouter.title: Ajouter une highlight
+highlight.intervenant: Intervenant
+highlight.list.title: Highlights
+highlight.modifier.succes: Highlight modifiée avec succès
+highlight.modifier.title: Modifier une highlight
+highlight.supprimer.erreur: Impossible de supprimer cette highlight
+highlight.supprimer.succes: Highlight supprimée avec succès
+highlight.title: Highlights
+highlight.video.autre: Autres vidéos
+highlight.video.indisponible: Aucunes vidéos disponibles
+highlight.video.libelle: Saisir l'url de la vidéo
+highlight.video.miniature: Miniature de la video (Facebook uniquement)
+highlight.video.plus: Voir plus de vidéos
+highlight.video.voirplus: Voir plus de vidéos
+hightlight.video.miniature.help: Seules les vidéos Facebook ont besoin d'une miniatures associées
 image.alt.ressource.type.lieu: Ressource de type lieu
 image.alt.ressource.type.materiel: Ressource de type matériel
 imagefond.image.libelle: Sélectionner une image
 imagefond.list.title: Gestion des images de fond
 imagefond.modifier.succes: L'image de fond a été modifiée avec succès
 imagefond.modifier.title: Modification de l'image de fond
-infospratiques.title: 'Infos pratiques'
+infospratiques.title: "Infos pratiques"
 inscription.aucun.inscrit: Auncun Inscrit
 inscription.bouton.justificatif: Télécharger le justificatif
 inscription.bouton.refuser: Refuser la demande d'inscription
 inscription.bouton.valider: Valider la demande d'inscription
 inscription.confirmation.refuser: La demande d'inscription a été refusée
 inscription.confirmation.valider: La demande d'inscription a été validée
-inscription.de: Inscription de 
+inscription.de: Inscription de
 inscription.pour: pour l'activité
 inscription.refus.motif.libelle: Motif de refus (facultatif)
 inscriptionavalider.list.title: Liste des inscriptions à valider
@@ -403,28 +526,43 @@ installationssportives.activitepropose.title: Activités proposées
 installationssportives.activites.aucun: Aucune activité proposée
 installationssportives.coordonnees.title: Coordonnées
 installationssportives.horaireouverture.title: Horaires d'ouvertures
+installationssportives.lieu.title: Salles disponibles
 installationssportives.title: Installations sportives
-langues.gestion: 'Gestion des langues'
+installationssportives.visitevirtuelle.title: Visite virtuelle
+langues.gestion: "Gestion des langues"
 layout.logout: Déconnexion
-lieu.ajouter.succes: 'Lieu ajouté avec succès'
+lieu.ajouter.succes: "Lieu ajouté avec succès"
 lieu.ajouter.title: Ajouter un lieu
-lieu.ajouter: 'Ajouter salle'
-lieu.modifier.succes: 'Lieu modifié avec succès'
+lieu.ajouter: "Ajouter salle"
+lieu.modifier.succes: "Lieu modifié avec succès"
 lieu.modifier.title: Modifier un lieu
 lieu.supprimer.erreur: Impossible de supprimer le lieu, des réservations y sont affectées
-lieu.supprimer.succes: 'Lieu supprimé avec succès'
+lieu.supprimer.succes: "Lieu supprimé avec succès"
+lieu.visitevirtuelle.libelle: Visite virtuelle
 log.libelle: Log
-log.list.title: 'Gestion des logs'
-materiel.ajouter.succes: 'Matériel ajouté avec succès'
+log.list.title: "Gestion des logs"
+logopartenaire.ajouter.succes: "Le partenaire ajouté avec succès"
+logopartenaire.ajouter.title: Ajouter un partenaire
+logopartenaire.lien: Lien vers partenaire
+logopartenaire.list.title: Partenaire
+logopartenaire.modifier.succes: "Le partenaire modifié avec succès"
+logopartenaire.modifier.title: Modifier un partenaire
+logopartenaire.nom: Nom
+logopartenaire.supprimer.erreur: Impossible de supprimer le logo
+logopartenaire.supprimer.succes: "Le partenaire supprimé avec succès"
+mail.error: Échec lors de l'envoi du mail.
+mail.success: Mail envoyé avec succès.
+materiel.ajouter.succes: "Matériel ajouté avec succès"
 materiel.ajouter.title: Ajouter un matériel
-materiel.ajouter: 'Ajouter materiel'
-materiel.modifier.succes: 'Matériel modifié avec succès'
+materiel.ajouter: "Ajouter materiel"
+materiel.modifier.succes: "Matériel modifié avec succès"
 materiel.modifier.title: Modifier un matériel
 materiel.supprimer.erreur: Impossible de supprimer le matériel, des réservations y sont affectées
-materiel.supprimer.succes: 'Matériel supprimé avec succès'
+materiel.supprimer.succes: "Matériel supprimé avec succès"
 mentions.conditions.nonvalide: "Veuillez accepter les conditions générales de vente"
 mentions.informations.validation: "J'accepte les conditions générales de vente"
 mescommandes.list.title: Mes commandes
+mescredits.list.title: Mes crédits
 mesinscriptions.list.title: Mes inscriptions
 message.confirmation.annulation.commande.titre: Confirmez l'annulation
 message.confirmation.annulation.commande: Toutes les inscriptions liées à cette commande seront supprimées. Annuler la commande ?
@@ -432,12 +570,20 @@ message.confirmation.annulation.inscription.titre: Confirmez l'annulation
 message.confirmation.annulation.inscription: Aucun remboursement de l'inscription ne sera effectué après l'annulation de celle-ci. Annuler l'inscription ?
 message.confirmation.desinscription.inscription.titre: Confirmez la désinscription
 message.confirmation.desinscription.inscription: Aucun remboursement de l'inscription ne sera effectué après la désinscription. Confirmez la désinscription ?
+message.confirmation.desinscription.massive.attente: personne.s en attente de paiement
+message.confirmation.desinscription.massive.debut: Vous êtes sur le point d'effectuer une désinscription massive. Ceci va entraîner la désinscription de 
+message.confirmation.desinscription.massive.fin: Confirmer la désinscription ?
+message.confirmation.desinscription.massive.inscrit: personne.s inscrite.s
+message.confirmation.desinscription.massive.validation.encadrant: personne.s en attente d'une validation encadrant
+message.confirmation.desinscription.massive.validation.gestionnaire: personne.s en attente d'une validation gestionnaire
 message.confirmation.paiement: Confirmer le paiement ?
 message.confirmation.paiementcarte: Confirmez-vous le paiement par carte ?
 message.confirmation.paiementcheque: Confirmez-vous le paiement par chèque ?
 message.confirmation.paiementespece: Confirmez-vous le paiement par espèce ?
 message.confirmation.suppression.titre: "Confirmez la suppression"
 message.confirmation.suppression: "Supprimer l'enregistrement ?"
+message.desinscriptionmassive.success: Désinscription massive effectué avec succès.
+message.selection.filtre.desinscription: "Vous n'avez pas filtrer votre recherche ou aucune inscription n'a été trouvé. Merci de bien vouloir filtrer ou modifier vos filtres afin de pouvoir procéder à la désincription."
 modal.error.complet: "Erreur lors de l'inscription : La capacité maximale a été dépassée"
 modal.error.error500: "Erreur lors de l'inscription : si cela persiste, veuillez contacter un administrateur"
 modal.error.inscriptionsavenir: "Erreur lors de l'inscription : Les inscriptions ne sont pas encore ouvertes"
@@ -453,12 +599,16 @@ modalinscription.bouton.inscription: Inscription
 modalinscription.bouton.preinscription: Préinscription
 modalinscription.carte.texte: "%nom% - %montant% €"
 modalinscription.continuer: Continuer sur le site
-modalinscription.cotisation.texte: '%nom% - %montant% €'
-modalinscription.justificatif.document: '%nom% '
-modalinscription.mention.ajout.panier: ' - Ajout automatique au panier'
-modalinscription.mention.document.telechargement: ' - Document à télécharger ci-dessous'
-modalinscription.mention.information.importante: 'Information importante !'
-modalinscription.mention.obligatoire: 'Obligatoire'
+modalinscription.cotisation.texte: "%nom% - %montant% €"
+modalinscription.justificatif.document: "%nom% "
+modalinscription.mention.ajout.panier: " - Ajout automatique au panier"
+modalinscription.mention.document.telechargement: " - Document à télécharger ci-dessous"
+modalinscription.mention.information.importante: "Information importante !"
+modalinscription.mention.obligatoire: "Obligatoire"
+modalinscription.message.confirmation.ajoutpanier: Confirmez-vous vouloir ajouter le(s) article(s) suivant(s) dans votre panier ?
+modalinscription.message.validation.article: Confirmez-vous vouloir ajouter le(s) article(s) suivant(s) dans votre panier après la validation ?
+modalinscription.panier.ajouter: Ajouter au panier
+modalinscription.panier.valider: Valider les articles
 modalinscription.panier.voir: Voir le panier
 modalinscription.titre.ancienneinscription: Ancienne inscription
 modalinscription.titre.attentevalidationencadrant: Inscription en attente de validation
@@ -483,7 +633,7 @@ monplanning.list.title: Mon planning
 monplanning.more.appel.empty: Aucun inscrit pour cette activité
 monplanning.more.mail.sucess: Mail envoyé avec succès
 outils.libelle: Outils
-paiement.bouton.commandes: 'Voir ma commande'
+paiement.bouton.commandes: "Voir ma commande"
 paiement.cb.validation: Payer par carte
 paiement.cb: Aller sur le site de paiement
 paiement.cheque.validation: Payer par chèque
@@ -492,19 +642,23 @@ paiement.confirmation.denied: Paiement refusé
 paiement.confirmation.success: Paiement enregistré
 paiement.especes.validation: Payer en espèces
 paiement.gratuit.validation: Finaliser la commande
-paiement.recap: 'Validation de votre commande'
-paiement.recapitulatif.bds: 'vous devez régler votre commande de %montant% € au Bureau des sports sous %timer% heures.'
-paiement.recapitulatif.fin: 'Passé ce délai, votre commande sera automatiquement annulée.'
-paiement.recapitulatif.intro: 'Pour valider votre inscription, '
-paiement.recapitulatif.paybox: 'vous devez régler votre commande de %montant% € par carte bancaire sous %timer% minutes.'
-paiement.recapitulatif.titre: 'Information importante !'
+paiement.recap: "Validation de votre commande"
+paiement.recapitulatif.bds: "vous devez régler votre commande de %montant% € au Bureau des sports sous %timer% heures."
+paiement.recapitulatif.fin: "Passé ce délai, votre commande sera automatiquement annulée."
+paiement.recapitulatif.intro: "Pour valider votre inscription, "
+paiement.recapitulatif.paybox: "vous devez régler votre commande de %montant% € par carte bancaire sous %timer% minutes."
+paiement.recapitulatif.titre: "Information importante !"
 paiement.validation.canceled: Votre paiement de %montant% € a été annulé
 paiement.validation.denied: Votre paiement de %montant% € a été refusé
 paiement.validation.success: Votre paiement de %montant% € a été validé
 panier.libelle: Panier
 panier.vide: Votre panier est vide
+parametrage.adressefacturation: Adresse de facturation
+parametrage.anneeUniversitaire: Année universitaire
 parametrage.facebook: Lien Facebook
+parametrage.facturation: Informations de facturation
 parametrage.instagram: Lien Instagram
+parametrage.libelleadresse: Libelle de l'adresse
 parametrage.mailcontact: Email de contact
 parametrage.modifier.succes: Le paramétrage a été modifié avec succès
 parametrage.modifier.title: Modifier le paramétrage
@@ -517,30 +671,30 @@ parametrage.timerpaybox: Délai pour payer une commande par carte bancaire depui
 parametrage.timers: Délais
 parametrage.title: Paramétrage
 parametrage.youtube: Lien Youtube
-preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais. 
-preinscription.confirmation.titre : Demande d'incription confirmée
+preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais.
+preinscription.confirmation.titre: Demande d'incription confirmée
 preinscription.demande.validation.message: Une demande de pré-inscription a été faite par l'utilisateur suivant
-profilutilisateur.ajouter.succes: 'Profil d''utilisateur ajouté avec succès'
+profilutilisateur.ajouter.succes: "Profil d'utilisateur ajouté avec succès"
 profilutilisateur.ajouter.title: Ajouter un profil d'utilisateur
-profilutilisateur.gestion: 'Gestion des profils d''utilisateur'
-profilutilisateur.libelle: 'Profil d''utilisateur'
-profilutilisateur.list.title: 'Gestion des profils d''utilisateur'
-profilutilisateur.modifier.succes: 'Profil d''utilisateur modifié avec succès'
+profilutilisateur.gestion: "Gestion des profils d'utilisateur"
+profilutilisateur.libelle: "Profil d'utilisateur"
+profilutilisateur.list.title: "Gestion des profils d'utilisateur"
+profilutilisateur.modifier.succes: "Profil d'utilisateur modifié avec succès"
 profilutilisateur.modifier.title: Modifier un profil d'utilisateur
 profilutilisateur.nbmaxinscriptions.libelle: "Nombre de créneaux maximum"
 profilutilisateur.preinscription: Ce profil peut-il se pré-inscrire
 profilutilisateur.supprimer.erreur.formatactivite: Des formats d'activités utilisent ce profil
 profilutilisateur.supprimer.erreur.montants: Des tarifs sont associés à ce profil
-profilutilisateur.supprimer.erreur.utilisateurs: Des utilisateurs utilisent ce profil 
+profilutilisateur.supprimer.erreur.utilisateurs: Des utilisateurs utilisent ce profil
 profilutilisateur.supprimer.erreur: Impossible de supprimer le profil
-profilutilisateur.supprimer.succes: 'Profil d''utilisateur supprimé avec succès'
+profilutilisateur.supprimer.succes: "Profil d'utilisateur supprimé avec succès"
 referentiel.bouton.maj: Mettre à jour le référentiel
 referentiel.libelle.maj: Sélectionnez un fichier pour mettre à jour le référentiel
 referentiel.libelle: Referentiel
-registration.check_email: 'Un e-mail a été envoyé à l''adresse %email%. Il contient un lien d''activation sur lequel il vous faudra cliquer afin d''activer votre compte.'
+registration.check_email: "Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte."
 registration.confirm.success: Votre compte a bien été activé
 registration.email.message: "Bonjour %username% !\n\nPour valider votre compte utilisateur, merci de vous rendre sur %confirmationUrl%\n\nCe lien ne peut \u00eatre utilis\u00e9 qu'une seule fois pour valider votre compte.\n"
-registration.email.subject: 'Bienvenue %username% !'
+registration.email.subject: "Bienvenue %username% !"
 reportingcommandes.list.title: Reporting Commandes
 reservation.calendrier.complet: Complet
 reservation.calendrier.disponible: Disponible
@@ -549,22 +703,26 @@ reservation.calendrier.inscrit: inscrit
 reservation.calendrier.titre: Créneaux disponibles
 resetting.check_email: "Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.        Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe. Remarque : Vous ne pouvez demander un nouveau mot de passe que toutes les %tokenLifetime% heures. Si vous ne recevez pas un email, vérifiez votre dossier spam ou essayez à nouveau"
 resetting.request.field: "Nom d'utilisateur ou adresse e-mail"
-ressource.ajouter.succes: 'Ressource ajoutée'
+ressource.ajouter.succes: "Ressource ajoutée"
 ressource.capacite: Capacité
 ressource.code.rus: Code RUS
 ressource.etablissement: Campus
-ressource.image.libelle: 'Sélectionner une image'
+ressource.image.libelle: "Sélectionner une image"
 ressource.latitude: Latitude
 ressource.libelle: Ressource
-ressource.lieu.ajouter: 'Ajouter Lieu'
+ressource.lieu.accesprm: Accessibilté pour les PMR
+ressource.lieu.ajouter: "Ajouter Lieu"
+ressource.lieu.imagesupplementaire.ajouter: Ajouter une image
+ressource.lieu.imagesupplementaire.nouvelle: Nouvelles images
+ressource.lieu.imagesupplementaire: Images supplémentaires
 ressource.list.subTitle: Liste des ressources
-ressource.list.title: 'Gestion des ressources'
+ressource.list.title: "Gestion des ressources"
 ressource.longitude: Longitude
-ressource.modifier.succes: 'Ressource modifée'
+ressource.modifier.succes: "Ressource modifée"
 ressource.quantite: Quantite
-ressource.referentiel.success: 'Le référentiel immobilier a été mis à jour avec succès'
+ressource.referentiel.success: "Le référentiel immobilier a été mis à jour avec succès"
 ressource.superficie: Superficie
-ressource.supprimer.succes: 'Ressource supprimée'
+ressource.supprimer.succes: "Ressource supprimée"
 ressource.tarif: Tarif
 role.liste: Roles
 scheduler.action.delete: Supprimer
@@ -573,16 +731,22 @@ scheduler.action.title.delete: la suppresion
 scheduler.action.title.save: l'enregistrement
 scheduler.action.title.update: la mise à jour
 scheduler.action.update: Mettre à jour
+scheduler.error.capacite.format: Vous ne pouvez pas dépasser la capacité totale du format 
+scheduler.error.capacite.profil.debut: La capacité maximale du profil 
+scheduler.error.capacite.profil.fin: est de 
+scheduler.error.capacite.somme: Vous ne pouvez pas dépasser la capacité totale renseignée
+scheduler.error.date.prolongation: Le champ date est vide
 scheduler.error.field: Le champ
 scheduler.error.isEmpty: est vide
+scheduler.error.occurence.prolongation: Le champ répéter est vide ou inférieur à 1
+scheduler.error.suppression.inscrit: Impossible de supprimer la série car il y a des inscrits
 scheduler.error.type: "n'est pas du bon type"
 scheduler.message.action.debut: Confirmer
 scheduler.message.action.occurence: l’occurence
-scheduler.error.occurence.prolongation: Le champ répéter est vide ou inférieur à 1
-scheduler.error.date.prolongation: Le champ date est vide
-scheduler.error.suppression.inscrit: Impossible de supprimer la série car il y a des inscrits
 scheduler.message.action.serie: toute la série
 scheduler.message.annuler: Annuler
+scheduler.message.fields: Les champs
+scheduler.message.information.modification.serie: concernent la série et ne pourront donc pas être modifiés sur un créneau isolé.
 scheduler.message.inscrit_list: Liste des inscrits
 scheduler.message.prolonger: Prolonger l'évènement
 scheduler.message.send_mail: Envoyer un mail à tous les inscrits de ce créneau
@@ -591,13 +755,18 @@ scheduler.message.valider: Enregistrer
 scheduler.message.voirplus: Voir plus
 scheduler.warning.suppression.inscrit: Voulez-vous supprimer la série malgré les pré-inscriptions en attente ?
 securite.libelle: Sécurité
-security.login.external.account: "Vous êtes personnel ou étudiant·e d'un des établissements suivants : Villa Arson, ERACM, CIRM, CNRS, OCA, INRA, INRIA, INSERM, IRD ?"
 security.login.inscrit: Vous avez déjà un compte UCA SPORT ?
-security.login.not.register: Pas encore de compte
-security.login.others.account: Ou vous êtes retraité·e, alumni ou membre d'honneur ?
+security.login.not.register: Vous n'avez pas encore de compte ?
 security.login.password: Mot de passe
 security.login.reinitialiser: "Mot de passe oublié ?"
-security.login.remember_me: 'Se souvenir de moi'
+security.login.remember_me: "Se souvenir de moi"
+security.login.selectionprofil.autres.titre: "Autres - Vous êtes ?"
+security.login.selectionprofil.label: Choisir un profil
+security.login.selectionprofil.message.premierevisite.lien: ici
+security.login.selectionprofil.message.premierevisite: Vous ne vous êtes jamais connectés ? Merci de nous contacter
+security.login.selectionprofil.placeholder: Sélectionnez
+security.login.selectionprofil.titre: Pour accèder au service, précisez votre profil
+security.login.selectionprofil.uca.titre: "UCA - Vous êtes étudiant.e ou personnel.le affecté.e à ?" 
 security.login.shibboleth.precision: Utilisez votre <strong>identifiant</strong> et <strong>mot de passe</strong> habituels pour vous connecter
 security.login.shibboleth: Vous êtes <strong>étudiant</strong> ou <strong>personnel</strong> Université Côte d'Azur ?
 security.login.submit.external: Se connecter
@@ -610,22 +779,31 @@ security.roles.ROLE_GESTION_ACTIVITE_ECRITURE: Gestion des activites (lecture/é
 security.roles.ROLE_GESTION_ACTIVITE_LECTURE: Gestion des activites (lecture seule)
 security.roles.ROLE_GESTION_ACTUALITE_ECRITURE: Gestion des actualités (lecture/écriture)
 security.roles.ROLE_GESTION_ACTUALITE_LECTURE: Gestion des actualités (lecture seule)
+security.roles.ROLE_GESTION_AVOIR: Gestion des avoirs
+security.roles.ROLE_GESTION_BASCULE: Gestion de la bascule
 security.roles.ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE: Gestion des classes d'activité (lecture/écriture)
 security.roles.ROLE_GESTION_CLASSE_ACTIVITE_LECTURE: Gestion des classes d'activité (lecture seule)
 security.roles.ROLE_GESTION_COMMANDES: Gestion des commandes
+security.roles.ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE: Gestion des crédit utilisateurs(lecture/écriture)
+security.roles.ROLE_GESTION_CREDIT_UTILISATEUR_LECTURE: Gestion des crédits utilisateurs (lecture seule)
 security.roles.ROLE_GESTION_CRENEAU_ECRITURE: Gestion des créneaux (lecture/écriture)
 security.roles.ROLE_GESTION_CRENEAU_LECTURE: Gestion des créneaux (lecture seule)
+security.roles.ROLE_GESTION_EMAILING: Gestion des e-mails
 security.roles.ROLE_GESTION_ETABLISSEMENT_ECRITURE: Gestion des campus (lecture/écriture)
 security.roles.ROLE_GESTION_ETABLISSEMENT_LECTURE: Gestion des campus (lecture seule)
+security.roles.ROLE_GESTION_EXTRACTION: Gestion des extractions
 security.roles.ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE: Gestion des formats d'activité (lecture/écriture)
 security.roles.ROLE_GESTION_FORMAT_ACTIVITE_LECTURE: Gestion des formats d'activité (lecture seule)
 security.roles.ROLE_GESTION_GROUPE_ECRITURE: Gestion des droits (lecture/écriture)
 security.roles.ROLE_GESTION_GROUPE_LECTURE: Gestion des droits (lecture seule)
+security.roles.ROLE_GESTION_HIGHLIGHT_ECRITURE: Gestion des highlights (lecture/écriture)
+security.roles.ROLE_GESTION_HIGHLIGHT_LECTURE: Gestion des highlights (lecture seule)
 security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Gestion des images de fond (lecture/écriture)
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Gestion des images de fond (lecture seule)
 security.roles.ROLE_GESTION_INSCRIPTION: Gestion des inscriptions
+security.roles.ROLE_GESTION_LOGOPARTENAIRE_ECRITURE: Gestion des partenaires (lecture/écriture)
+security.roles.ROLE_GESTION_LOGOPARTENAIRE_LECTURE: Gestion des partenaires (lecture seule)
 security.roles.ROLE_GESTION_LOG_LECTURE: Gestion des logs (lecture seule)
-security.roles.ROLE_GESTION_BASCULE: Gestion de la bascule
 security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Gestionnaire de caisse
 security.roles.ROLE_GESTION_PARAMETRAGE: Gestion du paramétrage
 security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Gestion des profils (lecture/écriture)
@@ -633,6 +811,9 @@ security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_LECTURE: Gestion des profils (lec
 security.roles.ROLE_GESTION_RESSOURCE_ECRITURE: Gestion des ressources (lecture/écriture)
 security.roles.ROLE_GESTION_RESSOURCE_LECTURE: Gestion des ressources (lecture seule)
 security.roles.ROLE_GESTION_SCHEDULER_LECTURE: Calendrier (Lecture)
+security.roles.ROLE_GESTION_SHNU_HIGHLIGHT_ECRITURE: Gestion du SHNU - Highlights (lecture/écriture)
+security.roles.ROLE_GESTION_SHNU_HIGHLIGHT_LECTURE: Gestion du SHNU - Highlights (lecture seule)
+security.roles.ROLE_GESTION_SUPPRESSION_MASSIVE: Gestion des désinscriptions de masse
 security.roles.ROLE_GESTION_TARIF_ECRITURE: Gestion des tarifs (lecture/écriture)
 security.roles.ROLE_GESTION_TARIF_LECTURE: Gestion des tarifs (lecture seule)
 security.roles.ROLE_GESTION_TEXTE_ECRITURE: Gestion des textes (lecture/écriture)
@@ -648,24 +829,38 @@ security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Gestion des utilisateurs (lectu
 security.roles.ROLE_PREVISUALISATION: Gestion de la prévisualisation
 security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
 security.roles.ROLE_USER: Accès UcaWeb
-security.shibboleth.login.submit: 'Se connecter'
+security.shibboleth.login.submit: "Se connecter"
 shibboleth.error.doctorant: Veuillez vous connecter avec votre compte étudiant
-shibboleth.error.dossierincomplet: Nous n’arrivons pas à vous identifier comme membre de l’UCA, merci de nous contacter via le formulaire de contact 
+shibboleth.error.dossierincomplet: Votre dossier d’inscription administratif est incomplet. Merci de vous rapprocher de la scolarité 
 shibboleth.error.profilinconnu: Nous n’arrivons pas à vous identifier comme membre de l’UCA, merci de nous contacter via le formulaire de contact
-shibboleth.error.utilisateurbloque: Problème de connexion – merci de vous diriger vers le bureau des sports 
+shibboleth.error.utilisateurbloque: Problème de connexion – merci de vous diriger vers le bureau des sports
+shnu.highlight.ajouter.title: SHNU - Ajouter une highlight
+shnu.highlight.modifier.title: SHNU - Modifier une highlight
+shnuhighlight.ajouter.succes: Highlight ajouté avec succès
+shnuhighlight.list.title: SHNU - Highlights
+shnuhighlight.modifier.succes: Highlight modifiée avec succès
+shnuhighlight.supprimer.succes: Highlight supprimé avec succès
 sitemap.activite.libelle: Activités
 sitemap.activites.libelle: Activités
 sitemap.actualite.libelle: Actualités
 sitemap.ajouter: Ajouter
+sitemap.bascule.annee.universitaire.libelle: Bascule d'année universitaire
+sitemap.bascule.semestre.libelle: Bascule semestre
 sitemap.classeactivite.libelle: Classes d'activités
+sitemap.commande.avoir.ajouter: Faire un avoir  
 sitemap.confirmation.invalide: Confirmation expirée
+sitemap.connexion.selectionprofil: Séléction de votre profil
 sitemap.connexion: Connexion
 sitemap.detailinscription.libelle: Detail de l'inscription
+sitemap.detailsAvoir.libelle: Détail de l'avoir
+sitemap.detailscommande.informationscarte: Informations de la carte
 sitemap.detailscommande.libelle: Détails de commande
+sitemap.emailing.libelle: Emailing
 sitemap.en: Translate to english
 sitemap.etablissement.libelle: Campus
 sitemap.evenements.libelle: Évènements
-sitemap.format.ajouter: Ajouter un format 
+sitemap.extraction: Extraction
+sitemap.format.ajouter: Ajouter un format
 sitemap.format.carte.ajouter: Ajouter format achat de carte
 sitemap.format.creneau.ajouter: Ajouter format avec créneau
 sitemap.format.reservation.ajouter: Ajouter format avec créneau
@@ -675,25 +870,27 @@ sitemap.gestion.libelle: Gestion
 sitemap.gestioncommande.libelle: Commandes en attente de paiement
 sitemap.gestioninscription.libelle: Gestion des inscriptions
 sitemap.groupe.libelle: Groupes
+sitemap.highlight.libelle: Highlights
+sitemap.highlights.libelle: Highlights
 sitemap.imagefond.libelle: Images de fond
 sitemap.infospratiques.libelle: Infos pratiques
 sitemap.inscriptionavalider.libelle: Inscription à valider
-sitemap.installations.libelle: Installations
 sitemap.it: Tradurre in italiano
 sitemap.langue: Langue
 sitemap.listeinscriptionavalider.libelle: Liste des inscriptions à valider
 sitemap.listeinscriptionavaliderencadrant.libelle: Mes validations d'encadrant
 sitemap.listeinscriptionavalidergestionnaire.libelle: Mes validations de gestionnaire
 sitemap.log.libelle: Logs
+sitemap.logopartenaire.libelle: Partenaire
 sitemap.menu: Menu
 sitemap.mescommandes.libelle: Mes commandes
+sitemap.mescredits.libelle: Mes crédits
 sitemap.mesinscriptions.libelle: Mes inscriptions
 sitemap.modifier: Modifier
 sitemap.moncompte.changermotdepasse: Modifier mot de passe
 sitemap.moncompte.libelle: Mon Compte
 sitemap.moncompte.modifier.libelle: Modifier
 sitemap.monplanning.libelle: Mon planning
-sitemap.bascule.libelle: Bascule
 sitemap.outils.libelle: Outils
 sitemap.panier.libelle: Panier
 sitemap.parametrage.libelle: Paramétrage
@@ -703,13 +900,17 @@ sitemap.preInscription_confirmation: Confirmation
 sitemap.profilutilisateur.libelle: Profils d'utilisateurs
 sitemap.recapitulatifcommande.libelle: Validation
 sitemap.referentiel.libelle: Référentiel
+sitemap.reportingavoirs.libelle: Reporting avoirs
 sitemap.reportingcommandes.libelle: Reporting commandes
+sitemap.reportingcredits.libelle: Reporting credits
 sitemap.reportings.libelle: Reportings
 sitemap.ressource.libelle: Ressources
 sitemap.ressource.lieu.ajouter: Ajouter lieu
 sitemap.ressource.materiel.ajouter: Ajouter matériel
 sitemap.securite.libelle: Securite
+sitemap.shnu.highlight.libelle: SHNU - Highlight
 sitemap.sporthautniveau.libelle: Sport de haut niveau
+sitemap.statistique.KPI.libelle: KPI
 sitemap.supprimer: Supprimer
 sitemap.tarif.libelle: Tarifs
 sitemap.texte.libelle: Textes
@@ -718,7 +919,8 @@ sitemap.typeactivite.libelle: Types d'activités
 sitemap.typeautorisation.libelle: Types d'autorisations
 sitemap.ucagest.libelle: Uca Gestion
 sitemap.ucasport.libelle: Uca Sport
-sitemap.utilisateur.libelle : Utilisateurs
+sitemap.utilisateur.credit.ajouter: Ajout d'un crédit utilisateur
+sitemap.utilisateur.libelle: Utilisateurs
 sitemap.utilisateur.verification: Vérification Email
 sitemap.utlisateur.reinitialiser.reset: Réinitialiser
 sitemap.utlisateur.reinitialiser.verification: Vérification de l'e-mail
@@ -726,70 +928,130 @@ sitemap.utlisateur.reinitialiser: Réinitialisation du mot de passe
 sitemap.validation.libelle: Utilisateurs pré-inscrits
 sitemap.validationcommande.libelle: Paiement
 sitemap.voir: Voir
-sportdehautniveau.partenaires: 'Partenaires'
-sportdehautniveau.title: 'Sport de haut niveau'
-tarif.ajouter.succes: 'Tarif ajouté avec succès'
+sportdehautniveau.accompagnements: Accompagnements
+sportdehautniveau.candidater: Candidater
+sportdehautniveau.highlights: Nos ambassadeurs
+sportdehautniveau.partenaires: "Partenaires"
+sportdehautniveau.representer: Représenter Université Côte d'Azur en compétition
+sportdehautniveau.title: "Sport de haut niveau"
+sressource.lieu.imagesupplementaire.ajoutmessage: Pour ajouter des images supplémentaire à une salle, il faut d'abord la créer.
+statistique.KPI.autres.title: Autres KPI
+statistique.KPI.etudiants.tableau.nbre_annee_n: Nombre total d'étudiants en année
+statistique.KPI.etudiants.tableau.nbre_annee_n_1: Nombre total d'étudiants en année
+statistique.KPI.etudiants.tableau.nbre_boursier: Nombre étudiants boursiers
+statistique.KPI.etudiants.tableau.nbre_inscrits: Nombre totale d'étudiants inscrits
+statistique.KPI.etudiants.tableau.nbre_shnu: Nombre étudiants SHNU
+statistique.KPI.etudiants.tableau.percent_boursier: '% étudiants boursiers inscrits'
+statistique.KPI.etudiants.tableau.percent_inscrit_activite: "% d'étudiants inscrits aux activités sportives sur le nombre total d'étudiants"
+statistique.KPI.etudiants.tableau.percent_shnu: "% étudiants SHNU"
+statistique.KPI.etudiants.tableau.rendement: Rendement/evol vs n-1
+statistique.KPI.etudiants.title: KPI généraux sur les étudiants
+statistique.KPI.personnels.tableau.cat_A: Catégorie A
+statistique.KPI.personnels.tableau.cat_B: Catégorie B
+statistique.KPI.personnels.tableau.cat_C: Catégorie C
+statistique.KPI.personnels.tableau.nbr_par_categorie: Nombre de personnels par catégorie
+statistique.KPI.personnels.tableau.nbre_annee_n: Nombre total de personnel en année
+statistique.KPI.personnels.tableau.nbre_annee_n_1: Nombre total de personnel en année
+statistique.KPI.personnels.tableau.nbre_inscrits: Nombre de personnels inscrits
+statistique.KPI.personnels.tableau.percent_inscrit: "% de personnels inscrits"
+statistique.KPI.personnels.tableau.rendement: Rendement/evol vs n-1
+statistique.KPI.personnels.title: KPI généraux sur les étudiants
+statistique.KPI.title: KPI
+statistique.customgraph: Graphique personnalisé
+statistique.graph.title.categories: Détail des membres du personnel par catégories
+statistique.graph.title.connexion.age: Détail du nombre de connexion par horaire et age
+statistique.graph.title.connexion.genre: Détail du nombre de connexion par horaire et genre
+statistique.graph.title.connexion.statut: Détail du nombre de connexion par horaire et statut
+statistique.graph.title.detailstudylevel: Détail du nombre d'étudiants par niveau d'étude
+statistique.graph.title.detailuser: Détail du nombre d'utilisateurs
+statistique.graph.title.genre: Nombre d'utilisateurs par genre
+statistique.graph.title.nbboursier: Nombre d'étudiants boursier
+statistique.graph.title.nbcarteachete: Nombre de cartes achetées
+statistique.graph.title.nbinscription.activite: Nombre de d'inscription par activité
+statistique.graph.title.nbinscription.classeactivite: Nombre de d'inscription par classe d'activité
+statistique.graph.title.nbinscription: Nombre d'inscriptions
+statistique.graph.title.nbpresent: Nombre de présents
+statistique.graph.title.nbshnu: Nombre d'étudiants SHNU
+statistique.graph.title.personnelcategories: Répartition du nombre de personnels par catégorie
+statistique.graph.title.repartitionage: Répartition du nombre d'utilisateurs par âge
+statistique.nonrenseigne: Non renseigné
+statistique.options.flux: Flux d'inscription
+statistique.options.frequentation: Fréquentation du cours
+statistique.options.nbachatcarte: Nombre d'achat de cartes
+statistique.options.nbetudperso: Nombre étudiant/personnel
+statistique.options.recurrence: Récurrence des inscriptions
+statistique.utilisateur.age: ans
+statistique.utilisateur.boursier: Boursier
+statistique.utilisateur.femme: Femme
+statistique.utilisateur.heure: heure
+statistique.utilisateur.homme: Homme
+statistique.utilisateur.nonboursier: Non Boursier
+statistique.utilisateur.nonshnu: Non SHNU
+statistique.utilisateur.shnu: SHNU
+tarif.ajouter.succes: "Tarif ajouté avec succès"
 tarif.ajouter.title: Ajouter un tarif
-tarif.gestion: 'Gestion des tarifs'
+tarif.gestion: "Gestion des tarifs"
 tarif.libelle: Tarif
 tarif.list.title: Tarifs
 tarif.mettre.jour: "Merci de mettre à jour tous les tarifs concernés par ce profil d'utilisateur"
-tarif.modifier.succes: 'Tarif modifié avec succès'
+tarif.modifier.succes: "Tarif modifié avec succès"
 tarif.modifier.title: Modifier un tarif
 tarif.montants: montants
 tarif.supprimer.erreur.autorisations: Des autorisations utilisent ce tarif
 tarif.supprimer.erreur.creneaux: Des créneaux utilisent ce tarif
 tarif.supprimer.erreur.formatsactivite: "Des formats d'activités utilisent ce tarif"
 tarif.supprimer.erreur.ressources: Des ressources utilisent ce tarif
-tarif.supprimer.erreur: 'Impossible de supprimer le tarif'
-tarif.supprimer.succes: 'Tarif supprimé avec succès'
-texte.ajouter.succes: 'Texte ajouté avec succès'
+tarif.supprimer.erreur: "Impossible de supprimer le tarif"
+tarif.supprimer.succes: "Tarif supprimé avec succès"
+tarif.tva.nonapplicable: TVA non applicable
+tarif.tva.raison: Raison
+texte.ajouter.succes: "Texte ajouté avec succès"
 texte.emplacement: Emplacement
-texte.emplacements.indisponibles: 'Tous les emplacements sont utilises. Merci de mettre e jour les textes existants.'
-texte.libelle: 'Gestion des textes'
-texte.list.title: 'Gestion des textes'
+texte.emplacements.indisponibles: "Tous les emplacements sont utilises. Merci de mettre e jour les textes existants."
+texte.libelle: "Gestion des textes"
+texte.list.title: "Gestion des textes"
 texte.mobile: Ce texte sera affiché sur mobile
-texte.modifier.succes: 'Texte modifié avec succès'
+texte.modifier.succes: "Texte modifié avec succès"
 texte.modifier.title: Modifier un texte
 texte.ordre: Ordre d'affichage
-texte.supprimer.succes: 'Texte supprimé avec succès'
+texte.supprimer.succes: "Texte supprimé avec succès"
 texte.titre: Titre
-traduction.deja.traduit: 'Déjà traduit'
+traduction.deja.traduit: "Déjà traduit"
 traduction.libelle: Traduction
-traduction.list.title: 'Traductions'
-traduction.modifier.title: 'Modifier une traduction'
-traduction.pas.encore.traduit: 'Sans traduction'
-traduction.tous: 'Tout'
-translation.modifier.succes: 'Traduction modifiée avec succès'
-typeactivite.ajouter.succes: 'Type d''activité ajouté avec succès'
+traduction.list.title: "Traductions"
+traduction.modifier.title: "Modifier une traduction"
+traduction.pas.encore.traduit: "Sans traduction"
+traduction.tous: "Tout"
+translation.modifier.succes: "Traduction modifiée avec succès"
+typeactivite.ajouter.succes: "Type d'activité ajouté avec succès"
 typeactivite.ajouter.title: Ajouter un type d'activite
-typeactivite.gestion: 'Gestion des types d''activité'
-typeactivite.libelle: 'Type d''activité'
-typeactivite.list.title: 'Gestion des types d''activité'
-typeactivite.modifier.succes: 'Type d''activité modifié avec succès'
+typeactivite.gestion: "Gestion des types d'activité"
+typeactivite.libelle: "Type d'activité"
+typeactivite.list.title: "Gestion des types d'activité"
+typeactivite.modifier.succes: "Type d'activité modifié avec succès"
 typeactivite.modifier.title: Modifier un type d'activite
 typeactivite.supprimer.erreur: Impossible de supprimer le type d'activité, des classes d'activités y sont affectées
-typeactivite.supprimer.succes: 'Type d''activité supprimé avec succès'
-typeautorisation.ajouter.succes: 'Autorisation ajoutée avec succès'
+typeactivite.supprimer.succes: "Type d'activité supprimé avec succès"
+typeautorisation.ajouter.succes: "Autorisation ajoutée avec succès"
 typeautorisation.ajouter.title: Ajouter un type d'autorisation
 typeautorisation.comportement: Comportement
 typeautorisation.cotisation.panier.description: Obligatoire pour toute participation aux activités
-typeautorisation.gestion: 'Gestion des types d''autorisation'
+typeautorisation.gestion: "Gestion des types d'autorisation"
 typeautorisation.informations.complementaires: Informations complémentaires
-typeautorisation.libelle: 'Type d''autorisation'
-typeautorisation.list.title: 'Gestion des Autorisations'
-typeautorisation.modifier.succes: 'Autorisation modifiée avec succès'
+typeautorisation.libelle: "Type d'autorisation"
+typeautorisation.list.title: "Gestion des Autorisations"
+typeautorisation.modifier.succes: "Autorisation modifiée avec succès"
 typeautorisation.modifier.title: Modifier un type d'autorisation
 typeautorisation.supprimer.erreur: Impossible de supprimer cette autorisation, des formats d'activités y sont affectés
-typeautorisation.supprimer.succes: 'Autorisation supprimée avec succès'
+typeautorisation.supprimer.succes: "Autorisation supprimée avec succès"
 typeautorisation.tarif: Tarif
-ucagest.libelle: 'Uca Gest'
-ucasport.libelle: 'Uca Sport'
+ucagest.libelle: "Uca Gest"
+ucasport.libelle: "Uca Sport"
 utilisater.statu.libelle: Statut de l'utilisateur
 utilisateur.activite.souscrite: Activité souscrite
 utilisateur.adresse.aucune: Aucune adresse enregistrée
 utilisateur.adresse: Adresse
-utilisateur.ajouter.succes: 'Utilisateur ajouté avec succès'
+utilisateur.ajouter.succes: "Utilisateur ajouté avec succès"
 utilisateur.ajouter.title: Ajout d'un utilisateur
 utilisateur.ancien.motdepasse: Ancien mot de passe
 utilisateur.autorisation.ajouter.success: Autorisation modifiée avec succès
@@ -802,11 +1064,18 @@ utilisateur.bloquer.succes: Utilisateur bloqué avec succès
 utilisateur.calendrier.voir: Voir le calendrier
 utilisateur.changer.motdepasse: Changer mon mot de passe
 utilisateur.civilite: Civilité
-utilisateur.codepostal.invalide: 'Code Postal incorrect'
-utilisateur.codepostal: 'Code Postal'
+utilisateur.codepostal.invalide: "Code Postal incorrect"
+utilisateur.codepostal: "Code Postal"
 utilisateur.commande: Commande
-utilisateur.compte.bloque: Votre compte est bloqué – Merci de vous diriger vers le bureau des sports. 
-utilisateur.date.naissance: 'Date de Naissance'
+utilisateur.compte.bloque: Votre compte est bloqué – Merci de vous diriger vers le bureau des sports.
+utilisateur.credit.ajouter.title: Ajout un crédit utilisateur
+utilisateur.credit.bascule.supprimer: Supprimer les crédits utilisateurs
+utilisateur.credit.de: Crédit de
+utilisateur.credit.operation: Operaation
+utilisateur.credit.typeoperation: TYpe d'operation
+utilisateur.credits.details: Détails de vos crédits
+utilisateur.credits.total: Total de mes crédits
+utilisateur.date.naissance: "Date de Naissance"
 utilisateur.datedenaissance.aucune: Aucune date de naissance enregistrée
 utilisateur.dbloquer.succes: Utilisateur débloqué avec succès
 utilisateur.description: Description de l'encadrant
@@ -817,26 +1086,26 @@ utilisateur.droits.de: Droits de
 utilisateur.droits: Droits de l'utilisateur
 utilisateur.envoyer.mailconfirmation.failure: "Echec de l'envoi du courriel"
 utilisateur.envoyer.mailconfirmation.success: Courriel envoyé avec succès
-utilisateur.gestion: 'Gestion des utilisateurs'
+utilisateur.gestion: "Gestion des utilisateurs"
 utilisateur.inactif.message: Ce compte n'a pas été activité par l'utilisateur
 utilisateur.inscription.information.aministrative: Informations administratives
-utilisateur.inscription.information.connexion: 'Informations de connexion'
-utilisateur.inscription.information.personnelle: 'Informations personnelles'
+utilisateur.inscription.information.connexion: "Informations de connexion"
+utilisateur.inscription.information.personnelle: "Informations personnelles"
 utilisateur.inscription.information.preinscription: Votre profil
 utilisateur.inscription.information.profil: Profil et droits d'accès
 utilisateur.inscription.libelle: Inscription
 utilisateur.inscriptions: Mes inscriptions
 utilisateur.libelle: Utilisateur
-utilisateur.list.title: 'Gestion des utilisateurs'
+utilisateur.list.title: "Gestion des utilisateurs"
 utilisateur.matricule: Matricule
-utilisateur.modifier.succes: 'Utilisateur modifié avec succès'
+utilisateur.modifier.succes: "Utilisateur modifié avec succès"
 utilisateur.modifier.title: Modifier un utilisateur
 utilisateur.moncompte.modifier.titre: Modifier mes informations
 utilisateur.nom: Nom
-utilisateur.numero.nfc: 'Numéro NFC'
+utilisateur.numero.nfc: "Numéro NFC"
 utilisateur.planning: Planning
 utilisateur.preInscription.title: Demande d'inscription
-utilisateur.preinscription.email.message: Votre demande d'inscription a bien été enregistrée. Elle sera traitée par notre équipe dans les plus brefs délais. 
+utilisateur.preinscription.email.message: Votre demande d'inscription a bien été enregistrée. Elle sera traitée par notre équipe dans les plus brefs délais.
 utilisateur.preinscription.message: Cet utilisateur a soumis une demande d'inscription, vous pouvez vérifier les documents fournis et la valider
 utilisateur.preinscription.refuser: Refuser
 utilisateur.preinscription.valider: Valider
@@ -844,21 +1113,23 @@ utilisateur.prenom: Prénom
 utilisateur.profil: Profil de l'utilisateur
 utilisateur.refus.message: Cet utilisateur a été refusé
 utilisateur.refuser.succes: utilisateur refusé avec succès
-utilisateur.registration.invalide.message: Vous ne pouvez plus valider de compte, ce lien a expiré. 
+utilisateur.registration.invalide.message: Vous ne pouvez plus valider de compte, ce lien a expiré.
 utilisateur.reinitialiser.titre: Réinitialisation du mot de passe
 utilisateur.renvoyer.email.activation: renvoyer le mail d'activatiion
-utilisateur.select.profilutilisateur: '- Sélectionner un profil utilisateur -'
+utilisateur.select.profilutilisateur: "- Sélectionner un profil utilisateur -"
 utilisateur.select.statututilisateur: Sélectionnez un statut
 utilisateur.sexe.madame: Madame
 utilisateur.sexe.monsieur: Monsieur
 utilisateur.statut.datatable: Statut
 utilisateur.statut: Statut de l'utilisateur
-utilisateur.supprimer.succes: 'Utilisateur supprimé avec succès'
+utilisateur.supprimer.succes: "Utilisateur supprimé avec succès"
 utilisateur.telephone.aucun: Aucun numéro de téléphone enregistré
-utilisateur.telephone: 'Numéro de téléphone'
+utilisateur.telephone: "Numéro de téléphone"
 utilisateur.valider.succes: Utilisateur validé avec succès
-utilisateur.verification.title: 'Vérification du courriel'
-utilisateur.ville.aucune: 'Aucne ville enregistrée'
-utilisateur.ville: 'Ville'
+utilisateur.verification.title: "Vérification du courriel"
+utilisateur.ville.aucune: "Aucune ville enregistrée"
+utilisateur.ville: "Ville"
+utilisateurcredithistorique.ajouter.succes: Crédit ajouter avec succès 
+utilisateurcredithistorique.list.title: Historique des crédits
 utlisateur.reinitialiser.reset: Réinitialiser le mot de passe
-validations.list.title: Utilisateurs en attente de validation
+validations.list.title: Utilisateur en attente d'approbation

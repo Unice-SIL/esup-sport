@@ -1,0 +1,20 @@
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('SHN - Accompagnement') }}
+{% endblock %}
+
+{% block main %}    
+    <section>
+        <h1  class="h1-light">{{ 'sportdehautniveau.accompagnements'|trans }}</h1>
+
+        {% for item in texte %}
+            <section class="container container-style bg-white mb-5">
+                {{ item.texte | raw }}
+            </section>
+        {% endfor %}
+    </section>
+{% endblock %}

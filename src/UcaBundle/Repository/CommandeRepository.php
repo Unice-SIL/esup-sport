@@ -56,28 +56,27 @@ class CommandeRepository extends \Doctrine\ORM\EntityRepository
     }
 
     //Méthode qui permet de récupérer toutes les factures payées et non gratuites avec ou non des parametres de recherches
-    public function findAllFacture($date_paiement = null, $recherche = null): array
+    public function findAllFacture($datePaiement, $recherche)
     {
-        $parametres = [];
-        $request = "c.statut = 'termine' and c.montantTotal <> '0.00'";
-        if (null != $date_paiement and 'null' != $date_paiement) {
-            $parametres['date_paiement_min'] = new \DateTime($date_paiement.' 00:00:00');
-            $parametres['date_paiement_max'] = new \DateTime($date_paiement.' 23:59:59');
-            $request .= ' and c.datePaiement >= :date_paiement_min and c.datePaiement <= :date_paiement_max';
-        }
-        if (null != $recherche and 'null' != $recherche) {
-            $parametres['nom'] = $recherche;
-            $parametres['prenom'] = $recherche;
-            $request .= ' and (c.nom = :nom or c.prenom = :prenom)';
-        }
-
         $qb = $this->createQueryBuilder('c')
-            ->where($request)
-            ->setParameters($parametres)
-            ->orderBy('c.numeroRecu', 'ASC')
+            ->where("c.statut = 'termine' and c.montantTotal <> '0.00'")
         ;
+        if (null != $datePaiement) {
+            $qb->andWhere('c.datePaiement BETWEEN :debut AND :fin')
+                ->setParameters([
+                    'debut' => \DateTime::createFromFormat('Y-m-d', $datePaiement)->setTime(0, 0, 0),
+                    'fin' => \DateTime::createFromFormat('Y-m-d', $datePaiement)->setTime(23, 59, 59),
+                ])
+            ;
+        }
 
-        return $qb->getQuery()->execute();
+        if (null != $recherche) {
+            $qb->andWhere('c.prenom = :recherche OR c.nom = :recherche')
+                ->setParameter('recherche', $recherche)
+            ;
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function findAllCommandes($date = null, $recherche = null, $dateDebut = null, $dateFin = null)

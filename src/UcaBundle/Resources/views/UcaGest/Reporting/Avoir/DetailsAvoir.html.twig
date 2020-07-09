@@ -1,0 +1,51 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/Commande.html.twig' as MacroCommande %}
+
+{% block title %}
+	Avoir
+{% endblock %}
+
+{% block main %}
+	{% if not refAvoir is defined %}
+		{% set refAvoir = false %}
+	{% endif %}
+	<h1> {{ 'commande.avoirdetails.libelle' | trans }} </h1>
+	<section class="container">
+		<!-- Bouton Retour -->
+		<div class="row">
+			<div class="col-12 mb-4 pl-3 p-xl-0">
+				{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+				{% if is_granted('ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE')%}
+						<a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurCreditAjouter', {'id': commande.utilisateur.id, 'montant': commande.getTotalAvoir(refAvoir) }) }}"> {{ 'bouton.reportavoir' | trans }}</a>
+				{% endif %}
+			</div>
+
+		</div>
+
+		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+			<div class="col-12 col-sm-8">
+				<p class="p-0 m-0">
+					<strong>{{ 'common.utilisateur' | trans }}:</strong>
+					{{ commande.utilisateur.prenom }}
+					{{ commande.utilisateur.nom }}
+				</p>
+				<p class="p-0 m-0">
+					<strong>
+						{{ 'commande.libelle' | trans }}:
+					</strong>
+					{{ commande.numeroCommande }}
+				</p>
+				<p class="p-0 m-0">
+					<strong>
+						{{ 'commande.avoir.libelle' | trans }}:
+					</strong>
+					{{ refAvoir }}
+				</p>
+			</div>
+		</div>
+		{% if commande.id and commande.commandeDetails is not empty %}
+			{{ MacroCommande.affiche(commande, source, null, refAvoir) }}
+		{% endif %}
+	</section>
+{% endblock %}

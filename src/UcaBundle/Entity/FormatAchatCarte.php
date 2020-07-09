@@ -7,16 +7,17 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Service\Common\Fn;
 
-/** @ORM\Entity 
+/**
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatAchatCarteRepository")
  * @Gedmo\Loggable
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\FormatAchatCarteListener"})
  */
 class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
-    #region Propriétés
+    //region Propriétés
 
     /**
-     * @ORM\ManyToOne(targetEntity="TypeAutorisation", inversedBy="formatsAchatCarte") 
+     * @ORM\ManyToOne(targetEntity="TypeAutorisation", inversedBy="formatsAchatCarte")
      * @Assert\Expression("this.getCarte()", message="formatactivite.achatcarte.carte.notnull") */
     private $carte;
 
@@ -26,14 +27,15 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
      */
     private $carteLibelle;
 
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
 
     public function getArticleAutorisations()
     {
         $autorisations = clone $this->getAutorisations();
         $autorisations->add($this->carte);
+
         return $autorisations;
     }
 
@@ -49,18 +51,16 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
 
     public function updateCarteLibelle()
     {
-        if($this->getCarte() != null){
+        if (null != $this->getCarte()) {
             $this->carteLibelle = $this->getCarte()->getLibelle();
-        } else{
+        } else {
             $this->carteLibelle = '';
         }
 
         return $this;
     }
 
-    #endregion
-
-
+    //endregion
 
     /**
      * Get id.
@@ -75,11 +75,11 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
     /**
      * Set carte.
      *
-     * @param \UcaBundle\Entity\TypeAutorisation|null $carte
+     * @param null|\UcaBundle\Entity\TypeAutorisation $carte
      *
      * @return FormatAchatCarte
      */
-    public function setCarte(\UcaBundle\Entity\TypeAutorisation $carte = null)
+    public function setCarte(TypeAutorisation $carte = null)
     {
         $this->carte = $carte;
 

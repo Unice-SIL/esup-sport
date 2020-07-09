@@ -1,10 +1,11 @@
 {% set item = item is defined ? item : null %}
 {% set menu = sitemap.getCurrentMenu %}
-    <li aria-expanded="false" class="nav-item dropdown" role="menu">
-        <a role="option" class="nav-link nav-home d-flex align-items-center" href="{{url('UcaWeb_Accueil')}}">
-            <i class="fas fa-home"></i>
-        </a>
-    </li>
+<li aria-expanded="false" class="nav-item dropdown" role="menu">
+    <a role="option" class="nav-link nav-home d-flex align-items-center" href="{{url('UcaWeb_Accueil')}}">
+        <i class="fas fa-home"></i>
+    </a>
+</li>
+
 {% for itemMenu in menu.items %}
     <li aria-expanded="false" class="nav-item dropdown" role="menu">
         {% set current = (sitemap.isCurrentAncestor(itemMenu.route) ? 'active' : '') %}

@@ -1,0 +1,77 @@
+{% if typeFormat == "FormatAvecCreneau" %}
+  {% set creneau = event.serie.creneau %}
+  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
+
+  {% if event.eligibleBonus == true %}
+      <span title="{{ "common.eligible"|trans }}" style="color: orange;"><i class="fas fa-star mr-1"></i></span>
+  {% endif %}
+
+  {% if creneau.lieu and creneau.lieu.etablissement %}
+    <p class='mb-3'>
+      {{ creneau.lieu.etablissement.libelle }}
+      -
+      {{ creneau.lieu.libelle }}
+      <div id="openlayersmap{{ event.id }}" style="width: 100%; height: 300px;"></div>
+    </p>
+  {% elseif creneau.lieu %}
+    <p class='mb-3'>{{ creneau.lieu.libelle }}</p>
+    <div id="openlayersmap{{ event.id }}" style="width: 100%; height: 300px;"></div>
+  {% else %}
+    <p class='mb-3'>{{'formatactivite.lieu.aucun' | trans}}</p>
+  {% endif %}
+  
+    {% for encadrant in creneau.encadrants %}
+    <p class='m-0 color-blue'>
+      {{ encadrant.nom }}
+      {{ encadrant.prenom }}
+      {% set id = "contactEncadrant" ~ event.id ~ encadrant.id %}
+      <a class="contact" data-toggle="collapse" href="#{{id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <i class="fas fa-envelope-square"></i>
+      </a>
+      <div class="collapse" id="{{ id }}">
+        <div class="card card-body text-dark color-dark-gray">
+            <div class="form-group">
+              <label for="text{{ id }}">Votre message :</label>
+              <textarea class="form-control" id="text{{ id }}" rows="5"></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+              {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
+              {% if inscriptionInformations.statut in ['nonconnecte'] %}                
+                <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
+                  {{ 'common.indisponible' | trans | upper }}
+                  <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}" aria-label="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}">
+                    <i class="fas fa-question-circle"></i>
+                  </span>
+                </p>
+              {% else %}
+                  <button onclick="sendMail({{event.id}}, {{encadrant.id}})" class="btn btn-primary" id="btn{{ id }}">Envoyer</button>
+              {% endif %}
+            </div>
+        </div>
+      </div>
+      </p>
+    {% endfor %}
+  
+
+  <p class='m-0 text-uppercase'>
+    {{ 'common.tarif'|trans }} :
+    {% if inscriptionInformations.montant.article >= 0 %}
+      {{ inscriptionInformations.montant.article }}&nbsp;€
+    {% endif %}
+  </p>
+{% elseif typeFormat == "FormatAvecReservation" %}
+  <p class="mb-3 color-blue">
+    {{ event.reservabilite.ressource.libelle }}
+    <div id="openlayersmap{{ event.id }}" style="width: 100%; height: 300px;"></div>
+  </p>
+  <br>
+  <p class='m-0 text-uppercase'>
+    {{ 'common.tarif'|trans }} :
+    <p>
+    {% if event.reservabilite.ressource.tarif != null %}
+      {% for tarif in event.reservabilite.ressource.tarif.montants %}
+        <p class="m-0">{{ '- ' ~ tarif.profil.libelle ~ ' ' ~ tarif.montant ~ '€' }}</p>
+      {% endfor %}
+    {% endif %}
+  </p>
+{% endif %}

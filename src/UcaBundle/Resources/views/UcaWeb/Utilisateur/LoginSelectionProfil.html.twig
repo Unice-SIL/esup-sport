@@ -1,0 +1,53 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+	<div class="row d-flex justify-content-center align-items-center">
+		<div class="col-12 col-md-6 pb-5">
+			<div class="text-center py-3">
+				<div class="w-100">
+					<img class="img-fluid rounded mb-3" alt="logo UCA" src="{{ asset('images/logo-UCA-large-transp.png') }}">
+				</div>
+				<p class="fs-21"> {{'security.login.selectionprofil.titre' | trans | raw}}<br></p>
+        <hr class="d-block d-md-none col-6 mt-5">
+        <div class="border-primary">
+          <div class="form-group">
+            <label for="connexionSelectionProfil"> {{'security.login.selectionprofil.label' | trans }} </label>
+            <select class="form-control" id="connexionSelectionProfil" aria-label="{{'security.login.selectionprofil.label' | trans }}" required>
+              <optgroup sytle:'display:none'>
+              <option selected disabled> -- {{'security.login.selectionprofil.placeholder' | trans}} -- </option>
+              {% for listeProfils in selectionProfil.getFileDatas() %}
+                <optgroup label='{{ selectionProfil.getTitre(listeProfils, _context) }}'/>
+                  {% for profil in listeProfils.items %}
+                    <option data-redirection="{{ selectionProfil.getUrl(profil) }}" role='option'> {{ profil.titre }} </option>
+                  {% endfor %}
+              {% endfor %}
+            </select>
+          </div>  
+          <div class="text-center mt-5">
+            <a id="boutonSelectionProfil" class="btn btn-primary" href="#"> {{ 'bouton.save'|trans }} </a>
+          </div>
+        </div>
+        <div class="text-center mt-5">
+          	<p class="fs-14"> 
+            {{'security.login.selectionprofil.message.premierevisite' | trans }} : 
+            <a href="{{ path('UcaWeb_Contact') }}"> {{ 'security.login.selectionprofil.message.premierevisite.lien' | trans }} </a> 
+            </p>
+        </div>
+			</div>
+    </div>
+  </div>
+{% endblock %}
+		
+{% block javascripts %}
+  <script>
+    $("#connexionSelectionProfil").select2({placeholder: $(this).attr('placeholder')});
+    $("#connexionSelectionProfil").on('change ', function(e) {
+      let listOptions = connexionSelectionProfil.querySelectorAll('option');
+      for (let i = 0; i<listOptions.length; i++) {
+        if (listOptions[i].selected){
+          boutonSelectionProfil.setAttribute('href',listOptions[i].dataset.redirection);
+        }
+      }
+    });
+	</script>
+{% endblock %}

@@ -61,4 +61,15 @@ class FormatSimpleRepository extends FormatActiviteRepository
 
         return $qb;
     }
+
+    public function findFormatSimpleByDate($date)
+    {
+        $qb = $this
+            ->createQueryBuilder('f')
+            ->where('f.dateFinEffective < :date')
+            ->setParameter('date', $date)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -2,19 +2,16 @@
 
 namespace UcaBundle\Controller\UcaGest\Activite;
 
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use UcaBundle\Entity\Activite;
-use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Datatables\ActiviteDatatable;
 use UcaBundle\Datatables\FormatActiviteDatatable;
+use UcaBundle\Entity\Activite;
 use UcaBundle\Form\ActiviteType;
-use UcaBundle\Service\Common\FlashBag;
-
 
 /**
  * @Security("has_role('ROLE_ADMIN')")
@@ -36,6 +33,7 @@ class ActiviteController extends Controller
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
             $responseService->getDatatableQueryBuilder();
+
             return $responseService->getResponse();
         }
         $twigConfig['codeListe'] = 'Activite';
@@ -43,7 +41,8 @@ class ActiviteController extends Controller
         if (!$usr->hasRole('ROLE_GESTION_ACTIVITE_ECRITURE')) {
             $twigConfig['noAddButton'] = true;
         }
-        return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
+
+        return $this->render('@Uca/UcaGest/Activite/Activite/Datatable.html.twig', $twigConfig);
     }
 
     /**
@@ -61,11 +60,13 @@ class ActiviteController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
             return $this->redirectToRoute('UcaGest_ActiviteLister');
         }
 
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Activite/Activite/Formulaire.html.twig', $twigConfig);
     }
 
@@ -82,11 +83,13 @@ class ActiviteController extends Controller
         if ($editForm->isSubmitted() && $editForm->isValid() && $request->isMethod('POST')) {
             $this->get('uca.flashbag')->addActionFlashBag($activite, 'Modifier');
             $em->flush();
+
             return $this->redirectToRoute('UcaGest_ActiviteLister');
         }
 
-        $twigConfig["item"] = $activite;
-        $twigConfig["form"] = $editForm->createView();
+        $twigConfig['item'] = $activite;
+        $twigConfig['form'] = $editForm->createView();
+
         return $this->render('@Uca/UcaGest/Activite/Activite/Formulaire.html.twig', $twigConfig);
     }
 
@@ -99,11 +102,24 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$activite->getFormatsActivite()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($activite, 'Supprimer');
+
             return $this->redirectToRoute('UcaGest_ActiviteLister');
+        }
+        if ($ordreSupprime = (null !== $activite->getOrdre() ? $activite->getOrdre() : false)) {
+            $activiteRepo = $em->getRepository('UcaBundle:Activite');
+            $max = $activiteRepo->maxOrdreActivite();
+            if ($max !== $ordreSupprime && null !== $ordreSupprime) {
+                for ($i = $ordreSupprime; $i < $max; ++$i) {
+                    $activiteImpactee = $activiteRepo->findOneBy(['ordre' => $i + 1]);
+                    $activiteImpactee->setOrdre($i);
+                    $em->persist($activiteImpactee);
+                }
+            }
         }
         $em->remove($activite);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($activite, 'Supprimer');
+
         return $this->redirectToRoute('UcaGest_ActiviteLister');
     }
 
@@ -113,7 +129,6 @@ class ActiviteController extends Controller
      */
     public function voirAction(Request $request, Activite $activite)
     {
-
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
         $datatable = $this->get('sg_datatables.factory')->create(FormatActiviteDatatable::class);
@@ -131,7 +146,52 @@ class ActiviteController extends Controller
 
             return $responseService->getResponse();
         }
-        $twigConfig["item"] = $activite;
+        $twigConfig['item'] = $activite;
+
         return $this->render('@Uca/UcaGest/Activite/Activite/Voir.html.twig', $twigConfig);
+    }
+
+    /**
+     * @Isgranted("ROLE_GESTION_ACTIVITE_ECRITURE")
+     * @Route("/ModifierOrdre/{id}/{action}", name="UcaGest_ActiviteModifierOrdre", options={"expose"=true}, requirements={"id"="\d+"}, methods={"GET"})
+     *
+     * @param string $action
+     *
+     * @return void
+     */
+    public function modifierOrdreAction(Request $request, Activite $activite, $action)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $activiteRepo = $em->getRepository('UcaBundle:Activite');
+        $max = $activiteRepo->maxOrdreActivite();
+        $ancienOrdre = $activite->getOrdre();
+        $estPremier = 1 == $ancienOrdre;
+        $estDernier = $max == $ancienOrdre;
+        $nonInitialise = null === $max;
+
+        if ('monter' === $action && !$estPremier && !$nonInitialise && null !== $ancienOrdre) {
+            $delta = -1;
+        } elseif ('descendre' === $action && !$estDernier && !$nonInitialise && null !== $ancienOrdre) {
+            $delta = +1;
+        } elseif (null === $ancienOrdre && !$nonInitialise) {
+            $ordre = $max + 1;
+        } elseif ($nonInitialise) {
+            $ordre = 0;
+        } else {
+            return new Response(200);
+        }
+
+        if (!isset($ordre)) {
+            $ordre = $ancienOrdre + $delta;
+            $activiteImpactee = $activiteRepo->findOneBy(['ordre' => $ordre]);
+            $activiteImpactee->setOrdre($ancienOrdre);
+            $em->persist($activiteImpactee);
+        }
+
+        $activite->setOrdre($ordre);
+        $em->persist($activite);
+        $em->flush();
+
+        return new Response(200);
     }
 }

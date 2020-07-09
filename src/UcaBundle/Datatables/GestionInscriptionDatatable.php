@@ -22,7 +22,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
             'order_cells_top' => true,
             'global_search_type' => 'like',
         ],
-        'features' => ['state_save' => false],
+            'features' => ['state_save' => false],
         ]);
         $this->addInvisibleColumns([
             'id',
@@ -33,6 +33,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
             'creneau.serie.evenements.dateFin',
             'formatActivite.activite.libelle',
             'formatActivite.libelle',
+            'formatActivite.lieu.etablissement.libelle',
             'formatActivite',
             'reservabilite.evenement.dateDebut',
             'reservabilite.evenement.dateFin',
@@ -52,7 +53,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                 'searchable' => true,
             ])
             ->add('Activite', TwigVirtualColumn::class, [
-                'title' => 'Activités',
+                'title' => $this->translator->trans('activite.list.title'),
                 'twigTemplate' => 'InscriptionData',
                 'class_name' => 'hide-column-sm',
                 'searchable' => true,
@@ -95,7 +96,12 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                 'visible' => false,
                 'searchable' => false,
             ])
-
+            ->add('formatActivite.listeEncadrants', Column::class, [
+                'visible' => false,
+            ])
+            ->add('formatActivite.listeLieux', Column::class, [
+                'visible' => false,
+            ])
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [

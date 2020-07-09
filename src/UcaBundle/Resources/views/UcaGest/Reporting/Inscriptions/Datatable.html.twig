@@ -2,6 +2,7 @@
 
 {% block DatatableHeader %}
     {% include "@Uca/UcaWeb/Inscription/Modal.Desinscription.html.twig" %}
+    {% include "@Uca/UcaWeb/Inscription/Modal.DesinscriptionMassive.html.twig" %}
     
     <div class="well">
         {{ form_start(form)}}
@@ -29,22 +30,46 @@
             <div class="col-sm-3">
                 {{ form_row(form.formatActivite) }}
             </div>
-                <div class="col-sm-3">
+            <div class="col-sm-3">
                 {{ form_row(form.creneau) }}
+            </div>
+            <div class="col-sm-12">
+            </div>
+            <div class="col-sm-3">
+                {{ form_row(form.encadrants) }}
+            </div>
+            <div class="col-sm-3">
+                {{ form_row(form.etablissements) }}
+            </div>
+            <div class="col-sm-3">
+                {{ form_row(form.lieux) }}
             </div>
             <div class="col-sm-12">
             </div>
         </div>
         {{ form_end(form) }}
-    </div>
+    </div>   
 {% endblock %} 
+
+{% block main %}
+{{ parent() }}
+     {% if toutSupprimer == true %}
+        <div class="float-right">
+            <a id="btn_desinscription" href="{{ path('UcaGest_GestionInscription_DesincriptionMassive')}}" data-toggle='modal' data-target='#modalDesinscriptionMassive' style="color: white" class="btn btn-danger btn-form" title="{{"bouton.desinscrire"|trans}}">
+                {{'bouton.desinscrire.inscription'|trans}}
+            </a>
+        </div>
+    {% endif %}
+{% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% if app.request.attributes.get("_route") == "UcaGest_GestionInscription" %}
         <script type="text/javascript">
 
-            $(document).ready(function() {       
+            $(document).ready(function() {                       
+                
+                setUrlBoutonToutSupprimer();
 
                 // On cache les select de format d'activite et de creneau
                 $('.hidden').closest('.form-group').hide();
@@ -52,19 +77,26 @@
                 var oTable = $('#sg-datatables-gestioninscription_datatable').DataTable();
                 
                 $('.champRechercheDatatableInscription').on('change', function() {
-               
+
+                    setUrlBoutonToutSupprimer();                    
+
                     var valueNom = $('#ucabundle_inscription_nom').val();
                     var valuePrenom = $('#ucabundle_inscription_prenom').val();
-                    var valueStatut = $('#ucabundle_inscription_statut').val() == 0 ? null : $('#ucabundle_inscription_statut').val();
+                    var valueStatut = $('#ucabundle_inscription_statut').val() == 0 ? '' : $('#ucabundle_inscription_statut').val();
                     var valueActivite = {id: 0, recherche: ''};
+                    var valueEtablissement = "";
+                    var valueLieu = "";
+                    var valueEncadrant = "";
 
                     // Selon le select et l'option choisie on modifie les options des select qui en decoule
                     if($(this).attr('id') == 'ucabundle_inscription_type_activite'){
                         changeSelectOption($('#ucabundle_inscription_type_activite').val(), 'classe_activite', 'type_activite');
                         changeSelectOption($('#ucabundle_inscription_type_activite').val(), 'activite', 'type_activite');
+                        $('#ucabundle_inscription_creneau').closest('.form-group').hide();
                     }
                     if($(this).attr('id') == 'ucabundle_inscription_classe_activite'){
                         changeSelectOption($('#ucabundle_inscription_classe_activite').val(), 'activite', 'classe_activite');
+                        $('#ucabundle_inscription_creneau').closest('.form-group').hide();
                     }
                     if($(this).attr('id') == 'ucabundle_inscription_activite'){
                         changeSelectOption($('#ucabundle_inscription_activite').val(), 'formatActivite', 'activite');
@@ -77,6 +109,9 @@
                         }else{
                             $('#ucabundle_inscription_creneau').closest('.form-group').hide();
                         }
+                    }
+                    if($(this).attr('id') == 'ucabundle_inscription_etablissements'){
+                        changeSelectOption($('#ucabundle_inscription_etablissements').val(), 'lieux', 'etablissements');
                     }
 
                     // Selon les select modifies on fait apparaitre les select format d'activite/creneau
@@ -115,14 +150,27 @@
                             valueActivite['recherche'] = 'Creneau';
                         }
                     }
-                    
+
+                    if($('#ucabundle_inscription_encadrants').val() != '0' && $('#ucabundle_inscription_encadrants').val() != null){
+                         valueEncadrant = $('#select2-ucabundle_inscription_encadrants-container').attr('title');
+                    }
+                    if($('#ucabundle_inscription_etablissements').val() != '0' && $('#ucabundle_inscription_etablissements').val() != null){
+                        valueEtablissement = $('#select2-ucabundle_inscription_etablissements-container').attr('title');                     
+                    }
+                    if($('#ucabundle_inscription_lieux').val() != '0' && $('#ucabundle_inscription_lieux').val() != null){
+                        valueLieu = $('#select2-ucabundle_inscription_lieux-container').attr('title');                        
+                    }
+                                        
                     var searchValue = JSON.stringify({ id: valueActivite['id'], recherche: valueActivite['recherche'] });
 
-                    // Indication de la recherche
-                    oTable.column(16).search(valueStatut,true,false);
-                    oTable.column(14).search(searchValue,true,false);
-                    oTable.column(12).search(valueNom,true,false);
-                    oTable.column(13).search(valuePrenom,true,false);
+                    // Indication de la recherche                    
+                    oTable.column(17).search(valueStatut,true,false);                    
+                    oTable.column(15).search(searchValue,true,false);                    
+                    oTable.column(14).search(valuePrenom,true,false);
+                    oTable.column(13).search(valueNom,true,false);
+                    oTable.column(20).search(valueEncadrant,true,false);
+                    oTable.column(8).search(valueEtablissement,true,false);
+                    oTable.column(21).search(valueLieu,true,false);
                     oTable.ajax.reload();
                 });
 
@@ -141,6 +189,56 @@
                     $('#ucabundle_inscription_'+dataIdSelect).val(0);
                     $('#ucabundle_inscription_'+dataIdSelect).trigger('change.select2');
                 }
+
+                //fonction qui permet de définir les paramétres de l'url du bouton tout supprimer
+                function setUrlBoutonToutSupprimer(){                    
+
+                    var uri = "{{ path('UcaGest_GestionInscription_DesincriptionMassive', {'nom': 'filtre_nom', 'prenom': 'filtre_prenom', 'statut': 'filtre_statut', 'idTypeActivite': 'id_typeActivite', 'idClasseActivite': 'id_classeActivite', 'idActivite': 'id_activite', 'idFormatActivite': 'id_formatActivite', 'idCreneau': 'id_creneau', 'idEncadrant': 'id_encadrant', 'idEtablissement': 'id_etablissement', 'idLieu': 'id_lieu' }) }}";
+                    if($("#ucabundle_inscription_nom").val()==""){
+                        uri = uri.replace('filtre_nom', null);    
+                    }else{
+                        uri = uri.replace('filtre_nom', $('#ucabundle_inscription_nom').val());
+                    }
+                    if($("#ucabundle_inscription_prenom").val()==""){
+                        uri = uri.replace('filtre_prenom', null);    
+                    }else{
+                        uri = uri.replace('filtre_prenom', $('#ucabundle_inscription_prenom').val());
+                    }
+                    uri = uri.replace('filtre_statut', $('#ucabundle_inscription_statut').val());
+                    uri = uri.replace('id_typeActivite', $('#ucabundle_inscription_type_activite').val());
+                    uri = uri.replace('id_classeActivite', $('#ucabundle_inscription_classe_activite').val());
+                    uri = uri.replace('id_activite', $('#ucabundle_inscription_activite').val());
+                    uri = uri.replace('id_formatActivite', $('#ucabundle_inscription_formatActivite').val());
+                    uri = uri.replace('id_creneau', $('#ucabundle_inscription_creneau').val());
+                    uri = uri.replace('id_encadrant', $('#ucabundle_inscription_encadrants').val());
+                    uri = uri.replace('id_etablissement', $('#ucabundle_inscription_etablissements').val());
+                    uri = uri.replace('id_lieu', $('#ucabundle_inscription_lieux').val());
+
+                    $.ajax({
+                        url: uri,
+                        type: "GET",
+                        dataType: "json",
+                        async: true,
+                        success: function (data)
+                        {
+                            if(data.filtre){
+                                $("#nonfiltrer").hide();
+                                $("#filtrer").show();
+                                $(".modal-footer").find("a").show();
+                                $("#inscrits").text(data.valide);
+                                $("#attentedepaiement").text(data.attentepaiement);
+                                $("#attentevalidationgestionnaire").text(data.attentevalidationgestionnaire);
+                                $("#attentevalidationencadrant").text(data.attentevalidationencadrant);
+                            }else{
+                                $("#filtrer").hide();
+                                $(".modal-footer").find("a").hide();
+                                $("#nonfiltrer").show();
+                            }
+                        }
+                    });
+                    $("#btn_desinscription").attr("href", uri);
+                }
+
             });
         </script>
 

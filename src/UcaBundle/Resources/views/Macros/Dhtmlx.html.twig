@@ -100,17 +100,24 @@
 
 {% endmacro %}
 {% macro initCalendarJs(item = null) %}
-	<script>
-		var ITEM = {{ item|json_encode()|raw }};
-        var DHTMLXAPI = "{{ path('DhtmlxApi') }}";
-        var DATAAPI = "{{ path('DataApi') }}";
-        var USERID = "{{ app.user.id }}";
-        var PATH_SEE_MORE = "{{ path("UcaWeb_PlanningMore_NoId") }}"
+	{% if item.capacite is defined %}
+	<script type='text/javascript'>
+			'use_strict';
+			var CAPACITE = {{ item.capacite }};
+	</script>
+	{% endif %}
+	<script type='text/javascript'>
+		'use_strict';
+		var ITEM = {{ item |json_encode() | raw }};
+    var DHTMLXAPI = "{{ path('DhtmlxApi') }}";
+    var DATAAPI = "{{ path('DataApi') }}";
+    var USERID = "{{ app.user.id }}";
+    var PATH_SEE_MORE = "{{ path("UcaWeb_PlanningMore_NoId") }}"
 	</script>
 	{{ encore_entry_script_tags('scheduler') }}
 
 {% endmacro %}
 
-{% macro debugSchedulerEvents() %}{% endmacro %}
+{% macro debugSchedulerEvents() %}  {% endmacro %}
 
-{% macro initSchedulerData(item) %}{% endmacro %}
+{% macro initSchedulerData(item) %} {% endmacro %}

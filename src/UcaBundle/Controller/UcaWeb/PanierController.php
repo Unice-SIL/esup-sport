@@ -2,15 +2,12 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
+use Doctrine\Common\Collections\Criteria;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\Response;
-use UcaBundle\Service\Common\FlashBag;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Doctrine\Common\Collections\Criteria;
 use UcaBundle\Form\ValiderPaiementPayboxType;
 
 /**
@@ -28,24 +25,24 @@ class PanierController extends Controller
         $utilisateur = $this->getUser();
         if ($utilisateur) {
             $panier = $utilisateur->getPanier();
-            $twigConfig["commande"] = $panier;
-            $twigConfig["source"] = 'monpanier';
+            $twigConfig['commande'] = $panier;
+            $twigConfig['source'] = 'monpanier';
             $form = $this->get('form.factory')->create(ValiderPaiementPayboxType::class, $panier);
             if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
                 if ($panier->getCgvAcceptees()) {
                     $em->persist($panier);
                     $em->flush();
-                    return $this->redirectToRoute('UcaWeb_PaiementRecapitulatif', array('id' => $panier->getId(), 'typePaiement' => 'PAYBOX'));
-                } else {
-                    $this->get('uca.flashbag')->addTranslatedFlashBag('danger', 'mentions.conditions.nonvalide');
+
+                    return $this->redirectToRoute('UcaWeb_PaiementRecapitulatif', ['id' => $panier->getId(), 'typePaiement' => 'PAYBOX']);
                 }
+                $this->get('uca.flashbag')->addTranslatedFlashBag('danger', 'mentions.conditions.nonvalide');
             }
             $twigConfig['form'] = $form->createView();
+
             return $this->render('@Uca/UcaWeb/Commande/DetailCommande.html.twig', $twigConfig);
-        } else {
-            /* Sinon on redirige vers page de connexion */
-            return $this->redirectToRoute('fos_user_security_login');
         }
+        // Sinon on redirige vers page de connexion
+        return $this->redirectToRoute('UcaWeb_ConnexionSelectionProfil');
     }
 
     /**
@@ -54,12 +51,13 @@ class PanierController extends Controller
     public function suppressionAction(Request $request, CommandeDetail $commandeDetail)
     {
         $em = $this->getDoctrine()->getManager();
-        $commande =  $commandeDetail->getCommande();
+        $commande = $commandeDetail->getCommande();
         if ($commandeDetail->traitementPostSuppressionPanier(['motif_annulation' => 'annulationutilisateur', 'commentaire_annulation' => ''])) {
             $em->remove($commandeDetail);
         } else {
             $this->get('uca.flashbag')->addActionErrorFlashBag($this, 'Supprimer');
         }
+
         return $this->finSuppression($commande);
     }
 
@@ -69,16 +67,17 @@ class PanierController extends Controller
     public function suppressionToutArticleAction(Request $request, Commande $commande)
     {
         $criteria = new Criteria();
-        $criteria->orderBy(array("type" => "DESC"));
+        $criteria->orderBy(['type' => 'DESC']);
         $listeCommandeDetails = $commande->getCommandeDetails()->matching($criteria);
 
         foreach ($listeCommandeDetails->getIterator() as $commandeDetail) {
             $commandeDetail->traitementPostSuppressionPanier(['motif_annulation' => 'annulationutilisateur', 'commentaire_annulation' => '']);
         }
+
         return $this->finSuppression($commande);
     }
 
-    function finSuppression($commande)
+    public function finSuppression($commande)
     {
         $em = $this->getDoctrine()->getManager();
         $commande->updateMontantTotal();
@@ -86,6 +85,7 @@ class PanierController extends Controller
             $em->remove($commande);
         }
         $em->flush();
+
         return $this->redirectToRoute('UcaWeb_Panier');
     }
 }

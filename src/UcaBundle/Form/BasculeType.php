@@ -65,7 +65,7 @@ class BasculeType extends AbstractType
                 'constraints' => new Assert\NotBlank(['groups' => 'default', 'message' => 'formatactivite.dateFinEffective.notblank']),
             ])
             ->add('save', SubmitType::class, [
-                'label_format' => 'sitemap.bascule.libelle',
+                'label_format' => 'bouton.basculer',
                 'validation_groups' => 'default',
             ])
         ;

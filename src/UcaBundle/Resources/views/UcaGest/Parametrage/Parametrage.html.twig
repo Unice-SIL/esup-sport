@@ -16,6 +16,8 @@
     <div class="container mt-4">
         <h2 class="hide-border-title">{{'parametrage.mailcontact'|trans}}</h2>
         <p>{{item.mailContact}}</p>
+        <h2 class="hide-border-title">{{'parametrage.anneeUniversitaire'|trans}}</h2>
+        <p>{{item.anneeUniversitaire}}</p>
         <h2 class="hide-border-title">{{'parametrage.reseauxsociaux'|trans}}</h2>
         <p>Facebook : {{item.lienFacebook}}</p>
         <p>Instagram : {{item.lienInstagram}}</p>
@@ -28,6 +30,10 @@
             <li>{{'parametrage.timercb'|trans}} : {{item.timerCb}} min</li>
             <li>{{'parametrage.timerpaybox'|trans}} : {{item.timerPaybox}} min</li>
         </ul>
+        <h2 class="hide-border-title">{{'parametrage.facturation'|trans}}</h2>
+        <p>{{'parametrage.libelleadresse'|trans}} : {{item.libelleAdresse}}</p>
+        <p>{{'parametrage.adressefacturation'|trans}} : {{item.adresseFacturation}}</p>
+        <p>SIRET : {{item.siret}}</p>
     </div>
 
 {% endblock %}

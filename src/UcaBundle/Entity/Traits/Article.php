@@ -49,16 +49,22 @@ trait Article
         return new \DateTime() < $this->getDateDebutInscription();
     }
 
-    public function isNotFull()
+    public function isNotFull($usr)
     {
-        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']]]);
+        $totalInscrits = 0;
+        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']]]);
+        foreach ($this->getInscriptions()->matching($criterias) as $inscription) {
+            if ($inscription->getUtilisateur()->getProfil() === $usr->getProfil()) {
+                ++$totalInscrits;
+            }
+        }
 
-        return !empty($this->getCapacite()) && $this->getInscriptions()->matching($criterias)->count() < $this->getCapacite();
+        return !empty($this->getCapaciteProfil($usr->getProfil())) && $totalInscrits < $this->getCapaciteProfil($usr->getProfil());
     }
 
-    public function isFull()
+    public function isFull($usr)
     {
-        return !$this->isNotFull();
+        return !$this->isNotFull($usr);
     }
 
     public function getArticleAutorisations()
@@ -68,7 +74,13 @@ trait Article
 
     public function autoriseProfil($profilUtilisateur)
     {
-        return $this->profilsUtilisateurs->contains($profilUtilisateur);
+        foreach ($this->profilsUtilisateurs as $formatProfil) {
+            if ($profilUtilisateur == $formatProfil->getProfilUtilisateur()) {
+                $profil = $formatProfil;
+            }
+        }
+
+        return isset($profil) && !in_array($profil->getCapaciteProfil(), [null, 0]);
     }
 
     public function getInscriptionInformations($utilisateur, $format = null)
@@ -94,7 +106,7 @@ trait Article
             $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $format);
             $inscriptions = $utilisateur->getInscriptionsByCriteria([
                 [Inscription::getItemColumn($this), 'eq', $this],
-                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
             ]);
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';
@@ -102,7 +114,7 @@ trait Article
                 $resultat['statut'] = 'inscrit';
             } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
                 $resultat['statut'] = 'preinscrit';
-            } elseif ($this->isFull()) {
+            } elseif ($this->isFull($utilisateur)) {
                 $resultat['statut'] = 'complet';
             } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
                 $resultat['statut'] = 'nbcreneaumaxatteint';

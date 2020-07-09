@@ -2,89 +2,88 @@
 
 namespace UcaBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\RadioType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\Lieu;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class FormatActiviteType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('libelle', TextType::class, [
-                'label_format' => 'common.libelle'
+                'label_format' => 'common.libelle',
             ])
             ->add('description', TextareaType::class, [
-                'label_format' => 'common.description'
+                'label_format' => 'common.description',
             ])
             ->add('dateDebutPublication', DateTimeType::class, [
                 'label_format' => 'format.date.publication.debut',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
-                )
+                ],
             ])
             ->add('dateFinPublication', DateTimeType::class, [
                 'label_format' => 'format.date.publication.fin',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
-                )
+                ],
             ])
             ->add('dateDebutInscription', DateTimeType::class, [
                 'label_format' => 'format.date.inscription.debut',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
-                )
+                ],
             ])
             ->add('dateFinInscription', DateTimeType::class, [
                 'label_format' => 'format.date.inscription.fin',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
-                )
+                ],
             ])
             ->add('dateDebutEffective', DateTimeType::class, [
                 'label_format' => 'format.date.effective.debut',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
                     'data-datetimepicker-step' => '15',
-                )
+                ],
             ])
             ->add('dateFinEffective', DateTimeType::class, [
                 'label_format' => 'format.date.effective.fin',
                 'widget' => 'single_text',
                 'format' => 'dd/MM/yyyy HH:mm',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y H:i',
                     'data-datetimepicker-step' => '15',
-                )
+                ],
             ])
             ->add('imageFile', VichImageType::class, [
                 'required' => true,
@@ -93,7 +92,14 @@ class FormatActiviteType extends AbstractType
                 'image_uri' => false,
                 'label_format' => 'format.image.libelle',
                 'translation_domain' => 'messages',
-            ]);
+            ])
+            ->add(
+                $builder->create('profils', FormatActiviteProfilUtilisateurType::class, [
+                    'constraints' => new Assert\Valid(),
+                    'mapped' => false,
+                ])
+            )
+        ;
 
         // ComplémentTYpe (code a déplacer)
         $builder
@@ -102,55 +108,50 @@ class FormatActiviteType extends AbstractType
                 'choice_label' => 'libelle',
                 'label_format' => 'format.niveau.sportif',
                 'multiple' => true,
-                'expanded' => true
+                'expanded' => true,
             ])
-            ->add('profilsUtilisateurs', EntityType::class, [
-                'class' => 'UcaBundle:ProfilUtilisateur',
-                'choice_label' => 'libelle',
-                'label_format' => 'format.profils.utilisateur',
-                'multiple' => true,
-                'expanded' => true
-            ]);
+        ;
         $autorisationsOptions = [
             'class' => 'UcaBundle:TypeAutorisation',
             'choice_label' => 'libelle',
             'label_format' => 'format.autorisations',
             'multiple' => true,
             'required' => false,
-            'expanded' => false
+            'expanded' => false,
         ];
-        if ($options['data_class'] == FormatAchatCarte::class) {
+        if (FormatAchatCarte::class == $options['data_class']) {
             $autorisationsOptions['query_builder'] = function (EntityRepository $er) {
                 return $er->createQueryBuilder('ta')
                     ->andWhere('ta.comportement<>4')
-                    ->orderBy('ta.libelle', 'ASC');
+                    ->orderBy('ta.libelle', 'ASC')
+                ;
             };
         }
         $builder->add('autorisations', EntityType::class, $autorisationsOptions)
             ->add('lieu', EntityType::class, [
                 'class' => 'UcaBundle:Lieu',
                 'choice_label' => function (Lieu $lieu) {
-                    if($lieu->getEtablissement() != null){
-                        return $lieu->getEtablissement()->getLibelle() . " - " . $lieu->getLibelle();
-                    } else{
-                        return $lieu->getLibelle();
+                    if (null != $lieu->getEtablissement()) {
+                        return $lieu->getEtablissement()->getLibelle().' - '.$lieu->getLibelle();
                     }
+
+                    return $lieu->getLibelle();
                 },
                 'label_format' => 'format.lieu',
                 'multiple' => true,
                 'expanded' => false,
                 'required' => true,
-                'attr' => ['placeholder' => 'format.lieu.placeholder']
+                'attr' => ['placeholder' => 'format.lieu.placeholder'],
             ])
             ->add('estEncadre', ChoiceType::class, [
                 'label_format' => 'format.encadre',
-                'choices'  => [
+                'choices' => [
                     'common.oui' => true,
                     'common.non' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
             ])
 
             ->add('encadrants', EntityType::class, [
@@ -159,27 +160,28 @@ class FormatActiviteType extends AbstractType
                     return $er->createQueryBuilder('u')
                         ->innerJoin('u.groups', 'g')
                         ->andWhere('g.roles like \'%ROLE_ENCADRANT%\'')
-                        ->orderBy('u.nom', 'ASC');
+                        ->orderBy('u.nom', 'ASC')
+                    ;
                 },
                 'choice_label' => function ($encadrant) {
-                    return ucfirst($encadrant->getNom() . " " . ucfirst($encadrant->getPrenom()));
+                    return ucfirst($encadrant->getNom().' '.ucfirst($encadrant->getPrenom()));
                 },
                 'label_format' => 'format.encadrants',
                 'multiple' => true,
                 'expanded' => false,
                 'attr' => [
-                    'class' => 'encadreToShow nonEncadreToHide'
-                ]
+                    'class' => 'encadreToShow nonEncadreToHide',
+                ],
             ])
             ->add('estPayant', ChoiceType::class, [
                 'label_format' => 'format.payant',
-                'choices'  => [
+                'choices' => [
                     'common.oui' => true,
                     'common.non' => false,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'required' => true
+                'required' => true,
             ])
             ->add('tarif', EntityType::class, [
                 'class' => 'UcaBundle:Tarif',
@@ -189,30 +191,39 @@ class FormatActiviteType extends AbstractType
                 'expanded' => false,
                 'placeholder' => 'format.tarif.placeholder',
                 'attr' => [
-                    'class' => 'payantToShow nonPayantToHide'
-                ]
+                    'class' => 'payantToShow nonPayantToHide',
+                ],
             ])
             ->add('capacite', TextType::class, [
-                'label_format' => 'common.capacite'
+                'label_format' => 'common.capacite.totale',
             ])
             ->add('statut', ChoiceType::class, [
                 'label_format' => 'format.statut',
-                'choices'  => [
+                'choices' => [
                     'format.statut.brouillon' => 0,
                     'format.statut.publie' => 1,
                 ],
                 'expanded' => true,
                 'multiple' => false,
-                'required' => true
-            ]);
+                'required' => true,
+            ])
+        ;
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if (!$view->vars['valid']) {
+            ksort($view['profils']['capaciteProfil']->vars['value']);
+            ksort($view['profils']['capaciteProfil']->vars['data']);
+            ksort($view['profils']['capaciteProfil']->children);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'UcaBundle\Entity\FormatSimple',
-            'inherit_data' => true
-
+            'inherit_data' => true,
         ]);
     }
 

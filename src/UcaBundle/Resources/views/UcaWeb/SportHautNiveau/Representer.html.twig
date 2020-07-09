@@ -1,0 +1,14 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('SHN - Representer') }}
+{% endblock %}
+
+{% block main %}    
+    <section>
+        <h3 class="text-center">Bientôt disponible</h3>
+    </section>
+{% endblock %}

@@ -1,0 +1,39 @@
+# Arboresence de la page de connexion
+
+# Profils UCA (connexion Shibboleth)
+- titre: "trans('security.login.selectionprofil.uca.titre')"
+  route: 'UcaWeb_ShibLogin'
+  shibboleth: 1
+  items: 
+    - titre: "Université Côde d'Azur"
+      shibboleth: 1
+    - titre: "Villa Arson"
+      shibboleth: 0
+    - titre: "ERACM"
+      shibboleth: 0
+    - titre: "CIRM"
+      shibboleth: 0
+    - titre: "CNRS"
+      shibboleth: 0
+    - titre: "OCA"
+      shibboleth: 0
+    - titre: "INRA"
+      shibboleth: 0
+    - titre: "INRIA"
+      shibboleth: 0
+    - titre: "INSERM"
+      shibboleth: 0
+    - titre: "IRD"
+      shibboleth: 0
+
+# Profils Externes (connexion FoSUser)
+- titre: "trans('security.login.selectionprofil.autres.titre')"
+  route: "fos_user_security_login"
+  shibboleth: 0
+  items: 
+    - titre: "Retraité"
+      shibboleth: 0
+    - titre: "Alumnis"
+      shibboleth: 0
+    - titre: "Membre d'honneur"
+      shibboleth: 0

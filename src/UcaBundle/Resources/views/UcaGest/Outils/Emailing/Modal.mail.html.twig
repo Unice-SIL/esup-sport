@@ -1,0 +1,19 @@
+{% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalMail' %}
+{% block modalTitle 'monPlanning.modal.mail.title' %}
+{% block modalBody %}
+  <div class="alert alert-info">
+  {{ 'contact.destinataires.total.message' | trans }} :
+  <span id='nbTotalDestinataires'> </span>
+  </div>
+  <div id="messageErreurDestinataire" class="d-none alert alert-danger">
+    {{ 'contact.destinataires.vide' | trans }}
+  </div>
+  {% include "@Uca/UcaGest/Outils/Emailing/Modal.mail.form.html.twig" %}
+{% endblock %}
+{% block modalFooter %} 
+  {{ form_row(formMail.save, {'attr': {'role': 'button'}}) }} 
+{% endblock %}
+{% block modalFormEnd %}
+    {{ form_end(formMail) }}
+{% endblock %}

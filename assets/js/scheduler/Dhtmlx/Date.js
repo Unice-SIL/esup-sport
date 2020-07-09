@@ -4,8 +4,16 @@ function show_minical() {
     if (scheduler.isCalendarVisible()) {
         scheduler.destroyCalendar();
     } else {
+        let pos = "";
+        if($(window).width()<350){
+            pos = {left: 40, top: 576};
+        }else if ($(window).width()>=350 && $(window).width()<530){
+            pos = {left: 50, top: 536};
+        }else{
+            pos = "dhx_minical_icon";
+        }
         scheduler.renderCalendar({
-            position: "dhx_minical_icon",
+            position: pos,
             date: scheduler._date,
             navigation: true,
             handler: function (date, calendar) {

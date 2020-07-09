@@ -2,26 +2,24 @@
 
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use League\Csv\Reader;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\RessourceDatatable;
-use League\Csv\Reader;
-use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\Etablissement;
+use UcaBundle\Entity\Fichier;
 use UcaBundle\Entity\Lieu;
 use UcaBundle\Entity\Materiel;
 use UcaBundle\Entity\ReferentielImmobilier;
-use UcaBundle\Entity\Fichier;
+use UcaBundle\Entity\Ressource;
 use UcaBundle\Form\FichierType;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use Liip\ImagineBundle\Config\Filter\Argument\Size;
-use Doctrine\DBAL\Driver\PDOException;
-use Doctrine\DBAL\Driver\PDOConnection as PDO;
 
-/** 
- * @Route("UcaGest/Ressource") 
+/**
+ * @Route("UcaGest/Ressource")
  * @Security("has_role('ROLE_ADMIN')")
  */
 class RessourceController extends Controller
@@ -45,6 +43,7 @@ class RessourceController extends Controller
             $em->flush();
             // mise à jour du référentiel
             $this->majReferentielImmobilier();
+
             return $this->redirectToRoute('UcaGest_RessourceLister');
         }
 
@@ -58,6 +57,7 @@ class RessourceController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
+
             return $responseService->getResponse();
         }
 
@@ -65,7 +65,10 @@ class RessourceController extends Controller
         $twigConfig['codeListe'] = 'Ressource';
         // Bouton Ajouter
         $usr = $this->container->get('security.token_storage')->getToken()->getUser();
-        if (!$usr->hasRole('ROLE_GESTION_RESSOURCE_ECRITURE')) $twigConfig['noAddButton'] = true;
+        if (!$usr->hasRole('ROLE_GESTION_RESSOURCE_ECRITURE')) {
+            $twigConfig['noAddButton'] = true;
+        }
+
         return $this->render('@Uca/UcaGest/Referentiel/Ressource/Datatable.html.twig', $twigConfig);
     }
 
@@ -78,12 +81,13 @@ class RessourceController extends Controller
         $tools = $this->get('uca.tools');
         $em = $this->getDoctrine()->getManager();
         $format = $request->get('format');
+
         if (Ressource::formatIsValid($format)) {
             $className = $tools->getClassName($format);
             $typeClassName = $tools->getClassName($format, 'FormType');
             $item = new $className();
         } else {
-            throw new \Exception("Format <$format> d'activité non valide");
+            throw new \Exception("Format <{$format}> d'activité non valide");
         }
         $form = $this->get('form.factory')->create($typeClassName, $item);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
@@ -91,11 +95,15 @@ class RessourceController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
             return $this->redirectToRoute('UcaGest_RessourceLister');
         }
+
         $twigConfig['item'] = $item;
+        $twigConfig['addAction'] = true;
         $twigConfig['form'] = $form->createView();
-        return $this->render('@Uca/UcaGest/Referentiel/Ressource/' . $format . '/Formulaire.html.twig', $twigConfig);
+
+        return $this->render('@Uca/UcaGest/Referentiel/Ressource/'.$format.'/Formulaire.html.twig', $twigConfig);
     }
 
     /**
@@ -107,11 +115,13 @@ class RessourceController extends Controller
         $em = $this->getDoctrine()->getManager();
         if (!$item->getFormatResa()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
+
             return $this->redirectToRoute('UcaGest_RessourceLister');
         }
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
         return $this->redirectToRoute('UcaGest_RessourceLister');
     }
 
@@ -132,15 +142,43 @@ class RessourceController extends Controller
         } else {
             throw new \Exception("Format d'activité non reconnu. Attendu : 'Lieu' ou 'Materiel'");
         }
-        $form = $this->get('form.factory')->create($typeClassName, $item);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
-            return $this->redirectToRoute('UcaGest_RessourceLister');
+
+        if ($item instanceof Lieu) {
+            $imagesSupplementaires = new ArrayCollection();
+            foreach ($item->getImagesSupplementaires() as $imageSupplementaire) {
+                $imagesSupplementaires->add($imageSupplementaire);
+            }
         }
+
+        $form = $this->get('form.factory')->createNamed('editRessourceForm', $typeClassName, $item);
+
+        if ($request->isMethod('POST')) {
+            $form->handleRequest($request);
+            //dump($item);
+            //die;
+            if ($form->isSubmitted() && $form->isValid()) {
+                if ($item instanceof Lieu) {
+                    foreach ($imagesSupplementaires as $img) {
+                        if (false === $item->getImagesSupplementaires()->contains($img)) {
+                            $img->getLieu()->removeImagesSupplementaires($img);
+                            $img->setLieu = null;
+                        }
+                        $em->persist($img);
+                    }
+                }
+
+                $em->persist($item);
+                $em->flush();
+                $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
+                return $this->redirectToRoute('UcaGest_RessourceLister');
+            }
+        }
+
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
-        return $this->render('@Uca/UcaGest/Referentiel/Ressource/' . $item_class . '/Formulaire.html.twig', $twigConfig);
+
+        return $this->render('@Uca/UcaGest/Referentiel/Ressource/'.$item_class.'/Formulaire.html.twig', $twigConfig);
     }
 
     /**
@@ -154,8 +192,8 @@ class RessourceController extends Controller
         $path = explode('\\', get_class($item))[2];
         $twigConfig['item'] = $item;
         $twigConfig['format'] = $path;
-        $twigConfig['type'] = "ressource";
-        $twigConfig['role'] = "admin";
+        $twigConfig['type'] = 'ressource';
+        $twigConfig['role'] = 'admin';
 
         return $this->render('@Uca/UcaGest/Referentiel/Ressource/Voir.html.twig', $twigConfig);
     }
@@ -165,13 +203,14 @@ class RessourceController extends Controller
     {
         $reservabilites = [];
         foreach ($datas as $key => $value) {
-            $reservabilites[$key] =  [
+            $reservabilites[$key] = [
                 'id' => $value->getId(),
                 'start_date' => $value->getDateDebut()->format('d/m/Y H:i:s'),
                 'end_date' => $value->getDateFin()->format('d/m/Y H:i:s'),
-                'text' => $value->getRessource()->getLibelle()
+                'text' => $value->getRessource()->getLibelle(),
             ];
         }
+
         return json_encode($reservabilites);
     }
 
@@ -184,13 +223,13 @@ class RessourceController extends Controller
         $em = $this->getDoctrine()->getManager();
         // Chargement du fichier CSV en base (Dans une table temporaire 'ReferentielImmobilier')
         $this->chargerFichierCsv();
-        // Parcours de la table 'ReferentielImmobilier'  
+        // Parcours de la table 'ReferentielImmobilier'
         $salles = $this->getDoctrine()->getRepository(ReferentielImmobilier::class)->findAll();
         foreach ($salles as $salle) {
             // on recherche le lieu via le code Rus
             $lieu = $this->getDoctrine()->getRepository(Lieu::class)->findOneBy([
                 'sourceReferentiel' => true,
-                'nomenclatureRus' => $salle->getCodeRus()
+                'nomenclatureRus' => $salle->getCodeRus(),
             ]);
             if (empty($lieu)) {
                 $lieu = new Lieu();
@@ -204,6 +243,7 @@ class RessourceController extends Controller
             $em->flush();
         }
         $this->get('uca.flashbag')->addMessageFlashBag('ressource.referentiel.success', 'success');
+
         return $this->redirectToRoute('UcaGest_RessourceLister');
     }
 
@@ -222,7 +262,7 @@ class RessourceController extends Controller
         // on force un nom d'image par défaut
         $lieu->setImage('no.png');
         $campus = $this->getDoctrine()->getRepository(Etablissement::class)->findOneBy([
-            'code' => $salle->getNomCampus()
+            'code' => $salle->getNomCampus(),
         ]);
         if (!empty($campus)) {
             $lieu->setEtablissement($campus);
@@ -251,7 +291,7 @@ class RessourceController extends Controller
             ['code' => 'REFIMMO']
         );
         // Mise en place du lecteur de fichier CSV - Données séparées par ";" - 1 ligne d'entête à ne pas charger
-        $reader = Reader::createFromPath($this->get('kernel')->getRootDir() . '/../web/upload/public/fichiers/' . $fichier->getImage());
+        $reader = Reader::createFromPath($this->get('kernel')->getRootDir().'/../web/upload/public/fichiers/'.$fichier->getImage());
         $reader->setDelimiter(';');
         $reader->setHeaderOffset(0);
         // Vidage de la table avant chargement du fichier
@@ -259,7 +299,7 @@ class RessourceController extends Controller
         $records = $reader->getRecords();
         // On charge chaque ligne du fichier en base : chaque donnée est identifiée via son nom dans le header
         foreach ($records as $offset => $record) {
-            $record = array_map("utf8_encode", $record);
+            $record = array_map('utf8_encode', $record);
             $item = new ReferentielImmobilier();
             $item->setLibelle($record['libelle']);
             //$item->setDescription($record['description']);
@@ -269,9 +309,11 @@ class RessourceController extends Controller
             $item->setLatitude($record['latitude']);
             $item->setLongitude($record['longitude']);
             $item->setSuperficie(empty($record['superficie']) ? null : $record['superficie']);
+            $item->setVisiteVirtuelle(empty($record['viste_virtuelle']) ? null : $record['viste_virtuelle']);
             $em->persist($item);
         }
         $em->flush();
+
         return $this->redirectToRoute('UcaGest_EtablissementLister');
     }
 
@@ -292,6 +334,7 @@ class RessourceController extends Controller
     {
         try {
             $file = $request->files()->get('CSV_File');
-        } catch (Exception $e) { }
+        } catch (Exception $e) {
+        }
     }
 }

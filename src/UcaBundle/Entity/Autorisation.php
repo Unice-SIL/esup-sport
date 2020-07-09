@@ -3,19 +3,17 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\AutorisationRepository")
  * @Vich\Uploadable
  */
 class Autorisation
 {
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -44,7 +42,7 @@ class Autorisation
     /** @ORM\Column(type="string", nullable=true) */
     private $justificatif;
 
-    /** @Vich\UploadableField(mapping="justificatif", fileNameProperty="justificatif") 
+    /** @Vich\UploadableField(mapping="justificatif", fileNameProperty="justificatif")
      * @Assert\Expression("this.getJustificatif() !== null || this.getJustificatifFile() !== null", message="formatactivite.image.notnull")
      */
     private $justificatifFile;
@@ -60,9 +58,9 @@ class Autorisation
 
     /** @ORM\Column(type="datetime") */
     private $date;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
 
     public function __construct($inscription, $typeAutorisation)
     {
@@ -74,12 +72,12 @@ class Autorisation
         $this->updateStatut();
     }
 
-    function getCodeComportement()
+    public function getCodeComportement()
     {
         return $this->getTypeAutorisation()->getComportement()->getCodeComportement();
     }
 
-    function getInformationsComplementaires()
+    public function getInformationsComplementaires()
     {
         return $this->getTypeAutorisation()->getArticleDescription();
     }
@@ -87,8 +85,9 @@ class Autorisation
     public function setJustificatifFile(File $justificatif = null)
     {
         $this->justificatifFile = $justificatif;
-        if ($justificatif)
+        if ($justificatif) {
             $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getJustificatifFile()
@@ -100,23 +99,24 @@ class Autorisation
     {
         $isValide = false;
 
-        if ($this->getCodeComportement() == 'case') {
+        if ('case' == $this->getCodeComportement()) {
             $isValide = $this->caseACocher;
-        } elseif ($this->getCodeComportement() == 'carte') {
+        } elseif ('carte' == $this->getCodeComportement()) {
             $isValide = $this->getUtilisateur()->hasAutorisation($this->getTypeAutorisation());
-        } elseif ($this->getCodeComportement() == 'cotisation') {
+        } elseif ('cotisation' == $this->getCodeComportement()) {
             $isValide = $this->getUtilisateur()->hasAutorisation($this->getTypeAutorisation());
-        } elseif ($this->getCodeComportement() == 'justificatif') {
+        } elseif ('justificatif' == $this->getCodeComportement()) {
             $isValide = $this->getUtilisateur()->hasAutorisation($this->getTypeAutorisation()) || !empty($this->justificatif) || !empty($this->justificatifFile);
-        } elseif ($this->getCodeComportement() == 'validationencadrant') {
+        } elseif ('validationencadrant' == $this->getCodeComportement()) {
             $isValide = $this->valideParEncadrant;
-        } elseif ($this->getCodeComportement() == 'validationgestionnaire') {
+        } elseif ('validationgestionnaire' == $this->getCodeComportement()) {
             $isValide = $this->valideParGestionnaire;
         }
 
         $this->statut = $isValide ? 'valide' : 'invalide';
     }
-    #endregion
+
+    //endregion
 
     /**
      * Get id.
@@ -179,7 +179,7 @@ class Autorisation
     /**
      * Set justificatif.
      *
-     * @param string|null $justificatif
+     * @param null|string $justificatif
      *
      * @return Autorisation
      */
@@ -203,7 +203,7 @@ class Autorisation
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Autorisation
      */
@@ -299,11 +299,11 @@ class Autorisation
     /**
      * Set inscription.
      *
-     * @param \UcaBundle\Entity\Inscription|null $inscription
+     * @param null|\UcaBundle\Entity\Inscription $inscription
      *
      * @return Autorisation
      */
-    public function setInscription(\UcaBundle\Entity\Inscription $inscription = null)
+    public function setInscription(Inscription $inscription = null)
     {
         $this->inscription = $inscription;
 
@@ -323,11 +323,11 @@ class Autorisation
     /**
      * Set typeAutorisation.
      *
-     * @param \UcaBundle\Entity\TypeAutorisation|null $typeAutorisation
+     * @param null|\UcaBundle\Entity\TypeAutorisation $typeAutorisation
      *
      * @return Autorisation
      */
-    public function setTypeAutorisation(\UcaBundle\Entity\TypeAutorisation $typeAutorisation = null)
+    public function setTypeAutorisation(TypeAutorisation $typeAutorisation = null)
     {
         $this->typeAutorisation = $typeAutorisation;
 
@@ -347,11 +347,11 @@ class Autorisation
     /**
      * Set utilisateur.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
      *
      * @return Autorisation
      */
-    public function setUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur = null)
+    public function setUtilisateur(Utilisateur $utilisateur = null)
     {
         $this->utilisateur = $utilisateur;
 
@@ -371,7 +371,7 @@ class Autorisation
     /**
      * Set valideParGestionnaire.
      *
-     * @param bool|null $valideParGestionnaire
+     * @param null|bool $valideParGestionnaire
      *
      * @return Autorisation
      */

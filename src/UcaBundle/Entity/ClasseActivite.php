@@ -4,11 +4,10 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\HttpFoundation\File\File;
-use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\ClasseActiviteRepository")
@@ -17,15 +16,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="classeactivite.uniqueentity")
  */
-class ClasseActivite
+class ClasseActivite implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
-    #region Propriétés
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    use \UcaBundle\Entity\Traits\JsonSerializable;
 
     /**
      * @Gedmo\Translatable
@@ -35,21 +28,28 @@ class ClasseActivite
      */
     protected $libelle;
 
-    /** 
-     * @ORM\ManyToOne(targetEntity="TypeActivite" , inversedBy="classeActivite") 
+    //region Propriétés
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TypeActivite" , inversedBy="classeActivite")
      * @Assert\NotNull(message="classeactivite.typeactivite.notnull")
      */
     private $typeActivite;
 
-    
-    /** 
+    /**
      * @ORM\OneToMany(targetEntity="Activite", mappedBy="classeActivite" , fetch="EXTRA_LAZY")
      */
     private $activites;
-    
+
     /** @ORM\Column(type="string", length=255) */
     private $image;
-    
+
     /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
@@ -58,40 +58,48 @@ class ClasseActivite
      * @Assert\Expression("this.getImage() !== null || this.getImageFile() !== null", message="classeactivite.image.notnull")
      */
     private $imageFile;
-    
+
     /** @ORM\Column(type="datetime",nullable=true) */
-    private $updatedAt; 
+    private $updatedAt;
 
     /**
      * @Gedmo\Versioned
      * @ORM\Column(type="text")
      */
     private $typeActiviteLibelle;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->libelle;
+    }
+
+    //endregion
+
+    //region Méthodes
+    public function jsonSerializeProperties()
+    {
+        return ['id', 'libelle'];
+    }
+
     public function getClasseActiviteLibelle()
     {
         return $this->getLibelle();
     }
-    function __toString()
-    {
-        return $this->libelle;
-    }
+
     public function updateTypeActiviteLibelle()
     {
         $this->typeActiviteLibelle = $this->getTypeActivite()->getLibelle();
 
         return $this;
-    }
-    #endregion
-    
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -127,15 +135,15 @@ class ClasseActivite
     {
         return $this->libelle;
     }
-   
+
     /**
      * Set typeActivite.
      *
-     * @param \UcaBundle\Entity\TypeActivite|null $typeActivite
+     * @param null|\UcaBundle\Entity\TypeActivite $typeActivite
      *
      * @return ClasseActivite
      */
-    public function setTypeActivite(\UcaBundle\Entity\TypeActivite $typeActivite = null)
+    public function setTypeActivite(TypeActivite $typeActivite = null)
     {
         $this->typeActivite = $typeActivite;
 
@@ -159,7 +167,7 @@ class ClasseActivite
      *
      * @return ClasseActivite
      */
-    public function addActivite(\UcaBundle\Entity\Activite $activite)
+    public function addActivite(Activite $activite)
     {
         $this->activite[] = $activite;
 
@@ -171,9 +179,9 @@ class ClasseActivite
      *
      * @param \UcaBundle\Entity\Activite $activite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeActivite(\UcaBundle\Entity\Activite $activite)
+    public function removeActivite(Activite $activite)
     {
         return $this->activite->removeElement($activite);
     }
@@ -201,8 +209,9 @@ class ClasseActivite
     public function setImageFile(File $image = null)
     {
         $this->imageFile = $image;
-        if ($image) 
+        if ($image) {
             $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getImageFile()
@@ -223,7 +232,7 @@ class ClasseActivite
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Activite
      */

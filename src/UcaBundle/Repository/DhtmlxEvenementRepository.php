@@ -111,4 +111,78 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
             ->execute()
         ;
     }
+
+    public function findEvenementChaqueSerieDuFormatBetwennDates($formatActiviteId, $dateDebut, $dateFin)
+    {
+        return $this->createQueryBuilder('d')
+            ->leftJoin('d.serie', 'serie')
+            ->leftJoin('serie.creneau', 'c')
+            ->where('c.formatActivite = :formatActivite')
+            ->andWhere('d.dateDebut <= :dateFin')
+            ->andWhere('d.dateFin >= :dateDebut')
+            ->setParameter('formatActivite', $formatActiviteId)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->orderBy('d.dateDebut')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findEvenementChaqueSerieDuFormatBetwennDatesByRessource($ressourceId, $dateDebut, $dateFin)
+    {
+        return $this->createQueryBuilder('d')
+            ->leftJoin('d.reservabilite', 'revervabilite')
+            ->leftjoin('revervabilite.ressource', 'ressource')
+            ->where('ressource.id = :idRessource')
+            ->andWhere('d.dateDebut <= :dateFin')
+            ->andWhere('d.dateFin >= :dateDebut')
+            ->setParameter('idRessource', $ressourceId)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findDhtmlxEvenementBySerie($id)
+    {
+        $qb = $this->createQueryBuilder('d')
+            ->where('d.serie = :id')
+            ->setParameter('id', $id)
+    ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findDhtmlxEvenementBySerieAndSemester($id, $semester)
+    {
+        $dates = [];
+        1 == $semester ? $dates = $this->createDate('-01-01', '-06-30') : $dates = $this->createDate('-07-01', '-12-31');
+
+        $parameters = [
+            'id' => $id,
+            'dateDeb' => $dates[0],
+            'dateFin' => $dates[1],
+        ];
+
+        $qb = $this->createQueryBuilder('d')
+            ->where('d.serie = :id')
+            ->andWhere('d.dateDebut >= :dateDeb AND d.dateFin <= :dateFin')
+            ->setParameters($parameters)
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function createDate($deb, $fin)
+    {
+        $retour = [];
+        $year = new \DateTime();
+        $year = date_format($year, 'Y');
+        $retour[0] = new \DateTime($year.$deb);
+        $retour[1] = new \DateTime($year.$fin);
+
+        return $retour;
+    }
 }

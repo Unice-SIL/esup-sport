@@ -1,0 +1,14 @@
+{% macro afficherCapacite(form, profilName ) %}
+	{% if profilName == null %}
+		{% set profilName = "nouvelleLigne" %}
+	{% endif %}
+	<div class="row" id="{{ profilName }}">
+		<div class="col-sm-6 col-lg-6 mt-2">
+				{{ form_label(form, profilName) }}
+		</div>
+		<div class="col-sm-6 col-lg-6">
+			{{ form_widget(form) }}
+		</div>
+	</div>
+	
+{% endmacro %}

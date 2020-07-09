@@ -3,9 +3,13 @@
 namespace UcaBundle\Controller\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Commande;
+use UcaBundle\Entity\FormatAchatCarte;
+use UcaBundle\Entity\UtilisateurCreditHistorique;
+use UcaBundle\Form\NumeroChequeType;
 
 class PaiementController extends Controller
 {
@@ -19,15 +23,52 @@ class PaiementController extends Controller
         $moyenPaiement = 'PAYBOX' == $typePaiement ? 'cb' : null;
         $commande->changeStatut('apayer', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
         $em->flush();
+        if ($commande->getUtilisateur()->getCreditTotal() >= $commande->getMontantTotal()) {
+            $moyenPaiement = 'credit';
+            $typePaiement = 'credit';
+            $usr = $commande->getUtilisateur();
+            $commande->setCreditUtilise($commande->getMontantTotal());
+            $creditHistorique = new UtilisateurCreditHistorique($usr, $commande->getMontantTotal(), null, 'debit', "Règlement d'une commande");
+            $creditHistorique->setCommandeAssociee($commande->getId());
+            $usr->addCredit($creditHistorique);
+            $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
+            $em->flush();
+
+            $twigConfig['status'] = 'success';
+            $twigConfig['source'] = $moyenPaiement;
+            $twigConfig['commande'] = $commande;
+
+            return $this->render('@Uca/UcaWeb/Commande/PaiementValidation.html.twig', $twigConfig);
+        }
+
         if ('PAYBOX' == $typePaiement) {
             $paybox = $this->get('uca.paybox');
             $paybox->setCommande($commande);
             $twigConfig['url'] = $paybox->getUrl();
             $twigConfig['form'] = $paybox->getForm();
         }
+
         $twigConfig['panier'] = $commande;
 
         return $this->render('@Uca/UcaWeb/Commande/RecapitulatifPaiement.html.twig', $twigConfig);
+    }
+
+    /**
+     * @Route("/UcaWeb/Paiement/Validation/{id}/{source}", name="UcaWeb_PaiementValidationCheque")
+     */
+    public function paiementValidationChequeAction(Request $request, Commande $commande, string $source)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $cd = $em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $commande]);
+        if ($cd->getFormatActivite() instanceof FormatAchatCarte) {
+            $twigConfig['commandeDetail'] = $cd;
+        }
+
+        $twigConfig['status'] = 'success';
+        $twigConfig['source'] = $source;
+        $twigConfig['commande'] = $commande;
+
+        return $this->render('@Uca/UcaWeb/Commande/PaiementValidation.html.twig', $twigConfig);
     }
 
     /**
@@ -44,13 +85,52 @@ class PaiementController extends Controller
             $commande->setPrenomEncaisseur($this->getUser()->getPrenom());
             $commande->setUtilisateurEncaisseur($this->getUser());
         }
+
         if (
             !$commande->getCommandeDetails()->isEmpty()
             && ('apayer' == $commande->getStatut() && 'localhost' == $request->server->get('HTTP_HOST') && in_array($source, ['monpanier', 'mescommandes'])
                 || 'apayer' == $commande->getStatut() & $this->isGranted('ROLE_GESTION_PAIEMENT_COMMANDE') && 'gestioncaisse' == $source
-                || 'panier' == $commande->getStatut() & 0 == $commande->getMontantTotal() && in_array($source, ['monpanier', 'mescommandes']))
+                || 'panier' == $commande->getStatut() & 0 == $commande->getMontantTotal() && in_array($source, ['monpanier', 'mescommandes'])
+                || 'panier' == $commande->getStatut() & $commande->getUtilisateur()->getCreditTotal() > 0 && in_array($source, ['monpanier', 'mescommandes']))
         ) {
+            if ($ancienCredit = $commande->getUtilisateur()->getCreditTotal() > 0) {
+                $montant = ($ancienCredit < $commande->getMontantTotal()) ? $ancienCredit : $commande->getMontantTotal();
+                $usr = $commande->getUtilisateur();
+                $commande->setCreditUtilise($montant);
+                $creditHistorique = new UtilisateurCreditHistorique($usr, $montant, null, 'debit', "Règlement d'une commande");
+                $creditHistorique->setCommandeAssociee($commande->getId());
+                $usr->addCredit($creditHistorique);
+            }
             $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
+
+            $cd = $em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $commande]);
+            if ($cd->getFormatActivite() instanceof FormatAchatCarte) {
+                $twigConfig['commandeDetail'] = $cd;
+            }
+
+            if ('cheque' == $moyenPaiement) {
+                $form = $this->get('form.factory')->create(NumeroChequeType::class);
+                $form->handleRequest($request);
+                $validation = ($form->isSubmitted() && $form->isValid());
+                if ($request->isMethod('POST') && $validation) {
+                    $commande->setNumeroCheque($form->getData()['numeroCheque']);
+                    $em->persist($commande);
+                    $em->flush();
+                    $url = $this->get('router')->generate('UcaWeb_PaiementValidationCheque', ['id' => $commande->getId(), 'source' => 'gestioncaisse']);
+
+                    return new JsonResponse([
+                        'formValid' => true,
+                        'redirection' => $url,
+                    ]);
+                }
+
+                return new JsonResponse([
+                    'formValid' => false,
+                    'form' => $this->renderView('@Uca/UcaWeb/Commande/Modal.PaiementValidation.Form.html.twig', [
+                        'form' => $form->createView(),
+                    ]),
+                ]);
+            }
             $em->flush();
             $twigConfig['status'] = 'success';
         } else {
@@ -78,5 +158,26 @@ class PaiementController extends Controller
         $twigConfig['commande'] = $commande;
 
         return $this->render('@Uca/UcaWeb/Commande/PaiementValidation.html.twig', $twigConfig);
+    }
+
+    private function getErrorMessages(\Symfony\Component\Form\Form $form)
+    {
+        $errors = [];
+
+        foreach ($form->getErrors() as $key => $error) {
+            if ($form->isRoot()) {
+                $errors['#'][] = $error->getMessage();
+            } else {
+                $errors[] = $error->getMessage();
+            }
+        }
+
+        foreach ($form->all() as $child) {
+            if (!$child->isValid()) {
+                $errors[$child->getName()] = $this->getErrorMessages($child);
+            }
+        }
+
+        return $errors;
     }
 }

@@ -4,9 +4,6 @@
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
 {% block main %}
-    <script> var typeA = "{{ type }}"; </script>
-    <script> var role = "{{ role }}"; </script>
-
     {{ flashBag.showAll }}
     {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     <h1>{{ item.libelle }}</h1>
@@ -42,6 +39,7 @@
                         <li> {{'ressource.superficie'|trans}} : {{ item.superficie }} </li>
                         <li> {{'ressource.code.rus'|trans}} : {{ item.nomenclatureRus }} </li>
                         <li> {{'ressource.latitude'|trans}} / {{'ressource.longitude'|trans}} : {{ item.latitude }} / {{ item.longitude }} </li>
+                        <li> {{'lieu.visitevirtuelle.libelle'|trans}} : {{ item.visiteVirtuelle }} </li>
                     </div>
                 </div>  
             {% elseif format == 'Materiel' %}
@@ -55,9 +53,12 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript">
-        //scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }
+    <script type='text/javascript'>
+		'use_strict';
+        var typeA = "{{ type }}";
+        var role = "{{ role }}"; 
     </script>
+
     {{ dhtmlxCalendar.initSchedulerData(item) }}
     {{ dhtmlxCalendar.initCalendarJs(item) }}
     {{ dhtmlxCalendar.debugSchedulerEvents() }}

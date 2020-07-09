@@ -2,13 +2,18 @@
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
 {% if app.request.attributes.get('_route') == 'UcaWeb_ClasseActiviteLister' %}
+    {% set home = true %}
     {% set pageActivity = false %}
     {% set urlImageFond = emplacementImageFond('Activités').image %}
     {% set route = 'UcaWeb_ActiviteLister' %}
     {% set params = {} %}
+    {% set routeAct = 'UcaWeb_FormatActiviteLister' %}
+    {# {% set paramsFor = {idCa: item.id} %} #}
     {% set description = '' %}
     {% set title = 'accueil.classeActivite.title' | trans %}
+    {% set titleAct = 'accueil.activite.title' | trans %}
 {% elseif app.request.attributes.get('_route') == 'UcaWeb_ActiviteLister' %}
+    {% set home = false %}
     {% set pageActivity = false %}
     {% set urlImageFond = item.image %}
     {% set route = 'UcaWeb_FormatActiviteLister' %}
@@ -16,6 +21,7 @@
     {% set title = item.libelle %}
     {% set description = '' %}
 {% elseif app.request.attributes.get('_route') == 'UcaWeb_FormatActiviteLister' %}
+    {% set home = false %}
     {% set pageActivity = true %}
     {% set urlImageFond = item.image %}
     {% set route = 'UcaWeb_FormatActiviteDetail' %}
@@ -38,13 +44,14 @@
         {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     </div>
 
-    <h1 class="h1-light">{{ title }}</h1>
-    {% if description is not empty %}
-        <section class="container container-style bg-white mb-5">
-            {{ description|nl2br }}
-        </section>
-    {% endif %}
+    
     {% if pageActivity and data is not empty %}
+        <h1 class="h1-light">{{ title }}</h1>
+        {% if description is not empty %}
+            <section class="container container-style bg-white mb-5">
+                {{ description|nl2br }}
+            </section>
+        {% endif %}
         <section class="container pageFormatActivity pt-3">
             <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "formatactivite.title"|trans }}</p>
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
@@ -121,7 +128,67 @@
                 </div>
             {% endfor %}
         </section>
+    {% elseif home %}
+        <section class="container my-5">
+            <ul class="nav nav-justified position-absolute">
+                <li class="nav-item">
+                    <a href="#classeActivite" class="active btn btn-outline-primary float-left mt-4 ongletClassActivite" data-toggle="tab"><i class="fas fa-chevron-left"></i></a>
+                </li>
+                <li class="nav-item">
+                    <a href="#activite" class="btn btn-outline-primary float-right mt-4 ongletClassActivite" data-toggle="tab"><i class="fas fa-search"></i></a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="classeActivite">
+                    <h1 class="h1-light text-center">{{ title }}</h1>
+                    <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                        {% for dataItem in data %}
+                            <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                <a class="align-self-center text-center" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="activite">
+                    <h1 class="h1-light text-center">{{ titleAct }}</h1>
+                    <div class="well mb-5">
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                        <div class="row bg-white p-4">
+                            <div class="col-sm-4">{{ form_row(form.type_activite) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.classe_activite) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.activite) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.format_activite) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.etablissement) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.lieu) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.dateDebut) }}</div>
+                            <div class="col-sm-4">{{ form_row(form.dateFin) }}</div>
+                            <div class="col-sm-4"></div>
+                            <div class="col-12 text-center">
+                                <button type="button" class="btn btn-danger" id="resetForm">{{ 'bouton.reinitialiser' | trans }}</button>
+                                {# {{ form_row(form.reset) }} #}
+                                <button type="button" class="btn btn-primary" id="refreshActivites">{{ 'common.rechercher' | trans }}</button>
+                            </div>
+                        </div>
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="row mb-5 d-flex flex-wrap justify-content-around" id="activities-container">
+                        {% for dataItem in activites %}
+                            <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite"  style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                <a class="align-self-center text-center" href="{{ url(routeAct, {id: dataItem.id, idCa: dataItem.classeActivite.id}) }}">{{ dataItem.libelle }}</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div id="modal-container"></div>
+        </section>
     {% else %}
+        <h1 class="h1-light">{{ title }}</h1>
+        {% if description is not empty %}
+            <section class="container container-style bg-white mb-5">
+                {{ description|nl2br }}
+            </section>
+        {% endif %}
         <section class="container">
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
                 {% for dataItem in data %}
@@ -132,4 +199,145 @@
             </div>
         </section>
     {% endif %}
+    {% include "@Uca/UcaWeb/Activite/Modal.Chargement.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        $(document).ready(function() {
+            $('.champRechercheActivite').on('change', function() {
+                // Selon le select et l'option choisie on modifie les options des select qui en decoule
+                if($(this).attr('id') == 'ucabundle_rechercheactivite_type_activite'){
+                    changeSelectOption($('#ucabundle_rechercheactivite_type_activite').val(), 'classe_activite', 'type_activite');
+                    changeSelectOption($('#ucabundle_rechercheactivite_type_activite').val(), 'activite', 'type_activite');
+                }
+                if($(this).attr('id') == 'ucabundle_rechercheactivite_classe_activite'){
+                    changeSelectOption($('#ucabundle_rechercheactivite_classe_activite').val(), 'activite', 'classe_activite');
+                }
+                if($(this).attr('id') == 'ucabundle_rechercheactivite_etablissement'){
+                    changeSelectOption($('#ucabundle_rechercheactivite_etablissement').val(), 'lieu', 'etablissement');
+                }
+            });
+
+            // Fonction qui cache les options de select inutiles dues au choix fait sur le select 'parent'
+            function changeSelectOption(idValue, dataIdSelect, dataIdChanged){
+                $('#ucabundle_rechercheactivite_'+dataIdSelect).select2('destroy');
+                $('#ucabundle_rechercheactivite_'+dataIdSelect+' option').each(function(index){
+                    if($(this).attr('data-'+dataIdChanged+'-id') != idValue && idValue != 0){
+                        $(this).attr('disabled','disabled');
+                    }else{
+                        $(this).removeAttr('disabled');
+                    }
+                });
+                $('#ucabundle_rechercheactivite_'+dataIdSelect+' option[value="0"]').removeAttr('disabled');
+                $('#ucabundle_rechercheactivite_'+dataIdSelect).select2();
+                $('#ucabundle_rechercheactivite_'+dataIdSelect).val(0);
+                $('#ucabundle_rechercheactivite_'+dataIdSelect).trigger('change.select2');
+            }
+
+            $('#refreshActivites').on('click', function() {
+                $("#modalActivite").modal('show');
+                let valueTypeActivite = $("#ucabundle_rechercheactivite_type_activite").val();
+                let valueClasseActivite = $("#ucabundle_rechercheactivite_classe_activite").val();
+                let valueActivite = $("#ucabundle_rechercheactivite_activite").val();
+                let valueFormatActivite = $("#ucabundle_rechercheactivite_format_activite").val();
+                let valueEtablissement = $("#ucabundle_rechercheactivite_etablissement").val();
+                let valueLieu = $("#ucabundle_rechercheactivite_lieu").val();
+                let valueDateDebut = $("#ucabundle_rechercheactivite_dateDebut").val();
+                let valueDateFin = $("#ucabundle_rechercheactivite_dateFin").val();
+
+                $.ajax({
+                method: "POST",
+                url: Routing.generate("ActiviteApi_RefreshActivities"),
+                data: {
+                    type_activite: valueTypeActivite,
+                    classe_activite: valueClasseActivite,
+                    activite: valueActivite,
+                    format_activite: valueFormatActivite,
+                    etablissement: valueEtablissement,
+                    lieu: valueLieu,
+                    dateDebut: valueDateDebut,
+                    dateFin: valueDateFin,
+                }
+                })
+                .done(function(data){
+                    
+                    if(data != null){
+                        $("#modalActivite").modal('hide');
+                        $("#activities-container").empty();
+                        $("#modal-container").empty();
+                        let items = JSON.parse(data);                        
+                        items['activite'].forEach(function(item){
+                            let activity = JSON.parse(item);                            
+                            let listeFormat = items['formatActivite'][activity['id']];
+                            let formats = JSON.parse(listeFormat);
+
+                            let modalContent = "<ul>"
+                            formats.forEach(function(format){
+                                modalContent += "<li>"+ format +"</li>"
+                            })
+                            modalContent += "</ul>";
+                            
+                            let background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/filename') | imagine_filter('thumb_large_small') }}') no-repeat center center";
+                            background = background.replace('filename', activity['image']);
+
+                            let div = '\
+                                <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite">\
+                                    <a class="align-self-center text-center" href="{{ url("UcaWeb_FormatActiviteLister", {id: "idActivite", idCa: "idClasseActivite"}) }}">libelle</a>\
+                                    <a class="align-self-center text-center text-warning detail-activite" data-toggle="modal" data-target="#modalTarget" type="button" style="width: 10%; padding-top: 0%; padding-bottom: 50%;"><i class="fas fa-info-circle fa-2x"></i></a>\
+                                </div>\
+                            ';
+                            div = div.replace('idActivite', activity['id']);
+                            div = div.replace('idClasseActivite', activity['classeActivite']['id']);
+                            div = div.replace('libelle', activity['libelle']);
+                            div = div.replace('modalTarget', "modal"+activity['id']);
+                            
+                            $("#activities-container").append(div);
+                            $("#activities-container div:last-child").css({
+                                'background' : background,
+                                'bacground-size' : 'cover',
+                            });
+
+                            let modal = '\
+                                <div class="modal fade" id="modalTarget" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">\
+                                    <div class="modal-dialog" role="document">\
+                                        <div class="modal-content">\
+                                            <div class="modal-header">\
+                                                <h2 class="modal-title fs-24 hide-border-title" id="exampleModalLongTitle">{{ "common.format.activite.details"|trans }}</h2>\
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                                                    <span aria-hidden="true">&times;</span>\
+                                                </button>\
+                                            </div>\
+                                            <div class="modal-body">\
+                                                {{ "contenu" | raw }}\
+                                            </div>\
+                                            <div class="modal-footer">\
+                                                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ "common.fermer"|trans }}</button>\
+                                            </div>\
+                                        </div>\
+                                    </div>\
+                                </div>\
+                            ';
+
+                            modal = modal.replace('modalTarget', "modal"+activity['id']);
+                            modal = modal.replace('contenu', modalContent);
+                            $("#modal-container").append(modal);                            
+                        });
+                    }
+                })
+                .fail(_uca.ajax.fail);        
+            });
+
+            $('#resetForm').on('click', function() {
+                $('#ucabundle_rechercheactivite_type_activite').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_classe_activite').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_activite').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_format_activite').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_etablissement').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_lieu').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_dateDebut').val(null);
+                $('#ucabundle_rechercheactivite_dateFin').val(null);
+            });
+        });        
+    </script>
 {% endblock %}

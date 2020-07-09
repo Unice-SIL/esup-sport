@@ -50,6 +50,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="complement.capacite.notblank")
      * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
+     * @Assert\Expression("this.getCapaciteTousProfil() <= this.getCapacite()", message="formatactivite.capaciteprofil.invalide" )
      */
     protected $capacite;
 
@@ -166,9 +167,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      */
     private $niveauxSportifs;
 
-    /** @ORM\ManyToMany(targetEntity="ProfilUtilisateur", inversedBy="formatsActivite", fetch="EAGER")
-     * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
-     * @Assert\Count(min = 1, minMessage = "complement.profilsutilisateurs.notblank")
+    /**
+     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="formatActivite", fetch="EAGER", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $profilsUtilisateurs;
 
@@ -390,11 +391,11 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function updateListeProfils()
     {
         $this->listeProfils = '';
-        foreach ($this->getProfilsUtilisateurs() as $profil) {
+        foreach ($this->getProfilsUtilisateurs() as $formatProfil) {
             if (!empty($this->listeProfils)) {
                 $this->listeProfils .= ', ';
             }
-            $this->listeProfils .= $profil->getLibelle();
+            $this->listeProfils .= $formatProfil->getProfilUtilisateur()->getLibelle();
         }
 
         return $this;
@@ -446,6 +447,27 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
                     && !(isset($options['utilisateur']) && $options['utilisateur']->hasAutorisation($item));
         });
     }
+
+    public function getCapaciteTousProfil()
+    {
+        $capaciteTotale = 0;
+
+        foreach ($this->getProfilsUtilisateurs() as $formatProfil) {
+            $capaciteTotale += (is_integer(intval($formatProfil->getCapaciteProfil())) ? intval($formatProfil->getCapaciteProfil()) : 0);
+        }
+
+        return $capaciteTotale;
+    }
+
+    public function getCapaciteProfil($profilUtilisateur)
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profilUtilisateur', $profilUtilisateur));
+        $result = $this->getProfilsUtilisateurs()->matching($criteria);
+
+        return !$result->isEmpty() ? $result->first()->getCapaciteProfil() : false;
+    }
+
+    // end region
 
     /**
      * Get id.
@@ -1006,7 +1028,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return FormatActivite
      */
-    public function addProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
+    public function addProfilsUtilisateur(FormatActiviteProfilUtilisateur $profilsUtilisateur)
     {
         $this->profilsUtilisateurs[] = $profilsUtilisateur;
 
@@ -1020,7 +1042,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeProfilsUtilisateur(ProfilUtilisateur $profilsUtilisateur)
+    public function removeProfilsUtilisateur(FormatActiviteProfilUtilisateur $profilsUtilisateur)
     {
         return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
     }

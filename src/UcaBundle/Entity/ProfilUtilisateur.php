@@ -4,26 +4,19 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
- * @Gedmo\Loggable   
+ * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="profilutilisateur.uniqueentity")
  */
 class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    #region Propriétés
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
+    // region Propriétés
 
     /**
      * @Gedmo\Translatable
@@ -44,35 +37,35 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="profil", cascade={"persist", "remove"}) */
     protected $montants;
 
-    /** @ORM\ManyToMany(targetEntity="FormatActivite", mappedBy="profilsUtilisateurs") */
+    /**
+     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="EAGER")
+     * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
+     */
     protected $formatsActivite;
 
-    /** @ORM\ManyToMany(targetEntity="Creneau", mappedBy="profilsUtilisateurs") */
+    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="EAGER", orphanRemoval=true) */
     protected $creneaux;
 
     /** @ORM\OneToMany(targetEntity="Utilisateur", mappedBy="profil") */
     protected $utilisateur;
- 
-    /** 
-     * @ORM\Column(type="boolean") 
-     * @Assert\NotBlank(message="profilutilisateur.preinscription.notblank")
-    */
-    protected $preinscription;
-
-    #endregion
-    
-    #region Méthodes
-
-    public function jsonSerializeProperties()
-    {
-        return ['libelle'];
-    }
-
-    #endregion
-
 
     /**
-     * Constructor
+     * @ORM\Column(type="boolean")
+     * @Assert\NotBlank(message="profilutilisateur.preinscription.notblank")
+     */
+    protected $preinscription;
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    // endregion
+
+    /**
+     * Constructor.
      */
     public function __construct()
     {
@@ -82,15 +75,14 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
         $this->utilisateur = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    // region Méthodes
+
+    public function jsonSerializeProperties()
     {
-        return $this->id;
+        return ['libelle'];
     }
+
+    // endregion
 
     /**
      * Set libelle.
@@ -165,13 +157,23 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
+     * Get id.
+     *
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * Add montant.
      *
      * @param \UcaBundle\Entity\MontantTarifProfilUtilisateur $montant
      *
      * @return ProfilUtilisateur
      */
-    public function addMontant(\UcaBundle\Entity\MontantTarifProfilUtilisateur $montant)
+    public function addMontant(MontantTarifProfilUtilisateur $montant)
     {
         $this->montants[] = $montant;
 
@@ -183,9 +185,9 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\MontantTarifProfilUtilisateur $montant
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
-    public function removeMontant(\UcaBundle\Entity\MontantTarifProfilUtilisateur $montant)
+    public function removeMontant(MontantTarifProfilUtilisateur $montant)
     {
         return $this->montants->removeElement($montant);
     }
@@ -201,49 +203,13 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Add formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
-     *
-     * @return ProfilUtilisateur
-     */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
-    {
-        $this->formatsActivite[] = $formatsActivite;
-
-        return $this;
-    }
-
-    /**
-     * Remove formatsActivite.
-     *
-     * @param \UcaBundle\Entity\FormatActivite $formatsActivite
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
-    {
-        return $this->formatsActivite->removeElement($formatsActivite);
-    }
-
-    /**
-     * Get formatsActivite.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getFormatsActivite()
-    {
-        return $this->formatsActivite;
-    }
-
-    /**
      * Add creneaux.
      *
-     * @param \UcaBundle\Entity\Creneau $creneaux
+     * @param \UcaBundle\Entity\CreneauProfilUtilisateur $creneaux
      *
      * @return ProfilUtilisateur
      */
-    public function addCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function addCreneaux(CreneauProfilUtilisateur $creneaux)
     {
         $this->creneaux[] = $creneaux;
 
@@ -253,11 +219,11 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Remove creneaux.
      *
-     * @param \UcaBundle\Entity\Creneau $creneaux
+     * @param \UcaBundle\Entity\CreneauProfilUtilisateur $creneaux
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
-    public function removeCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function removeCreneaux(CreneauProfilUtilisateur $creneaux)
     {
         return $this->creneaux->removeElement($creneaux);
     }
@@ -279,7 +245,7 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @return ProfilUtilisateur
      */
-    public function addUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function addUtilisateur(Utilisateur $utilisateur)
     {
         $this->utilisateur[] = $utilisateur;
 
@@ -291,9 +257,9 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\Utilisateur $utilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
-    public function removeUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function removeUtilisateur(Utilisateur $utilisateur)
     {
         return $this->utilisateur->removeElement($utilisateur);
     }

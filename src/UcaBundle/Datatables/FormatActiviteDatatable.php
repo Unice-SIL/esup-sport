@@ -4,12 +4,12 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
-use UcaBundle\Datatables\Column\TwigDataColumn;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
 use UcaBundle\Datatables\Button\LogButton;
 use UcaBundle\Datatables\Button\ModifierButton;
 use UcaBundle\Datatables\Button\SupprimerButton;
 use UcaBundle\Datatables\Button\VoirButton;
+use UcaBundle\Datatables\Column\TwigDataColumn;
 
 class FormatActiviteDatatable extends AbstractTranslatedDatatable
 {
@@ -18,66 +18,67 @@ class FormatActiviteDatatable extends AbstractTranslatedDatatable
         $this->setUcaDefault();
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('image', ImageColumn::class, array(
+            ])
+            ->add('image', ImageColumn::class, [
                 'title' => 'Image',
                 'imagine_filter' => 'thumb_small',
                 'relative_path' => 'upload/public/image',
                 'class_name' => 'hide-column-md',
                 'orderable' => false,
-            ))
-            ->add('libelle', Column::class, array(
+            ])
+            ->add('libelle', Column::class, [
                 'title' => $this->translator->trans('formatactivite.libelle'),
                 'visible' => true,
-            ))
-            ->add('description', Column::class, array(
+            ])
+            ->add('description', Column::class, [
                 'title' => $this->translator->trans('common.description'),
                 'visible' => true,
                 'searchable' => true,
-                'class_name' => 'hide-column'
-            ))
-            ->add('niveauxSportifs.libelle', Column::class, array(
+                'class_name' => 'hide-column',
+            ])
+            ->add('niveauxSportifs.libelle', Column::class, [
                 'title' => 'niveauxSportifs',
                 'data' => 'niveauxSportifs[,].libelle',
                 'visible' => false,
-            ))
-            ->add('activite.libelle', Column::class, array(
+            ])
+            ->add('activite.libelle', Column::class, [
                 'title' => 'Activité',
                 'visible' => false,
-            ))
-            ->add('activite.classeActivite.libelle', Column::class, array(
+            ])
+            ->add('activite.classeActivite.libelle', Column::class, [
                 'title' => 'classe Activité',
                 'visible' => false,
-            ))
-            ->add('activite.classeActivite.typeActivite.libelle', Column::class, array(
+            ])
+            ->add('activite.classeActivite.typeActivite.libelle', Column::class, [
                 'title' => 'Type Activité',
                 'visible' => false,
-            ))
-            ->add('dateDebutEffective', TwigDataColumn::class, array(
+            ])
+            ->add('dateDebutEffective', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.date.debut'),
                 'twigTemplate' => 'Date',
-            ))
-            ->add('dateFinEffective', TwigDataColumn::class, array(
+            ])
+            ->add('dateFinEffective', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.date.fin'),
                 'twigTemplate' => 'Date',
-            ))
-            ->add('profilsUtilisateurs.libelle', Column::class, array(
+            ])
+            /*->add('profilsUtilisateurs.libelle', Column::class, array(
                 'title' => 'Profil Utilisateur',
                 'data' => 'profilsUtilisateurs[,].libelle',
                 'visible' => false,
-            ))
+            ))*/
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
-                'actions' =>  [
+                'actions' => [
                     (new VoirButton($this, 'UcaGest_FormatActiviteVoir', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_LECTURE'))->getConfig(),
                     (new ModifierButton($this, 'UcaGest_FormatActiviteModifier', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
                     (new SupprimerButton($this, 'UcaGest_FormatActiviteSupprimer', ['idActivite' => 'activite.id', 'id' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'FormatActivite', 'objectId' => 'id'], 'ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE'))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

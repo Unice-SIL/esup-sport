@@ -26,13 +26,13 @@
     <section class="container">
         {{ flashBag.showAll }}
         <div class="row">
-
             <div class="w-100 mb-5 p-md-5 container-style bg-white justify-content-between card-event">
-
                 {% if retourBouton is defined %}
                     {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
                 {% endif %}
-
+                {% if extraDisplay is defined %}
+                    {% include extraDisplay %}
+                {% endif %}
                 {% block DatatableHeader %}
                     {% if not noAddButton is defined %}
                         <div class="row">

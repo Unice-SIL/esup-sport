@@ -111,8 +111,9 @@
 
 {% block javascripts %}
   <script type="text/javascript">
-    {% include "@Uca/Common/Modal/Modal.Information.js.twig" %}
-    
+    'use_strict';
+    {% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
+  
     {% if not formMail.vars.valid %}
         $('#mailButton').click();
     {% endif %}

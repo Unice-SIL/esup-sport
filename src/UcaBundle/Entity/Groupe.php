@@ -5,13 +5,13 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use FOS\UserBundle\Model\Group;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\GroupeRepository")
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\GroupeListener"})
- * @Gedmo\Loggable   
+ * @Gedmo\Loggable
  * @UniqueEntity("libelle", message="groupe.uniqueentity")
  */
 class Groupe extends Group
@@ -52,7 +52,7 @@ class Groupe extends Group
      *
      * @return Groupe
      */
-    public function addUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function addUtilisateur(Utilisateur $utilisateur)
     {
         $this->utilisateurs[] = $utilisateur;
 
@@ -64,9 +64,9 @@ class Groupe extends Group
      *
      * @param \UcaBundle\Entity\Utilisateur $utilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function removeUtilisateur(Utilisateur $utilisateur)
     {
         return $this->utilisateurs->removeElement($utilisateur);
     }
@@ -81,13 +81,13 @@ class Groupe extends Group
         return $this->utilisateurs;
     }
 
-    /**
-     */
     public function getLibelle()
     {
         return $this->libelle;
     }
+
     /**
+     * @param mixed $libelle
      */
     public function setLibelle($libelle)
     {
@@ -97,6 +97,7 @@ class Groupe extends Group
     }
 
     /**
+     * @param mixed $listeRoles
      */
     public function setListeRoles($listeRoles)
     {

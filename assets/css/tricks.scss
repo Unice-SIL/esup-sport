@@ -1,0 +1,103 @@
+.no-after:after{
+    content: none;
+}
+
+.nav-infospratiques{
+    font-size: 1.5em;
+    background-color: $gray-400;
+    color: $gray-700;
+    font-weight: bold;
+}
+
+/*- Mise en forme du calendrier -*/
+#sectionCalendrier .row .col-sm{
+    border: 2px solid $white;
+    text-align: center;
+}
+
+#sectionCalendrier .row .col-sm .modal{
+    border: none;
+    text-align: left;
+}
+
+.partenaires-type {
+    width: 40%;
+    display: flex;
+}
+
+@include media-breakpoint-down(md) { 
+    .partenaires-type {
+        width: 75%;
+        display: flex;
+    }
+}
+
+@include media-breakpoint-down(sm) { 
+    .partenaires-type {
+        width: 100%;
+        display: inline-block;
+    }
+}
+.bg-dark-color-blue {
+    background: $eerie-black !important;
+    color: $maximum-blue !important;
+}
+
+.curentSelectionTypeVisualisation{
+    color: $maximum-blue !important;
+    text-decoration: underline $maximum-blue !important;
+    font-weight: bold;
+}
+
+.cursor-pointer{
+    cursor: pointer;
+}
+
+.otherMonth{
+    opacity: 0.5;
+}
+
+.today {
+    color: $maximum-blue !important;
+}
+
+.cell-col-center {
+    display: table;
+    width: 100%;
+}
+
+.cell-title-center {
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.calendar-entete{
+    line-height: 1;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.calendar-entete span{
+    font-size: 2em;
+}
+
+#sectionCalendrier{
+    background-color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.data-div{
+    background-color: rgba(250, 250, 250, 0.5) !important;
+}
+
+.data-div, .calendar-entete{
+    min-width: 170px;
+}
+
+.color-blanc {
+    color: $blanc !important;
+}
+
+/*- Mise en forme gestion d'onglet dans la liste des classe d'activité -*/
+.ongletClassActivite.active{
+    display: none;
+}

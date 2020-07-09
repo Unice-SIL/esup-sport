@@ -16,6 +16,8 @@
     // ACTIVITY
 /* - - - PAGE ACTIVITE - - - */
     // FORMATS
+    // VIDEO
+    // IMAGE
     // CALENDRIER
 /* - - - INSTALLATIONS SPORTIVES - - - */
 /* - - - EVENTS - - - */
@@ -36,6 +38,9 @@
 }
 .color-blue {
     color: $maximum-blue;
+}
+.color-blanc {
+    color: $blanc;
 }
 .color-dark-gray {
     color: $eerie-black;
@@ -114,7 +119,6 @@
 // CONTAINER / SECTIONS / BACKGROUNDS
 html { 
     height: 100%;
-    overflow-x: hidden;
 }
 body {
     letter-spacing: 1px;
@@ -155,7 +159,8 @@ body {
 .bg-dark {
     border: 2px solid $blanc;
 }
-@include media-breakpoint-down(lg) { 
+// @include media-breakpoint-down(lg) { 
+@media (max-width: 1300px){
     body {
         padding-bottom: 202px;
     }
@@ -222,6 +227,9 @@ body {
     background-color: $blanc;
     box-shadow: 0 -5px 25px rgba(0, 0, 0, 0.35);
     transition: 0.25s;
+}
+.input-img-preview .form-group {
+    margin-bottom: 0px !important ;
 }
 
 // TITLES
@@ -587,7 +595,8 @@ footer form a {
     padding: 5px 12px;
     color: $blanc;
 }
-@include media-breakpoint-down(lg) {
+// @include media-breakpoint-down(lg) {
+@media (max-width: 1300px){
     .navbar-footer {
         justify-content: center;
         flex-direction: column;
@@ -668,6 +677,26 @@ nav[aria-label="breadcrumb"] ol {
     height: 80vh;
     min-height: 520px;
     margin-top: 75px;
+}
+.carousel-control-prev {
+    left: -25px !important;
+    opacity: .5;
+    color: black !important;
+}
+.carousel-control-next {
+    right: -20px !important;
+    opacity: .5;
+    color: black !important;
+}
+.carousel-control-prev:hover, 
+.carousel-control-next:hover {
+    opacity: .75;
+    color: black;
+}
+.carousel-control-prev:active, 
+.carousel-control-next:active {
+    opacity: 1;
+    color: black;
 }
 .carousel-inner,
 .carousel-item {
@@ -966,6 +995,65 @@ select#selectDays {
         left: 10%;
     }
 }
+// VIDEO
+.card-video-small{
+    width: 100% !important;
+}
+.card-video{
+    overflow: hidden;
+    width:30%;
+    height: 225px;
+}
+.card-video-small::before {
+    content: '';
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0);
+    width: 0%;
+    height: 0%;
+    z-index: 1;
+    position: absolute;
+    transition: 0.15s ease-in;
+    margin-left: -16px;
+    margin-top: -16px;
+}
+.card-video-small:hover::before {
+    width: 91.5%;
+    height: 225px;
+    background: rgba(0, 0, 0, 0.25);
+}
+.bg-dark.card-video:hover{
+    border: 4px solid $blanc;
+}
+@include media-breakpoint-down(md) { 
+    .card-video {
+        width: 48%;
+    }
+
+    .card-video{
+        height: 400px;
+    }
+    .card-video-small:hover::before {
+        height: 400px;
+        width: 96.5%;
+    }
+}
+@include media-breakpoint-down(sm) { 
+    .card-video {
+        width: 75%;
+    }
+    .card-video-small:hover::before {
+        width: 93%;
+    }
+}
+.card-video span{
+    white-space: nowrap;
+}
+.card-video .fa-play-circle{
+    background-color: $blanc;
+    border-radius: 50%;
+    padding: 2px;
+}
+
 
 // CALENDRIER
 
@@ -1073,7 +1161,8 @@ select#selectDays {
     width: 100%;
 }
 .card-install .install-coordinates h3,
-.card-install .install-opening-hours h3 {
+.card-install .install-opening-hours h3,
+.card-install .install-virtual-visit h3 {
     font-size: 1rem;
     margin-bottom: 0.5rem;
 }

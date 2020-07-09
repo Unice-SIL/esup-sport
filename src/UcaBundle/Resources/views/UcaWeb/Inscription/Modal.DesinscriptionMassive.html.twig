@@ -1,0 +1,19 @@
+{% extends "@Uca/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalDesinscriptionMassive' %}
+{% block modalTitle 'message.confirmation.desinscription.inscription.titre' %}
+{% block modalBody %}
+    <div id="filtrer">
+        {{ 'message.confirmation.desinscription.massive.debut'|trans }} :
+        <br><br>
+            - <span id="inscrits"></span> {{ 'message.confirmation.desinscription.massive.inscrit'|trans }}<br>
+            - <span id="attentedepaiement"></span> {{ 'message.confirmation.desinscription.massive.attente'|trans }}<br>
+            - <span id="attentevalidationgestionnaire"></span> {{ 'message.confirmation.desinscription.massive.validation.gestionnaire'|trans }}<br>
+            - <span id="attentevalidationencadrant"></span> {{ 'message.confirmation.desinscription.massive.validation.encadrant'|trans }}<br>
+        <br>
+        {{ 'message.confirmation.desinscription.massive.fin'|trans }}
+    </div>
+    <div id="nonfiltrer">
+        {{'message.selection.filtre.desinscription'|trans}}
+    </div>
+{% endblock %}
+{% block modalBoutonActionLibelle 'bouton.desinscrire.inscription' | trans %}

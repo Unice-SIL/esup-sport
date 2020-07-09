@@ -29,6 +29,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
             'dateAnnulation',
             'dateCommande',
             'montantTotal',
+            'avoirCommandeDetails.referenceAvoir',
             'commandeDetails.typeArticle',
             'commandeDetails.libelle',
         ]);
@@ -45,6 +46,10 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('common.numerorecu'),
                 'searchable' => false,
             ])
+            ->add('avoirCommandeDetails', TwigVirtualColumn::class, [
+                'title' => $this->translator->trans('commande.avoir.posseder'),
+                'twigTemplate' => 'AvoirCommandeDetails',
+            ])
             ->add('utilisateur.nom', Column::class, [
                 'title' => $this->translator->trans('common.nom'),
                 'searchable' => true,
@@ -55,7 +60,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
             ])
             ->add('montantTotal', NumberColumn::class, [
                 'title' => $this->translator->trans('common.montant'),
-                'formatter' => $formatter,
+                'formatter' => new \NumberFormatter('fr_FR', \NumberFormatter::CURRENCY),
                 'use_format_currency' => true, // needed for \NumberFormatter::CURRENCY
                 'currency' => 'EUR',
                 'searchable' => true,
@@ -76,12 +81,14 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                         'termine' => 'eq',
                         'annule' => 'eq',
                         'apayer' => 'eq',
+                        'avoir' => 'eq',
                     ],
                     'select_options' => [
                         'panier' => $this->translator->trans('common.toutescommandes'),
                         'termine' => $this->translator->trans('common.termine'),
                         'annule' => $this->translator->trans('common.annule'),
                         'apayer' => $this->translator->trans('common.apayer'),
+                        'avoir' => $this->translator->trans('common.avoir'),
                     ],
                 ]],
             ])
@@ -98,7 +105,10 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'search_column' => 'dateCommande',
                 'twigTemplate' => 'DateOnlyCommande',
                 'searchable' => true,
-                'filter' => [TwoDatesFilter::class, []],
+                'filter' => [TwoDatesFilter::class, [
+                    'classes' => 'datetimepicker',
+                    'attributes' => ['data-datetimepicker-format' => 'd/m/Y'],
+                ]],
             ])
             ->add('commandeDetails', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.carte'),

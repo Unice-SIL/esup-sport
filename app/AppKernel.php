@@ -1,8 +1,8 @@
 <?php
 
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
@@ -12,10 +12,10 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new FOS\UserBundle\FOSUserBundle(),
-            new Liip\ImagineBundle\LiipImagineBundle(), /* Creation des Thumbnails */
+            new Liip\ImagineBundle\LiipImagineBundle(), // Creation des Thumbnails
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Sg\DatatablesBundle\SgDatatablesBundle(),
-            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(), /* Annotations @Gedmo : Translatable, Uploadable */
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(), // Annotations @Gedmo : Translatable, Uploadable
             new Symfony\Bundle\FrameworkBundle\FrameworkBundle(),
             new Symfony\Bundle\MonologBundle\MonologBundle(),
             new Symfony\Bundle\SecurityBundle\SecurityBundle(),
@@ -23,12 +23,14 @@ class AppKernel extends Kernel
             new Symfony\Bundle\TwigBundle\TwigBundle(),
             new Symfony\WebpackEncoreBundle\WebpackEncoreBundle(),
             new Vich\UploaderBundle\VichUploaderBundle(),
+            new StatistiqueBundle\StatistiqueBundle(),
             new UcaBundle\UcaBundle(),
             new UserBundle\UserBundle(),
             new FOS\CKEditorBundle\FOSCKEditorBundle(),
             new UniceSIL\ShibbolethBundle\UniceSILShibbolethBundle(),
             new Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle(),
             new Lexik\Bundle\PayboxBundle\LexikPayboxBundle(),
+            new SunCat\MobileDetectBundle\MobileDetectBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {
@@ -53,12 +55,12 @@ class AppKernel extends Kernel
 
     public function getCacheDir()
     {
-        return dirname(__DIR__) . '/var/cache/' . $this->getEnvironment();
+        return dirname(__DIR__).'/var/cache/'.$this->getEnvironment();
     }
 
     public function getLogDir()
     {
-        return dirname(__DIR__) . '/var/logs';
+        return dirname(__DIR__).'/var/logs';
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -69,6 +71,6 @@ class AppKernel extends Kernel
 
             $container->addObjectResource($this);
         });
-        $loader->load($this->getRootDir() . '/config/environment/config_' . strtolower($this->getEnvironment()) . '.yml');
+        $loader->load($this->getRootDir().'/config/environment/config_'.strtolower($this->getEnvironment()).'.yml');
     }
 }

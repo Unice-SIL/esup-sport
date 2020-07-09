@@ -2,18 +2,18 @@
 {% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 {% import '@Uca/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
 {% block main %}
-    <script> var typeA = "{{ type }}"; </script>
-    <script> var role = "{{ role }}"; </script>
-
     {{ flashBag.showAll }}
     {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
         <h2>Réservabilités</h2>
         {{ dhtmlxCalendar.displayCalendarHtml }}
 {% endblock %}
 {% block javascripts %}
-    <script type="text/javascript">
-        //scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }
+    <script type='text/javascript'>
+		'use_strict';
+        var typeA = "{{ type }}";
+        var role = "{{ role }}"; 
     </script>
+
     {{ dhtmlxCalendar.initSchedulerData(item) }}
     {{ dhtmlxCalendar.initCalendarJs(item) }}
     {{ dhtmlxCalendar.debugSchedulerEvents() }}

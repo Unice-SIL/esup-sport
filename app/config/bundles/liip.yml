@@ -12,16 +12,31 @@ liip_imagine:
             web_path : ~
     filter_sets :
         cache : ~
+        
         thumb_small:
             filters:
                 thumbnail:
                     size: [50, 50]
                     mode: outbound
+    
         thumb_big:
             filters:
                 thumbnail:
                     size: [64,64]
                     mode: outbound
+        
+        thumb_install_salle:
+            filters:
+                thumbnail:
+                    size: [225,135]
+                    mode: outbound
+
+        thumb_partenaires_test-1:
+            filters:
+                thumbnail:
+                    size: [200,200]
+                    mode: inset
+
         thumb_large_small:
             filters:
                 thumbnail:

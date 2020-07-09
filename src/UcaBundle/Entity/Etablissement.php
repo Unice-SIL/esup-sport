@@ -4,11 +4,11 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\EtablissementRepository")
  * @Gedmo\Loggable
@@ -17,7 +17,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Etablissement
 {
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -25,17 +25,17 @@ class Etablissement
      */
     private $id;
 
-    /** 
+    /**
      * @Gedmo\Versioned
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
      * @Assert\NotBlank(message="etablissement.code.notblank")
      */
     private $code;
 
-    /** 
+    /**
      * @Gedmo\Translatable
      * @Gedmo\Versioned
-     * @ORM\Column(type="string") 
+     * @ORM\Column(type="string")
      * @Assert\NotBlank(message="etablissement.libelle.notblank")
      */
     private $libelle;
@@ -43,14 +43,14 @@ class Etablissement
     /** @ORM\OneToMany(targetEntity="Ressource", mappedBy="etablissement") */
     private $ressources;
 
-    /** 
-     * @ORM\Column(type="string") 
+    /**
+     * @ORM\Column(type="string")
      * @Gedmo\Versioned
-     * @Assert\NotBlank(message="etablissement.adresse.notblank") 
+     * @Assert\NotBlank(message="etablissement.adresse.notblank")
      */
     private $adresse;
 
-    /** 
+    /**
      * @ORM\Column(type="string", length=5)
      * @Gedmo\Versioned
      * @Assert\NotBlank(message="etablissement.codePostal.notblank")
@@ -58,17 +58,17 @@ class Etablissement
      */
     private $codePostal;
 
-    /** 
+    /**
      * @ORM\Column(type="string")
      * @Gedmo\Versioned
-     * @Assert\NotBlank(message="etablissement.ville.notblank")   
+     * @Assert\NotBlank(message="etablissement.ville.notblank")
      */
     private $ville;
-    
+
     /** @ORM\Column(type="string", length=255) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *     mimeTypesMessage = "etablissement.image.format"
@@ -76,36 +76,37 @@ class Etablissement
      * @Assert\Expression("this.getImage() !== null || this.getImageFile() !== null", message="etablissement.image.notnull")
      */
     private $imageFile;
-    
+
     /** @ORM\Column(type="datetime",nullable=true) */
-    private $updatedAt; 
-    
+    private $updatedAt;
+
     /** @ORM\Column(type="string",nullable=true)
      *  @Gedmo\Versioned
      *  @Assert\Email(message="etablissement.email.invalide")
      */
-    private $email;  
-    
+    private $email;
+
     /** @ORM\Column(type="string",nullable=true)
      *  @Gedmo\Versioned
      *  @Assert\Length(min = 10, max = 10, minMessage = "etablissement.telephone.invalide", maxMessage = "etablissement.telephone.invalide")
      *  @Assert\Regex(pattern="/^0[0-9]([-. ]?[0-9]{2}){4}$/", message="etablissement.telephone.invalide")
      */
-    private $telephone; 
-    
+    private $telephone;
+
     /** @Gedmo\Versioned
-     * @ORM\Column(type="text",nullable=true) 
+     * @ORM\Column(type="text",nullable=true)
      */
-    private $horairesOuverture; 
-    #endregion
+    private $horairesOuverture;
 
+    /** @ORM\OneToMany(targetEntity="CommandeDetail", mappedBy="etablissementRetraitCarte") */
+    private $cartesRetirees;
+    //endregion
 
+    //region Méthodes
+    //endregion
 
-    #region Méthodes
-    #endregion
-    
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -178,7 +179,7 @@ class Etablissement
      *
      * @return Etablissement
      */
-    public function addUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function addUtilisateur(Utilisateur $utilisateur)
     {
         $this->utilisateurs[] = $utilisateur;
 
@@ -190,9 +191,9 @@ class Etablissement
      *
      * @param \UcaBundle\Entity\Utilisateur $utilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function removeUtilisateur(Utilisateur $utilisateur)
     {
         return $this->utilisateurs->removeElement($utilisateur);
     }
@@ -214,7 +215,7 @@ class Etablissement
      *
      * @return Etablissement
      */
-    public function addRessource(\UcaBundle\Entity\Ressource $ressource)
+    public function addRessource(Ressource $ressource)
     {
         $this->ressources[] = $ressource;
 
@@ -226,9 +227,9 @@ class Etablissement
      *
      * @param \UcaBundle\Entity\Ressource $ressource
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeRessource(\UcaBundle\Entity\Ressource $ressource)
+    public function removeRessource(Ressource $ressource)
     {
         return $this->ressources->removeElement($ressource);
     }
@@ -243,11 +244,10 @@ class Etablissement
         return $this->ressources;
     }
 
-
     /**
      * Set adresse.
      *
-     * @param string|null $adresse
+     * @param null|string $adresse
      *
      * @return Etablissement
      */
@@ -271,7 +271,7 @@ class Etablissement
     /**
      * Set codePostal.
      *
-     * @param string|null $codePostal
+     * @param null|string $codePostal
      *
      * @return Etablissement
      */
@@ -295,7 +295,7 @@ class Etablissement
     /**
      * Set ville.
      *
-     * @param string|null $ville
+     * @param null|string $ville
      *
      * @return Etablissement
      */
@@ -319,8 +319,9 @@ class Etablissement
     public function setImageFile(File $image = null)
     {
         $this->imageFile = $image;
-        if ($image) 
+        if ($image) {
             $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getImageFile()
@@ -341,7 +342,7 @@ class Etablissement
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Etablissement
      */
@@ -365,7 +366,7 @@ class Etablissement
     /**
      * Set email.
      *
-     * @param string|null $email
+     * @param null|string $email
      *
      * @return Etablissement
      */
@@ -389,7 +390,7 @@ class Etablissement
     /**
      * Set telephone.
      *
-     * @param string|null $telephone
+     * @param null|string $telephone
      *
      * @return Etablissement
      */
@@ -413,7 +414,7 @@ class Etablissement
     /**
      * Set horairesOuverture.
      *
-     * @param string|null $horairesOuverture
+     * @param null|string $horairesOuverture
      *
      * @return Etablissement
      */
@@ -432,5 +433,41 @@ class Etablissement
     public function getHorairesOuverture()
     {
         return $this->horairesOuverture;
+    }
+
+    /**
+     * Add cartesRetiree.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $cartesRetiree
+     *
+     * @return Etablissement
+     */
+    public function addCartesRetiree(\UcaBundle\Entity\CommandeDetail $cartesRetiree)
+    {
+        $this->cartesRetirees[] = $cartesRetiree;
+
+        return $this;
+    }
+
+    /**
+     * Remove cartesRetiree.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $cartesRetiree
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCartesRetiree(\UcaBundle\Entity\CommandeDetail $cartesRetiree)
+    {
+        return $this->cartesRetirees->removeElement($cartesRetiree);
+    }
+
+    /**
+     * Get cartesRetirees.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCartesRetirees()
+    {
+        return $this->cartesRetirees;
     }
 }

@@ -7,14 +7,13 @@ import {changeColor} from "./Events";
 
 
 var Serie = {
-
+ 
     type: "Serie",
 
     // save the data of this object and dependant childrens
     saveBd: function()
     {
         Load.start();
-
         var me = this;
         $.ajax({
             method: "POST",
@@ -24,18 +23,15 @@ var Serie = {
                 id: scheduler.data.item.id
             }
         }).done(function (data) {
-
             me.saveCallback(data);
         }).fail(_uca.ajax.fail);
     },
 
     load: function(data)
     {
-
         this.extend(this, data);
         this.type = "Serie";
         this.evenementType = scheduler.data.item.type;
-
 
         if(typeof data.creneau != "undefined" && data.creneau != null){
             this.tarif_id = data.creneau.tarif.id;
@@ -75,7 +71,7 @@ var Serie = {
 
     //update and save the serie and all Evenement
     updateSerie: function(data, action)
-    {
+    {   
         let start_date = new Date(data.start_date.getTime() - data.serieOffset);
         let end_date = new Date(data.end_date.getTime() - data.serieOffset);
         this.action = action;
@@ -93,6 +89,10 @@ var Serie = {
         
         obj.encadrant_ids = data.encadrant_ids;
         obj.profil_ids = data.profil_ids;
+        obj.profil_ids.split(",").forEach(function(profil){
+            let keyStr = 'capaciteProfil_' + profil;
+            obj[keyStr] = data[keyStr];
+        });
         obj.niveau_sportif_ids = data.niveau_sportif_ids;
 
         this.getDependantChildren().forEach(function(ev)  {
@@ -102,6 +102,10 @@ var Serie = {
                     ev.end_date = new Date(ev.start_date.getTime() - move_delay_end );
 
                     ev.profil_ids = data.profil_ids;
+                    ev.profil_ids.split(",").forEach(function(profil){
+                        let keyStr = 'capaciteProfil_' + profil;
+                        ev[keyStr] = data[keyStr];
+                    });
                     ev.capacite = data.capacite;
                     ev.text = data.text;
                     ev.eligible_bonus = data.eligible_bonus;
@@ -111,8 +115,6 @@ var Serie = {
                     if(typeof data.encadrant_ids !== "undefined"){
                         ev.encadrant_ids = data.encadrant_ids;
                     }
-
-
                     if(typeof data.resources_ids !== "undefined"){
                         ev.resources_ids = data.resources_ids;
                     }
@@ -146,7 +148,6 @@ var Serie = {
             obj.enfants.push(ev);
 
         });
-
         this.saveBd();
         
     },
@@ -236,10 +237,8 @@ var Serie = {
 
     //delete element we don't want to send
     serialize: function(){
-
         var obj = {};
         this.extend(obj, this);
-
         obj.enfants = this.clean(obj.enfants);
         for (let i = 0; i < obj.enfants.length; i++) {
             const element = obj.enfants[i];

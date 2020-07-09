@@ -2,6 +2,7 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use UcaBundle\Service\Common\Parametrage;
 
@@ -11,11 +12,10 @@ use UcaBundle\Service\Common\Parametrage;
  */
 class Commande
 {
-    // valeurs : cheque, cb, espece
-
+    //region Propriétés
     /** @ORM\Column(type="boolean") */
     protected $cgvAcceptees = false;
-    //region Propriétés
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -35,6 +35,12 @@ class Commande
     /** @ORM\OneToMany(targetEntity="CommandeDetail", mappedBy="commande", cascade={"persist"}, orphanRemoval=true) */
     private $commandeDetails;
 
+    /** @ORM\OneToMany(targetEntity="CommandeDetail", mappedBy="avoir", cascade={"persist"}, orphanRemoval=true) */
+    private $avoirCommandeDetails;
+
+    /** @ORM\Column(type="decimal", options={"default"=0}) */
+    private $creditUtilise = 0.0;
+
     /** @ORM\Column(type="datetime", nullable=true) */
     private $datePanier;
 
@@ -52,7 +58,7 @@ class Commande
 
     /** @ORM\Column(type="string", nullable=true) */
     private $statut;
-    // valeurs : panier, apayer, termine, annule
+    // valeurs : panier, apayer, termine, annule, factureAnnulee, avoir
 
     /** @ORM\Column(type="string", nullable=true) */
     private $matricule;
@@ -78,6 +84,7 @@ class Commande
 
     /** @ORM\Column(type="string", nullable=true) */
     private $moyenPaiement;
+    // valeurs : cheque, cb, espece
 
     /** @ORM\ManyToOne(targetEntity="Utilisateur") */
     private $utilisateurEncaisseur;
@@ -87,12 +94,16 @@ class Commande
 
     /** @ORM\Column(type="string", nullable=true) */
     private $nomEncaisseur;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $numeroCheque;
     //endregion
 
     //region Méthodes
     public function __construct($utilisateur)
     {
         $this->commandeDetails = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->avoircCommandeDetails = new \Doctrine\Common\Collections\ArrayCollection();
         $this->utilisateur = $utilisateur;
         $this->changeStatut('panier');
     }
@@ -145,6 +156,17 @@ class Commande
         } elseif ('annule' == $statut) {
             $this->dateAnnulation = new \DateTime();
             $this->traitementPostAnnulation($options);
+        } elseif ('avoir' == $statut) {
+            $this->dateAnnulation = new \DateTime();
+            $this->traitementPostGenerationAvoir();
+        } elseif ('factureAnnulee' == $statut) {
+        }
+    }
+
+    public function traitementPostGenerationAvoir()
+    {
+        foreach ($this->avoirCommandeDetails->getIterator() as $cmdDetails) {
+            $cmdDetails->traitementPostGenerationAvoir();
         }
     }
 
@@ -196,7 +218,74 @@ class Commande
         return $dateValeur->diff($dateLimite);
     }
 
+    public function hasAvoir()
+    {
+        return !$this->getAvoirCommandeDetails()->isEmpty();
+    }
+
+    public function eligibleAvoir()
+    {
+        foreach ($this->getCommandeDetails() as $cmdDetails) {
+            if ($cmdDetails->eligibleAvoir()) {
+                return $this;
+            }
+        }
+
+        return false;
+    }
+
+    public function getCommmandeDetailsByAvoir($refAvoir)
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('referenceAvoir', $refAvoir));
+
+        return $this->getCommandeDetails()->matching($criteria);
+    }
+
+    public function getTotalAvoir($refAvoir)
+    {
+        $totalAvoir = 0;
+        foreach ($this->getCommmandeDetailsByAvoir($refAvoir)->getIterator() as $cmdDetails) {
+            $totalAvoir += $cmdDetails->getMontant();
+        }
+
+        return $totalAvoir;
+    }
+
+    public function getTvaAvoir($refAvoir)
+    {
+        $totalTva = 0;
+        foreach ($this->getCommmandeDetailsByAvoir($refAvoir)->getIterator() as $cmdDetails) {
+            $totalTva += $cmdDetails->getTva();
+        }
+
+        return $totalTva;
+    }
+
     //endregion
+
+    /**
+     * Set cgvAcceptees.
+     *
+     * @param bool $cgvAcceptees
+     *
+     * @return Commande
+     */
+    public function setCgvAcceptees($cgvAcceptees)
+    {
+        $this->cgvAcceptees = $cgvAcceptees;
+
+        return $this;
+    }
+
+    /**
+     * Get cgvAcceptees.
+     *
+     * @return bool
+     */
+    public function getCgvAcceptees()
+    {
+        return $this->cgvAcceptees;
+    }
 
     /**
      * Get id.
@@ -211,7 +300,7 @@ class Commande
     /**
      * Set numeroCommande.
      *
-     * @param null|int $numeroCommande
+     * @param int|null $numeroCommande
      *
      * @return Commande
      */
@@ -235,7 +324,7 @@ class Commande
     /**
      * Set numeroRecu.
      *
-     * @param null|int $numeroRecu
+     * @param int|null $numeroRecu
      *
      * @return Commande
      */
@@ -257,9 +346,33 @@ class Commande
     }
 
     /**
+     * Set creditUtilise.
+     *
+     * @param string $creditUtilise
+     *
+     * @return Commande
+     */
+    public function setCreditUtilise($creditUtilise)
+    {
+        $this->creditUtilise = $creditUtilise;
+
+        return $this;
+    }
+
+    /**
+     * Get creditUtilise.
+     *
+     * @return string
+     */
+    public function getCreditUtilise()
+    {
+        return $this->creditUtilise;
+    }
+
+    /**
      * Set datePanier.
      *
-     * @param null|\DateTime $datePanier
+     * @param \DateTime|null $datePanier
      *
      * @return Commande
      */
@@ -283,7 +396,7 @@ class Commande
     /**
      * Set dateCommande.
      *
-     * @param null|\DateTime $dateCommande
+     * @param \DateTime|null $dateCommande
      *
      * @return Commande
      */
@@ -307,7 +420,7 @@ class Commande
     /**
      * Set datePaiement.
      *
-     * @param null|\DateTime $datePaiement
+     * @param \DateTime|null $datePaiement
      *
      * @return Commande
      */
@@ -331,7 +444,7 @@ class Commande
     /**
      * Set dateAnnulation.
      *
-     * @param null|\DateTime $dateAnnulation
+     * @param \DateTime|null $dateAnnulation
      *
      * @return Commande
      */
@@ -355,7 +468,7 @@ class Commande
     /**
      * Set statut.
      *
-     * @param null|string $statut
+     * @param string|null $statut
      *
      * @return Commande
      */
@@ -379,7 +492,7 @@ class Commande
     /**
      * Set matricule.
      *
-     * @param null|string $matricule
+     * @param string|null $matricule
      *
      * @return Commande
      */
@@ -403,7 +516,7 @@ class Commande
     /**
      * Set prenom.
      *
-     * @param null|string $prenom
+     * @param string|null $prenom
      *
      * @return Commande
      */
@@ -427,7 +540,7 @@ class Commande
     /**
      * Set nom.
      *
-     * @param null|string $nom
+     * @param string|null $nom
      *
      * @return Commande
      */
@@ -451,7 +564,7 @@ class Commande
     /**
      * Set email.
      *
-     * @param null|string $email
+     * @param string|null $email
      *
      * @return Commande
      */
@@ -523,7 +636,7 @@ class Commande
     /**
      * Set typePaiement.
      *
-     * @param null|string $typePaiement
+     * @param string|null $typePaiement
      *
      * @return Commande
      */
@@ -547,7 +660,7 @@ class Commande
     /**
      * Set moyenPaiement.
      *
-     * @param null|string $moyenPaiement
+     * @param string|null $moyenPaiement
      *
      * @return Commande
      */
@@ -569,93 +682,9 @@ class Commande
     }
 
     /**
-     * Set utilisateur.
-     *
-     * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
-     *
-     * @return Commande
-     */
-    public function setUtilisateur(Utilisateur $utilisateur = null)
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
-    /**
-     * Get utilisateur.
-     *
-     * @return \UcaBundle\Entity\Utilisateur|null
-     */
-    public function getUtilisateur()
-    {
-        return $this->utilisateur;
-    }
-
-    /**
-     * Add commandeDetail.
-     *
-     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
-     *
-     * @return Commande
-     */
-    public function addCommandeDetail(CommandeDetail $commandeDetail)
-    {
-        $this->commandeDetails[] = $commandeDetail;
-
-        return $this;
-    }
-
-    /**
-     * Remove commandeDetail.
-     *
-     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
-     *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeCommandeDetail(CommandeDetail $commandeDetail)
-    {
-        return $this->commandeDetails->removeElement($commandeDetail);
-    }
-
-    /**
-     * Get commandeDetails.
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getCommandeDetails()
-    {
-        return $this->commandeDetails;
-    }
-
-    /**
-     * Set cgvAcceptees.
-     *
-     * @param bool $cgvAcceptees
-     *
-     * @return Utilisateur
-     */
-    public function setCgvAcceptees($cgvAcceptees)
-    {
-        $this->cgvAcceptees = $cgvAcceptees;
-
-        return $this;
-    }
-
-    /**
-     * Get cgvAcceptees.
-     *
-     * @return bool
-     */
-    public function getCgvAcceptees()
-    {
-        return $this->cgvAcceptees;
-    }
-
-    /**
      * Set prenomEncaisseur.
      *
-     * @param null|string $prenomEncaisseur
+     * @param string|null $prenomEncaisseur
      *
      * @return Commande
      */
@@ -679,7 +708,7 @@ class Commande
     /**
      * Set nomEncaisseur.
      *
-     * @param null|string $nomEncaisseur
+     * @param string|null $nomEncaisseur
      *
      * @return Commande
      */
@@ -701,13 +730,133 @@ class Commande
     }
 
     /**
-     * Set utilisateurEncaisseur.
+     * Set numeroCheque.
      *
-     * @param null|\UcaBundle\Entity\Utilisateur $utilisateurEncaisseur
+     * @param string|null $numeroCheque
      *
      * @return Commande
      */
-    public function setUtilisateurEncaisseur(Utilisateur $utilisateurEncaisseur = null)
+    public function setNumeroCheque($numeroCheque = null)
+    {
+        $this->numeroCheque = $numeroCheque;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroCheque.
+     *
+     * @return string|null
+     */
+    public function getNumeroCheque()
+    {
+        return $this->numeroCheque;
+    }
+
+    /**
+     * Set utilisateur.
+     *
+     * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
+     *
+     * @return Commande
+     */
+    public function setUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur = null)
+    {
+        $this->utilisateur = $utilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Get utilisateur.
+     *
+     * @return \UcaBundle\Entity\Utilisateur|null
+     */
+    public function getUtilisateur()
+    {
+        return $this->utilisateur;
+    }
+
+    /**
+     * Add commandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
+     *
+     * @return Commande
+     */
+    public function addCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    {
+        $this->commandeDetails[] = $commandeDetail;
+
+        return $this;
+    }
+
+    /**
+     * Remove commandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    {
+        return $this->commandeDetails->removeElement($commandeDetail);
+    }
+
+    /**
+     * Get commandeDetails.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCommandeDetails()
+    {
+        return $this->commandeDetails;
+    }
+
+    /**
+     * Add avoirCommandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $avoirCommandeDetail
+     *
+     * @return Commande
+     */
+    public function addAvoirCommandeDetail(\UcaBundle\Entity\CommandeDetail $avoirCommandeDetail)
+    {
+        $this->avoirCommandeDetails[] = $avoirCommandeDetail;
+
+        return $this;
+    }
+
+    /**
+     * Remove avoirCommandeDetail.
+     *
+     * @param \UcaBundle\Entity\CommandeDetail $avoirCommandeDetail
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeAvoirCommandeDetail(\UcaBundle\Entity\CommandeDetail $avoirCommandeDetail)
+    {
+        return $this->avoirCommandeDetails->removeElement($avoirCommandeDetail);
+    }
+
+    /**
+     * Get avoirCommandeDetails.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAvoirCommandeDetails()
+    {
+        return $this->avoirCommandeDetails;
+    }
+
+    /**
+     * Set utilisateurEncaisseur.
+     *
+     * @param \UcaBundle\Entity\Utilisateur|null $utilisateurEncaisseur
+     *
+     * @return Commande
+     */
+    public function setUtilisateurEncaisseur(\UcaBundle\Entity\Utilisateur $utilisateurEncaisseur = null)
     {
         $this->utilisateurEncaisseur = $utilisateurEncaisseur;
 

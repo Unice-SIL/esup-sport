@@ -59,7 +59,7 @@ class InscriptionService
             'maxCreneauAtteint' => $maxCreneauAtteint, ];
     }
 
-    public function ajoutPanier()
+    public function ajoutPanier($confirmation = false)
     {
         $user = $this->inscription->getUtilisateur();
         $panier = $user->getPanier();
@@ -72,7 +72,7 @@ class InscriptionService
                 ['formatActivite', 'eq', $item->getFormatActivite()],
                 ['creneau', 'eq', null],
                 ['reservabilite', 'eq', null],
-                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
             ])->first();
             if (empty($inscriptionFormat)) {
                 $inscriptionFormat = new Inscription($item->getFormatActivite(), $user, ['typeInscription' => 'format']);
@@ -105,8 +105,10 @@ class InscriptionService
             array_push($articles, $article);
         }
 
-        $this->em->persist($this->inscription);
-        $this->em->persist($panier);
+        if (!$confirmation) {
+            $this->em->persist($this->inscription);
+            $this->em->persist($panier);
+        }
 
         return $articles;
     }

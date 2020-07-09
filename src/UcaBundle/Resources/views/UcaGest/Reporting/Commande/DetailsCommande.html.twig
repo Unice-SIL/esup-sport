@@ -1,0 +1,61 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+{% import '@Uca/Macros/Commande.html.twig' as MacroCommande %}
+
+{% block title %}	+c
+		Commande
+{% endblock %}
+
+{% block main %}
+	{% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+	<h1> {{ 'commande.libelle' | trans }}</h1>
+	<section class="container">
+		<div id="flahsbagAjax">
+		</div>
+		<!-- Bouton Retour -->
+		<div class="row">
+			<div class="col-12 mb-4 pl-3 p-xl-0">
+				{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+				{% if is_granted("ROLE_GESTION_AVOIR") and commande.eligibleAvoir %}
+						<a class="btn btn-warning" href="{{ path('UcaGest_AvoirAjouter',{'id': commande.id}) }}"> <span class="fa fa-credit-card"></span> &nbsp; {{ 'commande.avoir.ajouter.titre' | trans }} </a>
+				{% endif %}
+			</div>
+		</div>
+
+		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+			<div class="col-12 col-sm-8">
+				<p class="p-0 m-0">
+					<strong>{{ 'common.utilisateur' | trans }}:</strong>
+					{{ commande.utilisateur.prenom }}
+					{{ commande.utilisateur.nom }}
+				</p>
+				<p class="p-0 m-0">
+					<strong> {{ 'commande.libelle' | trans }}: </strong>
+					{{ commande.numeroCommande }}
+				</p>
+				<h2 class="hide-border-title mt-5 mb-0"> {{ 'detailscommande.list.title' | trans}} </h2>
+				{% if commande.timeout and commande.commandeDetails is not empty %}
+					<p class="p-0 m-0">
+						{# <strong>Timeout :</strong>
+						<span id='commande-timer'/> #}
+						{% set temps = ('common.temps.heure' | transchoice(commande.timeout.d * 24 + commande.timeout.h)) ~ ' ' ~ ('common.et' | transchoice(commande.timeout.h and commande.timeout.i)) ~ ' ' ~ ('common.temps.minute' | transchoice(commande.timeout.i)) %}
+						{% set typeCommande = 'commande' %}
+						{{ 'commande.timeout.timer' | trans({ '%temps%': temps, '%typecommande%': typeCommande }) }}
+						{{ ('commande.timeout.' ~ typeCommande ~ '.expiration') | trans }}
+					</p>
+				{% endif %}
+			</div>
+		</div>
+
+		{% if commande.id and commande.commandeDetails is not empty %}
+			{{ MacroCommande.affiche(commande, source) }}
+		{% endif %}
+
+	</section>
+
+
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+
+{% endblock %}

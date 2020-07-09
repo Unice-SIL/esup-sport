@@ -5,7 +5,7 @@ namespace UcaBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\AppelRepository")
  */
 class Appel
 {

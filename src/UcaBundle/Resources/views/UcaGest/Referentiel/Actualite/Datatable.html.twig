@@ -3,23 +3,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script>
-
-
-        $(document).on("click", ".js-monter, .js-descendre", function () {
-            var table = $('#sg-datatables-Actualite_datatable').DataTable();
-            var id = $(this).closest('tr').attr('id');
-            var pathUrl = Routing.generate('UcaGest_ActualiteModifierOrdre', {'id': id, 'action': $(this).data('action') });
-            $.ajax({
-                    type: 'GET',
-                    url: pathUrl
-                })
-                .done(function(data) {
-                    if(data == 200){
-                        table.draw();
-                    }
-                })
-                .fail(_uca.ajax.fail);
-        });
-        
+        _uca.datatable.ordonnerElements('UcaGest_ActualiteModifierOrdre', '#sg-datatables-Actualite_datatable', 3000);
     </script>
 {% endblock %}

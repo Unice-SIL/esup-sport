@@ -20,8 +20,35 @@
                 {{ form_label(montant, form.vars.data.montants[loop.index0].profil.libelle) }}
                 {{ form_widget(montant) }}
             {% endfor %}
-            {{ form_row(form.pourcentageTVA)}}
+
+            <div id="pourcentageTVA_tarif_hide">{{ form_row(form.pourcentageTVA)}}</div>
+            {{ form_row(form.tva)}}                    
+            <div id="tvaNonApplicable_tarif_hide">{{ form_row(form.tvaNonApplicable)}}</div>
             </div>
         </div>
     {{ form_end(form) }}
 {% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            changeVisibilityInputDependingCheckedBoxTva();
+            $("#tarif_tva").change(changeVisibilityInputDependingCheckedBoxTva);
+        });
+
+        function changeVisibilityInputDependingCheckedBoxTva() {
+            if($("#tarif_tva").is(':checked')){
+                $('#pourcentageTVA_tarif_hide').hide();                
+                $('#tvaNonApplicable_tarif_hide').show();
+                $('#tarif_pourcentageTVA').attr('value',0);
+            }else{
+                $('#pourcentageTVA_tarif_hide').show();                
+                $('#tvaNonApplicable_tarif_hide').hide();
+                // $('#tarif_tvaNonApplicable').attr('value',"");
+                $('#tarif_tvaNonApplicable').val('');
+            }
+        }
+    </script>
+{% endblock %}
+
+

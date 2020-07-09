@@ -1,7 +1,7 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
-{% set params = {idCa: idCa, idA: idA, id: id} %}
+{% set params = {data: data, idCa: idCa, idA: idA, id: id, item: item} %}
 
 {% block title %}
     Uca Web
@@ -26,7 +26,7 @@
             {% for dataItem in data %}
                 {% if dataItem.id != id %}
                     <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                        <a class="align-self-center text-center d-flex flex-wrap justify-content-center align-items-center align-content-center p-0" href="{{ url("UcaWeb_FormatActiviteReservationDetail", params | merge( {idRessource: dataItem.id} ) ) }}">
+                        <a class="align-self-center text-center d-flex flex-wrap justify-content-center align-items-center align-content-center p-0" href="{{ url("UcaWeb_FormatActiviteReservationDetailRessource", params | merge( {idRessource: dataItem.id} ) ) }}">
                             <div class="w-100">{{ dataItem.libelle }}</div>
                             {% if app.user %}
                                 <div class="w-100 font-italic fw-500">

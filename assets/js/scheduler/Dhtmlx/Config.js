@@ -4,6 +4,7 @@ import {Creneau} from "./Creneau.js";
 import {Reservation} from "./Reservation";
 import {Serie} from "./Serie.js";
 import {Prolongation} from "./Prolongation.js";
+import {SchedulerExtends} from "./Scheduler.Extends.js";
 
 scheduler.config.details_on_create = true;
 scheduler.config.multi_day = true;
@@ -19,7 +20,8 @@ scheduler.config.encadrantColor = "#1A1A1A";
 scheduler.config.repeat_date = "%d/%m/%Y";
 scheduler.config.xml_date = "%d/%m/%Y %H:%i";
 scheduler.locale.labels.section_tarif = "Tarifs";
-scheduler.locale.labels.section_profils = "Profils";
+scheduler.locale.labels.section_profils = "Profiiiiiiils";
+//scheduler.locale.lables.section_capacites_profil = "Capacités par profil"
 scheduler.locale.labels.section_resources = "Ressources";
 scheduler.locale.labels.section_template = "Capacite";
 scheduler.config.modified_event_id = null;
@@ -124,8 +126,8 @@ function initLoadData(data){
 var loadData = function(item)
 {
 
-
-    if(item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie"){
+    
+        if(item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie"){
         delete scheduler._series[item.oldId];
         let event = Object.create(Serie);
         event.load(item);

@@ -12,11 +12,12 @@
         </div>
         <div aria-labelledby="heading{{id}}" class="card-body collapse {{expanded ? 'show' : ''}}" data-parent="#{{parent}}" id="collapse{{id}}">
             <div class="install-activity p-3 color-dark-gray">
-                {% if mobile == 0 or ((mobile == 1  or mobile == 2) and 'Windows' in app.request.headers.get('User-Agent')) %}
-                    {{ text | raw }}
-                {% elseif mobile == 1 and 'Windows' not in app.request.headers.get('User-Agent')  %}
+                {% if (is_mobile() or is_tablet()) and  mobile == 1 %}
                     {{ texte_mobile | raw }}
-                {% endif %}
+                {% elseif (is_mobile() or is_tablet()) and  mobile == 2  %}
+                {% else %}
+                    {{ text | raw }}
+                {% endif %} 
             </div>
         </div>
     </div>

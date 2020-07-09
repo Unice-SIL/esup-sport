@@ -4,18 +4,19 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\TypeActiviteRepository")
  * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="typeactivite.uniqueentity")
  */
 class TypeActivite
 {
-    #region Propriétés
+    /** @ORM\OneToMany(targetEntity="ClasseActivite",mappedBy="typeActivite") */
+    protected $classeActivite;
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -30,24 +31,22 @@ class TypeActivite
      * @Assert\NotBlank(message="typeactivite.libelle.notblank")
      */
     private $libelle;
-
-    /** @ORM\OneToMany(targetEntity="ClasseActivite",mappedBy="typeActivite") */
-    protected $classeActivite;
-    #endregion
-
-    #region Méthodes
-    function __toString()
-    {
-        return $this->libelle;
-    }
-    #endregion
+    //endregion
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->classeActivite = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
+    public function __toString()
+    {
+        return $this->libelle;
     }
 
     /**
@@ -91,7 +90,7 @@ class TypeActivite
      *
      * @return TypeActivite
      */
-    public function addClasseActivite(\UcaBundle\Entity\ClasseActivite $classeActivite)
+    public function addClasseActivite(ClasseActivite $classeActivite)
     {
         $this->classeActivite[] = $classeActivite;
 
@@ -103,9 +102,9 @@ class TypeActivite
      *
      * @param \UcaBundle\Entity\ClasseActivite $classeActivite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeClasseActivite(\UcaBundle\Entity\ClasseActivite $classeActivite)
+    public function removeClasseActivite(ClasseActivite $classeActivite)
     {
         return $this->classeActivite->removeElement($classeActivite);
     }

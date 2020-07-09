@@ -4,30 +4,27 @@ namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\RessourceRepository")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="format", type="string")
  * @ORM\DiscriminatorMap( {
- *   "Lieu" = "Lieu", 
+ *   "Lieu" = "Lieu",
  *   "Materiel" = "Materiel"
  * } )
  * @Gedmo\Loggable
  * @Vich\Uploadable
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\RessourceListener"})
  */
-
 abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -36,9 +33,9 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     private $id;
 
     /** @Gedmo\Translatable
-     * @Gedmo\Versioned 
+     * @Gedmo\Versioned
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="lieu.libelle.notblank") 
+     * @Assert\NotBlank(message="lieu.libelle.notblank")
      */
     private $libelle;
 
@@ -50,16 +47,16 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /** @ORM\Column(type="boolean", nullable=true) */
     private $sourceReferentiel;
 
-    /** 
+    /**
      * @ORM\ManyToOne(targetEntity="Etablissement", inversedBy="ressources") */
     private $etablissement;
 
-    /** 
+    /**
      * @ORM\ManyToOne(targetEntity="Tarif",inversedBy="ressources") */
     private $tarif;
 
     /** @ORM\ManyToMany(targetEntity="FormatAvecReservation", mappedBy="ressource") */
-    private $formatResa = array();
+    private $formatResa = [];
 
     /** @ORM\OneToMany(targetEntity="Reservabilite", mappedBy="ressource") */
     private $reservabilites;
@@ -67,12 +64,13 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /** @ORM\Column(type="string", length=255) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *     mimeTypesMessage = "ressource.image.format"
      * )
      * @Assert\Expression("this.getImage() !== null || this.getImageFile() !== null", message="ressource.image.notnull")
+     * @Assert\Valid()
      */
     private $imageFile;
 
@@ -89,10 +87,21 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      * @ORM\Column(type="text")
      */
     private $etablissementLibelle;
-    #endregion
 
+    //endregion
 
-    #region Méthodes
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->formatResa = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->reservabilites = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
 
     public static function formatIsValid($format)
     {
@@ -103,12 +112,14 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     {
         return ['libelle', 'description', 'etablissementLibelle'];
     }
-    
+
     public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
-        if ($imageFile)
+        if ($imageFile) {
             $this->updatedAt = new \DateTime('now');
+        }
+
         return $this;
     }
 
@@ -119,34 +130,24 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
 
     public function updateTarifLibelle()
     {
-        if($this->getTarif() != null){
+        if (null != $this->getTarif()) {
             $this->tarifLibelle = $this->getTarif()->getLibelle();
-        } else{
+        } else {
             $this->tarifLibelle = '';
         }
 
         return $this;
     }
+
     public function updateEtablissementLibelle()
     {
-        if($this->getEtablissement() != null){
+        if (null != $this->getEtablissement()) {
             $this->etablissementLibelle = $this->getEtablissement()->getLibelle();
-        } else{
+        } else {
             $this->etablissementLibelle = '';
         }
 
         return $this;
-    }
-
-    #endregion
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->formatResa = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->reservabilites = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -186,7 +187,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /**
      * Set description.
      *
-     * @param string|null $description
+     * @param null|string $description
      *
      * @return Ressource
      */
@@ -210,7 +211,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /**
      * Set sourceReferentiel.
      *
-     * @param bool|null $sourceReferentiel
+     * @param null|bool $sourceReferentiel
      *
      * @return Ressource
      */
@@ -258,7 +259,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Ressource
      */
@@ -282,11 +283,11 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /**
      * Set etablissement.
      *
-     * @param \UcaBundle\Entity\Etablissement|null $etablissement
+     * @param null|\UcaBundle\Entity\Etablissement $etablissement
      *
      * @return Ressource
      */
-    public function setEtablissement(\UcaBundle\Entity\Etablissement $etablissement = null)
+    public function setEtablissement(Etablissement $etablissement = null)
     {
         $this->etablissement = $etablissement;
 
@@ -306,11 +307,11 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     /**
      * Set tarif.
      *
-     * @param \UcaBundle\Entity\Tarif|null $tarif
+     * @param null|\UcaBundle\Entity\Tarif $tarif
      *
      * @return Ressource
      */
-    public function setTarif(\UcaBundle\Entity\Tarif $tarif = null)
+    public function setTarif(Tarif $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -334,7 +335,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      *
      * @return Ressource
      */
-    public function addFormatResa(\UcaBundle\Entity\FormatAvecReservation $formatResa)
+    public function addFormatResa(FormatAvecReservation $formatResa)
     {
         $this->formatResa[] = $formatResa;
 
@@ -346,9 +347,9 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      *
      * @param \UcaBundle\Entity\FormatAvecReservation $formatResa
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatResa(\UcaBundle\Entity\FormatAvecReservation $formatResa)
+    public function removeFormatResa(FormatAvecReservation $formatResa)
     {
         return $this->formatResa->removeElement($formatResa);
     }
@@ -370,7 +371,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      *
      * @return Ressource
      */
-    public function addReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite)
+    public function addReservabilite(Reservabilite $reservabilite)
     {
         $this->reservabilites[] = $reservabilite;
 
@@ -382,9 +383,9 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      *
      * @param \UcaBundle\Entity\Reservabilite $reservabilite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite)
+    public function removeReservabilite(Reservabilite $reservabilite)
     {
         return $this->reservabilites->removeElement($reservabilite);
     }

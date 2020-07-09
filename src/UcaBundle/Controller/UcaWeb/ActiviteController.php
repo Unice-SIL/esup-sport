@@ -2,15 +2,17 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Activite;
+use UcaBundle\Entity\Etablissement;
 use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\FormatAvecCreneau;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\FormatSimple;
 use UcaBundle\Entity\Ressource;
+use UcaBundle\Form\RechercheActiviteType;
 
 /**
  * @Route("UcaWeb")
@@ -25,6 +27,12 @@ class ActiviteController extends Controller
         $em = $this->getDoctrine()->getManager();
         $twigConfig['entite'] = 'ClasseActivite';
         $twigConfig['data'] = $em->getRepository('UcaBundle:ClasseActivite')->findAll();
+        $twigConfig['activites'] = $em->getRepository('UcaBundle:Activite')->findBy(
+            [],
+            ['ordre' => 'asc']
+        );
+        $form = $this->get('form.factory')->create(RechercheActiviteType::class, ['em' => $em]);
+        $twigConfig['form'] = $form->createView();
         // $twigConfig["item"] = array_chunk($data, round(count($data) / 2, 0, PHP_ROUND_HALF_UP));
         return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
     }
@@ -111,35 +119,74 @@ class ActiviteController extends Controller
         $id = $item->getId();
         $twigConfig['entite'] = 'FormatActiviteDetail';
 
-        $events = null;
+        $twigConfig['item'] = $item;
+        $twigConfig['itemId'] = $item->getId();
+        $twigConfig['typeVisualisation'] = 'semaine';
+        $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
+        $twigConfig['currentDate'] = new \DateTime();
+        $twigConfig['typeFormat'] = 'FormatAvecCreneau';
+        $twigConfig['widthWindow'] = '1350';
+        $twigConfig['nbJour'] = '7';
+        $twigConfig['idRessource'] = 0;
 
-        $evenements = $em->getRepository('UcaBundle:DhtmlxEvenement')->findPremierEvenementDependantSerieDeChaqueSerieDuFormat($id);
-        foreach ($evenements as $event) {
-            if (null != $event['dateDebut']) {
-                $ev = $event[0];
-                $dayOfWeek = $ev->getDateDebut()->format('w');
-
-                if ($dayOfWeek == $day) {
-                    $events[$ev->getSerie()->getId()]['creneau'] = $ev;
-                    $events[$ev->getSerie()->getId()]['nextCreneauDebut'] = $event['dateDebut'];
-                }
-
-                if (empty($twigConfig['nombreEvenement'][$dayOfWeek])) {
-                    $twigConfig['nombreEvenement'][$dayOfWeek] = 0;
-                }
-                ++$twigConfig['nombreEvenement'][$dayOfWeek];
-                if ('disponible' == $ev->getSerie()->getCreneau()->getInscriptionInformations($this->getUser(), $item)['statut']) {
-                    if (empty($twigConfig['nombreEvenementDispo'][$dayOfWeek])) {
-                        $twigConfig['nombreEvenementDispo'][$dayOfWeek] = 0;
-                    }
-                    ++$twigConfig['nombreEvenementDispo'][$dayOfWeek];
-                }
-            }
+        $dates = [];
+        for ($d = 1; $d <= 7; ++$d) {
+            $dt = new \DateTime();
+            $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
+            $dates[] = $dt;
         }
+        $twigConfig['listeJours'] = $dates;
 
-        $twigConfig['days'] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        $twigConfig['currentDay'] = $day;
-        $twigConfig['events'] = $events;
+        $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
+
+        return $this->render('@Uca/UcaWeb/Activite/FormatActivite.html.twig', $twigConfig);
+    }
+
+    /**
+     * @Route("/ClasseActivite/{idCa}/Activite/{idA}/FormatActiviteDetailReservation/{id}/ressource/{idRessource}", name="UcaWeb_FormatActiviteReservationDetailRessource", methods={"GET"})
+     *
+     * @param mixed $id
+     * @param mixed $idCa
+     * @param mixed $idA
+     * @param mixed $idRessource
+     */
+    public function FormatActiviteAvecReservationDetailsRessource($idCa, $idA, $id, $idRessource)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $item = $em->getRepository('UcaBundle:FormatActivite')->findOneBy(['id' => $id]);
+        $ressource = $em->getRepository('UcaBundle:Ressource')->findOneBy(['id' => $idRessource]);
+
+        $twigConfig['item'] = $item;
+        $twigConfig['entite'] = 'FormatActiviteDetail';
+        $twigConfig['idCa'] = $idCa;
+        $twigConfig['idA'] = $idA;
+        $twigConfig['item'] = $item;
+        $twigConfig['id'] = $item->getId();
+        $twigConfig['idRessource'] = $idRessource;
+        $twigConfig['libelleRessource'] = $ressource->getLibelle();
+
+        $activite = $em->getRepository('UcaBundle:Activite')->findOneBy(['id' => $idA]);
+
+        $twigConfig['data'] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($activite, $this->getUser());
+
+        $twigConfig['itemId'] = $id;
+        $twigConfig['typeVisualisation'] = 'semaine';
+        $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
+        $twigConfig['currentDate'] = new \DateTime();
+        $twigConfig['typeFormat'] = 'FormatAvecReservation';
+        $twigConfig['widthWindow'] = '1350';
+        $twigConfig['nbJour'] = '7';
+
+        $dates = [];
+        for ($d = 1; $d <= 7; ++$d) {
+            $dt = new \DateTime();
+            $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
+            $dates[] = $dt;
+        }
+        $twigConfig['listeJours'] = $dates;
+
+        $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
 
         return $this->render('@Uca/UcaWeb/Activite/FormatActivite.html.twig', $twigConfig);
     }

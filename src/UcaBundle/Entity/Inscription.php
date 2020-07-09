@@ -25,7 +25,10 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /** @ORM\ManyToOne(targetEntity="FormatActivite", inversedBy="inscriptions") */
     private $formatActivite;
 
-    /** @ORM\ManyToOne(targetEntity="Creneau", inversedBy="inscriptions") */
+    /**
+     * @ORM\ManyToOne(targetEntity="Creneau", inversedBy="inscriptions")
+     * @ORM\JoinColumn(name="creneau_id", referencedColumnName="id", onDelete="SET NULL")
+     */
     private $creneau;
 
     /** @ORM\ManyToOne(targetEntity="Reservabilite", inversedBy="inscriptions") */
@@ -42,11 +45,11 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\Column(type="string") */
     private $statut;
-    // valeurs : initialise, attentevalidationencadrant, attentevalidationgestionnaire, attenteajoutpanier, attentepaiement, valide, annule, desinscrit, ancienneinscription
+    // valeurs : initialise, attentevalidationencadrant, attentevalidationgestionnaire, attenteajoutpanier, attentepaiement, valide, annule, desinscrit, ancienneinscription, desinscriptionadministrative
 
     /** @ORM\Column(type="string", nullable=true) */
     private $motifAnnulation;
-    // valeurs : refusencadrant, refusgestionnaire, annulationutilisateur, timeout, bascule
+    // valeurs : refusencadrant, refusgestionnaire, annulationutilisateur, timeout
 
     /** @ORM\Column(type="string", nullable=true) */
     private $commentaireAnnulation;
@@ -176,17 +179,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     public function setStatut($statut, $options = [])
     {
-        if ('ancienneinscription' == $statut) {
-            if ('attentevalidationencadrant' == $this->getStatut() || 'attentevalidationgestionnaire' == $this->getStatut() || 'attenteajoutpanier' == $this->getStatut() || 'initialise' == $this->getStatut()) {
-                $this->statut = 'annule';
-                $this->motifAnnulation = 'bascule';
-            }
-            if ('valide' == $this->getStatut()) {
-                $this->statut = 'ancienneinscription';
-            }
-        } else {
-            $this->statut = $statut;
-        }
+        $this->statut = $statut;
         if (isset($options['motifAnnulation'])) {
             $this->motifAnnulation = $options['motifAnnulation'];
         }
@@ -248,7 +241,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     {
         foreach ($this->commandeDetails->getIterator() as $cd) {
             $c = $cd->getCommande();
-            if ('termine' != $c->getStatut()) {
+            if (!in_array($c->getStatut(), ['termine', 'avoir'])) {
                 $this->commandeDetails->removeElement($cd);
                 $cd->setInscription(null);
                 $cd->setMontant(0)->setTva(0);
@@ -310,7 +303,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get dateValidation.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateValidation()
     {
@@ -344,7 +337,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get motifAnnulation.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getMotifAnnulation()
     {
@@ -368,11 +361,35 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get commentaireAnnulation.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getCommentaireAnnulation()
     {
         return $this->commentaireAnnulation;
+    }
+
+    /**
+     * Set dateDesinscription.
+     *
+     * @param null|\DateTime $dateDesinscription
+     *
+     * @return Inscription
+     */
+    public function setDateDesinscription($dateDesinscription = null)
+    {
+        $this->dateDesinscription = $dateDesinscription;
+
+        return $this;
+    }
+
+    /**
+     * Get dateDesinscription.
+     *
+     * @return null|\DateTime
+     */
+    public function getDateDesinscription()
+    {
+        return $this->dateDesinscription;
     }
 
     /**
@@ -392,7 +409,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get formatActivite.
      *
-     * @return \UcaBundle\Entity\FormatActivite|null
+     * @return null|\UcaBundle\Entity\FormatActivite
      */
     public function getFormatActivite()
     {
@@ -416,7 +433,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get creneau.
      *
-     * @return \UcaBundle\Entity\Creneau|null
+     * @return null|\UcaBundle\Entity\Creneau
      */
     public function getCreneau()
     {
@@ -440,7 +457,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get reservabilite.
      *
-     * @return \UcaBundle\Entity\Reservabilite|null
+     * @return null|\UcaBundle\Entity\Reservabilite
      */
     public function getReservabilite()
     {
@@ -464,7 +481,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get utilisateur.
      *
-     * @return \UcaBundle\Entity\Utilisateur|null
+     * @return null|\UcaBundle\Entity\Utilisateur
      */
     public function getUtilisateur()
     {
@@ -490,7 +507,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\Autorisation $autorisation
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeAutorisation(Autorisation $autorisation)
     {
@@ -526,7 +543,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\Utilisateur $encadrant
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeEncadrant(Utilisateur $encadrant)
     {
@@ -562,7 +579,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeCommandeDetail(CommandeDetail $commandeDetail)
     {
@@ -580,46 +597,9 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     }
 
     /**
-     * Set dateDesinscription.
-     *
-     * @param null|\DateTime $dateDesinscription
-     *
-     * @return Inscription
-     */
-    public function setDateDesinscription($dateDesinscription = null)
-    {
-        $this->dateDesinscription = $dateDesinscription;
-
-        return $this;
-    }
-
-    /**
-     * Get dateDesinscription.
-     *
-     * @return \DateTime|null
-     */
-    public function getDateDesinscription()
-    {
-        return $this->dateDesinscription;
-    }
-
-    private function setItem($item, $format)
-    {
-        if (is_a($item, Creneau::class)) {
-            $this->setCreneau($item);
-            $this->setFormatActivite($item->getFormatActivite());
-        } elseif (is_a($item, Reservabilite::class)) {
-            $this->setReservabilite($item);
-            $this->setFormatActivite($format);
-        } elseif (is_a($item, FormatActivite::class)) {
-            $this->setFormatActivite($item);
-        }
-    }
-
-    /**
      * Set prenomDesinscription.
      *
-     * @param string|null $prenomDesinscription
+     * @param null|string $prenomDesinscription
      *
      * @return Inscription
      */
@@ -643,7 +623,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Set nomDesinscription.
      *
-     * @param string|null $nomDesinscription
+     * @param null|string $nomDesinscription
      *
      * @return Inscription
      */
@@ -667,11 +647,11 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Set utilisateurDesinscription.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateurDesinscription
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateurDesinscription
      *
      * @return Inscription
      */
-    public function setUtilisateurDesinscription(\UcaBundle\Entity\Utilisateur $utilisateurDesinscription = null)
+    public function setUtilisateurDesinscription(Utilisateur $utilisateurDesinscription = null)
     {
         $this->utilisateurDesinscription = $utilisateurDesinscription;
 
@@ -686,5 +666,18 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function getUtilisateurDesinscription()
     {
         return $this->utilisateurDesinscription;
+    }
+
+    private function setItem($item, $format)
+    {
+        if (is_a($item, Creneau::class)) {
+            $this->setCreneau($item);
+            $this->setFormatActivite($item->getFormatActivite());
+        } elseif (is_a($item, Reservabilite::class)) {
+            $this->setReservabilite($item);
+            $this->setFormatActivite($format);
+        } elseif (is_a($item, FormatActivite::class)) {
+            $this->setFormatActivite($item);
+        }
     }
 }

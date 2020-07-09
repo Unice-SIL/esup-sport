@@ -3,6 +3,7 @@
 namespace UcaBundle\Controller\Api;
 
 use UcaBundle\Entity\Creneau;
+use UcaBundle\Entity\CreneauProfilUtilisateur;
 use UcaBundle\Entity\DhtmlxDate;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
@@ -17,8 +18,8 @@ use UcaBundle\Entity\Utilisateur;
 
 class DhtmlxCommand
 {
+    public $data;
     private $em;
-    private $data;
     private $action;
     private $item;
     private $commands;
@@ -51,13 +52,14 @@ class DhtmlxCommand
             if ('UcaBundle\Entity\DhtmlxEvenement' == get_class($this->item)) {
                 $this->item->setDescription($this->data['text']);
                 $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && 'true' == $this->data['dependanceSerie']);
-                if ('true' == $this->data['eligible_bonus']) {
-                    $this->item->setEligibleBonus(true);
-                } else {
-                    $this->item->setEligibleBonus(false);
+                if (isset($this->data['eligible_bonus'])) {
+                    if ('true' == $this->data['eligible_bonus']) {
+                        $this->item->setEligibleBonus(true);
+                    } else {
+                        $this->item->setEligibleBonus(false);
+                    }
                 }
-            }
-            if ('UcaBundle\Entity\DhtmlxSerie' == get_class($this->item)) {
+            } elseif ('UcaBundle\Entity\DhtmlxSerie' == get_class($this->item)) {
                 if (isset($this->data['recurrence'])) {
                     $this->recurrence = $this->data['recurrence'];
                 }
@@ -66,6 +68,7 @@ class DhtmlxCommand
             if ($this->isCreneauEvent() && isset($this->data['capacite'])) {
                 $this->getReferenceItem()->setCapacite($this->data['capacite']);
             }
+
             $this->updateTarif();
             $this->updateLieu();
             $this->updateProfils();
@@ -73,11 +76,13 @@ class DhtmlxCommand
             $this->updateEncadrants();
             $this->em->persist($this->item);
         }
+
         foreach ($this->commands as $command) {
             $command->execute();
         }
     }
 
+    // Pb pour les évents simple
     public function getResult()
     {
         $res = $this->item->jsonSerialize();
@@ -98,10 +103,12 @@ class DhtmlxCommand
             $this->createReference();
         } elseif ('insert' == $this->action && !isset($this->data['enfants'])) {
             $this->item = new DhtmlxEvenement($this->data);
-            if ('true' == $this->data['eligible_bonus']) {
-                $this->item->setEligibleBonus(true);
-            } else {
-                $this->item->setEligibleBonus(false);
+            if (isset($this->data['eligible_bonus'])) {
+                if ('true' == $this->data['eligible_bonus']) {
+                    $this->item->setEligibleBonus(true);
+                } else {
+                    $this->item->setEligibleBonus(false);
+                }
             }
             if (!empty($parent)) {
                 $this->item->setSerie($parent->getItem());
@@ -190,13 +197,24 @@ class DhtmlxCommand
             if (null !== $item->getProfilsUtilisateurs()) {
                 foreach ($item->getProfilsUtilisateurs() as $key => $profil) {
                     $item->removeProfilsUtilisateur($profil);
+                    $this->em->remove($profil);
                 }
+                $this->em->flush();
             }
             if (isset($this->data['profil_ids']) && '' !== $this->data['profil_ids']) {
                 foreach (explode(',', $this->data['profil_ids']) as $key => $profil) {
-                    $item->addProfilsUtilisateur($this->em->getReference(ProfilUtilisateur::class, $profil));
+                    $keyStr = 'capaciteProfil_'.$profil;
+                    $capaciteProfil = (isset($this->data[$keyStr]) && '' !== $this->data[$keyStr]) ? $this->data[$keyStr] : 0;
+                    $creneauProfil = new CreneauProfilUtilisateur(
+                        $item,
+                        $this->em->getReference(ProfilUtilisateur::class, $profil),
+                        $capaciteProfil
+                    );
+
+                    $item->addProfilsUtilisateur($creneauProfil);
                 }
             }
+            $this->em->flush();
         }
     }
 

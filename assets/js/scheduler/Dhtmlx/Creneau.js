@@ -7,6 +7,7 @@ import {loadData} from "./Config";
 import {changeColor} from "./Events";
 import {Load} from "./Load";
 import {More} from "./More";
+import { controllers } from "chart.js";
 
 var Creneau = {
 
@@ -16,13 +17,10 @@ var Creneau = {
 
     //object from database
     load: function(data){
-
         this.evenement = Object.create(Evenement)
         this.evenement.load(data);
         //this.extend(this, data);
-
         this.tarif_id = this.evenement.tarif_id;
-
         this.copyId = null;
         this.id = data.id;
         this.start_date = transformDate(data.dateDebut);
@@ -41,20 +39,22 @@ var Creneau = {
         
         //if action is insert, creneau don't have serie parent yet 
         if(typeof this.evenement.serie != "undefined"){
-
             //this.text = this.getParent().creneau.formatActivite.description;
             this.serieOffset = this.start_date.getTime() - (transformDate(this.getParent().dateDebut)).getTime();       
             this.capacite = this.getParent().creneau.capacite;
-
             //get all the profils
             this.profil_ids = [];
             let profils = this.getParent().creneau.profilsUtilisateurs;
             for (var p in profils) {
-                const element = profils[p];
+                let element = profils[p].profilUtilisateur;
+                let capacite =  profils[p].capaciteProfil;
+                let keyStr = 'capaciteProfil_' + element.id;
+                this[keyStr] = capacite;
                 this.profil_ids.push(element.id);
             }
             this.profil_ids = this.profil_ids.join(",");
-
+            
+    
             //get all encadrants
             this.encadrant_ids = [];
             if(typeof this.getParent().creneau.encadrants != "undefined"){
@@ -226,5 +226,4 @@ var Creneau = {
     },
 
 };
-
 export {Creneau}

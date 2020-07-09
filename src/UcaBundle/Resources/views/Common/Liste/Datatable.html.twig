@@ -4,31 +4,42 @@
 {% import '@Uca/Macros/ShowDatatable.html.twig' as Datatable %}
 
 {% block main %}
-    {% block modal %}{% endblock %}
-    {% if app.request.attributes.get("_route") == "UcaWeb_MesInscriptions" %}
-        {% include "@Uca/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
-    {% else %}
-        {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
-    {% endif %}
+	{% block DatatableTitle %}
+		{% if retourBouton is defined %}
+			{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+		{% endif %}
+		<h1> {{ (codeListe|lower ~ '.list.title')|trans }}</h1>
+		{{ flashBag.showAll }}
+	{% endblock %}
+	
+	{% block DatatableHeader%}
+		{% if not noAddButton is defined %}
+			<div class="row">
+				<a href="{{ url('UcaGest_' ~ codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+			</div>
+		{% endif %}
+		<div id="loaderDiv" class="row pb-5 d-none">
+			<div class="col-sm-12 d-flex justify-content-center align-items-center">
+				<img src="{{ asset('images/load.gif') }}" id="load-img">
+			</div>
+		</div>
+	{% endblock %}
 
-    {% if retourBouton is defined %}
-        {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-    {% endif %}
+	{% block DatatableContent %}
+		{{ Datatable.showDatatable(datatable) }}
+	{% endblock %}
+	
+	{% block DatatableFooter %}{% endblock %}
 
-    <h1>{{ (codeListe|lower ~ '.list.title')|trans }}</h1>
-    {{ flashBag.showAll }}
-    {% block DatatableHeader%}
-        {% if not noAddButton is defined %}
-            <div class="row">
-                <a href="{{ url('UcaGest_' ~ codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
-            </div>
-        {% endif %}
-    {% endblock %}
-
-    {{ Datatable.showDatatable(datatable) }}
-
+	{% block modal %}
+		{% if app.request.attributes.get("_route") == "UcaWeb_MesInscriptions" %}
+			{% include "@Uca/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
+		{% else %}
+			{% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
+		{% endif %}
+	{% endblock %}
 {% endblock %}
 
 {% block javascripts %}
-    {{ Datatable.renderDatatable(datatable) }}
+	{{ Datatable.renderDatatable(datatable) }}
 {% endblock %}

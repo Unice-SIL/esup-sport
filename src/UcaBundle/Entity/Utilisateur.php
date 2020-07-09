@@ -147,6 +147,9 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /** @ORM\OneToMany(targetEntity="Appel", mappedBy="utilisateur") */
     private $appels;
 
+    /** @ORM\OneToMany(targetEntity="UtilisateurCreditHistorique", mappedBy="utilisateur",cascade={"persist","remove"}) */
+    private $credit;
+
     //endregion
 
     //region Méthodes
@@ -187,6 +190,17 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getCommandesByStatut($statut)
     {
         return $this->getCommandesByCriteria([['statut', 'eq', $statut]]);
+    }
+
+    public function getCommandeByAvoir($refAvoir)
+    {
+        foreach ($this->getCommandes() as $commande) {
+            if (!$commande->getCommmandeDetailsByAvoir($refAvoir)->isEmpty()) {
+                return $commande->getId();
+            }
+        }
+
+        return false;
     }
 
     public function getPanier()
@@ -230,7 +244,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     {
         return $this->getInscriptionsByCriteria([
             ['creneau', 'neq', null],
-            ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription']],
+            ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
         ])->count();
     }
 
@@ -291,6 +305,18 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getEmailDomain()
     {
         return strstr($this->getEmail(), '@');
+    }
+
+    public function getCreditTotal()
+    {
+        $solde = 0;
+        foreach ($this->getCredit() as $ligneCredit) {
+            if ('valide' == $ligneCredit->getStatut()) {
+                $solde += $ligneCredit->getMontant();
+            }
+        }
+
+        return $solde;
     }
 
     //endregion
@@ -939,5 +965,41 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     public function getAppels()
     {
         return $this->appels;
+    }
+
+    /**
+     * Add credit.
+     *
+     * @param \UcaBundle\Entity\UtilisateurCreditHistorique $credit
+     *
+     * @return Utilisateur
+     */
+    public function addCredit(UtilisateurCreditHistorique $credit)
+    {
+        $this->credit[] = $credit;
+
+        return $this;
+    }
+
+    /**
+     * Remove credit.
+     *
+     * @param \UcaBundle\Entity\UtilisateurCreditHistorique $credit
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeCredit(UtilisateurCreditHistorique $credit)
+    {
+        return $this->credit->removeElement($credit);
+    }
+
+    /**
+     * Get credit.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCredit()
+    {
+        return $this->credit;
     }
 }

@@ -1,0 +1,223 @@
+{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block title %}
+	Bascule d'année universitaire
+{% endblock %}
+
+{% block main %}
+	<h1>
+		{{ 'sitemap.bascule.annee.universitaire.libelle'|trans }}
+	</h1>
+
+	{{ flashBag.showAll }}
+
+	{# {% set nbClasseEtActivite = (form.children|length - 9) %}     #}
+	{% set nbClasseEtActivite = form.nbClasseEtActivite.vars.data %}
+	{% set nbLieu = form.nbLieu.vars.data %}
+	{% set nbMateriel = form.nbMateriel.vars.data %}
+	{% set condition = true %}
+	{% set startDecoration = false %}
+
+	{{ form_start(form) }}
+
+	<div class="my-5">
+		<hr>
+		<h3 class="text-uppercase text-center text-primary fs-24">
+			{{ 'classeactivite.libelle'|trans ~ ' ' ~ 'common.and'|trans ~ ' ' ~ 'activite.libelle'|trans  }}
+		</h3>
+		<hr>
+		<div class="row text-center mt-5">
+			<div class="col-sm-4">
+				<p class="font-weight-bold lead" style="border-bottom: 2px solid black;">{{ 'classeactivite.libelle'|trans }}</p>
+			</div>
+			<div class="col-sm-4">
+				<p class="font-weight-bold lead" style="border-bottom: 2px solid black;">{{ 'activite.libelle'|trans }}</p>
+			</div>
+			<div class="col-sm-4">
+				<p class="font-weight-bold lead" style="border-bottom: 2px solid black;">{{ 'bascule.creneau.option'|trans }}</p>
+			</div>
+			<div
+				class="col-sm-4">{# <button type="button" id="btnCheckUncheck" class="btn btn-primary check" onClick="checkUncheck()">{{ 'bouton.selectionner.tout'|trans }}</button> #}
+			</div>
+			<div class="col-sm-4"></div>
+			<div class="col-sm-4"></div>
+			{% for child in form.children if condition %}
+				{% if loop.index >= nbClasseEtActivite %}
+					{% set condition = false %}
+				{% endif %}
+				{% if 'ClasseAct' in child.vars.name %}
+				</div>
+				{% if startDecoration %}
+					<hr style="width: 65%;">
+				{% endif %}
+				{% set startDecoration = true %}
+				<div class="row text-center my-5">
+					<div class="col-sm-4">
+						{{ form_row(child) }}
+					</div>
+				{% elseif 'optionCreneau' in child.vars.name %}
+					<div class="col-sm-4">
+						{{ form_row(child) }}
+					</div>
+					<div class="col-sm-4"></div>
+				{% else %}
+					<div class="col-sm-4 mb-2">
+						{{ form_row(child) }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<br>
+	<div class="my-5">
+		<hr>
+		<h3 class="text-uppercase text-center text-primary fs-24">
+			{{ 'evenements.title'|trans }}
+		</h3>
+		<hr>
+		<div class="mt-5">
+			{{ form_row(form.basculeDesEvenements) }}
+		</div>
+	</div>
+	<br>
+	<div class="my-5">
+		<hr>
+		<h3 class="text-uppercase text-center text-primary fs-24">
+			{{ 'common.ressources'|trans }}
+		</h3>
+		<hr>
+		<div class="my-5">
+			{{ form_row(form.basculeDesReservations) }}
+		</div>
+		<h3 class="text-center">{{ 'common.lieu'|trans }}</h3>
+		<div class="row mt-2 mb-5">
+			{% for child in form.children %}
+				{% if loop.index > nbClasseEtActivite + 1  and loop.index < nbClasseEtActivite + 2 + nbLieu %}
+					<div class="col-sm-3">
+						{{ form_row(child) }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+		<h3 class="text-center">{{ 'common.materiel'|trans }}</h3>
+		<div class="row mt-2 mb-5">
+			{% for child in form.children %}
+				{% if loop.index > nbClasseEtActivite + nbLieu + 2   and loop.index < nbClasseEtActivite + 3 + nbLieu + nbMateriel %}
+					<div class="col-sm-3">
+						{{ form_row(child) }}
+					</div>
+				{% endif %}
+			{% endfor %}
+		</div>
+	</div>
+	<br>
+
+	<div class="my-5">
+		<hr>
+		<h3 class="text-uppercase text-center text-primary fs-24">
+			{{ 'common.carte'|trans ~ ', ' ~ 'common.credit'|trans ~ ' ' ~ 'common.and'|trans ~ ' ' ~ 'bascule.cotisation'|trans }}
+		</h3>
+		<hr>
+		<div class="row mt-5">
+			<div class="col-sm-6">
+				{{ form_row(form.basculeCarteEtCotisation) }}
+			</div>
+			<div class="col-sm-6">
+				{{ form_row(form.basculeCredit) }}
+			</div>
+		</div>
+	</div>
+
+	<br>
+	<hr>
+	<div class="row mb-4">
+		<div class="col-sm-6">{{ form_row(form.nouvelleDateDebutInscription) }}</div>
+		<div class="col-sm-6">{{ form_row(form.nouvelleDateFinInscription) }}</div>
+		<div class="col-sm-6">{{ form_row(form.nouvelleDateDebutEffective) }}</div>
+		<div class="col-sm-6">{{ form_row(form.nouvelleDateFinEffective) }}</div>
+	</div>
+	<div class="text-center">{{ form_end(form) }}</div>
+
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		$( document ).ready( function ()
+{
+$( ".classe-activite" ).each( function ()
+{
+checkAssociatedActivities( $( this ).attr( 'id' ).substring( 38 ), $( this ).is( ':checked' ) );
+$( this ).click( function ()
+{
+checkAssociatedActivities( $( this ).attr( 'id' ).substring( 38 ), $( this ).is( ':checked' ) );
+} );
+} );
+$( ".activite" ).each( function ()
+{
+$( this ).click( function ()
+{
+let idAct = $( this ).attr( 'id' ).substring( 37 ).split( "-" )[ 0 ];
+let idClassAct = $( this ).attr( 'id' ).substring( 37 ).split( "-" )[ 1 ];
+checkAssociatedActivtyClasses( idClassAct, $( this ).is( ':checked' ) );
+activateAssociatedOptions( idAct, $( this ).is( ':checked' ) );
+} );
+} );
+} );
+
+function checkAssociatedActivities( id, check )
+{
+$( '.activite' + id ).each( function ()
+{
+$( this ).prop( 'checked', check );
+let idAct = $( this ).attr( 'id' ).slice( 37, $( this ).attr( 'id' ).length - id.length - 1 );
+activateAssociatedOptions( idAct, $( this ).is( ':checked' ) );
+} );
+}
+
+function checkAssociatedActivtyClasses( id, check )
+{
+let canICheck = [];
+$( ".classe-activite" + id ).each( function ()
+{
+$( ".activite" + id ).each( function ()
+{
+canICheck.push( $( this ).is( ':checked' ) );
+} );
+$( this ).prop( 'checked', canICheck.includes( true ) );
+} );
+}
+
+function activateAssociatedOptions( id, check )
+{
+$( '.option-creneau' + id ).each( function ()
+{
+let idString = $( this ).attr( 'id' );
+$( '#' + idString + '_0' ).attr( 'disabled', ! check );
+$( '#' + idString + '_0' ).attr( 'checked', check );
+$( '#' + idString + '_1' ).attr( 'disabled', ! check );
+} );
+}
+
+/*function checkUncheck(){
+            if($("#btnCheckUncheck").hasClass("check")){
+                $(".classe-activite").each(function(){
+                    $(this).prop('checked', true);
+                    checkAssociatedActivities($(this).attr('id').substring(38), $(this).is(':checked'));
+                });
+                $("#btnCheckUncheck").removeClass("check btn-primary");
+                $("#btnCheckUncheck").addClass("uncheck btn-secondary");
+                $("#btnCheckUncheck").html("{{ 'bouton.deselectionner.tout'|trans }}");
+            }else{
+                $(".classe-activite").each(function(){
+                    $(this).prop('checked', false);
+                    checkAssociatedActivities($(this).attr('id').substring(38), $(this).is(':checked'));
+                });
+                $("#btnCheckUncheck").removeClass("uncheck btn-secondary");
+                $("#btnCheckUncheck").addClass("check btn-primary");
+                $("#btnCheckUncheck").html("{{ 'bouton.selectionner.tout'|trans }}");
+            }
+        }*/
+	</script>
+{% endblock %}
