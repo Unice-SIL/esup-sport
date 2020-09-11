@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CommandeRepository
+ *
+ * Contient les requtes à la base de données pour l'entité commande
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
@@ -109,5 +115,18 @@ class CommandeRepository extends \Doctrine\ORM\EntityRepository
         ;
 
         return $qb->getQuery()->execute();
+    }
+
+    public function findCommandeByTypeAutorisationAndUser($typeAutorisation, $user)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->leftJoin('c.commandeDetails', 'cd')
+            ->andWhere('c.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->andWhere('cd.typeAutorisation = :typeAutorisation')
+            ->setParameter('typeAutorisation', $typeAutorisation)
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

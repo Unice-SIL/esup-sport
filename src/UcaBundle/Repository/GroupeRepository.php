@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GroupeRepository
+ *
+ * Requêtes à la base de données pour l'entité groupe
+*/
+
 namespace UcaBundle\Repository;
 
 class GroupeRepository extends \Doctrine\ORM\EntityRepository

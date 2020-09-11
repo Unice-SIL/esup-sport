@@ -8,13 +8,11 @@
 {% endblock %}
 
 {% block main %}    
-    <section>
-        <h1  class="h1-light">{{ 'sportdehautniveau.accompagnements'|trans }}</h1>
+    <h1 class="h1-light">{{ 'sportdehautniveau.accompagnements'|trans }}</h1>
 
-        {% for item in texte %}
-            <section class="container container-style bg-white mb-5">
-                {{ item.texte | raw }}
-            </section>
-        {% endfor %}
-    </section>
+    {% if emplacement("SHN - Accompagnement") is not empty %}
+        <section class="container container-style bg-white mb-5">
+            {{ emplacement("SHN - Accompagnement")|raw }}
+        </section>
+    {% endif %} 
 {% endblock %}

@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * Classe - CommandeDetail:
+ *
+ * Une comamnde contient un ou plusieur détails
+ * Tous les détails (payant ou non) figure dans une commande
+ * Un détail de commande correspond à une inscription d'un utilisateur à un format d'activté / créneau / réservation.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\CommandeDetailRepository")
- *
- *  @ORM\Table(name="commande_detail", uniqueConstraints={@ORM\UniqueConstraint(name="avoir_reference",columns={"referenceAvoir"})})
+ * @ORM\Table(name="commande_detail")
  */
 class CommandeDetail
 {
@@ -30,6 +37,9 @@ class CommandeDetail
 
     /** @ORM\Column(name="referenceAvoir", type="integer", nullable=true) */
     private $referenceAvoir;
+
+    /** @ORM\Column(type="datetime", nullable=true,  options={"default":null}) */
+    private $dateAvoir;
 
     /**
      * @ORM\Id
@@ -281,16 +291,32 @@ class CommandeDetail
 
     public function traitementPostGenerationAvoir()
     {
-        if ('autorisation' == $this->getType()) {
-            if (!empty($autorisation = $this->typeAutorisation)) {
-                // $autorisation = $this->typeAutorisation->getTarif();
-                $this->getCommande()->getUtilisateur()->removeAutorisation($autorisation);
+        $avoir = $this->getReferenceAvoir();
+
+        if (null !== $avoir) {
+            if ('autorisation' == $this->getType()) {
+                if ('Achat de Carte' == $this->getTypeAutorisation()->getComportementLibelle()) {
+                    foreach ($this->getCommande()->getCommandeDetails() as $cmdDetails) {
+                        if ('inscription' == $cmdDetails->getType() && ($format = $cmdDetails->getFormatActivite()) instanceof FormatAchatCarte && $format->getCarte() == $this->getTypeAutorisation()) {
+                            $cmdDetails
+                                ->getInscription()->setStatut('desinscrit')
+                                /*->setAvoir($this->getCommande())
+                                ->setReferenceAvoir($avoir)
+                                ->setDateAvoir($this->getDateAvoir())*/
+                            ;
+                        }
+                    }
+                }
+                if (!empty($autorisation = $this->typeAutorisation)) {
+                    // $autorisation = $this->typeAutorisation->getTarif();
+                    $this->getCommande()->getUtilisateur()->removeAutorisation($autorisation);
+                }
+                if ($insciption = $this->getInscription()) {
+                    $insciption->removeAllAutorisations();
+                }
             }
-            if ($insciption = $this->getInscription()) {
-                $insciption->removeAllAutorisations();
-            }
-        } elseif ('inscription' == $this->getTYpe()) {
-            $this->getInscription()->setStatut('annule', ['motifAnnulation' => "génération d'avoir"]);
+        } elseif ('inscription' == $this->getType()) {
+            $this->getInscription()->setStatut('annule', ['motifAnnulation' => "Génération d'avoir"]);
             $this->getInscription()->removeAllAutorisations();
         }
 
@@ -302,7 +328,7 @@ class CommandeDetail
     /**
      * Set referenceAvoir.
      *
-     * @param int|null $referenceAvoir
+     * @param null|int $referenceAvoir
      *
      * @return CommandeDetail
      */
@@ -316,7 +342,7 @@ class CommandeDetail
     /**
      * Get referenceAvoir.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getReferenceAvoir()
     {
@@ -336,7 +362,7 @@ class CommandeDetail
     /**
      * Set type.
      *
-     * @param string|null $type
+     * @param null|string $type
      *
      * @return CommandeDetail
      */
@@ -350,7 +376,7 @@ class CommandeDetail
     /**
      * Get type.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getType()
     {
@@ -360,7 +386,7 @@ class CommandeDetail
     /**
      * Set hmac.
      *
-     * @param string|null $hmac
+     * @param null|string $hmac
      *
      * @return CommandeDetail
      */
@@ -374,7 +400,7 @@ class CommandeDetail
     /**
      * Get hmac.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getHmac()
     {
@@ -384,7 +410,7 @@ class CommandeDetail
     /**
      * Set dateAjoutPanier.
      *
-     * @param \DateTime|null $dateAjoutPanier
+     * @param null|\DateTime $dateAjoutPanier
      *
      * @return CommandeDetail
      */
@@ -396,13 +422,37 @@ class CommandeDetail
     }
 
     /**
+     * Set dateAvoir.
+     *
+     * @param null|\DateTime $dateAvoir
+     *
+     * @return CommandeDetail
+     */
+    public function setDateAvoir($dateAvoir = null)
+    {
+        $this->dateAvoir = $dateAvoir;
+
+        return $this;
+    }
+
+    /**
      * Get dateAjoutPanier.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateAjoutPanier()
     {
         return $this->dateAjoutPanier;
+    }
+
+    /**
+     * Get dateAvoir.
+     *
+     * @return null|\DateTime
+     */
+    public function getDateAvoir()
+    {
+        return $this->dateAvoir;
     }
 
     /**
@@ -456,7 +506,7 @@ class CommandeDetail
     /**
      * Set jourCreneau.
      *
-     * @param string|null $jourCreneau
+     * @param null|string $jourCreneau
      *
      * @return CommandeDetail
      */
@@ -470,7 +520,7 @@ class CommandeDetail
     /**
      * Get jourCreneau.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getJourCreneau()
     {
@@ -480,7 +530,7 @@ class CommandeDetail
     /**
      * Set horaireCreneau.
      *
-     * @param string|null $horaireCreneau
+     * @param null|string $horaireCreneau
      *
      * @return CommandeDetail
      */
@@ -494,7 +544,7 @@ class CommandeDetail
     /**
      * Get horaireCreneau.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getHoraireCreneau()
     {
@@ -504,7 +554,7 @@ class CommandeDetail
     /**
      * Set libelle.
      *
-     * @param string|null $libelle
+     * @param null|string $libelle
      *
      * @return CommandeDetail
      */
@@ -518,7 +568,7 @@ class CommandeDetail
     /**
      * Get libelle.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLibelle()
     {
@@ -528,7 +578,7 @@ class CommandeDetail
     /**
      * Set description.
      *
-     * @param string|null $description
+     * @param null|string $description
      *
      * @return CommandeDetail
      */
@@ -542,7 +592,7 @@ class CommandeDetail
     /**
      * Get description.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getDescription()
     {
@@ -552,7 +602,7 @@ class CommandeDetail
     /**
      * Set dateDebut.
      *
-     * @param \DateTime|null $dateDebut
+     * @param null|\DateTime $dateDebut
      *
      * @return CommandeDetail
      */
@@ -566,7 +616,7 @@ class CommandeDetail
     /**
      * Get dateDebut.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateDebut()
     {
@@ -576,7 +626,7 @@ class CommandeDetail
     /**
      * Set dateFin.
      *
-     * @param \DateTime|null $dateFin
+     * @param null|\DateTime $dateFin
      *
      * @return CommandeDetail
      */
@@ -590,7 +640,7 @@ class CommandeDetail
     /**
      * Get dateFin.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateFin()
     {
@@ -600,7 +650,7 @@ class CommandeDetail
     /**
      * Set typeArticle.
      *
-     * @param string|null $typeArticle
+     * @param null|string $typeArticle
      *
      * @return CommandeDetail
      */
@@ -614,7 +664,7 @@ class CommandeDetail
     /**
      * Get typeArticle.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getTypeArticle()
     {
@@ -624,7 +674,7 @@ class CommandeDetail
     /**
      * Set numeroCarte.
      *
-     * @param string|null $numeroCarte
+     * @param null|string $numeroCarte
      *
      * @return CommandeDetail
      */
@@ -638,7 +688,7 @@ class CommandeDetail
     /**
      * Get numeroCarte.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNumeroCarte()
     {
@@ -648,7 +698,7 @@ class CommandeDetail
     /**
      * Set dateCarteFinValidite.
      *
-     * @param \DateTime|null $dateCarteFinValidite
+     * @param null|\DateTime $dateCarteFinValidite
      *
      * @return CommandeDetail
      */
@@ -662,7 +712,7 @@ class CommandeDetail
     /**
      * Get dateCarteFinValidite.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateCarteFinValidite()
     {
@@ -672,11 +722,11 @@ class CommandeDetail
     /**
      * Set commande.
      *
-     * @param \UcaBundle\Entity\Commande|null $commande
+     * @param null|\UcaBundle\Entity\Commande $commande
      *
      * @return CommandeDetail
      */
-    public function setCommande(\UcaBundle\Entity\Commande $commande = null)
+    public function setCommande(Commande $commande = null)
     {
         $this->commande = $commande;
 
@@ -686,7 +736,7 @@ class CommandeDetail
     /**
      * Get commande.
      *
-     * @return \UcaBundle\Entity\Commande|null
+     * @return null|\UcaBundle\Entity\Commande
      */
     public function getCommande()
     {
@@ -696,11 +746,11 @@ class CommandeDetail
     /**
      * Set avoir.
      *
-     * @param \UcaBundle\Entity\Commande|null $avoir
+     * @param null|\UcaBundle\Entity\Commande $avoir
      *
      * @return CommandeDetail
      */
-    public function setAvoir(\UcaBundle\Entity\Commande $avoir = null)
+    public function setAvoir(Commande $avoir = null)
     {
         $this->avoir = $avoir;
 
@@ -710,7 +760,7 @@ class CommandeDetail
     /**
      * Get avoir.
      *
-     * @return \UcaBundle\Entity\Commande|null
+     * @return null|\UcaBundle\Entity\Commande
      */
     public function getAvoir()
     {
@@ -720,11 +770,11 @@ class CommandeDetail
     /**
      * Set inscription.
      *
-     * @param \UcaBundle\Entity\Inscription|null $inscription
+     * @param null|\UcaBundle\Entity\Inscription $inscription
      *
      * @return CommandeDetail
      */
-    public function setInscription(\UcaBundle\Entity\Inscription $inscription = null)
+    public function setInscription(Inscription $inscription = null)
     {
         $this->inscription = $inscription;
 
@@ -734,7 +784,7 @@ class CommandeDetail
     /**
      * Get inscription.
      *
-     * @return \UcaBundle\Entity\Inscription|null
+     * @return null|\UcaBundle\Entity\Inscription
      */
     public function getInscription()
     {
@@ -748,7 +798,7 @@ class CommandeDetail
      *
      * @return CommandeDetail
      */
-    public function addLigneCommandeReference(\UcaBundle\Entity\CommandeDetail $ligneCommandeReference)
+    public function addLigneCommandeReference(CommandeDetail $ligneCommandeReference)
     {
         $this->ligneCommandeReferences[] = $ligneCommandeReference;
 
@@ -760,9 +810,9 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeReference
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeLigneCommandeReference(\UcaBundle\Entity\CommandeDetail $ligneCommandeReference)
+    public function removeLigneCommandeReference(CommandeDetail $ligneCommandeReference)
     {
         return $this->ligneCommandeReferences->removeElement($ligneCommandeReference);
     }
@@ -784,7 +834,7 @@ class CommandeDetail
      *
      * @return CommandeDetail
      */
-    public function addLigneCommandeLiee(\UcaBundle\Entity\CommandeDetail $ligneCommandeLiee)
+    public function addLigneCommandeLiee(CommandeDetail $ligneCommandeLiee)
     {
         $this->ligneCommandeLiees[] = $ligneCommandeLiee;
 
@@ -796,9 +846,9 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeLiee
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeLigneCommandeLiee(\UcaBundle\Entity\CommandeDetail $ligneCommandeLiee)
+    public function removeLigneCommandeLiee(CommandeDetail $ligneCommandeLiee)
     {
         return $this->ligneCommandeLiees->removeElement($ligneCommandeLiee);
     }
@@ -816,11 +866,11 @@ class CommandeDetail
     /**
      * Set formatActivite.
      *
-     * @param \UcaBundle\Entity\FormatActivite|null $formatActivite
+     * @param null|\UcaBundle\Entity\FormatActivite $formatActivite
      *
      * @return CommandeDetail
      */
-    public function setFormatActivite(\UcaBundle\Entity\FormatActivite $formatActivite = null)
+    public function setFormatActivite(FormatActivite $formatActivite = null)
     {
         $this->formatActivite = $formatActivite;
 
@@ -830,7 +880,7 @@ class CommandeDetail
     /**
      * Get formatActivite.
      *
-     * @return \UcaBundle\Entity\FormatActivite|null
+     * @return null|\UcaBundle\Entity\FormatActivite
      */
     public function getFormatActivite()
     {
@@ -840,11 +890,11 @@ class CommandeDetail
     /**
      * Set creneau.
      *
-     * @param \UcaBundle\Entity\Creneau|null $creneau
+     * @param null|\UcaBundle\Entity\Creneau $creneau
      *
      * @return CommandeDetail
      */
-    public function setCreneau(\UcaBundle\Entity\Creneau $creneau = null)
+    public function setCreneau(Creneau $creneau = null)
     {
         $this->creneau = $creneau;
 
@@ -854,7 +904,7 @@ class CommandeDetail
     /**
      * Get creneau.
      *
-     * @return \UcaBundle\Entity\Creneau|null
+     * @return null|\UcaBundle\Entity\Creneau
      */
     public function getCreneau()
     {
@@ -864,11 +914,11 @@ class CommandeDetail
     /**
      * Set reservabilite.
      *
-     * @param \UcaBundle\Entity\Reservabilite|null $reservabilite
+     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
      *
      * @return CommandeDetail
      */
-    public function setReservabilite(\UcaBundle\Entity\Reservabilite $reservabilite = null)
+    public function setReservabilite(Reservabilite $reservabilite = null)
     {
         $this->reservabilite = $reservabilite;
 
@@ -878,7 +928,7 @@ class CommandeDetail
     /**
      * Get reservabilite.
      *
-     * @return \UcaBundle\Entity\Reservabilite|null
+     * @return null|\UcaBundle\Entity\Reservabilite
      */
     public function getReservabilite()
     {
@@ -888,11 +938,11 @@ class CommandeDetail
     /**
      * Set typeAutorisation.
      *
-     * @param \UcaBundle\Entity\TypeAutorisation|null $typeAutorisation
+     * @param null|\UcaBundle\Entity\TypeAutorisation $typeAutorisation
      *
      * @return CommandeDetail
      */
-    public function setTypeAutorisation(\UcaBundle\Entity\TypeAutorisation $typeAutorisation = null)
+    public function setTypeAutorisation(TypeAutorisation $typeAutorisation = null)
     {
         $this->typeAutorisation = $typeAutorisation;
 
@@ -902,7 +952,7 @@ class CommandeDetail
     /**
      * Get typeAutorisation.
      *
-     * @return \UcaBundle\Entity\TypeAutorisation|null
+     * @return null|\UcaBundle\Entity\TypeAutorisation
      */
     public function getTypeAutorisation()
     {
@@ -912,11 +962,11 @@ class CommandeDetail
     /**
      * Set etablissementRetraitCarte.
      *
-     * @param \UcaBundle\Entity\Etablissement|null $etablissementRetraitCarte
+     * @param null|\UcaBundle\Entity\Etablissement $etablissementRetraitCarte
      *
      * @return CommandeDetail
      */
-    public function setEtablissementRetraitCarte(\UcaBundle\Entity\Etablissement $etablissementRetraitCarte = null)
+    public function setEtablissementRetraitCarte(Etablissement $etablissementRetraitCarte = null)
     {
         $this->etablissementRetraitCarte = $etablissementRetraitCarte;
 
@@ -926,7 +976,7 @@ class CommandeDetail
     /**
      * Get etablissementRetraitCarte.
      *
-     * @return \UcaBundle\Entity\Etablissement|null
+     * @return null|\UcaBundle\Entity\Etablissement
      */
     public function getEtablissementRetraitCarte()
     {

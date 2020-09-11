@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CleanAuthorizationAndCardCommand:
+ *
+ * Commande en console pour nettoyer les autorisation et cartes
+*/
+
 namespace UcaBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

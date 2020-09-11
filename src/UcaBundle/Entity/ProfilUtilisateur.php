@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - ProfilUtilisateur:
+ *
+ * Permet de saisir les profils utilisateurs
+ * Les profils donnent accès aux activités, aux nombres de places, aux prix,..
+ * C"est une donnée essentielle pour la logique de contrôle du site.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

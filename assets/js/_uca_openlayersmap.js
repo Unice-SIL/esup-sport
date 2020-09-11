@@ -3,6 +3,15 @@
 
 _uca.openlayersmap = {};
 
+/**
+ * Function: createMap() 
+ * Initlialise la carte et les évents listener
+*/ 
+_uca.openlayersmap.createMap = function () {
+    _uca.openlayersmap.init();
+    $('.js-openlayersmap').each(_uca.openlayersmap.createmap);
+}
+
 _uca.openlayersmap.init = function() {
     _uca.openlayersmap.htmlTemplate = $('#modalOpenLayersMap .modal-dialog').html();
     _uca.openlayersmap.libelle = '';

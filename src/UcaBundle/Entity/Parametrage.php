@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Paramêtrage:
+ *
+ * Permet de règler les paramêtre globaux du site
+ * Ces élements sont notament utilisée dans la génération de facture.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -8,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="parametrage")
- * @ORM\Entity(repositoryClass="UcaBundle\Repository\ActiviteRepository")
+ * @ORM\Entity
  * @Gedmo\Loggable
  */
 class Parametrage
@@ -109,7 +116,7 @@ class Parametrage
      */
     private $anneeUniversitaire;
 
-    /*
+    /**
      * @Gedmo\Versioned
      * @ORM\Column(type="string")
      * @Assert\NotBlank(message="parametrage.libelleadresse.notblank")

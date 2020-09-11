@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CreneauRepository
+ *
+ * Contient les requêtes à la base de données pour l'entité creneau
+*/
+
 namespace UcaBundle\Repository;
 
 class CreneauRepository extends \Doctrine\ORM\EntityRepository

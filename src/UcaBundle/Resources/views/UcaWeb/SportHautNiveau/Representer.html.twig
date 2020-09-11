@@ -1,4 +1,4 @@
-{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
+{% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 {% import '@Uca/Macros/Bootstrap.html.twig' as Bootstrap %}
 
@@ -8,7 +8,11 @@
 {% endblock %}
 
 {% block main %}    
-    <section>
-        <h3 class="text-center">Bientôt disponible</h3>
-    </section>
+    <h1 class="h1-light">{{ 'sportdehautniveau.representer'|trans }}</h1>
+
+    {% if emplacement("SHN - Representer") is not empty %}
+        <section class="container container-style bg-white mb-5">
+            {{ emplacement("SHN - Representer")|raw }}
+        </section>
+    {% endif %} 
 {% endblock %}

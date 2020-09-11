@@ -1,27 +1,28 @@
 <?php
 
+/*
+ * Classe - ImageFondType
+ *
+ * Formulaire d'édition d'une image de fond
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-
 
 class ImageFondType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('titre', TextType::class, [
             'label_format' => 'common.titre',
         ]);
-        $builder->add('imageFile', VichImageType::class,[
+        $builder->add('imageFile', VichImageType::class, [
             'required' => true,
             'allow_delete' => false,
             'download_uri' => false,
@@ -31,7 +32,7 @@ class ImageFondType extends AbstractType
         ]);
 
         $builder->add('save', SubmitType::class, [
-            'label_format' => 'bouton.save'
+            'label_format' => 'bouton.save',
         ]);
     }
 

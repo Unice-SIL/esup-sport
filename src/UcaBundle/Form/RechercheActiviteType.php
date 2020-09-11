@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - RechercheActiviteType
+ *
+ * Formulaire de recherche d'activité (UcaWeb)
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

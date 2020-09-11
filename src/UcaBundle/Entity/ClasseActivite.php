@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Classe d'Activité:
+ *
+ * Une classe d'activté (ex: sport en salle) contient les activités associées
+ * Elle appartient au type d'activité (ex: le sport).
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - AccueilController
+ *
+ * Gestion de l'acceuil de l'application (public)
+ * Gestion de la page de connexion
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

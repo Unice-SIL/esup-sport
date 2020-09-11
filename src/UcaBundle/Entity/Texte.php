@@ -1,24 +1,26 @@
 <?php
 
+/*
+ * Classe - Texte:
+ *
+ * Permet de modifier le contenu afficher sur le site à certains endroits.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use UcaBundle\Annotations\CKEditor;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use UcaBundle\Annotations\CKEditor;
 
 /**
- * Texte
- *
  * @ORM\Table(name="texte")
  * @ORM\Entity
- * @Gedmo\Loggable   
+ * @Gedmo\Loggable
  */
 class Texte
 {
-    #region Propriétés
+    //region Propriétés
 
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -27,7 +29,7 @@ class Texte
      */
     private $id;
 
-    /** 
+    /**
      * @ORM\Column(type="string")
      */
     private $emplacement;
@@ -67,8 +69,7 @@ class Texte
      */
     private $texteMobile;
 
-    #endregion
-    
+    //endregion
 
     /**
      * Get id.
@@ -179,7 +180,7 @@ class Texte
     /**
      * Set texteMobile.
      *
-     * @param string|null $texteMobile
+     * @param null|string $texteMobile
      *
      * @return Texte
      */

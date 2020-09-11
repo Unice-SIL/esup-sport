@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - Previsalisation
+ *
+ * Service gérant la prévisulisation des contenus
+*/
+
 namespace UcaBundle\Service\Common;
 
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -12,7 +18,6 @@ class Previsualisation
 
     private $authorizationChecker;
     private $event;
-
 
     public function __construct(TokenStorage $tokenStorage, AuthorizationChecker $authorizationChecker)
     {
@@ -28,7 +33,7 @@ class Previsualisation
 
     public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {
-        if ($this->tokenStorage->getToken() == null) {
+        if (null == $this->tokenStorage->getToken()) {
             return;
         }
         $this->event = $event;
@@ -36,11 +41,13 @@ class Previsualisation
         //Check if the user have the role previsualisation and delete session var if is not the case
         if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->clearSession();
+
             return;
         }
 
-        if (!$this->tokenStorage->getToken()->getUser()->hasRole("ROLE_PREVISUALISATION")) {
+        if (!$this->tokenStorage->getToken()->getUser()->hasRole('ROLE_PREVISUALISATION')) {
             $this->clearSession();
+
             return;
         }
 
@@ -56,7 +63,7 @@ class Previsualisation
 
         $previsualisation = $event->getRequest()->getSession()->get('previsualisation');
         $urlRetourPrevisualisation = $event->getRequest()->getSession()->get('urlRetourPrevisualisation');
-        self::$IS_ACTIVE = $previsualisation == 'on';
+        self::$IS_ACTIVE = 'on' == $previsualisation;
 
         if (!self::$IS_ACTIVE) {
             $this->clearSession();

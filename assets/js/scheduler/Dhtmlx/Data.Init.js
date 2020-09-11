@@ -98,7 +98,7 @@ $.post(DATAAPI, {
         if (month < 10) {
             month = '0' + month;
         }
-        scheduler.config.repeat_date_of_end = [day, month, year].join('/');
+        scheduler.config.repeat_date_of_end = [day, month, year].join('-');
     }
 
 }).fail(_uca.ajax.fail);

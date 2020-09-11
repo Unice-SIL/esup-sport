@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - Creneau:
+ *
+ * Représente un Créneau dans un format avec Créneau
+ * Le créneau peut ou non être répétif ou unique.
+ * Un utilisateur s'inscrit à un créneau.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;

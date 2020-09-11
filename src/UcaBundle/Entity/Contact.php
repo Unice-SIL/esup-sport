@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * Classe - Contact:
+ *
+ * Contrôle le formulaire de contact.
+*/
+
 namespace UcaBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
 {
-    #region Propriétés
+    //region Propriétés
 
     /** @Assert\NotBlank(message="contact.email.notblank")
      * @Assert\Email(message="contact.email.invalide") */
@@ -16,9 +22,8 @@ class Contact
     /** @Assert\NotBlank(message="contact.message.notblank") */
     private $message;
 
-    #endregion
+    //endregion
 
-    
     /**
      * Set email.
      *
@@ -60,7 +65,7 @@ class Contact
 
         return $this;
     }
-    
+
     public function getEmail()
     {
         return $this->email;

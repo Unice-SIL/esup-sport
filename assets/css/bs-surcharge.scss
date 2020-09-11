@@ -1306,7 +1306,7 @@ input, .form-control {
     border: none;
     border: 2px solid $pastel-gray;
     padding: 10px 15px;
-    min-height: 50px;
+    min-height: 40px;
 }
 label, legend {
     font-weight: 700;
@@ -1394,6 +1394,11 @@ legend {
 #sg-datatables-Groupe_datatable th {
     width: 33% !important;
 }
+
+.sg-datatables-individual-filtering {
+    width: 100%;
+}
+
 /* Loader pour le datatable */
 .dataTables_wrapper .dataTables_processing {
     position: absolute;

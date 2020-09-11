@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CreneauProfilUtilisateur:
+ *
+ * Entité Technique permettant d'enregistre la capacité par profil par créneau.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

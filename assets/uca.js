@@ -34,15 +34,17 @@ global.uca = uca;
 /* JQuery DateTimePicker */
 require('jquery-datetimepicker');
 require('jquery-datetimepicker/build/jquery.datetimepicker.min.css');
-require("./js/jquery-datetimepicker/main.js");
+require("./js/jquery/jqueryDatetimepicker.js");
+
 
 /* Select2 */
 require('select2/dist/css/select2.css');
 require('select2');
 require('@ttskch/select2-bootstrap4-theme/dist/select2-bootstrap4.css');
+require("./js/jquery/jquerySelect2.js");
 
 /* JQuery Datatable */
-require("./js/jquery-datatable/main.js");
+require("./js/jquery/jqueryDatatable.js")
 const pipeline = require('./bundles/sgdatatables/js/pipeline.js');
 
 /* FontAwesome */
@@ -88,9 +90,12 @@ import "./libs/dhtmlxScheduler-5.1.6/sources/ext/dhtmlxscheduler_recurring.js";
 /* Custom imports */
 import "./js/_uca.js";
 import "./js/_uca_ajax.js";
+import "./js/_uca_bascule.js";
 import "./js/_uca_capaciteProfils.js";
 import "./js/_uca_common.js";
+import "./js/_uca_extraction.js";
 import "./js/_uca_inscription.js";
+import "./js/_uca_mail.js";
 import "./js/_uca_multipleImages.js";
 import "./js/_uca_openlayersmap.js";
 import "./js/_uca_timer.js";

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Tarif:
+ *
+ * Permet de fixer un tarifs (une grille) de prix pour un élement (format, creneau, autorisation,...).
+ * Un tafif est définit par profil.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;

@@ -1,11 +1,16 @@
 <?php
 
+/*
+ * Classe - FormatSimple:
+ *
+ * L'un des trois format d'activité (hérité)
+ * Cela va correspondre aux évènements ponctuels auquels l'utilisateur pourra s'inscrire.
+*/
+
 namespace UcaBundle\Entity;
 
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use UcaBundle\Service\Common\Fn;
 
 /**
@@ -14,7 +19,7 @@ use UcaBundle\Service\Common\Fn;
  */
 class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
-    #region Propriétés
+    //region Propriétés
 
     /** @Gedmo\Versioned
      * @ORM\Column(type="boolean", nullable=false) */
@@ -23,9 +28,9 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", cascade={"persist", "remove"}, mappedBy="formatSimple") */
     private $evenement;
 
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
     public function __construct()
     {
         parent::__construct();
@@ -36,7 +41,7 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     public function getArticleLibelle()
     {
         return $this->getLibelle()
-            . ' [' . $this->getArticleDateDebut()->format('d/m/Y H:i') . ']';
+            .' ['.$this->getArticleDateDebut()->format('d/m/Y H:i').']';
     }
 
     public function getArticleDescription()
@@ -48,6 +53,7 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     {
         $this->evenement->setDateDebut($dateDebutEffective);
         parent::setDateDebutEffective($dateDebutEffective);
+
         return $this;
     }
 
@@ -55,6 +61,7 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     {
         $this->evenement->setDateFin($dateFinEffective);
         parent::setDateFinEffective($dateFinEffective);
+
         return $this;
     }
 
@@ -62,11 +69,11 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     {
         $this->evenement->setDescription($libelle);
         parent::setLibelle($libelle);
+
         return $this;
     }
 
-    #endregion
-
+    //endregion
 
     /**
      * Set promouvoir.
@@ -95,11 +102,11 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     /**
      * Set evenement.
      *
-     * @param \UcaBundle\Entity\DhtmlxEvenement|null $evenement
+     * @param null|\UcaBundle\Entity\DhtmlxEvenement $evenement
      *
      * @return FormatSimple
      */
-    public function setEvenement(\UcaBundle\Entity\DhtmlxEvenement $evenement = null)
+    public function setEvenement(DhtmlxEvenement $evenement = null)
     {
         $this->evenement = $evenement;
 

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - HighlightController
+ *
+ * Gestion du CRUD pour les highlights
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

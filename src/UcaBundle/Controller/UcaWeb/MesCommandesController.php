@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - MesCommandesController
+ *
+ * Gestion de l'écran de mes commandes des utilisateurs
+ * Consulter une commande / un Avoir
+ * Export les commandes / avoirs au format pdf
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
@@ -14,7 +22,7 @@ use UcaBundle\Entity\Parametrage;
 use UcaBundle\Form\ValiderPaiementPayboxType;
 
 /**
- * @Route("UcaWeb/MesCommandes/")
+ * @Route("UcaWeb/MesCommandes")
  * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
  */
 class MesCommandesController extends Controller
@@ -92,7 +100,7 @@ class MesCommandesController extends Controller
     }
 
     /**
-     * @Route("Annuler/{id}",name="UcaWeb_MesCommandesAnnuler")
+     * @Route("/Annuler/{id}",name="UcaWeb_MesCommandesAnnuler")
      */
     public function annulerAction(Request $request, Commande $commande)
     {
@@ -112,7 +120,7 @@ class MesCommandesController extends Controller
     }
 
     /**
-     * @Route("Export/{id}",name="UcaWeb_MesCommandesExport", options={"expose"=true})
+     * @Route("/Export/{id}",name="UcaWeb_MesCommandesExport", options={"expose"=true})
      */
     public function exportAction(Request $request, Commande $commande)
     {
@@ -125,7 +133,7 @@ class MesCommandesController extends Controller
 
         try {
             $pdf = new HTML2PDF('p', 'A4', 'fr');
-            $pdf->pdf->SetAuthor('Université de Nice');
+            $pdf->pdf->SetAuthor('Université Côte d\'Azur');
             $pdf->pdf->SetTitle('Facture');
             $pdf->writeHTML($content);
             $pdf->Output('Facture.pdf');
@@ -135,7 +143,7 @@ class MesCommandesController extends Controller
     }
 
     /**
-     * @Route("Export/{id}/Avoir/{refAvoir}",name="UcaWeb_MesAvoirsExport", options={"expose"=true})
+     * @Route("/Export/{id}/Avoir/{refAvoir}",name="UcaWeb_MesAvoirsExport", options={"expose"=true})
      *
      * @param mixed $refAvoir
      */
@@ -145,11 +153,12 @@ class MesCommandesController extends Controller
             return $this->redirectToRoute('UcaWeb_MesCredits');
         }
 
-        $content = $this->renderView('@Uca/UcaWeb/Commande/Avoir.html.twig', ['commande' => $commande, 'refAvoir' => $refAvoir]);
+        $parametrage = $this->getDoctrine()->getRepository(Parametrage::class)->findOneById(1);
+        $content = $this->renderView('@Uca/UcaWeb/Commande/Avoir.html.twig', ['commande' => $commande, 'refAvoir' => $refAvoir,  'parametrage' => $parametrage]);
 
         try {
             $pdf = new HTML2PDF('p', 'A4', 'fr');
-            $pdf->pdf->SetAuthor('Université de Nice');
+            $pdf->pdf->SetAuthor('Université Côte d\'Azur');
             $pdf->pdf->SetTitle('Avoir');
             $pdf->writeHTML($content);
             $pdf->Output('Avoir.pdf');

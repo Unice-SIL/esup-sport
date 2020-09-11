@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogoPartenaireDatatable
+ *
+ * COntient les champs à afficher pour la table des logos partenaires
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

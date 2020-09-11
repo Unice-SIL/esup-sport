@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GestionInscriptionType
+ *
+ * Formulaire de recherche du reporting des inscriptions
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

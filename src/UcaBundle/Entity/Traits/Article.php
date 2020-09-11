@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Trait - Article:
+ *
+ * Un article correspond à un élements de la comamnde (à l'instar du e-commerce)
+ * Ce trait est donc réexploité à plusieurs emplacement.
+*/
+
 namespace UcaBundle\Entity\Traits;
 
 use UcaBundle\Entity\Creneau;

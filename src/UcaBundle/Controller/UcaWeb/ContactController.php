@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ContactController
+ *
+ * Gestion du formulaire de contact
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,10 +37,12 @@ class ContactController extends Controller
                 $form->getData()->getEmail()
             );
 
-            $this->get('uca.flashbag')->addMessageFlashBag('contact.demande.success','success');
+            $this->get('uca.flashbag')->addMessageFlashBag('contact.demande.success', 'success');
+
             return $this->redirectToRoute('UcaWeb_Contact');
         }
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaWeb/Contact/Formulaire.html.twig', $twigConfig);
     }
 }

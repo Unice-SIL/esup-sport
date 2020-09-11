@@ -56,123 +56,17 @@
   {{ Inscription.Js }}
   {{ encore_entry_script_tags('creneau') }}
   
-  <script>
-    $( document ).ready( function () 
-    {
-      createMap();
-      $( '[data-toggle="tooltip"]' ).tooltip();
-    } );
-  </script>
-
-
-
-  <script>
-    
-    var api_url = "{{ path('api_activite_creneau') }}";
-
-    function hideLoader(){
-      $("#load").hide();
-    }
-    function showLoader(){
-      $("#load").show();
-    }
-
-    $(document).ready(function (){
-      loadData();
-    });
-
+  <script type='text/javascript'>
+    'use_strict';
     $(window).resize(function(){
       $('.modal').modal('hide');
-      loadData();
-    })
-
-    function changeTypeVisualisation(newTypeVisualisation){
-      typeVisualisation = newTypeVisualisation;
-      loadData();
-    }
-
-    function changePeriode(forNextPeriode, nbDays){
-      var date = new Date(currentDate.replace( /(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"));
-
-      var facteur = forNextPeriode ? 1 : -1;
-      if(typeVisualisation == "semaine"){
-        date.setDate(date.getDate() + nbDays * facteur);
-      } else if(typeVisualisation == "jour"){
-        date.setDate(date.getDate() + 1 * facteur);
-      } else if(typeVisualisation == "mois"){
-        var oldMonth = date.getMonth();
-        date.setMonth(date.getMonth() + 1 * facteur);
-        while (date.getMonth() != oldMonth + 1 * facteur){
-          date.setDate(date.getDate() - 1 * facteur * (date.getMonth() - oldMonth + 1 * facteur));
-        }
-      }
-
-      var options = { day: '2-digit', year: 'numeric', month: '2-digit'};
-      currentDate = date.toLocaleDateString("fr-FR", options);
-
-      loadData();
-    }
-
-    function loadData(){
-      let valueHeightDiv = [];
-      let widthWindow = $(window).width();
-      showLoader();
-      $.post(api_url, {
-        data: {
-          itemId: itemId,
-          typeVisualisation: typeVisualisation,
-          currentDate: currentDate,
-          typeFormat: typeFormat,
-          idRessource: idRessource,
-          widthWindow: widthWindow,
-        }
-      }, function (data) {
-        $("#sectionCalendrier").text('');
-        $("#sectionCalendrier").append(data.content);
-        hideLoader();
-
-        $('.js-inscription').each(_uca.inscription.addButtonEvent);
-        $( '[data-toggle="tooltip"]' ).tooltip();
-
-        $(".data-div").each(function(){
-          valueHeightDiv.push($(this).height());
-        })
-        $('.cell-col-center').height(Math.max.apply(Math, valueHeightDiv));
-
-        createMap();
-
-      }).fail(_uca.ajax.fail);
-    }
-
-    function sendMail(idEvent, idEncadrant){
-      let id = "#contactEncadrant"+idEvent+idEncadrant;
-      let textareaId= "#textcontactEncadrant"+idEvent+idEncadrant;
-      let message = $(textareaId).val();
-      $.ajax({
-        url: Routing.generate("api_mailencadrant"),
-        type: "POST",
-        data: {
-          message: message,
-          event: idEvent,
-          encadrant: idEncadrant,
-        },
-      }).done(function(data){
-        if(data!=null){
-          if(data['response'] == "success"){
-            setTimeout(function() {alert("{{ 'mail.success'|trans }}")}, 2000);
-            $(textareaId).val("");
-            $(id).removeClass("show");
-          } else {
-            setTimeout(function() {alert("{{ 'mail.error'|trans }}")}, 2000);
-          }
-          
-        }
-      }).fail(_uca.ajax.fail);
-    }
-
-    function createMap(){
-      _uca.openlayersmap.init();
-      $('.js-openlayersmap').each(_uca.openlayersmap.createmap);
-    }
+      _uca.calendrier.loadData();
+    });
+    
+    $(document).ready(function () {
+      _uca.openlayersmap.createMap();
+      _uca.bootstrap.tooltip.display()
+      _uca.calendrier.loadData();
+    });
   </script>
 {% endblock %}

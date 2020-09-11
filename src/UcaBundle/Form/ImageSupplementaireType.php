@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - ImageSupplementaireType
+ *
+ * Formulaire d'ajout/édition d'une image supplémentaire
+ * Formulaire imbriqué
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

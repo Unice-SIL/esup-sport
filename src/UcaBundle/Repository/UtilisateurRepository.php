@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - UtilisateurRepository
+ *
+ * Requêtes à la base de données pour l'entité utilisateur
+*/
+
 namespace UcaBundle\Repository;
 
 class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
@@ -51,7 +57,7 @@ class UtilisateurRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    
+
     public function findByPrenomNom($prenom, $nom)
     {
         $qb = $this->createQueryBuilder('u')

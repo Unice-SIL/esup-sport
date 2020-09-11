@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - FormatActiviteProfilUtilisateur:
+ *
+ * Entité technique permettant de saisir la capacité d'un foramt d'activité en fonction du profils des utilisateurs.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

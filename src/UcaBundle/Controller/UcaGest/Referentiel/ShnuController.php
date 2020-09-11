@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - ShnuControlle
+ *
+ * Gestion de la partie sport de haut niveau
+ * Partie highlight : CRUD
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

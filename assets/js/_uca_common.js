@@ -51,18 +51,29 @@ _uca.common.lireURL= function (input) {
 };
 
 /** 
- * Function: afficherCheckbox()
- * Afficher / Masquer un élément en fonction d'une checkboxe
- * @param: checkbox, cible
+ * Function: afficherMasquer
+ * Afficher / Masquer un élément
+ * @param: inpui, target
  */
-_uca.common.afficherCheckbox = function (checkbox, target) {
-    if (checkbox.checked === true) {
-        target.parentElement.style.display = "block";
-    } 
-    if (checkbox.checked === false) {
-        target.parentElement.style.display = "none";
+_uca.common.afficherMasquer = function (input, target) {
+    if (input.type == 'checkbox') { 
+        if (input.checked === true) {
+            target.parentElement.style.display = "block";
+        } 
+        if (input.checked === false) {
+            target.parentElement.style.display = "none";
+        }
     }
 };
+
+/** 
+ * Function: afficher
+ * Afficher un élément
+ * @param: target
+ */
+_uca.common.afficherElement = function (target) {
+    target.style.display = "block";
+}
 
 /** 
  * Function: cocherDecocherTous()

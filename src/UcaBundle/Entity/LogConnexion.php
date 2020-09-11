@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogConnexion:
+ *
+ * ENtité technique permettant d'avoir l'historique des logs.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - StatistiqueController
+ *
+ * Gestion des statistiques
+*/
+
 namespace UcaBundle\Controller\Api;
 
 use DateInterval;

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - EmailingDatatable:
+ *
+ * Donne les colonnes disponible pour la liste des utilisateurs
+ * Permet de flitrer les utlisateurs poru l'emailing
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\Column;

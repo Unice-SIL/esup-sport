@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - Etablissement:
+ *
+ * Ce sont les campus, ce sont eux qui contiendront les Ressources (lieu ou matériels).
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -442,7 +448,7 @@ class Etablissement
      *
      * @return Etablissement
      */
-    public function addCartesRetiree(\UcaBundle\Entity\CommandeDetail $cartesRetiree)
+    public function addCartesRetiree(CommandeDetail $cartesRetiree)
     {
         $this->cartesRetirees[] = $cartesRetiree;
 
@@ -454,9 +460,9 @@ class Etablissement
      *
      * @param \UcaBundle\Entity\CommandeDetail $cartesRetiree
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCartesRetiree(\UcaBundle\Entity\CommandeDetail $cartesRetiree)
+    public function removeCartesRetiree(CommandeDetail $cartesRetiree)
     {
         return $this->cartesRetirees->removeElement($cartesRetiree);
     }

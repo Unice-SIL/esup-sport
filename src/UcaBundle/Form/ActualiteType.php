@@ -1,34 +1,35 @@
 <?php
 
+/*
+ * Classe - ActualiteType:
+ *
+ *  Formulaire d'ajout/édition d'une actualité
+*/
+
 namespace UcaBundle\Form;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
-
 
 class ActualiteType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('titre', TextType::class, [
             'label_format' => 'common.titre',
         ]);
-        $builder->add('texte', CKEditorType::class, array(
+        $builder->add('texte', CKEditorType::class, [
             'label_format' => 'common.texte',
-            'config' => array(
+            'config' => [
                 'class' => 'ckeditor',
-            )
-        ));
-        $builder->add('imageFile', VichImageType::class,[
+            ],
+        ]);
+        $builder->add('imageFile', VichImageType::class, [
             'required' => true,
             'allow_delete' => false,
             'download_uri' => false,
@@ -38,7 +39,7 @@ class ActualiteType extends AbstractType
         ]);
 
         $builder->add('save', SubmitType::class, [
-            'label_format' => 'bouton.save'
+            'label_format' => 'bouton.save',
         ]);
     }
 

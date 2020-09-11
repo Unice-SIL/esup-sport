@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - UtilisateurCreditHistoriqueRepository
+ *
+ * Elle contient les opérations de crédit/débit du solde des utilisateurs (en fonction des avoirss).
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -44,7 +50,7 @@ class UtilisateurCreditHistorique
 
     /** @ORM\Column(type="string", nullable=false)*/
     private $operation;
-    // Valeur : génération d'avoir, paiement d'une commande, report d'avoir
+    // Valeur : Génération d'avoir, Règlement d'une facture, Report d'avoir, Ajout manuel de crédit
 
     /** @ORM\Column(type="string", nullable=true) */
     private $commandeAssociee;
@@ -52,15 +58,17 @@ class UtilisateurCreditHistorique
     // end region
 
     // regiion methods
-    public function __construct(Utilisateur $utilisateur, $montant, $avoir, $typeOpoeration, $operation)
+    public function __construct(Utilisateur $utilisateur, $montant, $avoir = null, $typeOpoeration, $operation, $commande = null)
     {
-        $this->date = new \DateTime();
+        $dateNow = new \DateTime();
+        $this->date = $dateNow;
         $this->utilisateur = $utilisateur;
         $this->montant = $montant;
         $this->avoir = $avoir;
         $this->typeOperation = $typeOpoeration;
         $this->operation = $operation;
         $this->statut = 'valide';
+        $this->commandeAssociee = $commande;
     }
 
     /**

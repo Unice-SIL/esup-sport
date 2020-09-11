@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe -  DescendreButton
+ *
+ * Bouton pour descendre (classer) un élément du datatable
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class DescendreButton extends AbstractButton

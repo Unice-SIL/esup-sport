@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - HistoriqueNavigation
+ *
+ * Service gérant l'historique de navigation (bouton retour)
+*/
+
 namespace UcaBundle\Service\Common;
 
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
@@ -47,13 +53,14 @@ class HistoriqueNavigation
             'UcaWeb/Paiement/Retour',
             'media/cache/resolve',
             'historiqueNavigationDebug=o',
-            'urlHistory=clear'
+            'urlHistory=clear',
         ];
         foreach ($array_search as $search) {
-            if (strpos($url, $search) !== FALSE) {
+            if (false !== strpos($url, $search)) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -64,12 +71,13 @@ class HistoriqueNavigation
         $previousUrl = self::getUrlHistoriqueByIndex(-1);
         if ($request->isXmlHttpRequest() || $request->isMethod('POST')) {
             // On exclu ces types de requêtes de l'historique.
-        } elseif ($request->query->get('urlHistory') != null) {
+        } elseif (null != $request->query->get('urlHistory')) {
             $index = -$request->query->get('urlHistory');
             $historiqueUrl = self::getUrlRetour($index);
             if ($historiqueUrl == $currentUrl) {
-                for ($i = 1; $i <= $index; $i++)
+                for ($i = 1; $i <= $index; ++$i) {
                     array_pop(self::$OBJECT);
+                }
             }
         } elseif (self::urlInExcludeList($currentUrl)) {
             // On exclu ces Url de l'historique de navigation.
@@ -82,7 +90,7 @@ class HistoriqueNavigation
     public function onKernelRequest(GetResponseEvent $event)
     {
         $request = $event->getRequest();
-        if ($request->query->get('urlHistory') == 'clear') {
+        if ('clear' == $request->query->get('urlHistory')) {
             $request->getSession()->remove('HistoriqueNavigation');
         }
         self::setModeDebug($request);
@@ -98,16 +106,16 @@ class HistoriqueNavigation
     {
         if ($index > 1 && count(self::$OBJECT) <= $index) {
             return false;
-        } else {
-            $previousUrl = self::getUrlHistoriqueByIndex(-($index + 1));
-            $previousUrl .= strpos($previousUrl, '?') !== FALSE ? '&' : '?';
-            $previousUrl .= 'urlHistory=-' . $index;
-            return $previousUrl;
         }
+        $previousUrl = self::getUrlHistoriqueByIndex(-($index + 1));
+        $previousUrl .= false !== strpos($previousUrl, '?') ? '&' : '?';
+        $previousUrl .= 'urlHistory=-'.$index;
+
+        return $previousUrl;
     }
 
     public function debug()
     {
-        return self::$DEBUG == 'on';
+        return 'on' == self::$DEBUG;
     }
 }

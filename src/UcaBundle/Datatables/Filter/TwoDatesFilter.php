@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - TwoDatesFilter:
+ *
+ * Filtre les données d'une datatable entre deux dates données
+*/
+
 namespace UcaBundle\Datatables\Filter;
 
 use DateTime;

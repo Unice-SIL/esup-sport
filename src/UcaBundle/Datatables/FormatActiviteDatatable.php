@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - FormatActiviteDatatable
+ *
+ * Liste les colonnes des format d'activité disponibles au sein d'une activité
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

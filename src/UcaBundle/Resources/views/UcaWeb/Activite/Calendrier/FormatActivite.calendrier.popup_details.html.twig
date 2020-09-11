@@ -44,7 +44,7 @@
                   </span>
                 </p>
               {% else %}
-                  <button onclick="sendMail({{event.id}}, {{encadrant.id}})" class="btn btn-primary" id="btn{{ id }}">Envoyer</button>
+                  <button onclick="_uca.mail.sendMailEncadrant({{event.id}}, {{encadrant.id}})" class="btn btn-primary" id="btn{{ id }}">Envoyer</button>
               {% endif %}
             </div>
         </div>

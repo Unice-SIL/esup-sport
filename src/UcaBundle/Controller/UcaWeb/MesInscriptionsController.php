@@ -1,5 +1,15 @@
 <?php
 
+/*
+ * Classe - MesInscriptionsController
+ *
+ * Gestion des inscription côté Web
+ * Inscription de l'utilisateur
+ * Annulation d'une inscription
+ * Ajouter un élement au panier
+ * La desincription massive est intégré à ce contrôleur
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

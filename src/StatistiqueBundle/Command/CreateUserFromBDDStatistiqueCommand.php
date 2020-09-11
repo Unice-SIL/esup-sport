@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - CreateUserFromBDDStatistiqueCommand
+ *
+ * Commadne (exécution en console)
+ * Requêtes à la base de données permettant l'alimentation des données statistiques
+*/
+
 namespace StatistiqueBundle\Command;
 
 use DateTime;

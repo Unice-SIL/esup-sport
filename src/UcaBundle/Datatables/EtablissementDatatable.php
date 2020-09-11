@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EtablissementDatatable:
+ *
+ * Donne les colonnes affichés dans la liste des établissements.
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
@@ -16,13 +22,13 @@ class EtablissementDatatable extends AbstractTranslatedDatatable
         $this->setUcaDefault();
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('libelle', Column::class, array(
+            ])
+            ->add('libelle', Column::class, [
                 'title' => $this->translator->trans('common.libelle'),
-            ))
+            ])
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
@@ -30,8 +36,9 @@ class EtablissementDatatable extends AbstractTranslatedDatatable
                     (new ModifierButton($this, 'UcaGest_EtablissementModifier', ['id' => 'id'], 'ROLE_GESTION_ETABLISSEMENT_ECRITURE'))->getConfig(),
                     (new SupprimerButton($this, 'UcaGest_EtablissementSupprimer', ['id' => 'id'], 'ROLE_GESTION_ETABLISSEMENT_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Etablissement', 'objectId' => 'id'], 'ROLE_GESTION_ETABLISSEMENT_ECRITURE'))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

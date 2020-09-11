@@ -59,8 +59,8 @@ groupe.name.tropLong: Le nom du groupe est trop long
 groupe.name.tropPetit: Le nom du groupe est trop petit
 groupe.roles.notnull: Le rôle est obligatoire
 groupe.uniqueentity: Un groupe existe déjà avec ce nom
-highlight.urlvideo.notblank: L'url de la vidéo est obligatoire
 highlight.urlvideo.invalid: L'url saisie n'est pas une url valide. L'url doit correspondre à celle d'une vidéo Youtube, Dailymotion ou Vimeo.
+highlight.urlvideo.notblank: L'url de la vidéo est obligatoire
 imagefond.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
 imagefond.image.notnull: Une image doit être sélectionnée
 imagefond.titre.notnull: Le titre est obligatoire
@@ -88,9 +88,9 @@ message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être
 message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
 message.typeinvalide.entier: La valeur {{ value }} n'est pas un entier valide
 parametrage.adressefacturation.notblank: L'adresse de facturation doit être renseignée
+parametrage.anneeuniversitaire.greaterthan: Cette valeur doit être supérieure à 2019
 parametrage.anneeuniversitaire.notblank: L'année universitaire est obligatoire
 parametrage.anneeuniversitaire.type: Cette valeur doit être un nombre
-parametrage.anneeuniversitaire.greaterthan: Cette valeur doit être supérieure à 2019
 parametrage.facebook.notblank: Un lien Facebook doit être renseigné
 parametrage.instagram.notblank: Un lien Instagram doit être renseigné
 parametrage.libelleadresse.notblank: Un libelle pour l'adresse doit être renseigné
@@ -128,6 +128,7 @@ typeautorisation.comportement.notnull: Veuillez sélectionner un comportement
 typeautorisation.libelle.notblank: Le libellé du type d'autorisation est obligatoire
 typeautorisation.uniqueentity: Un type d'autorisation existe déjà avec ce libellé
 utilisateur.UserProfile.notnull: Veuillez selectionner un profil d'utilisateur
+utilisateur.credit.dateexpiration.notblank: Veuillez saisir la date d'expiration
 utilisateur.document.format.erreur: Format du document invalide
 utilisateur.document.notBlank : Pièce justificative manquante
 utilisateur.firstname.notnull: Le prénom est obligatoire
@@ -141,6 +142,7 @@ utilisateur.name.notnull: Le nom est obligatoire
 utilisateur.password.notnull: Le mot de passe est obligatoire
 utilisateur.password.tropPetit: Le mot de passe est trop court
 utilisateur.sexe.notnull: La civilité est obligatoire
+utilisateur.statut.notnull: Le statut est obligatoire
 utilisateur.telephone.invalide: Le numéro de téléphone invalide
 utilisateur.username.email: Votre nom d'utilisateur ne doit pas être un e-mail
 utilisateur.username.existant: Le nom d'utilisateur est déjà utilisé

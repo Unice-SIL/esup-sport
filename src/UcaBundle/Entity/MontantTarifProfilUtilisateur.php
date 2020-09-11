@@ -1,10 +1,14 @@
 <?php
 
+/*
+ * Classe - MontantTarifProfilUtilisateur:
+ *
+ * Entité technique permettant de saisir un tarif selon le profil utilisateur.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -12,7 +16,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class MontantTarifProfilUtilisateur
 {
-    #region Propriétés
+    /** @ORM\ManyToOne(targetEntity="Tarif", inversedBy="montants") */
+    protected $tarif;
+
+    /** @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="montants") */
+    protected $profil;
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -24,15 +33,9 @@ class MontantTarifProfilUtilisateur
      * @Assert\NotBlank(message="tarif.montant.notnull")
      */
     private $montant;
+    //endregion
 
-    /** @ORM\ManyToOne(targetEntity="Tarif", inversedBy="montants") */
-    protected $tarif;
-
-    /** @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="montants") */
-    protected $profil;
-    #endregion
-
-    #region Méthodes
+    //region Méthodes
 
     public function __construct($tarif, $profil, $montant)
     {
@@ -40,19 +43,20 @@ class MontantTarifProfilUtilisateur
         $this->profil = $profil;
         $this->montant = $montant;
     }
-    
+
     public function setMontant($montant)
     {
-        if ($montant != $this->montant || $this->montant == null) {
+        if ($montant != $this->montant || null == $this->montant) {
             $p = $this->getProfil();
             $t = $this->getTarif();
-            $t->setModificationMontants($t->getModificationMontants() . ' / ' . $p->getLibelle() . ':' . $montant . ' €');
+            $t->setModificationMontants($t->getModificationMontants().' / '.$p->getLibelle().':'.$montant.' €');
         }
         $this->montant = $montant;
 
         return $this;
     }
-    #endregion
+
+    //endregion
 
     /**
      * Get id.
@@ -77,11 +81,11 @@ class MontantTarifProfilUtilisateur
     /**
      * Set tarif.
      *
-     * @param \UcaBundle\Entity\Tarif|null $tarif
+     * @param null|\UcaBundle\Entity\Tarif $tarif
      *
      * @return MontantTarifProfilUtilisateur
      */
-    public function setTarif(\UcaBundle\Entity\Tarif $tarif = null)
+    public function setTarif(Tarif $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -101,11 +105,11 @@ class MontantTarifProfilUtilisateur
     /**
      * Set profil.
      *
-     * @param \UcaBundle\Entity\ProfilUtilisateur|null $profil
+     * @param null|\UcaBundle\Entity\ProfilUtilisateur $profil
      *
      * @return MontantTarifProfilUtilisateur
      */
-    public function setProfil(\UcaBundle\Entity\ProfilUtilisateur $profil = null)
+    public function setProfil(ProfilUtilisateur $profil = null)
     {
         $this->profil = $profil;
 

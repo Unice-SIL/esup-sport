@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - MesCommandesDatatable
+ *
+ * COntient les colonnes à afficher pour la page mes commandess
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

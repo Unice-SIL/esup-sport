@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe -  InscriptionAjoutePPanier:
+ *
+ * Bouton pour l'ajout au panier
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class InscriptionAjouterPanierButton extends AbstractButton
@@ -11,7 +17,7 @@ class InscriptionAjouterPanierButton extends AbstractButton
         $this->bsClass = 'btn btn-primary btn-form';
         $this->attributsAdditionnels = [];
     }
-    
+
     public function getRenderIf()
     {
         return function ($row) {

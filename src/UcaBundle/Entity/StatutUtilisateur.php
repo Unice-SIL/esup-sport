@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * Classe - StatutUtilisateur
+ *
+ * Permet de modifier le statut d'un utilisateur, c'est un élement de contrôel pour l'accès au site
+ * Ces élements ne sont pas éditable dans l'interface.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -15,14 +21,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 class StatutUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
-
-    #region Propriétés
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @Gedmo\Translatable
@@ -33,24 +31,32 @@ class StatutUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\OneToMany(targetEntity="Utilisateur", mappedBy="statut") */
     protected $utilisateur;
-    #endregion
 
-    #region Méthodes
+    //region Propriétés
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
 
-    public function jsonSerializeProperties()
-    {
-        return ['libelle'];
-    }
-
-    #endregion
-
+    //endregion
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->utilisateur = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
+
+    public function jsonSerializeProperties()
+    {
+        return ['libelle'];
     }
 
     /**
@@ -73,6 +79,7 @@ class StatutUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     public function setLibelle($libelle)
     {
         $this->libelle = $libelle;
+
         return $this;
     }
 
@@ -93,7 +100,7 @@ class StatutUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @return StatutUtilisateur
      */
-    public function addUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function addUtilisateur(Utilisateur $utilisateur)
     {
         $this->utilisateur[] = $utilisateur;
 
@@ -105,9 +112,9 @@ class StatutUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\Utilisateur $utilisateur
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur)
+    public function removeUtilisateur(Utilisateur $utilisateur)
     {
         return $this->utilisateur->removeElement($utilisateur);
     }

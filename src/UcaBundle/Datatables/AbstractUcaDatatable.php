@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe : AbstractUcaDatatable:
+ *
+ * Classe mère des datatables toute les classes de datatable sont liees aux entites
+ * les tableau (liste) affichent les données et boutons selectionner dans les classes filels
+ * Dans certains cas des requêtes personnalitées ajoutent des flitres supplémentaires.
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\AbstractDatatable;
@@ -8,10 +16,13 @@ use Sg\DatatablesBundle\Datatable\Style;
 
 abstract class AbstractUcaDatatable extends AbstractDatatable
 {
-    public function getTranslator() {
+    public function getTranslator()
+    {
         return $this->translator;
     }
-    public function getAuthorizationChecker() {
+
+    public function getAuthorizationChecker()
+    {
         return $this->authorizationChecker;
     }
 
@@ -20,7 +31,7 @@ abstract class AbstractUcaDatatable extends AbstractDatatable
         foreach ($cols as $col) {
             $this->columnBuilder->add($col, Column::class, [
                 'default_content' => '',
-                'visible' => false
+                'visible' => false,
             ]);
         }
     }
@@ -43,8 +54,8 @@ abstract class AbstractUcaDatatable extends AbstractDatatable
             'search_in_non_visible_columns' => true,
         ], $options));
         $this->callbacks->set(array_merge(
-            ['draw_callback' => ['template' => "@Uca/Common/Modal/Modal.Suppression.js.twig"]],
-            ['state_loaded' => ['template' => "@Uca/Datatables/Callback/StateLoaded.js.twig"]],
+            ['draw_callback' => ['template' => '@Uca/Common/Modal/Modal.Suppression.js.twig']],
+            ['state_loaded' => ['template' => '@Uca/Datatables/Callback/StateLoaded.js.twig']],
             $callbacks
         ));
         $this->features->set(array_merge(['processing' => true, 'state_save' => true], $features));

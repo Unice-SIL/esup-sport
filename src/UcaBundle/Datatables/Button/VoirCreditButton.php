@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - VoirCreditButton
+ *
+ * Bouton perrmettant de visualiser l'avoir associé au crédit (filtre rendeer_if)
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class VoirCreditButton extends VoirButton
@@ -7,7 +13,7 @@ class VoirCreditButton extends VoirButton
     public function getRenderIf()
     {
         return function ($row) {
-            return "génération d'avoir" == $row['operation'];
+            return in_array($row['operation'], ["Report d'avoir", "Génération d'avoir"]);
         };
     }
 }

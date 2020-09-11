@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogoPartenaireController
+ *
+ * Gestion du CRUD pour les logos partenaires
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

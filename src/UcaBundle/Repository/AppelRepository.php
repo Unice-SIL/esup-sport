@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - AppelRepository
+ *
+ * Contient les requêtes à la base de données pour l'entité appel
+*/
+
 namespace UcaBundle\Repository;
 
 class AppelRepository extends \Doctrine\ORM\EntityRepository

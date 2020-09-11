@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - UtilisateurMentionsInformationsType
+ *
+ * Formulaire de validation des mentions légales par un utilsiateur
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -10,16 +16,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UtilisateurMentionsInformationsType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('mentionsInformationsAcceptees', CheckboxType::class, [
-                'label' => 'mentions.informations.validation'
+                'label' => 'mentions.informations.validation',
             ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.enregistrer',
-            ]);
+            ])
+        ;
     }
 
     public function getBlockPrefix()

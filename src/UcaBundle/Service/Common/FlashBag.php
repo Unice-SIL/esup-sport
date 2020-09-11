@@ -1,8 +1,12 @@
 <?php
 
-namespace UcaBundle\Service\Common;
+/*
+ * classe - FlashBag
+ *
+ * Service gérant les flashbag (messages d'alerte)
+*/
 
-use UcaBundle\Service\Common\Fn;
+namespace UcaBundle\Service\Common;
 
 class FlashBag
 {
@@ -24,18 +28,18 @@ class FlashBag
 
     public function addFlashBag($item, $message, $bootstrapColor)
     {
-        $message = Fn::getShortClassName($item) . '.' . $message;
+        $message = Fn::getShortClassName($item).'.'.$message;
         $this->addTranslatedFlashBag(strtolower($bootstrapColor), strtolower($message));
     }
 
     public function addActionFlashBag($item, $action)
     {
-        $this->addFlashBag($item, $action . '.succes', 'success');
+        $this->addFlashBag($item, $action.'.succes', 'success');
     }
 
     public function addActionErrorFlashBag($item, $action)
     {
-        $this->addFlashBag($item, $action . '.erreur', 'danger');
+        $this->addFlashBag($item, $action.'.erreur', 'danger');
     }
 
     public function addMessageFlashBag($message, $bootstrapColor)

@@ -1,3 +1,4 @@
+
 FormatAchatCarte.button: 'Buy the card'
 FormatAvecCreneau.button: 'See the available slots' 
 FormatAvecReservation.button: Book
@@ -46,6 +47,10 @@ actualite.modifier.succes: News successfully modified
 actualite.modifier.title: Edit news
 actualite.supprimer.erreur: Cannot delete news
 actualite.supprimer.succes: News successfully deleted
+aucun.resultat: "No results"
+aucune.activite: "No activities"
+aucune.classeactivite: "No activity classes"
+aucune.formatactivite: "No activity formats"
 avoir.ajouter.success: Credit sucessfully added
 bascule.aucun.choix: No choice selected
 bascule.carte.cotisation.supprimer: Remove user cards and fees
@@ -54,6 +59,7 @@ bascule.creneau.dupliquer: Duplicate time slots
 bascule.creneau.option: Time slot options
 bascule.creneau.supprimer: Delete time slots
 bascule.evenement.statut: Change registration status
+bascule.loader: Toggle in progress. This action may take several minutes.
 bascule.reservation.supprimer: Remove room and equipment reservations
 bascule.success: The swing was successfull
 bouton.ajouter.credit: Adding a credit²
@@ -124,9 +130,11 @@ column.valfr: French
 column.valit: Italian
 comamndedetail.informationscarte.etablissement: Pick-up campus
 commande.avoir.ajouter.titre: Provide a credit note
+commande.avoir.date: Credit's date
 commande.avoir.libelle: Credit
 commande.avoir.lister: Credit note list
-commande.avoir.posseder: Has a credit note
+commande.avoir.posseder: Credit note(s)?
+commande.avoir.report: Skipped credit
 commande.avoirdetails.libelle: Credit note's details
 commande.avoirdetails.referenceavoir: Credit note's reference
 commande.avoirdetails.titre: Credit note's elements
@@ -142,11 +150,12 @@ commande.timeout.panier.expiration: After this deadline, your shopping cart will
 commande.timeout.timer: You have %temps% left to finalize your %typecommande% and validate your registration.
 commandedetail.informationscarte.ajouter: Enter card's data
 commandedetail.informationscarte.datefin: Expiration date
-commandedetail.informationscarte.etablissement: '- Select a withdrawal campus -'
+commandedetail.informationscarte.etabissement: '- Select a withdrawal campus -'
+commandedetail.informationscarte.libelle: Edit card's informations
 commandedetail.informationscarte.message.bds: You've just validate a card command. Do you want to enter the card's datas ? 
 commandedetail.informationscarte.message.vide: The datas from this card were not entered.
 commandedetail.informationscarte.numero: Card's number
-commandedetail.informationscarte.titre: Edit card's informations
+commandedetail.informationscarte.titre: Edit card
 commandedetail.modifier.succes: Order's détail successfully modify
 common.a.venir: To come up
 common.acces.rapide: Quick access
@@ -183,6 +192,7 @@ common.coordonnees: Coordinates
 common.credit: User credit
 common.creneaux.details: Time slots details
 common.creneaux: Time slots
+common.date.commande: Order's date
 common.date.debut: Starting on
 common.date.effectives: Effective dates
 common.date.fin: Ending on
@@ -583,6 +593,7 @@ message.confirmation.suppression.titre: "Confirm deletion"
 message.confirmation.suppression: "Delete entry ?"
 message.desinscriptionmassive.success: Massive unsubscription successfully completed.
 message.selection.filtre.desinscription: "You did not filter your search or no registration was found. Please filter or modify your filters in order to be able to unsubscribe."
+modal.erro.nonconnecte: "Error: Your are not logged in"
 modal.error.complet: "Error : The max number of subscription has been exceeded"
 modal.error.error500: "Error : if it occurs again, please contact an administrator"
 modal.error.inscriptionsavenir: "Error : Registrations are not yet opened"
@@ -734,6 +745,7 @@ scheduler.error.capacite.format: You cannot exceed the total capacity of the for
 scheduler.error.capacite.profil.debut: The maximum capacity of the profil
 scheduler.error.capacite.profil.fin: is 
 scheduler.error.capacite.somme: You cannot exceed the total capacity indicated
+scheduler.error.date.invalid: "The repeat or period end date is too large. This activity format ends on: "
 scheduler.error.date.prolongation: The date field is empty
 scheduler.error.field: Field
 scheduler.error.isEmpty: is empty
@@ -829,6 +841,7 @@ security.roles.ROLE_PREVISUALISATION: Manage previews
 security.roles.ROLE_SUPER_ADMIN: Access UcaGest (Advaanced)
 security.roles.ROLE_USER: Access UcaWeb
 security.shibboleth.login.submit: Sign in
+sg.datatables.actions.title: Action
 shibboleth.error.doctorant: Please login with your student account
 shibboleth.error.dossierincomplet: Your administrative registration file is incomplete. Thank you for getting closer to schooling
 shibboleth.error.profilinconnu: We are unable to identify you as a member of the UCA, please contact us via the contact form
@@ -852,7 +865,7 @@ sitemap.connexion.selectionprofil: Profile selection
 sitemap.connexion: Login
 sitemap.detailinscription.libelle: Registration details
 sitemap.detailsAvoir.libelle: Credit note's details
-sitemap.detailscommande.informationscarte: Card's datas
+sitemap.detailscommande.informationscarte.modifiier: Edit card
 sitemap.detailscommande.libelle: Order details
 sitemap.emailing.libelle: Emailing
 sitemap.en: Translate to english
@@ -902,6 +915,7 @@ sitemap.referentiel.libelle: Referential
 sitemap.reportingavoirs.libelle: Credit note Reporting
 sitemap.reportingcommandes.libelle: Orders Reporting
 sitemap.reportingcredits.libelle: User's credit Reporting
+sitemap.reportingcredits.reporter.libelle: Skip a user's credit
 sitemap.reportings.libelle: Reportings
 sitemap.ressource.libelle: Resources
 sitemap.ressource.lieu.ajouter: Add location
@@ -1046,7 +1060,6 @@ typeautorisation.supprimer.succes: Authorization successfully deleted
 typeautorisation.tarif: Price
 ucagest.libelle: Uca Gest
 ucasport.libelle: Uca Sport
-utilisater.statu.libelle: User status
 utilisateur.activite.souscrite: Subscribed activity
 utilisateur.adresse.aucune: No address registered
 utilisateur.adresse: Address
@@ -1071,6 +1084,7 @@ utilisateur.credit.ajouter.title: Adding a user's credit
 utilisateur.credit.bascule.supprimer: Remove user's credits
 utilisateur.credit.de: Credit of
 utilisateur.credit.operation: Operaation
+utilisateur.credit.reporter.title: Skip a credit
 utilisateur.credit.typeoperation: Operation's type
 utilisateur.credits.details: Credit's details
 utilisateur.credits.total: Credit's total

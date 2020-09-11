@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CommandeDetailInformationsCarteType
+ *
+ *  Formulaire d'édition des information d'une carte
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

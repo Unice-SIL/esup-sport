@@ -1,18 +1,22 @@
 <?php
 
+/*
+ * Classe - ChangePasswordController:
+ *
+ * Surchage de la classe de FOS (permet une redirection)
+*/
+
 namespace UserBundle\Controller\Utilisateur;
 
-use Symfony\Component\HttpFoundation\Request;
 use FOS\UserBundle\Controller\ChangePasswordController as FoSController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use FOS\UserBundle\FOSUserEvents;
+use Symfony\Component\HttpFoundation\Request;
 
 class ChangePasswordController extends FoSController
 {
     /**
-     * @param Request $request
      * @return Response $response
-    */
+     */
     public function changePasswordAction(Request $request)
     {
         $usr = $this->getUser();
@@ -21,7 +25,7 @@ class ChangePasswordController extends FoSController
             $response = $this->redirectToRoute('UcaWeb_MonCompte');
             // $this->get('uca.flashbag')->addActionFlashBag($usr, 'motdepassemodifie');
         }
+
         return $response;
-        
     }
 }

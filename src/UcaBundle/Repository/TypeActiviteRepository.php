@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - TypeActiviteRepository
+ *
+ * Requêtes à la base de données pour l'entité type d'activité
+*/
+
 namespace UcaBundle\Repository;
 
 class TypeActiviteRepository extends \Doctrine\ORM\EntityRepository

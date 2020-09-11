@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ImageSupplementaire:
+ *
+ * Entité techique permetant d'ajouter plusieurs images sur un même élément.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

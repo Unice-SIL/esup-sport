@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ShnuHighlight
+ *
+ * COntient les colonnes à afficher pour la liste des highlight poru le sport de haut niveau
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

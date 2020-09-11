@@ -1,4 +1,9 @@
 <?php
+/*
+ * Classe -  MonterButton
+ *
+ * Bouton pour monter un élément du (classer) datatable
+*/
 
 namespace UcaBundle\Datatables\Button;
 

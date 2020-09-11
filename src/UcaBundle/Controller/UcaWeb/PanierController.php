@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - PanierController
+ *
+ * Gestion du panier de l'$utilisateur
+ * Affiche la liste des article
+ * SUppression d'un seul ou de tous les articles
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Doctrine\Common\Collections\Criteria;

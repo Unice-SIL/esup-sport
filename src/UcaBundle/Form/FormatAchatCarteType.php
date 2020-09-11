@@ -1,15 +1,20 @@
 <?php
 
+/*
+ * Classe - FormatAchatCarteType
+ *
+ * Formulaire d'ajout/édition d'un format d'achat de carte
+*/
+
 namespace UcaBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use UcaBundle\Entity\FormatAchatCarte;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Doctrine\ORM\EntityRepository;
 
 class FormatAchatCarteType extends AbstractType
 {
@@ -17,30 +22,32 @@ class FormatAchatCarteType extends AbstractType
     {
         $builder
             ->add('formatActivite', FormatActiviteType::class, [
-                'data_class' => FormatAchatCarte::class
+                'data_class' => FormatAchatCarte::class,
             ])
             ->add('carte', EntityType::class, [
                 'class' => 'UcaBundle:TypeAutorisation',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('ta')
                         ->andWhere('ta.comportement=4')
-                        ->orderBy('ta.libelle', 'ASC');
+                        ->orderBy('ta.libelle', 'ASC')
+                    ;
                 },
-                'choice_label' => function($typeAutorisation){
+                'choice_label' => function ($typeAutorisation) {
                     return ucfirst($typeAutorisation->getLibelle());
                 },
                 'label_format' => 'format.achat.carte.autorisation',
                 'multiple' => false,
                 'expanded' => false,
                 'required' => true,
-                'placeholder' => 'formatachatcarte.carte.placeholder'
+                'placeholder' => 'formatachatcarte.carte.placeholder',
             ])
             ->add('save', SubmitType::class, [
-                'label_format' => 'bouton.save'
+                'label_format' => 'bouton.save',
             ])
             ->add('previsualiser', SubmitType::class, [
-                'label_format' => 'bouton.save.previsualiser'
-            ]);
+                'label_format' => 'bouton.save.previsualiser',
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)

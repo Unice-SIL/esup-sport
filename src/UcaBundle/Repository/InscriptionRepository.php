@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - InscriptionRepository
+ *
+ * Requêtes à la base de données pour l'entité inscription
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
@@ -422,6 +428,15 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
                 ->setParameter('encadrant', $encadrant)
             ;
         }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findInscriptionBascule()
+    {
+        $qb = $this->createQueryBuilder('i')
+            ->andWhere("i.statut <> 'ancienneinscription'")
+        ;
 
         return $qb->getQuery()->getResult();
     }

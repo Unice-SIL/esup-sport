@@ -1,13 +1,20 @@
 <?php
 
+/*
+ * Classe - GroupeController
+ *
+ * Gestion des groupes : CRUD
+ * Les groupes permette de regrouper les rôles de sécurité
+*/
+
 namespace UcaBundle\Controller\UcaGest\Securite;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\GroupeDatatable;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Entity\Groupe;
 
 /* use Gedmo\Translat   able\TranslatableListener;
@@ -19,18 +26,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use UcaBundle\Entity\Groupe;
 use UcaBundle\Form\GroupeType; */
 
-
 /**
  * @Route("UcaGest/Groupe")
  * @Security("has_role('ROLE_ADMIN')")
-*/
+ */
 class GroupeController extends Controller
 {
-
-    /** 
-     * @Route("/", name="UcaGest_GroupeLister") 
+    /**
+     * @Route("/", name="UcaGest_GroupeLister")
      * @Isgranted("ROLE_GESTION_GROUPE_LECTURE")
-    */
+     */
     public function listerAction(Request $request)
     {
         $isAjax = $request->isXmlHttpRequest();
@@ -43,6 +48,7 @@ class GroupeController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
@@ -51,11 +57,12 @@ class GroupeController extends Controller
             $twigConfig['noAddButton'] = true;
         }
         $twigConfig['codeListe'] = 'Groupe';
+
         return $this->render('@Uca/UcaGest/Securite/Groupe/Lister.html.twig', $twigConfig);
     }
 
     /**
-     * @Route("/{id}/Supprimer", name="UcaGest_GroupeSupprimer") 
+     * @Route("/{id}/Supprimer", name="UcaGest_GroupeSupprimer")
      * @Isgranted("ROLE_GESTION_GROUPE_ECRITURE")
      */
     public function supprimerAction(Request $request, Groupe $groupe)
@@ -63,11 +70,12 @@ class GroupeController extends Controller
         $gm = $this->container->get('fos_user.group_manager');
         if (!$groupe->getUtilisateurs()->isEmpty()) {
             $this->get('uca.flashbag')->addMessageFlashBag('groupe.supprimer.danger', 'danger');
+
             return $this->redirectToRoute('UcaGest_GroupeLister');
         }
         $gm->deleteGroup($groupe);
         $this->get('uca.flashbag')->addActionFlashBag($groupe, 'Supprimer');
+
         return $this->redirectToRoute('UcaGest_GroupeLister');
     }
-
 }

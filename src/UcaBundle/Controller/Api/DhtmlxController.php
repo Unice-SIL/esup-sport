@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - DataController:
+ *
+ * Classe liée à librairie DHTMLX
+ * Contrôleur deédié à la gestion de la libraire
+*/
+
 namespace UcaBundle\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -93,6 +100,13 @@ class DhtmlxController extends Controller
         $ev = $request->request->get('evenement');
         $c = new DhtmlxCommand($em, $ev);
         if ('delete' == $ev['action']) {
+            $item = $c->getItem();
+            if ($item instanceof DhtmlxEvenement) {
+                //si on veut supprimer le dernier événement d'une série, on supprime aussi la série pour éviter les problèmes de suppression de format
+                if (sizeof($item->getSerie()->getEvenements()) <= 1) {
+                    $em->remove($item->getSerie());
+                }
+            }
             $res = $c->getResult();
             $c->execute();
             $em->flush();

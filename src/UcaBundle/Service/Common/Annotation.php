@@ -1,9 +1,14 @@
 <?php
 
+/*
+ * classe - Annotation
+ *
+ * Service gérant les annotations
+*/
+
 namespace UcaBundle\Service\Common;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use UcaBundle\UcaBundle;
 
 class Annotation
 {
@@ -24,6 +29,7 @@ class Annotation
                 return substr($item->getName(), 0, strlen($domainFilter)) === $domainFilter;
             });
         }
+
         return $filteredMetadatas;
     }
 
@@ -37,12 +43,14 @@ class Annotation
                 return get_class($item) == $annotationFilter;
             });
         }
+
         return $filteredAnnotations;
     }
 
-    public function truncateTable($tableName) {
+    public function truncateTable($tableName)
+    {
         $connection = $this->em->getConnection();
-        $platform   = $connection->getDatabasePlatform();
+        $platform = $connection->getDatabasePlatform();
         $connection->executeUpdate($platform->getTruncateTableSQL($tableName));
     }
 
@@ -65,6 +73,7 @@ class Annotation
             }
         }
         $this->em->flush();
+
         return $properties;
     }
 }

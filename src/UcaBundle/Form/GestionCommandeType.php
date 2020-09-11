@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GestionCommandeType
+ *
+ * Formulaire de recherche du reporting des commandes
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

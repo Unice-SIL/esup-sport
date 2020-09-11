@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - FormatActiviteProfilUtilisateurType
+ *
+ * Formulaire d'ajout/édition les profils autorisié pour une activité ainsi que le nombre de places
+ * Ce formulaire est imbriqué dans le format d'activité
+*/
+
 namespace UcaBundle\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -8,7 +15,6 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;

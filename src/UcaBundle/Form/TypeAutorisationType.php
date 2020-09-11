@@ -1,17 +1,19 @@
 <?php
 
+/*
+ * Classe - TypeActiviteType
+ *
+ * Formulaire d'ajout/édition d'un type d'activité
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TypeAutorisationType extends AbstractType
@@ -44,25 +46,25 @@ class TypeAutorisationType extends AbstractType
             'disabled' => false,
             'placeholder' => 'common.aucun',
             'attr' => [
-                'class' => 'defaultToHide cotisationToShow caseToHide justificatifToHide carteToShow validationencadrantToHide validationgestionnaireToHide'
-            ]
+                'class' => 'defaultToHide cotisationToShow caseToHide justificatifToHide carteToShow validationencadrantToHide validationgestionnaireToHide',
+            ],
         ]);
         $builder->add('informationsComplementaires', TextAreaType::class, [
             'required' => false,
             'label_format' => 'typeautorisation.informations.complementaires',
             'attr' => [
-                'class' => 'defaultToHide cotisationToShow caseToShow justificatifToShow carteToShow validationencadrantToShow validationgestionnaireToShow'
-            ]
+                'class' => 'defaultToHide cotisationToShow caseToShow justificatifToShow carteToShow validationencadrantToShow validationgestionnaireToShow',
+            ],
         ]);
         $builder->add('save', SubmitType::class, [
-            'label_format' => 'bouton.save'
+            'label_format' => 'bouton.save',
         ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'UcaBundle\Entity\TypeAutorisation'
+            'data_class' => 'UcaBundle\Entity\TypeAutorisation',
         ]);
     }
 }

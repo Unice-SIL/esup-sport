@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - Utilisateur:
+ *
+ * Les utilsateurs de l'application.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;

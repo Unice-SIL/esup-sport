@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - TypeActivite:
+ *
+ * Niveau de le plus large de la taxonomie.
+ * Pour l'instant un seul type existe : le sport.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

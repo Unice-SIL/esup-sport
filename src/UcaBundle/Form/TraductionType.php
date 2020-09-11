@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe TraductionType
+ *
+ * Formulaire d'édtion des traductions
+*/
+
 namespace UcaBundle\Form;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;
@@ -20,19 +26,19 @@ class TraductionType extends AbstractType
             // elseif (!empty($options['data']['data']['ckeditor'])) CKEditorType::class;
             // else $class = TextareaType::class;
 
-            if (strpos($col['config'], 'hidden') === false) {
+            if (false === strpos($col['config'], 'hidden')) {
                 $builder->add($alias, empty($options['data']['data']['ckeditor']) ? TextareaType::class : CKEditorType::class, [
                     'data' => $options['data']['data'][$alias],
-                    'label' => "column.$alias",
-                    'disabled' => strpos($col['config'], 'readonly') !== false,
+                    'label' => "column.{$alias}",
+                    'disabled' => false !== strpos($col['config'], 'readonly'),
                     'constraints' => [
-                        new NotBlank(["message" => "traduction.texte.notblank"]),
+                        new NotBlank(['message' => 'traduction.texte.notblank']),
                     ],
                 ]);
             }
         }
         $builder->add('save', SubmitType::class, [
-            'label' => 'bouton.save'
+            'label' => 'bouton.save',
         ]);
     }
 

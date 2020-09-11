@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CommandeExportCommandeButton
+ *
+ * Bouton d'export des comamnde (flitre render_if)
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class CommandeExportButton extends ExportPdfButton

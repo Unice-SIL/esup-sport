@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GestionPanierDatatable:
+ *
+ * Affichage des éléments du panier
+ */
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
@@ -23,43 +29,44 @@ class GestionPanierDatatable extends AbstractTranslatedDatatable
         ]);
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('numeroCommande', Column::class, array(
+            ])
+            ->add('numeroCommande', Column::class, [
                 'title' => $this->translator->trans('common.numerocommande'),
-                'class_name' => 'hide-column-sm'
-            ))
-            ->add('utilisateur.nom', Column::class, array(
+                'class_name' => 'hide-column-sm',
+            ])
+            ->add('utilisateur.nom', Column::class, [
                 'title' => $this->translator->trans('common.nom'),
-            ))
-            ->add('utilisateur.prenom', Column::class, array(
+            ])
+            ->add('utilisateur.prenom', Column::class, [
                 'title' => $this->translator->trans('common.prenom'),
-            ))
-            ->add('dateCommande', TwigVirtualColumn::class, array(
+            ])
+            ->add('dateCommande', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.date'),
                 'search_column' => 'date',
                 'twigTemplate' => 'DateOnly',
                 'searchable' => true,
-                'filter' => array(DateFilter::class, array(
+                'filter' => [DateFilter::class, [
                     'classes' => 'datetimepicker',
-                    'attributes' => array('data-datetimepicker-format' => 'd/m/Y')
-                ))
-            ))
-            ->add('montantTotalFormated', TwigVirtualColumn::class, array(
+                    'attributes' => ['data-datetimepicker-format' => 'd/m/Y'],
+                ]],
+            ])
+            ->add('montantTotalFormated', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.montant'),
                 'field' => 'montantTotal',
                 'twigTemplate' => 'Montant',
-                'class_name' => 'hide-column-md'
-            ))
+                'class_name' => 'hide-column-md',
+            ])
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
                     (new VoirButton($this, 'UcaWeb_CommandeEnAttenteVoir', ['id' => 'id'], 'ROLE_GESTION_PAIEMENT_COMMANDE'))->getConfig(),
                     (new SupprimerButton($this, 'UcaWeb_CommandeEnAttenteSupprimer', ['id' => 'id'], 'ROLE_GESTION_PAIEMENT_COMMANDE'))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

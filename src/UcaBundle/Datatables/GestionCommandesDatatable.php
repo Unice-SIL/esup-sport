@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GestionCommandesDatatable:
+ *
+ * Affiche la liste des détails d'une commande.
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

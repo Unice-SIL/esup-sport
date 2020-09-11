@@ -1,12 +1,16 @@
 <?php
+/*
+ * Classe - Materiel:
+ *
+ * Il s'agit d'une ressource (hérité)
+ * Un matériel est réservable par un utilisateur.
+*/
 
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity
@@ -14,7 +18,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Materiel extends Ressource
 {
-    #region Propriétés
+    //region Propriétés
     /** @Gedmo\Versioned
      *  @ORM\Column(type="integer", nullable=true)
      *  @Assert\NotBlank(message="materiel.quantite.notblank")
@@ -22,21 +26,21 @@ class Materiel extends Ressource
      *  @Assert\GreaterThanOrEqual(value = 0)
      */
     private $quantiteDisponible;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
 
     public function getCapacite()
     {
         return $this->getQuantiteDisponible();
     }
 
-    #endregion
+    //endregion
 
     /**
      * Set quantiteDisponible.
      *
-     * @param int|null $quantiteDisponible
+     * @param null|int $quantiteDisponible
      *
      * @return Materiel
      */

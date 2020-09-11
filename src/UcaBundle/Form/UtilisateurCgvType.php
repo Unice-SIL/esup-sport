@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - UtilisateurCgvType
+ *
+ * Formulaire de validation des CGV
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -10,16 +16,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class UtilisateurCgvType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('cgvAcceptees', CheckboxType::class, [
-                'label' => 'cgv.validation'
+                'label' => 'cgv.validation',
             ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.enregistrer',
-            ]);
+            ])
+        ;
     }
 
     public function getBlockPrefix()

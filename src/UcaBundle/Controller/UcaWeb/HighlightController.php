@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - HighlightController
+ *
+ * Gestion de l'affichage des Highlights.
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

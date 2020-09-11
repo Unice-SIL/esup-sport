@@ -67,7 +67,11 @@
     {% if app.request.attributes.get("_route") == "UcaGest_GestionInscription" %}
         <script type="text/javascript">
 
-            $(document).ready(function() {                       
+            $(document).ready(function() {   
+                $("input[type=text]").each(function(){
+                    $(this).attr('placeholder','');
+                    $(this).css('height','40px');
+                })                    
                 
                 setUrlBoutonToutSupprimer();
 

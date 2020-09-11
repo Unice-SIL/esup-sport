@@ -97,13 +97,16 @@
 		<button id="btn-extend-send" class="btn btn-primary btn-send">{{"scheduler.message.valider"|trans}}</button>
 		<button id="btn-extend-back" class="btn btn-primary btn-back">{{"scheduler.message.annuler"|trans}}</button>
 	</div>
-
 {% endmacro %}
 {% macro initCalendarJs(item = null) %}
 	{% if item.capacite is defined %}
 	<script type='text/javascript'>
 			'use_strict';
 			var CAPACITE = {{ item.capacite }};
+			//permet de passer la date fin effective 
+			var DATEFINEFFECTIVE = "{{ item.dateFinEffective|date('d-m-Y') }}";
+			//on créer la date fin effective + 1 jour pour vérification dans Lightbox.js
+			var DATEFINEFFECTIVEVERIFICATION = new Date("{{ item.dateFinEffective|date_modify('+1 day')|date('Y/m/d') }}"); 
 	</script>
 	{% endif %}
 	<script type='text/javascript'>

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - DetailsCommandeDatatable:
+ *
+ * COntient les champs à afficher pour le détail d'uen commande
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\Column;

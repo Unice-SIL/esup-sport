@@ -110,14 +110,17 @@
 {% endblock %}
 
 {% block javascripts %}
+  {% if not formMail.vars.valid %}
+    <script type="text/javascript">
+      'use_strict';
+      $('#mailButton').click();
+    </script>
+  {% endif %}
+
   <script type="text/javascript">
     'use_strict';
     {% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
   
-    {% if not formMail.vars.valid %}
-        $('#mailButton').click();
-    {% endif %}
-   
     var PATH_SEND_MAIL = '{{ path("UcaWeb_PlanningMore_mail", {id: evenement.id} ) }}'
     
     function  cocherDecocherTout(param) {

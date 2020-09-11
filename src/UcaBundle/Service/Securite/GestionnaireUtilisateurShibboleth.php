@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - GestionnaireUtilisateurShibboleth
+ *
+ * Service gérant la remonter des informations de shibboleth pour valider la connexion
+*/
+
 namespace UcaBundle\Service\Securite;
 
 use Doctrine\ORM\EntityManager;

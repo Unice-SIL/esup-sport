@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - FormatAchatCarte:
+ *
+ * Héritée du foramt d'activité, il s'agit du format permettant d'acheter les cartes.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

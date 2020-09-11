@@ -1,10 +1,15 @@
 <?php
 
+/*
+ * classe - ClasseActiviteListener
+ *
+ * Service intervant lors des modification en base de données de l'entité classe d'activité
+*/
+
 namespace UcaBundle\Service\Listener\Entity;
 
-use UcaBundle\Entity\ClasseActivite;
 use Doctrine\ORM\Event\PreFlushEventArgs;
-use Doctrine\ORM\Event\LifecycleEventArgs;
+use UcaBundle\Entity\ClasseActivite;
 
 class ClasseActiviteListener
 {

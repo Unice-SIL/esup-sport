@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - Paramêtrage
+ *
+ * Service gérant les paramêtres globaux de l'application
+*/
+
 namespace UcaBundle\Service\Common;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,7 +34,7 @@ class Parametrage
 
     public static function timeoutToDateLimit($timer)
     {
-        return (new \DateTime())->sub(new \DateInterval('PT' . $timer . 'M'));
+        return (new \DateTime())->sub(new \DateInterval('PT'.$timer.'M'));
     }
 
     public static function getDateDebutCbLimite()

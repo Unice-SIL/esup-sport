@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - GestionnairePanierController
+ *
+ * Afficher le contenu du panier selon le statut
+ * Suppression d'un article du panier
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

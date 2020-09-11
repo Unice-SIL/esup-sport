@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - MesCréditsDatatable
+ *
+ * COntient les colonnes à afficher pour la page mes credits
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
@@ -7,6 +13,7 @@ use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\NumberColumn;
 use UcaBundle\Datatables\Button\CommandeExportAvoirButton;
 use UcaBundle\Datatables\Button\CommandeExportPaiementButton;
+use UcaBundle\Datatables\Button\CreditAjouterExportButton;
 use UcaBundle\Datatables\Column\TwigDataColumn;
 
 class MesCreditsDatatable extends AbstractTranslatedDatatable
@@ -33,7 +40,7 @@ class MesCreditsDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('utilisateur.credit.typeoperation'),
             ])
             ->add('montant', NumberColumn::class, [
-                'title' => $this->translator->trans('common.montants'),
+                'title' => $this->translator->trans('common.montant'),
                 'formatter' => new \NumberFormatter('fr_FR', \NumberFormatter::CURRENCY),
                 'use_format_currency' => true, // needed for \NumberFormatter::CURRENCY
                 'currency' => 'EUR',
@@ -44,6 +51,7 @@ class MesCreditsDatatable extends AbstractTranslatedDatatable
                 'actions' => [
                     (new CommandeExportAvoirButton($this, 'UcaWeb_MesAvoirsExport', ['id' => 'commandeAssociee', 'refAvoir' => 'avoir']))->getConfig(),
                     (new CommandeExportPaiementButton($this, 'UcaWeb_MesCommandesExport', ['id' => 'commandeAssociee']))->getConfig(),
+                    (new CreditAjouterExportButton($this, 'UcaWeb_MesCreditsExport', ['id' => 'id']))->getConfig(),
                 ],
             ])
         ;

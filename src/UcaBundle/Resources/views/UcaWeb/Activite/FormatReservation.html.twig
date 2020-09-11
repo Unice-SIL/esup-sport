@@ -56,14 +56,14 @@
     {{ parent() }}
     {{ encore_entry_script_tags('calendar') }}
     {{ Inscription.Js }}
-    {# Inserer le JS ailleurs peut-etre ? #}
-    <script>
+ 
+    <script type='text/javascript'>
+        'use_strict';
         $(document).ready(function () {
             $(".notFull").on('click', function () {
-                $("#blocInscription").css("visibility", "visible");
+                _uca.common.afficherElement(blocInscription);
             });
-
-            $('[data-toggle="tooltip"]').tooltip();
+            _uca.bootstrap.tooltip.display();
         });
     </script>
 {% endblock %}

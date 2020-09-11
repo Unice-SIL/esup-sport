@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - Inscription:
+ *
+ * Entité gérant la partie des inscriptions
+ * Un utilisateur s'incrit sur un format auquel peut être associé certains élements (un créneua, une ressources, ou un type d'autorisation)
+ * La facturation sera elle gérée dans les commandes.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;

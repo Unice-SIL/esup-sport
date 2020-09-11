@@ -450,7 +450,8 @@
             - titre: "trans('sitemap.utilisateur.credit.ajouter')"
               route: UcaGest_UtilisateurCreditAjouter
               params: { id: id }
-              droit: ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE
+            - titre: "trans('sitemap.reportingcredits.reporter.libelle')"
+              route: UcaGest_UtilisateurCreditReporter
 
         - titre: "trans('sitemap.groupe.libelle')"
           route: UcaGest_GroupeLister
@@ -474,19 +475,17 @@
           items:
             - titre: "trans('sitemap.detailscommande.libelle')"
               route: UcaGest_ReportingCommandeDetails
-              params: { id: idCommande }
-              items: 
-                - titre: "trans('sitemap.detailscommande.informationscarte')"
-                  route: UcaGest_CommandeDetails_InformationsCarte
-                  params: { idCommande: idCommande, id: id }
+              params: { id: idCommande }  
+            - titre: "trans('sitemap.detailscommande.informationscarte.modifiier')"
+              route: UcaGest_CommandeDetails_InformationsCarte
+              params: { id: id }
             - titre: "trans('sitemap.commande.avoir.ajouter')"
               route: 'UcaGest_AvoirAjouter'
-              # droit: ROLE_GESTION_AVOIR
               params:  { id: id }
             - titre: "trans('sitemap.detailsAvoir.libelle')"
               route: "UcaGest_AvoirDetails"
               params: { id: id, refAvoir: refAvoir }
-              # droit: ROLE_GESTION_AVOIR
+              
         - titre: "trans('sitemap.reportingcredits.libelle')"
           route: UcaGest_ReportingCredit
           droit: ROLE_GESTION_CREDIT_UTILISATEUR_LECTURE

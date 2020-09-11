@@ -100,6 +100,8 @@
   {{ Inscription.Js }}
   <script type="text/javascript">
     'use_strict';
-    _uca.bootstrap.tooltip.display();
+    $(document).ready(function () {
+      _uca.bootstrap.tooltip.display();
+    });
   </script>
 {% endblock %}

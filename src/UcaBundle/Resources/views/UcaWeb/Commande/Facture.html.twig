@@ -71,10 +71,12 @@
 		margin-bottom: 5px;
 	}
 </style>
+
+{% set array = [] %}
+
 <page backbottom="10mm" backleft="10mm" backright="10mm" backtop="10mm">
-
-	<img alt="image_activite" src="{{ serverPathToWeb() ~ 'build/images/logo_black.png'}}" style="align:left;">
-
+	<img alt="image_activite" src="{{ serverPathToWeb() ~ 'build/images/logo_black.png'}}" style="align:left;"/>
+	
 	<table style="vertical-align:top;width:100%;margin-top:70px;">
 		<tr>
 			<td class="50p">
@@ -95,10 +97,12 @@
 	<table style="margin-top: 50px;width:100%;">
 		<tr>
 			<td class="50p">
-				<h2>{{'common.facture'|trans}}
-					n°{{commande.numeroRecu}}</h2>
+				<h2>{{ 'common.facture'|trans }} n°{{commande.numeroRecu}}</h2>
 			</td>
 			<td class="50p" style="text-align: right;">{{ commande.datePaiement|date("d/m/y")}}</td>
+		</tr>
+		<tr>
+			<td class="50p">{{'utilisateur.commande'|trans}}&nbsp;n°{{commande.numeroCommande}}</td>
 		</tr>
 		<tr>
 			<td class="20p">{{'common.payeavec'|trans }}
@@ -107,15 +111,12 @@
 				le
 				{{commande.datePaiement|date('d/m/Y')}}</td>
 		</tr>
-		<tr>
-			<td class="50p">{{'utilisateur.commande'|trans}}&nbsp;n°{{commande.numeroCommande}}</td>
-		</tr>
 	</table>
-	{% set array = [] %}
-	<table class="border" style="margin-top: 30px;">
+
+	<table class="border" style="margin-top: 30px">
 		<thead>
 			<tr>
-				<th>{{'common.description'|trans}}</th>
+				<th> {{'common.description'|trans}}</th>
 				<th>TVA</th>
 				<th>{{'common.prixunitaire'|trans}}</th>
 				<th>{{'common.montant'|trans}}</th>
@@ -123,84 +124,63 @@
 		</thead>
 		<tbody>
 			{% set index = 0 %}
+			{% set totalTva = 0 %}
+			<!-- Liste des articles --> 
 			{% for article in commande.commandeDetails %}
 				<tr>
-					<td class="60p">{{article.libelle}}</td>
-					<td>{{article.montant}}&nbsp;€</td>
-					{% if article.formatActivite.tarif != null %}
-                        {% if article.formatActivite.tarif.tva == true %}               
-                            {% set array = array|merge([article.formatActivite.tarif.tvaNonApplicable]) %}
-                            <td>{{index}}*</td>
-                            {% set index = index + 1 %}
-                        {% else %}
-                            <td>{{article.formatActivite.tarif.pourcentageTVA}} %</td>
-                        {% endif %}
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-					<td class="10p">{{article.montant}}&nbsp;€</td>
-					<td>{{article.montant}}&nbsp;€</td>
+					<td class="60p"> {{article.libelle}}</td>
+					<td> {{ article.tva }}&nbsp;€</td>
+					<td> {{ (article.montant - article.tva) | number_format(2) }}&nbsp;€</td>
+					<td> {{ article.montant }}&nbsp;€</td>
 				</tr>
+				{% set totalTva = totalTva + article.tva %}
 			{% endfor %}
-			<tr>
-				<td class="60p"></td>
-				<td>
-					<strong>
-						{{'common.credit' | trans }}
-					</strong>
-				</td>
-				<td>
-					{{ commande.creditUtilise |round(2, 'floor') | number_format(2) }}
-					&nbsp;€</td>
-			</tr>
 
 			{% if commande.tva == 0 %}
 				<tr>
 					<td class="no-border" colspan="2"></td>
-					<td rowspan="3" style="text-align: center;">
-						<strong>{{'common.total'|trans}}:</strong>
-					</td>
-					<td>
-						{{commande.montantTotal}}&nbsp;€
-					</td>
+					<td style="text-align: center;"> <strong>{{'common.total'|trans}}&nbsp;:</strong> </td>
+					<td>{{ commande.montantTotal }}&nbsp;€</td>
 				</tr>
 			{% else %}
 				<tr>
 					<td class="no-border" colspan="2"></td>
-					<td rowspan="3" style="text-align: center;">
-						<strong>{{'common.total'|trans}}:</strong>
+					<td style="text-align: center;"> 
+						<strong> {{'common.total'|trans ~' '~ 'common.ht'|trans }}&nbsp;:</strong>
 					</td>
 					<td>
-						{{'common.ht'|trans }}&nbsp;:&nbsp;{{(commande.montantTotal - commande.tva)|round(2, 'floor')|number_format(2)}}&nbsp;€
+						{{ (commande.montantTotal - totalTva)|round(2, 'floor')|number_format(2) }}&nbsp;€
+						<!-- {# {{(commande.montantTotal - commande.tva)|round(2, 'floor')|number_format(2)}}&nbsp;€ #} -->
 					</td>
 				</tr>
 				<tr>
 					<td class="no-border" colspan="2"></td>
-					<td>
 						{% if  commande.tva != 0 %}
-							{{'common.tva'|trans }}&nbsp;:&nbsp;{{commande.tva|round(2, 'floor')|number_format(2)}}&nbsp;€
+							<td> <strong> {{'common.tva'|trans }}&nbsp;: </strong> </td>
+							<td> {{ totalTva|round(2, 'floor')|number_format(2) }}&nbsp;€</td> 
+							<!-- {# <td> {{ commande.tva|round(2, 'floor')|number_format(2)}}&nbsp;€ </td>  #} -->
 						{% else %}
-							{{ 'common.tva.nonapplicable'| trans }}
+								<td> <strong> {{ 'common.tva.nonapplicable'| trans }} </strong> </td>
 						{% endif %}
-					</td>
+					 
 				</tr>
 				<tr>
 					<td class="no-border" colspan="2"></td>
-					<td>
-						{{'common.ttc'|trans }}&nbsp;:&nbsp;{{commande.montantTotal|round(2, 'floor')|number_format(2)}}&nbsp;€
-					</td>
+					<td> <strong> {{'common.total'|trans ~' '~ 'common.ttc'|trans }}&nbsp;: </strong> </td>
+					<td> {{commande.montantTotal|round(2, 'floor')|number_format(2)}}&nbsp;€ </td>
 				</tr>
 			{% endif %}
-			<tr>
-				<td class="no-border" colspan="1"></td>
-				<td rowspan="3" style="text-align: center;">
-					<strong>
-						{{'common.apayer'|trans }}</strong>
-				</td>
-				<td>
-					{{ (commande.montantTotal - commande.creditUtilise) |round(2, 'floor')|number_format(2)}}&nbsp;€</td>
-			</tr>
 
+			<tr>
+				<td class="no-border" colspan="2"></td>
+				<td> <strong> {{'common.credit' | trans }} </strong> </td>
+				<td> {{ commande.creditUtilise|round(2, 'floor')|number_format(2) }}&nbsp;€</td>
+			</tr>
+			<tr>
+				<td class="no-border" colspan="2"></td>
+				<td> <strong>{{'common.apayer'|trans }}</strong> </td>
+				<td> {{ (commande.montantTotal - commande.creditUtilise)|round(2, 'floor')|number_format(2)}}&nbsp;€</td>
+			</tr>
 		</tbody>
 	</table>
 

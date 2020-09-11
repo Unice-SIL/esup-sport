@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EmailingType
+ *
+ *  Formulaire d'emailing: saisir le contenu et l'objet de l'emailing
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

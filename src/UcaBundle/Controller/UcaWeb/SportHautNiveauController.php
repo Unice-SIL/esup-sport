@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - SportHautNiveauController
+ *
+ * Gère la page de sport de haut niveau (interface web)
+ * Permet l'affichage des Highlight du shnu
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -7,7 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\LogoPartenaire;
 use UcaBundle\Entity\ShnuHighlight;
-use UcaBundle\Entity\Texte;
 
 /** @Route("UcaWeb/Sport") */
 class SportHautNiveauController extends Controller
@@ -25,11 +31,7 @@ class SportHautNiveauController extends Controller
      */
     public function voirAccompagnementsAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $texte = $em->getRepository(Texte::class)->findByEmplacement('SHN - Accompagnement');
-        $twigConfig['texte'] = $texte;
-
-        return $this->render('@Uca/UcaWeb/SportHautNiveau/Accompagnements.html.twig', $twigConfig);
+        return $this->render('@Uca/UcaWeb/SportHautNiveau/Accompagnements.html.twig');
     }
 
     /**

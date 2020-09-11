@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - RessourceController
+ *
+ * Gestion du CRUD pour les ressources
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Doctrine\Common\Collections\ArrayCollection;

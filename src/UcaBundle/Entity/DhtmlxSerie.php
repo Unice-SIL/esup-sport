@@ -1,10 +1,16 @@
 <?php
 
+/*
+ * Classe - DhtmlxDate:
+ *
+ * Interagit avec la librairie scheduler (hérité)
+ * Les creneaux sont des séries.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\DhtmlxSerieRepository")
@@ -13,7 +19,10 @@ use Gedmo\Translatable\Translatable;
 class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
-    #region Propriétés
+
+    /** @ORM\OneToOne(targetEntity="Creneau", cascade={"persist", "remove"}, inversedBy="serie") */
+    protected $creneau;
+    //region Propriétés
 
     /** @ORM\OneToMany(targetEntity="DhtmlxEvenement", mappedBy="serie", cascade={"persist", "remove"})) */
     private $evenements;
@@ -24,12 +33,9 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
     /** @ORM\Column(type="datetime") */
     private $dateFinSerie;
 
-    /** @ORM\OneToOne(targetEntity="Creneau", cascade={"persist", "remove"}, inversedBy="serie") */
-    protected $creneau;
+    //endregion
 
-    #endregion
-
-    #region Méthodes
+    //region Méthodes
 
     public function __construct()
     {
@@ -41,7 +47,7 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
         return ['dateDebut', 'dateFin', 'evenements', 'recurrence', 'dateFinSerie', 'creneau', 'oldId', 'action'];
     }
 
-    #endregion
+    //endregion
 
     /**
      * Set recurrence.
@@ -156,7 +162,7 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
      *
      * @return DhtmlxSerie
      */
-    public function addEvenement(\UcaBundle\Entity\DhtmlxEvenement $evenement)
+    public function addEvenement(DhtmlxEvenement $evenement)
     {
         $this->evenements[] = $evenement;
 
@@ -168,9 +174,9 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
      *
      * @param \UcaBundle\Entity\DhtmlxEvenement $evenement
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeEvenement(\UcaBundle\Entity\DhtmlxEvenement $evenement)
+    public function removeEvenement(DhtmlxEvenement $evenement)
     {
         return $this->evenements->removeElement($evenement);
     }
@@ -188,11 +194,11 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
     /**
      * Set creneau.
      *
-     * @param \UcaBundle\Entity\Creneau|null $creneau
+     * @param null|\UcaBundle\Entity\Creneau $creneau
      *
      * @return DhtmlxSerie
      */
-    public function setCreneau(\UcaBundle\Entity\Creneau $creneau = null)
+    public function setCreneau(Creneau $creneau = null)
     {
         $this->creneau = $creneau;
 

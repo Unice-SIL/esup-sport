@@ -1,19 +1,22 @@
 <?php
 
+ /*
+ * Classe - Actualité:
+ *
+ * Informations diverses destinées à être afficher dans les headers.
+ * Les actualitées sont hiérarchisable.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use UcaBundle\Annotations\CKEditor;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use UcaBundle\Annotations\CKEditor;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * Texte
- *
  * @ORM\Table(name="actualite")
  * @ORM\Entity
  * @Vich\Uploadable
@@ -21,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Actualite
 {
-    #region Propriétés
+    //region Propriétés
 
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -30,7 +33,7 @@ class Actualite
      */
     private $id;
 
-    /** 
+    /**
      * @Gedmo\Versioned
      * @ORM\Column(type="integer", nullable=true)
      */
@@ -56,7 +59,7 @@ class Actualite
     /** @ORM\Column(type="string", length=255) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *     mimeTypesMessage = "activite.image.format"
@@ -67,21 +70,25 @@ class Actualite
 
     /** @ORM\Column(type="datetime", nullable=true) */
     private $updatedAt;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
     public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
-        if ($imageFile)
+        if ($imageFile) {
             $this->updatedAt = new \DateTime('now');
+        }
+
         return $this;
     }
+
     public function getImageFile()
     {
         return $this->imageFile;
     }
-    #endregion
+
+    //endregion
 
     /**
      * Get id.
@@ -192,7 +199,7 @@ class Actualite
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Actualite
      */

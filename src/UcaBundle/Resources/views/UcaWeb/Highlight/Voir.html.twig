@@ -4,7 +4,11 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+    {% if routeName_autre_video == "UcaWeb_ShnuHighlights" %}
+        {{ ImageAsset.imageFondCssWithEmplacement('SHN - Highlights') }}
+    {% else %}
+        {{ ImageAsset.imageFondCssWithEmplacement('Defaut') }}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}
@@ -35,19 +39,27 @@
     {% if premiere_video is not null %}
         <div class="container container-style bg-white mb-5">
             {% if premiere_video.lecteurVideo == 'instagram' %}
-                 {% set classVideo = 'embed-responsive embed-responsive-4by3 mb-4' %} 
+                {% set classVideo = 'embed-responsive embed-responsive-4by3 mb-4' %} 
+                {% set styleTitre = '' %} 
             {% elseif premiere_video.lecteurVideo == 'facebook' %}
                 {% set classVideo = 'embed-responsive embed-responsive-1by1 mb-4' %}   
+                {% set styleTitre = 'margin-top: -45%' %}   
             {% else %}
                 {% set classVideo = 'embed-responsive embed-responsive-16by9 mb-4' %}   
+                {% set styleTitre = '' %}   
             {% endif %}
 
             <div class="row">
                 <div class="col-lg-8 pb-3">
-                    <div class="{{ classVideo }}">
-                        <iframe title="{{ premiere_video.titre }}" class="embed-responsive embed-responsive-item" src="{{premiere_video.video}}" allowTransparency="true" scrolling="no" allowfullscreen></iframe>
-                    </div>
-                    <div>
+                    {% if premiere_video.lecteurVideo == 'instagram' %}
+                        <iframe style="width: 100%; height: 1000px;" title="{{ premiere_video.titre }}" class="embed-responsive embed-responsive-item border-0" height="{{ premiere_video.height }}" src="{{premiere_video.video}}" allowTransparency="true" scrolling="true" allowfullscreen></iframe>
+                    {% else %}
+                    <!-- style="width: 100%; height: 1000px;" -->
+                        <div class="{{ classVideo }}">
+                            <iframe title="{{ premiere_video.titre }}" class="embed-responsive embed-responsive-item" src="{{premiere_video.video}}" allowTransparency="true" scrolling="no" allowfullscreen></iframe>
+                        </div>
+                    {% endif %}
+                    <div style="{{ styleTitre }}">
                         <h2 class="text-center">{{ premiere_video.titre}}</h2>
                         {{ premiere_video.texte | raw }}
                     </div>

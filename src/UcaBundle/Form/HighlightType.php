@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - highlight
+ *
+ * Formulaire d'ajout/édition d'un Highlight
+*/
+
 namespace UcaBundle\Form;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;

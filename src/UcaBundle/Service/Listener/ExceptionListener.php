@@ -1,14 +1,15 @@
 <?php
 
+/*
+ * classe - ExceptionListener
+ *
+ * Service gérant les redirection des erreurs serveurs
+*/
+
 namespace UcaBundle\Service\Listener;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
-use UcaBundle\Exception\ShibbolethException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use UcaBundle\Exception\ShibbolethException;
 
 class ExceptionListener
 {

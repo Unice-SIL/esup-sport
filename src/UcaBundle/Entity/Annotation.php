@@ -1,10 +1,13 @@
 <?php
+/*
+ * Classe - Annotation:
+ *
+ * Entité technique pour la gestion des entités.
+*/
 
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\AnnotationRepository")
@@ -12,7 +15,7 @@ use Gedmo\Translatable\Translatable;
  */
 class Annotation
 {
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -28,16 +31,17 @@ class Annotation
 
     /** @ORM\Column(type="string") */
     private $annotation;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
     public function __construct($array)
     {
         $this->entity = $array['entity'];
         $this->field = $array['field'];
         $this->annotation = $array['annotation'];
     }
-    #endregion
+
+    //endregion
 
     /**
      * Get id.

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - FormatActiviteType
+ *
+ * Formulaire d'ajout/édition des éléments commun à tous les Formats d'activité
+ * Ce formulaire sera imbriqué dans le format
+*/
+
 namespace UcaBundle\Form;
 
 use Doctrine\ORM\EntityRepository;

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - IntervalleDateRepository
+ *
+ * Requête concernant les élements DHTMLX, permet les réquêtes entre deux dates
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
@@ -15,15 +21,16 @@ class IntervalleDateRepository extends \Doctrine\ORM\EntityRepository
     {
         // if (is_a($reference, 'UcaBundle\Entity\FormatAvecCreneau')) {
         //     return $this->findByFormatAvecCreneau($reference->getId());
-        // } 
+        // }
         if (is_a($reference, 'UcaBundle\Entity\FormatAvecCreneau')) {
             return $this->findBy(['formatAvecCreneau' => $reference]);
-        } elseif (is_a($reference, 'UcaBundle\Entity\Ressource')) {
+        }
+        if (is_a($reference, 'UcaBundle\Entity\Ressource')) {
             // return $this->findByRessource($options['id']);
             return $this->findBy(['ressource' => $reference]);
-        } else {
-            return $this->findAll();
         }
+
+        return $this->findAll();
     }
 
     public function findByFormatAvecCreneau($id)
@@ -31,7 +38,8 @@ class IntervalleDateRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('i');
         $qb->join('i.creneau', 'c');
         $qb->join('c.formatActivite', 'f');
-        $qb->andWhere('f.id = ' . $id);
+        $qb->andWhere('f.id = '.$id);
+
         return $qb->getQuery()->getResult();
     }
 
@@ -54,6 +62,7 @@ class IntervalleDateRepository extends \Doctrine\ORM\EntityRepository
         foreach ($intervallesDate as $key => $intervalleDate) {
             $res[$key] = $intervalleDate->getDhtmlxEvent();
         }
+
         return $res;
     }
 }

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Activité:
+ *
+ * Une activité correspond à la discipline (ex: ski)
+ * Un utilisateur ne s'inscrit pas à une activité mais à un format.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

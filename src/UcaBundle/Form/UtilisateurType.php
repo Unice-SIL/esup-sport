@@ -1,83 +1,91 @@
 <?php
 
+/*
+ * Classe - UtilisateurType
+ *
+ * Formulaire d'ajout/edition d'un utilisateur
+*/
+
 namespace UcaBundle\Form;
 
-use DateTime;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Doctrine\ORM\EntityRepository;
-use Vich\UploaderBundle\Form\Type\VichImageType;
+use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Entity\TypeAutorisation;
 use UcaBundle\Entity\Utilisateur;
-use Symfony\Component\Validator\Constraints as Assert;
-
-
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 //use Symfony\Component\Form\FormEvents;
 //use Symfony\Component\Form\FormEvent;
 
-
 class UtilisateurType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-
         $shibboleth = !empty($options['data']) && $options['data']->getShibboleth();
-        if (empty($options['data'])) $plainPasswordOptions = ['data' => Utilisateur::getRandomPassword()];
-        else $plainPasswordOptions = [];
+        if (empty($options['data'])) {
+            $plainPasswordOptions = ['data' => Utilisateur::getRandomPassword()];
+        } else {
+            $plainPasswordOptions = [];
+        }
 
         $ajout = false;
         $modif = false;
         $preInscription = false;
         $profil = false;
-        if ($options['action_type'] == "modifier") $modif = true;
-        else if ($options['action_type'] == "preInscription") $preInscription = true;
-        else if ($options['action_type'] == 'profil') $profil = true;
-        else $ajout = true;
+        if ('modifier' == $options['action_type']) {
+            $modif = true;
+        } elseif ('preInscription' == $options['action_type']) {
+            $preInscription = true;
+        } elseif ('profil' == $options['action_type']) {
+            $profil = true;
+        } else {
+            $ajout = true;
+        }
 
         $builder
-            ->add('username', null, array(
+            ->add('username', null, [
                 'label' => 'form.username',
                 'translation_domain' => 'FOSUserBundle',
-                'disabled' => ($modif or $shibboleth or $profil)
-            ))
-            ->add('email', EmailType::class, array(
+                'disabled' => ($modif or $shibboleth or $profil),
+            ])
+            ->add('email', EmailType::class, [
                 'label' => 'form.email',
                 'translation_domain' => 'FOSUserBundle',
-                'disabled' => $shibboleth
-            ))
+                'disabled' => $shibboleth,
+            ])
             ->add('prenom', TextType::class, [
                 'label_format' => 'utilisateur.prenom',
                 'required' => true,
-                'disabled' => $shibboleth
+                'disabled' => $shibboleth,
             ])
             ->add('nom', TextType::class, [
                 'label_format' => 'utilisateur.nom',
                 'required' => true,
-                'disabled' => $shibboleth
+                'disabled' => $shibboleth,
             ])
             ->add('sexe', ChoiceType::class, [
                 'label_format' => 'utilisateur.civilite',
                 'choices' => [
                     'utilisateur.sexe.monsieur' => 'M',
-                    'utilisateur.sexe.madame' => 'F'
+                    'utilisateur.sexe.madame' => 'F',
                 ],
                 'preferred_choices' => 'M',
                 'multiple' => false,
                 'expanded' => true,
-                'required' => true
+                'required' => true,
             ])
             ->add('dateNaissance', DateTimeType::class, [
                 'label_format' => 'utilisateur.date.naissance',
@@ -85,49 +93,53 @@ class UtilisateurType extends AbstractType
                 //'placeholder' => 'dd/MM/yyyy',
                 'format' => 'dd/MM/yyyy',
                 'widget' => 'single_text',
-                'attr' => array(
+                'attr' => [
                     'class' => 'datetimepicker',
                     'data-datetimepicker-format' => 'd/m/Y',
                     'data-datetimepicker-defaultdate' => '',
-                )
+                ],
             ])
             ->add('adresse', TextType::class, [
                 'label_format' => 'utilisateur.adresse',
-                'required' => false
+                'required' => false,
             ])
             ->add('codePostal', TextType::class, [
                 'label_format' => 'utilisateur.codepostal',
-                'required' => false
+                'required' => false,
             ])
             ->add('ville', TextType::class, [
                 'label_format' => 'utilisateur.ville',
-                'required' => false
+                'required' => false,
             ])
             ->add('telephone', TextType::class, [
                 'label_format' => 'utilisateur.telephone',
                 'required' => false,
-                'attr' => ['placeholder' => 'common.telephone.placeholder']
+                'attr' => ['placeholder' => 'common.telephone.placeholder'],
             ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'bouton.enregistrer',
-            ]);
+            ])
+        ;
 
+        if ($ajout) {
+            $builder->add('plainPassword', HiddenType::class, $plainPasswordOptions);
+        }
+        if ($modif or $profil) {
+            $builder->remove('plainPassword');
+        }
 
-        if ($ajout) $builder->add('plainPassword', HiddenType::class, $plainPasswordOptions);
-        if ($modif or $profil) $builder->remove('plainPassword');
-        
         if ($preInscription) {
             $builder
-                ->add('plainPassword', RepeatedType::class, array(
+                ->add('plainPassword', RepeatedType::class, [
                     'type' => PasswordType::class,
-                    'options' => array(
+                    'options' => [
                         'translation_domain' => 'FOSUserBundle',
-                        'attr' => array('autocomplete' => 'new-password'),
-                        ),
-                    'first_options' => array('label' => 'form.password'),
-                    'second_options' => array('label' => 'form.password_confirmation'),
+                        'attr' => ['autocomplete' => 'new-password'],
+                    ],
+                    'first_options' => ['label' => 'form.password'],
+                    'second_options' => ['label' => 'form.password_confirmation'],
                     'invalid_message' => 'fos_user.password.mismatch',
-                ))
+                ])
                 ->add('profil', EntityType::class, [
                     'class' => 'UcaBundle:ProfilUtilisateur',
                     'choice_label' => 'libelle',
@@ -135,14 +147,15 @@ class UtilisateurType extends AbstractType
                     'query_builder' => function (EntityRepository $er) {
                         return
                             $er->createQueryBuilder('pu')
-                            ->andWhere('pu.preinscription = 1')
-                            ->orderBy('pu.libelle', 'ASC');
+                                ->andWhere('pu.preinscription = 1')
+                                ->orderBy('pu.libelle', 'ASC')
+                            ;
                     },
                     'multiple' => false,
                     'expanded' => false,
                     'required' => true,
                     'placeholder' => 'utilisateur.select.profilutilisateur',
-                    'disabled' => $shibboleth
+                    'disabled' => $shibboleth,
                 ])
                 ->add('documentFile', VichImageType::class, [
                     'required' => true,
@@ -151,27 +164,29 @@ class UtilisateurType extends AbstractType
                     'image_uri' => false,
                     'label_format' => 'utilisateur.document.libelle',
                     'translation_domain' => 'messages',
-                    'constraints' =>  new Assert\NotBlank(['message' => 'utilisateur.document.notBlank'])
-                ]);
+                    'constraints' => new Assert\NotBlank(['message' => 'utilisateur.document.notBlank']),
+                ])
+            ;
         } elseif (!$profil) {
             $builder
-                ->add('statut',EntityType::class, [
+                ->add('statut', EntityType::class, [
                     'class' => 'UcaBundle:StatutUtilisateur',
                     'choice_label' => 'libelle',
                     'label_format' => 'utilisateur.statut',
                     'multiple' => false,
                     'expanded' => false,
-                    'required' => false,
+                    'required' => true,
                     'placeholder' => 'utilisateur.select.statututilisateur',
+                    'constraints' => new Assert\NotBlank(['message' => 'utilisateur.statut.notnull']),
                 ])
                 ->add('matricule', TextType::class, [
                     'label_format' => 'utilisateur.matricule',
                     'required' => false,
-                    'disabled' => $shibboleth
+                    'disabled' => $shibboleth,
                 ])
                 ->add('numeroNfc', TextType::class, [
                     'label_format' => 'utilisateur.numero.nfc',
-                    'required' => false
+                    'required' => false,
                 ])
                 ->add('profil', EntityType::class, [
                     'class' => 'UcaBundle:ProfilUtilisateur',
@@ -181,16 +196,16 @@ class UtilisateurType extends AbstractType
                     'expanded' => false,
                     'required' => true,
                     'placeholder' => 'utilisateur.select.profilutilisateur',
-                    'disabled' => $shibboleth
+                    'disabled' => $shibboleth,
                 ])
                 ->add('groups', EntityType::class, [
-                    'class' => 'UcaBundle:Groupe',                 
+                    'class' => 'UcaBundle:Groupe',
                     'choice_label' => 'libelle',
                     'label_format' => 'utilisateur.droits',
                     'multiple' => true,
                     'expanded' => true,
                     'required' => false,
-                    'placeholder' => "utilisateur.droits"
+                    'placeholder' => 'utilisateur.droits',
                 ])
                 ->add('autorisations', EntityType::class, [
                     'class' => 'UcaBundle:TypeAutorisation',
@@ -201,14 +216,14 @@ class UtilisateurType extends AbstractType
                     },
                     'multiple' => true,
                     'expanded' => false,
-                    'required' => false
+                    'required' => false,
                 ])
                 ->add('description', TextareaType::class, [
                     'label_format' => 'utilisateur.description',
-                    'required' => false
+                    'required' => false,
                 ])
             ;
-                
+
             /*if ($preInscription) {
                 $builder->addEventListener(
                 FormEvents::POST_SUBMIT,
@@ -216,12 +231,11 @@ class UtilisateurType extends AbstractType
                     $isValid = $event->getForm()->isValid();
                     if ($isValid) ;
                         return ;
-                    }  
+                    }
                 );
             }*/
         }
     }
-
 
     public function getParent()
     {

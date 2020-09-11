@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - PayBox
+ *
+ * Service mettant en place la solution de paiement paybox
+*/
+
 namespace UcaBundle\Service\Securite;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

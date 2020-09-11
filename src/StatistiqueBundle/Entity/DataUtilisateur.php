@@ -1,15 +1,16 @@
 <?php
 
+/*
+ * Classe - DataUtilisateur:
+ *
+ * Données utilisateurs formatés pour la satistique
+ * C'est une autre base de donnée
+*/
+
 namespace StatistiqueBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * DataUtilisateur.
- *
- * @ORM\Table(name="data_utilisateur")
- * @ORM\Entity(repositoryClass="StatistiqueBundle\Repository\DataUtilisateurRepository")
- */
 class DataUtilisateur
 {
     /**

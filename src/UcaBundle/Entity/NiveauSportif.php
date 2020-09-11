@@ -1,10 +1,16 @@
 <?php
 
+/*
+ * Classe - NiveauSportif:
+ *
+ * Indique le niveau sportif d'un format d'activité
+ * Aucune interface ne permet de modifier cette donnée.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity
@@ -14,7 +20,10 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    #region Propriétés
+    /** @ORM\ManyToMany(targetEntity="Creneau", mappedBy="niveauxSportifs") */
+    protected $creneaux;
+
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -28,27 +37,23 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $libelle;
 
-    /** @ORM\ManyToMany(targetEntity="Creneau", mappedBy="niveauxSportifs") */
-    protected $creneaux;
-
-    #endregion
-
-    #region Méthodes
-
-    public function jsonSerializeProperties()
-    {
-        return  ['libelle'];
-    }
-
-
-    #endregion
+    //endregion
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->creneaux = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
+
+    public function jsonSerializeProperties()
+    {
+        return  ['libelle'];
     }
 
     /**
@@ -92,7 +97,7 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @return NiveauSportif
      */
-    public function addCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function addCreneaux(Creneau $creneaux)
     {
         $this->creneaux[] = $creneaux;
 
@@ -104,9 +109,9 @@ class NiveauSportif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      *
      * @param \UcaBundle\Entity\Creneau $creneaux
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function removeCreneaux(Creneau $creneaux)
     {
         return $this->creneaux->removeElement($creneaux);
     }

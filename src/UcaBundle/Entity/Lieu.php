@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Lieu:
+ *
+ * Un lieu est une ressource (hérité).
+ * Il correspondents aux salles (réservables ou non).
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

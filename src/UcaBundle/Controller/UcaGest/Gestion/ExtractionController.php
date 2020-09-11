@@ -1,9 +1,15 @@
 <?php
 
+/*
+ * Classe - ExtractionController
+ *
+ * Gestion de l'extraction des données
+ * Construction des fichier execl à partir de la base de donnée
+*/
+
 namespace UcaBundle\Controller\UcaGest\Gestion;
 
 use Doctrine\ORM\PersistentCollection;
-use FOS\JsRoutingBundle\Command\DumpCommand;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
@@ -11,7 +17,6 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,7 +32,6 @@ use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Groupe;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Lieu;
-use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\TypeActivite;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\GestionExtractionType;
@@ -115,10 +119,10 @@ class ExtractionController extends Controller
             foreach ($groupeEncadrant[0]->getUtilisateurs() as $encadrant) {
                 $nomPrenom = $encadrant->getNom().' '.$encadrant->getPrenom();
                 foreach ($encadrant->getCreneaux() as $creneau) {
-                    if($creneau->getSerie() != null && sizeof($creneau->getSerie()->getEvenements())!=0){
+                    if (null != $creneau->getSerie() && 0 != sizeof($creneau->getSerie()->getEvenements())) {
                         $this->createExcelLine($em, $creneau, $sheet, $nomPrenom, $idCol);
                         ++$idCol;
-                    }                    
+                    }
                 }
             }
 
@@ -131,41 +135,45 @@ class ExtractionController extends Controller
     /**
      * @Route("/extractionApi", name="ExtractionApi", methods={"POST"}, options={"expose"=true})
      */
-    public function extractionPersonnaliseeApi(Request $request) {
+    public function extractionPersonnaliseeApi(Request $request)
+    {
         $em = $this->getDoctrine()->getManager();
         $titleColumn = [];
         $alphabet = range('A', 'Z');
         $data = $request->request->all();
 
         //On définit le nom des colonnes pour l'Excel
-        foreach($data as $key => $value) {
-            if($value === "1") {
+        foreach ($data as $key => $value) {
+            if ('1' === $value) {
                 switch ($key) {
                     case 'Créneau':
-                        array_push($titleColumn, str_replace("_", " ", $key));
+                        array_push($titleColumn, str_replace('_', ' ', $key));
                         $details = $request->get('Détails_créneau');
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
-                        break;
 
+                        break;
                     case 'Format_d\'activité':
-                        array_push($titleColumn, str_replace("_", " ", $key));
+                        array_push($titleColumn, str_replace('_', ' ', $key));
                         $details = $request->get('Détails_format_d\'activité');
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
+
                         break;
                     case 'Inscription':
                         array_push($titleColumn, 'Statut');
                         $details = $request->get('Détails_inscription');
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
+
                         break;
                     case 'Statut inscription':
                         break;
                     default:
-                        array_push($titleColumn, str_replace("_", " ", $key));
+                        array_push($titleColumn, str_replace('_', ' ', $key));
+
                         break;
                 }
             }
         }
-        
+
         //Création de la feuille Excel
         $spreadsheet = new Spreadsheet();
         $spreadsheet->removeSheetByIndex(0);
@@ -175,34 +183,34 @@ class ExtractionController extends Controller
 
         $idCol = 8; //On commencera à écrire les lignes à partir de cette colonne
 
-        $this->createExcelHeader($spreadsheet, $sheet, $titleColumn);            
+        $this->createExcelHeader($spreadsheet, $sheet, $titleColumn);
 
         //On récupère tous les enregistrements suivant paramétres choisi
         $lignes = [];
         $main = '';
-        if ("1" === $request->get("Créneau")) {
+        if ('1' === $request->get('Créneau')) {
             $lignes = $em->getRepository(Creneau::class)->findAll();
             $main = 'Creneau';
-        } elseif ("1" === $request->get("Format_d'activité")) {
+        } elseif ('1' === $request->get("Format_d'activité")) {
             $lignes = $em->getRepository(FormatActivite::class)->findAll();
             $main = 'FormatActivite';
-        } elseif ("1" === $request->get("Activité")) {
+        } elseif ('1' === $request->get('Activité')) {
             $lignes = $em->getRepository(Activite::class)->findAll();
             $main = 'Activite';
-        } elseif ("1" === $request->get("Classe_d'activité")) {
+        } elseif ('1' === $request->get("Classe_d'activité")) {
             $lignes = $em->getRepository(ClasseActivite::class)->findAll();
             $main = 'ClasseActivite';
-        } elseif ("1" === $request->get("Type_d'activité")) {
+        } elseif ('1' === $request->get("Type_d'activité")) {
             $lignes = $em->getRepository(TypeActivite::class)->findAll();
             $main = 'TypeActivite';
-        } elseif ("1" === $request->get("Inscription")) {
-            if ("0" === $request->get("Statut")) {
+        } elseif ('1' === $request->get('Inscription')) {
+            if ('0' === $request->get('Statut')) {
                 $lignes = $em->getRepository(Inscription::class)->findAll();
             } else {
-                $lignes = $em->getRepository(Inscription::class)->findByStatut($request->get("Statut"));
+                $lignes = $em->getRepository(Inscription::class)->findByStatut($request->get('Statut'));
             }
             $main = 'Inscription';
-        } elseif ("1" === $request->get("Encadrants")) {
+        } elseif ('1' === $request->get('Encadrants')) {
             $groupeEncadrant = $em->getRepository(Groupe::class)->findGroupeEncadrant();
             $lignes = $groupeEncadrant[0]->getUtilisateurs();
             $main = 'Encadrant';
@@ -216,57 +224,57 @@ class ExtractionController extends Controller
                 //Suivant l'élément principal choisit, on récupére les données
                 switch ($main) {
                     case 'Creneau':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($ligne->getEncadrants()) : $encadrantValue = null;
-                        "1" === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByCreneau($ligne->getId()) : $typeActiviteValue = null;
-                        "1" === $request->get("Classe_d'activité") ? $classeActiviteValue = $em->getRepository(ClasseActivite::class)->findClasseActiviteByCreneau($ligne->getId()) : $classeActiviteValue = null;
-                        "1" === $request->get("Activité") ? $activiteValue = $em->getRepository(Activite::class)->findActiviteByCreneau($ligne->getId()) : $activiteValue = null;
-                        "1" === $request->get("Format_d'activité") ? $formatActiviteValue = $ligne->getFormatActivite() : $formatActiviteValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($ligne->getEncadrants()) : $encadrantValue = null;
+                        '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByCreneau($ligne->getId()) : $typeActiviteValue = null;
+                        '1' === $request->get("Classe_d'activité") ? $classeActiviteValue = $em->getRepository(ClasseActivite::class)->findClasseActiviteByCreneau($ligne->getId()) : $classeActiviteValue = null;
+                        '1' === $request->get('Activité') ? $activiteValue = $em->getRepository(Activite::class)->findActiviteByCreneau($ligne->getId()) : $activiteValue = null;
+                        '1' === $request->get("Format_d'activité") ? $formatActiviteValue = $ligne->getFormatActivite() : $formatActiviteValue = null;
                         $creneauValue = $ligne;
-                        "1" === $request->get("Inscription") ? $inscriptionValue = $this->getInscriptionValue($em, $main, $request->get("Statut"), $ligne->getId()) : $inscriptionValue = null;
+                        '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
                         //Détails créneau
-                        "1" === $request->get("Détails_créneau")['Description créneau'] ? $descriptionCreneauValue = $this->getDescriptionCreneau($em, $ligne) : $descriptionCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Tarif créneau'] ? $tarifCreneauValue = $ligne->getTarif()->getLibelle() : $tarifCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Capacité créneau'] ? $capaciteCreneauValue = $ligne->getcapacite() : $capaciteCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Profils autorisés créneau'] ? $profilsAutorisesCreneauValue = $ligne->getProfilsUtilisateurs() : $profilsAutorisesCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Niveaux sportifs créneau'] ? $niveauxSportifsCreneauValue = $ligne->getNiveauxSportifs() : $niveauxSportifsCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Eligibilité créneau'] ? $eligibiliteCreneauValue = $this->getEligibiliteCreneau($em, $ligne) : $eligibiliteCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Période créneau'] ? $periodeCreneauValue = $this->getPeriodeCreneau($em, $ligne) : $periodeCreneauValue = null;
-                        "1" === $request->get("Détails_créneau")['Campus'] ? $campusValue = $this->getEtablissementValue($em, $main, $ligne->getId()) : $campusValue = null;
-                        "1" === $request->get("Détails_créneau")['Lieu'] ? $lieuValue = $this->getLieuValue($ligne->getLieu()) : $lieuValue = null;
-                        
+                        '1' === $request->get('Détails_créneau')['Description créneau'] ? $descriptionCreneauValue = $this->getDescriptionCreneau($em, $ligne) : $descriptionCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Tarif créneau'] ? $tarifCreneauValue = $ligne->getTarif()->getLibelle() : $tarifCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Capacité créneau'] ? $capaciteCreneauValue = $ligne->getcapacite() : $capaciteCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Profils autorisés créneau'] ? $profilsAutorisesCreneauValue = $ligne->getProfilsUtilisateurs() : $profilsAutorisesCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Niveaux sportifs créneau'] ? $niveauxSportifsCreneauValue = $ligne->getNiveauxSportifs() : $niveauxSportifsCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Eligibilité créneau'] ? $eligibiliteCreneauValue = $this->getEligibiliteCreneau($em, $ligne) : $eligibiliteCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Période créneau'] ? $periodeCreneauValue = $this->getPeriodeCreneau($em, $ligne) : $periodeCreneauValue = null;
+                        '1' === $request->get('Détails_créneau')['Campus'] ? $campusValue = $this->getEtablissementValue($em, $main, $ligne->getId()) : $campusValue = null;
+                        '1' === $request->get('Détails_créneau')['Lieu'] ? $lieuValue = $this->getLieuValue($ligne->getLieu()) : $lieuValue = null;
+
                         break;
                     case 'FormatActivite':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($ligne->getEncadrants()) : $encadrantValue = null;
-                        "1" === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByFormatActivite($ligne->getId()) : $typeActiviteValue = null;
-                        "1" === $request->get("Classe_d'activité") ? $classeActiviteValue = $em->getRepository(ClasseActivite::class)->findClasseActiviteByFormatActivite($ligne->getId()) : $classeActiviteValue = null;
-                        "1" === $request->get("Activité") ? $activiteValue = $ligne->getActivite() : $activiteValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($ligne->getEncadrants()) : $encadrantValue = null;
+                        '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByFormatActivite($ligne->getId()) : $typeActiviteValue = null;
+                        '1' === $request->get("Classe_d'activité") ? $classeActiviteValue = $em->getRepository(ClasseActivite::class)->findClasseActiviteByFormatActivite($ligne->getId()) : $classeActiviteValue = null;
+                        '1' === $request->get('Activité') ? $activiteValue = $ligne->getActivite() : $activiteValue = null;
                         $formatActiviteValue = $ligne;
-                        "1" === $request->get("Inscription") ? $inscriptionValue = $this->getInscriptionValue($em, $main, "1" === $request->get("Statut"), $ligne->getId()) : $inscriptionValue = null;
-                        
+                        '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
+
                         break;
                     case 'Activite':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByActivite($ligne->getId())) : $encadrantValue = null;
-                        "1" === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByActivite($ligne->getId()) : $typeActiviteValue = null;
-                        "1" === $request->get("Classe_d'activité") ? $classeActiviteValue = $ligne->getClasseActivite() : $classeActiviteValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByActivite($ligne->getId())) : $encadrantValue = null;
+                        '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByActivite($ligne->getId()) : $typeActiviteValue = null;
+                        '1' === $request->get("Classe_d'activité") ? $classeActiviteValue = $ligne->getClasseActivite() : $classeActiviteValue = null;
                         $activiteValue = $ligne;
-                        "1" === $request->get("Inscription") ? $inscriptionValue = $this->getInscriptionValue($em, $main, "1" === $request->get("Statut"), $ligne->getId()) : $inscriptionValue = null;
-                        
+                        '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
+
                         break;
                     case 'ClasseActivite':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByClasseActivite($ligne->getId())) : $encadrantValue = null;
-                        "1" === $request->get("Type_d'activité") ? $typeActiviteValue = $ligne->getTypeActivite() : $typeActiviteValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByClasseActivite($ligne->getId())) : $encadrantValue = null;
+                        '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $ligne->getTypeActivite() : $typeActiviteValue = null;
                         $classeActiviteValue = $ligne;
-                        "1" === $request->get("Inscription") ? $inscriptionValue = $this->getInscriptionValue($em, $main, "1" === $request->get("Statut"), $ligne->getId()) : $inscriptionValue = null;
-                        
+                        '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
+
                         break;
                     case 'TypeActivite':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByTypeActivite($ligne->getId())) : $encadrantValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByTypeActivite($ligne->getId())) : $encadrantValue = null;
                         $typeActiviteValue = $ligne;
-                        "1" === $request->get("Inscription") ? $inscriptionValue = $this->getInscriptionValue($em, $main, "1" === $request->get("Statut"), $ligne->getId()) : $inscriptionValue = null;
-                        
+                        '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
+
                         break;
                     case 'Inscription':
-                        "1" === $request->get("Encadrants") ? $encadrantValue = $this->getEncadrantValue($em->getRepository(FormatActivite::class)->find($ligne->getFormatActivite())->getEncadrants()) : $encadrantValue = null;
+                        '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(FormatActivite::class)->find($ligne->getFormatActivite())->getEncadrants()) : $encadrantValue = null;
                         $inscriptionValue = $ligne;
 
                         break;
@@ -276,30 +284,29 @@ class ExtractionController extends Controller
                         break;
                     default:
                         break;
-                }  
-                
+                }
+
                 //Détails Format Activité
-                "1" === $request->get('Détails_format_d\'activité')['Description format'] ? $descriptionFormatValue = $formatActiviteValue->getDescription() : $descriptionFormatValue = null;// null != $datesPublications && 'null' != $datesPublications ? $datesPublicationsValue = date_format($formatActiviteValue->getDateDebutEffective(), 'd/m/Y - H:i')."\n".date_format($formatActiviteValue->getDateFinEffective(), 'd/m/Y - H:i') : $datesPublicationsValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Dates effectives'] ? $datesEffectivesValue = [date_format($formatActiviteValue->getDateDebutEffective(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinEffective(), 'd/m/Y - H:i')] : $datesEffectivesValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Dates inscriptions'] ? $datesInscriptionsValue = [date_format($formatActiviteValue->getDateDebutInscription(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinInscription(), 'd/m/Y - H:i')] : $datesInscriptionsValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Dates publications'] ? $datesPublicationsValue = [date_format($formatActiviteValue->getDateDebutPublication(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinPublication(), 'd/m/Y - H:i')] : $datesPublicationsValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Capacité format'] ? $capaciteFormatValue = $formatActiviteValue->getCapacite() : $capaciteFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Statut format'] ? $statutFormatValue = $this->getStatutValue($formatActiviteValue->getStatut()) : $statutFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Payant'] ? $payantFormatValue = $this->getPayantvalue($formatActiviteValue->getEstPayant()) : $payantFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Tarif format'] ? $tarifFormatValue =  $this->getTarifValue($formatActiviteValue->getTarif()) : $tarifFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Niveaux sportifs format'] ? $niveauxSportifsFormatValue = $formatActiviteValue->getNiveauxSportifs() : $niveauxSportifsFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Profils autorisés format'] ? $profilsAutorisesFormatValue = $formatActiviteValue->getProfilsUtilisateurs() : $profilsAutorisesFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Autorisations requises format'] ? $autorisationRequisesFormatValue = $formatActiviteValue->getAutorisations() : $autorisationRequisesFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Ressource format'] ? $ressourceFormatValue = $this->getRessourceFormatValue($formatActiviteValue) : $ressourceFormatValue = null;
-                "1" === $request->get('Détails_format_d\'activité')['Carte à acheter'] ? $carteAcheterFormatValue = $this->getCarteFormatValue($formatActiviteValue)  : $carteAcheterFormatValue = null;                    
+                '1' === $request->get('Détails_format_d\'activité')['Description format'] ? $descriptionFormatValue = $formatActiviteValue->getDescription() : $descriptionFormatValue = null; // null != $datesPublications && 'null' != $datesPublications ? $datesPublicationsValue = date_format($formatActiviteValue->getDateDebutEffective(), 'd/m/Y - H:i')."\n".date_format($formatActiviteValue->getDateFinEffective(), 'd/m/Y - H:i') : $datesPublicationsValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Dates effectives'] ? $datesEffectivesValue = [date_format($formatActiviteValue->getDateDebutEffective(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinEffective(), 'd/m/Y - H:i')] : $datesEffectivesValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Dates inscriptions'] ? $datesInscriptionsValue = [date_format($formatActiviteValue->getDateDebutInscription(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinInscription(), 'd/m/Y - H:i')] : $datesInscriptionsValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Dates publications'] ? $datesPublicationsValue = [date_format($formatActiviteValue->getDateDebutPublication(), 'd/m/Y - H:i'), date_format($formatActiviteValue->getDateFinPublication(), 'd/m/Y - H:i')] : $datesPublicationsValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Capacité format'] ? $capaciteFormatValue = $formatActiviteValue->getCapacite() : $capaciteFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Statut format'] ? $statutFormatValue = $this->getStatutValue($formatActiviteValue->getStatut()) : $statutFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Payant'] ? $payantFormatValue = $this->getPayantvalue($formatActiviteValue->getEstPayant()) : $payantFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Tarif format'] ? $tarifFormatValue = $this->getTarifValue($formatActiviteValue->getTarif()) : $tarifFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Niveaux sportifs format'] ? $niveauxSportifsFormatValue = $formatActiviteValue->getNiveauxSportifs() : $niveauxSportifsFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Profils autorisés format'] ? $profilsAutorisesFormatValue = $formatActiviteValue->getProfilsUtilisateurs() : $profilsAutorisesFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Autorisations requises format'] ? $autorisationRequisesFormatValue = $formatActiviteValue->getAutorisations() : $autorisationRequisesFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Ressource format'] ? $ressourceFormatValue = $this->getRessourceFormatValue($formatActiviteValue) : $ressourceFormatValue = null;
+                '1' === $request->get('Détails_format_d\'activité')['Carte à acheter'] ? $carteAcheterFormatValue = $this->getCarteFormatValue($formatActiviteValue) : $carteAcheterFormatValue = null;
                 //Détails Inscription
-                "1" === $request->get("Détails_inscription")['Nom et prénom inscrit'] ? $nomPrenomInscriptionValue = $this->getDetailInscription($inscriptionValue, 'nomprenom') : $nomPrenomInscriptionValue = null;
-                "1" === $request->get("Détails_inscription")['Date d\'inscription'] ? $dateInscriptionInscriptionValue = $this->getDetailInscription($inscriptionValue, 'dateinscription') : $dateInscriptionInscriptionValue = null;
-                "1" === $request->get("Détails_inscription")['Date de validation'] ? $dateValidationInscriptionValue = $this->getDetailInscription($inscriptionValue, 'datevalidation') : $dateValidationInscriptionValue = null;
-                "1" === $request->get("Détails_inscription")['Date de desincription'] ? $dateDesinscriptionInscriptionValue = $this->getDetailInscription($inscriptionValue, 'datedesinscription') : $dateDesinscriptionInscriptionValue = null;
-                "1" === $request->get("Détails_inscription")['Motif d\'annulation'] ? $motifAnnulationInscriptionValue = $this->getDetailInscription($inscriptionValue, 'motifannulation') : $motifAnnulationInscriptionValue = null;
-                "1" === $request->get("Détails_inscription")['Commentaire d\'annulation'] ? $commentaireInscriptionValue = $this->getDetailInscription($inscriptionValue, 'commentaireannulation') : $commentaireInscriptionValue = null;
-                                    
+                '1' === $request->get('Détails_inscription')['Nom et prénom inscrit'] ? $nomPrenomInscriptionValue = $this->getDetailInscription($inscriptionValue, 'nomprenom') : $nomPrenomInscriptionValue = null;
+                '1' === $request->get('Détails_inscription')['Date d\'inscription'] ? $dateInscriptionInscriptionValue = $this->getDetailInscription($inscriptionValue, 'dateinscription') : $dateInscriptionInscriptionValue = null;
+                '1' === $request->get('Détails_inscription')['Date de validation'] ? $dateValidationInscriptionValue = $this->getDetailInscription($inscriptionValue, 'datevalidation') : $dateValidationInscriptionValue = null;
+                '1' === $request->get('Détails_inscription')['Date de desincription'] ? $dateDesinscriptionInscriptionValue = $this->getDetailInscription($inscriptionValue, 'datedesinscription') : $dateDesinscriptionInscriptionValue = null;
+                '1' === $request->get('Détails_inscription')['Motif d\'annulation'] ? $motifAnnulationInscriptionValue = $this->getDetailInscription($inscriptionValue, 'motifannulation') : $motifAnnulationInscriptionValue = null;
+                '1' === $request->get('Détails_inscription')['Commentaire d\'annulation'] ? $commentaireInscriptionValue = $this->getDetailInscription($inscriptionValue, 'commentaireannulation') : $commentaireInscriptionValue = null;
 
                 //On pousse les données dans le tableau qui va permettre de créer les lignes excel
                 isset($encadrantValue) ? array_push($tab, $this->getNomPrenomEncadrant($encadrantValue)) : null;
@@ -311,7 +318,7 @@ class ExtractionController extends Controller
                 isset($descriptionFormatValue) ? array_push($tab, $descriptionFormatValue) : null;
                 isset($datesEffectivesValue) ? array_push($tab, $datesEffectivesValue[0], $datesEffectivesValue[1]) : null;
                 isset($datesInscriptionsValue) ? array_push($tab, $datesInscriptionsValue[0], $datesInscriptionsValue[1]) : null;
-                isset($datesPublicationsValue) ? array_push($tab, $datesPublicationsValue[0], $datesPublicationsValue[1] ) : null;
+                isset($datesPublicationsValue) ? array_push($tab, $datesPublicationsValue[0], $datesPublicationsValue[1]) : null;
                 isset($capaciteFormatValue) ? array_push($tab, $capaciteFormatValue) : null;
                 isset($statutFormatValue) ? array_push($tab, $statutFormatValue) : null;
                 isset($payantFormatValue) ? array_push($tab, $payantFormatValue) : null;
@@ -329,7 +336,7 @@ class ExtractionController extends Controller
                 isset($profilsAutorisesCreneauValue) ? array_push($tab, $this->getLibelleResult($profilsAutorisesCreneauValue)) : null;
                 isset($niveauxSportifsCreneauValue) ? array_push($tab, $this->getLibelleResult($niveauxSportifsCreneauValue)) : null;
                 isset($eligibiliteCreneauValue) ? array_push($tab, $eligibiliteCreneauValue) : null;
-                isset($periodeCreneauValue) ? array_push($tab, $periodeCreneauValue) : null;                    
+                isset($periodeCreneauValue) ? array_push($tab, $periodeCreneauValue) : null;
                 isset($campusValue) ? array_push($tab, $this->getLibelleResult($campusValue)) : null;
                 isset($lieuValue) ? array_push($tab, $this->getLibelleResult($lieuValue)) : null;
                 //Inscription et détails
@@ -340,7 +347,6 @@ class ExtractionController extends Controller
                 isset($dateDesinscriptionInscriptionValue) ? array_push($tab, $dateDesinscriptionInscriptionValue) : null;
                 isset($motifAnnulationInscriptionValue) ? array_push($tab, $motifAnnulationInscriptionValue) : null;
                 isset($commentaireInscriptionValue) ? array_push($tab, $commentaireInscriptionValue) : null;
-                
 
                 //Création des lignes
                 if (!empty($tab)) {
@@ -349,17 +355,17 @@ class ExtractionController extends Controller
                     $numeroLettreBis = 0;
                     $styleArray = $this->setStyleArrayForExcel(false, 10);
                     for ($i = 0; $i < sizeof($tab); ++$i) {
-                        if($i<26){
+                        if ($i < 26) {
                             $sheet->getCell($alphabet[$i].$idCol)->setValue($tab[$index]);
                             $sheet->getStyle($alphabet[$i].$idCol)->getAlignment()->setWrapText(true);
                             $sheet->getStyle($alphabet[$i].$idCol)->applyFromArray($styleArray);
-                        }else{
+                        } else {
                             $sheet->getCell($alphabet[$numeroLettre].$alphabet[$numeroLettreBis].$idCol)->setValue($tab[$index]);
                             $sheet->getStyle($alphabet[$numeroLettre].$alphabet[$numeroLettreBis].$idCol)->getAlignment()->setWrapText(true);
                             $sheet->getStyle($alphabet[$numeroLettre].$alphabet[$numeroLettreBis].$idCol)->applyFromArray($styleArray);
-                            $numeroLettreBis++;
+                            ++$numeroLettreBis;
                         }
-                        $index++;
+                        ++$index;
                     }
                     ++$idCol;
                 }
@@ -393,20 +399,20 @@ class ExtractionController extends Controller
         $currentLettre = 0;
 
         for ($i = 0; $i < sizeof($titleColumn); ++$i) {
-            if($i<26){
+            if ($i < 26) {
                 $sheet->setCellValue($alphabet[$i].'7', $titleColumn[$index]);
                 $sheet->getStyle($alphabet[$i].'7')->applyFromArray($styleArray);
                 $sheet->getColumnDimension($alphabet[$i])->setAutoSize(true);
                 $currentLettre = $i;
-            }else{
+            } else {
                 $sheet->setCellValue($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre].'7', $titleColumn[$index]);
                 $sheet->getStyle($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre].'7')->applyFromArray($styleArray);
                 $sheet->getColumnDimension($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre])->setAutoSize(true);
                 $currentLettre = [$premiereLettre, $deuxiemeLettre];
-                $deuxiemeLettre++;
-                if($deuxiemeLettre==26){
+                ++$deuxiemeLettre;
+                if (26 == $deuxiemeLettre) {
                     $deuxiemeLettre = 0;
-                    $premiereLettre++;
+                    ++$premiereLettre;
                 }
             }
 
@@ -626,7 +632,7 @@ class ExtractionController extends Controller
         $translator = $this->get('translator');
         if (is_array($inscriptions)) {
             foreach ($inscriptions as $inscription) {
-                $result .=  $translator->trans('common.'.$inscription->getStatut())." \n";
+                $result .= $translator->trans('common.'.$inscription->getStatut())." \n";
             }
         } elseif ('aucun' != $inscriptions) {
             $result = $translator->trans('common.'.$inscriptions->getStatut());
@@ -637,32 +643,40 @@ class ExtractionController extends Controller
         return $result;
     }
 
-    private function getDetailInscription($inscription, $detail){
+    private function getDetailInscription($inscription, $detail)
+    {
         $result = '';
-        if($inscription != null && $inscription != "aucun"){
-            if(is_array($inscription)){
+        if (null != $inscription && 'aucun' != $inscription) {
+            if (is_array($inscription)) {
                 foreach ($inscription as $inscrit) {
                     switch ($detail) {
                         case 'nomprenom':
                             $result .= strtoupper($inscrit->getUtilisateur()->getNom()).' '.$inscrit->getUtilisateur()->getNom()."\n";
+
                             break;
                         case 'dateinscription':
                             $result .= date_format($inscrit->getDate(), 'd/m/Y')."\n";
+
                             break;
                         case 'datevalidation':
-                            $inscrit->getDateValidation()!=null ? $result .= date_format($inscrit->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n"; 
+                            null != $inscrit->getDateValidation() ? $result .= date_format($inscrit->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n";
+
                             break;
                         case 'datedesinscription':
-                            $inscrit->getDateDesinscription()!=null ? $result .= date_format($inscrit->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n"; 
+                            null != $inscrit->getDateDesinscription() ? $result .= date_format($inscrit->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n";
+
                             break;
                         case 'motifannulation':
-                            $inscrit->getMotifAnnulation()!=null ? $result .= $inscrit->getMotifAnnulation()."\n" : $result .= "\n"; 
+                            null != $inscrit->getMotifAnnulation() ? $result .= $inscrit->getMotifAnnulation()."\n" : $result .= "\n";
+
                             break;
                         case 'commentaireannulation':
-                            $inscrit->getCommentaireAnnulation()!=null ? $result .= $inscrit->getCommentaireAnnulation()."\n" : $result .= "\n"; 
-                            break;                    
+                            null != $inscrit->getCommentaireAnnulation() ? $result .= $inscrit->getCommentaireAnnulation()."\n" : $result .= "\n";
+
+                            break;
                         default:
                             $result = '';
+
                             break;
                     }
                 }
@@ -670,31 +684,38 @@ class ExtractionController extends Controller
                 switch ($detail) {
                     case 'nomprenom':
                         $result .= strtoupper($inscription->getUtilisateur()->getNom()).' '.$inscription->getUtilisateur()->getNom()."\n";
+
                         break;
                     case 'dateinscription':
                         $result .= date_format($inscription->getDate(), 'd/m/Y')."\n";
+
                         break;
                     case 'datevalidation':
-                        $inscription->getDateValidation()!=null ? $result .= date_format($inscription->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n"; 
+                        null != $inscription->getDateValidation() ? $result .= date_format($inscription->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n";
+
                         break;
                     case 'datedesinscription':
-                        $inscription->getDateDesinscription()!=null ? $result .= date_format($inscription->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n"; 
+                        null != $inscription->getDateDesinscription() ? $result .= date_format($inscription->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n";
+
                         break;
                     case 'motifannulation':
-                        $inscription->getMotifAnnulation()!=null ? $result .= $inscription->getMotifAnnulation()."\n" : $result .= "\n"; 
+                        null != $inscription->getMotifAnnulation() ? $result .= $inscription->getMotifAnnulation()."\n" : $result .= "\n";
+
                         break;
                     case 'commentaireannulation':
-                        $inscription->getCommentaireAnnulation()!=null ? $result .= $inscription->getCommentaireAnnulation()."\n" : $result .= "\n"; 
-                        break;                    
+                        null != $inscription->getCommentaireAnnulation() ? $result .= $inscription->getCommentaireAnnulation()."\n" : $result .= "\n";
+
+                        break;
                     default:
                         $result = '';
+
                         break;
                 }
             }
-            
-        }else{
+        } else {
             $result = ' ';
         }
+
         return $result;
     }
 
@@ -793,42 +814,46 @@ class ExtractionController extends Controller
         return 'Non payant';
     }
 
-    private function getCarteFormatValue($formatActivite){
-        if($formatActivite instanceof FormatAchatCarte){
+    private function getCarteFormatValue($formatActivite)
+    {
+        if ($formatActivite instanceof FormatAchatCarte) {
             return $formatActivite->getCarte()->getLibelle();
         }
 
         return ' ';
     }
 
-    private function getRessourceFormatValue($formatActivite){
-        if($formatActivite instanceof FormatAvecReservation){
+    private function getRessourceFormatValue($formatActivite)
+    {
+        if ($formatActivite instanceof FormatAvecReservation) {
             return $formatActivite->getRessource();
         }
 
         return 'aucun';
     }
 
-    private function getTarifValue($tarif){
-        if(null != $tarif){
+    private function getTarifValue($tarif)
+    {
+        if (null != $tarif) {
             return $tarif->getLibelle();
         }
+
         return ' ';
     }
 
-    private function addTitleColumn($array, $data) {
+    private function addTitleColumn($array, $data)
+    {
         foreach ($data as $key => $value) {
-            if($value === "1"){
-                if(strpos($key, "Dates") !== false) {
+            if ('1' === $value) {
+                if (false !== strpos($key, 'Dates')) {
                     $date = explode(' ', $key);
-                    array_push($array, $date[0].' début '.$date[1], $date[0].' fin '.$date[1] );
+                    array_push($array, $date[0].' début '.$date[1], $date[0].' fin '.$date[1]);
                 } else {
                     array_push($array, $key);
                 }
-                
             }
         }
 
         return $array;
-    }    
+    }
 }

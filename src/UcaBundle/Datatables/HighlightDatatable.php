@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - HighlightDatatable
+ *
+ * COntient les champs à afficher pour la table des HighlightDatatable
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

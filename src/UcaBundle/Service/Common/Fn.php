@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - Fn
+ *
+ * Service récupérant les noms d'entités
+*/
+
 namespace UcaBundle\Service\Common;
 
 class Fn
@@ -12,12 +18,13 @@ class Fn
     public static function getShortClassName($item)
     {
         $array = explode('\\', self::getFullClassName($item));
+
         return array_pop($array);
     }
 
     public static function strTruncate($str, $length)
     {
-        return strlen($str) > $length ? substr($str, 0, $length) . '...' : $str;
+        return strlen($str) > $length ? substr($str, 0, $length).'...' : $str;
     }
 
     public static function intlDateFormat($date, $format)

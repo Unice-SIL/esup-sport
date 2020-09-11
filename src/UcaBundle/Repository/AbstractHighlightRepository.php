@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - AbstractHighlightRepository:
+ *
+ * Classe mère des pour les repositories des highlight
+*/
+
 namespace UcaBundle\Repository;
 
 abstract class AbstractHighlightRepository extends \Doctrine\ORM\EntityRepository

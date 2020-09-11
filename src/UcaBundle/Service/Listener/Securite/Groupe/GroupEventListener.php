@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - GroupEventListener
+ *
+ * Service surchargant certaines méthodes de FoSUser
+*/
+
 namespace UcaBundle\Service\Listener\Securite\Groupe;
 
 use FOS\UserBundle\Event\FormEvent;

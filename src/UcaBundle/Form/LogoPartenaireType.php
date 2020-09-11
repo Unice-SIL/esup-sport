@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogoPartenaireType
+ *
+ * Formulaire d'édition d'un logo partenarie
+*/
+
 namespace UcaBundle\Form;
 
 use FOS\CKEditorBundle\Form\Type\CKEditorType;

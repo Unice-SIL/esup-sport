@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe -  ExportPdfButton
+ *
+ * Bouton pour l'exportPdf (classer) un datatable
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class ExportPdfButton extends AbstractButton

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - DhtmlxEvenement
+ *
+ * Interagit avec la librairie scheduler (hérité)
+ * Il s'agit d'un occurence au sein d'une série.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

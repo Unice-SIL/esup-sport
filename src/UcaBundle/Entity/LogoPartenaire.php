@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - LogoPartenaire:
+ *
+ * Entité correspondant au logos des LogoPartenaireListener
+ * Ces éléments sont organisables.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -10,8 +17,6 @@ use UcaBundle\Annotations\CKEditor;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * Texte.
- *
  * @ORM\Table(name="logo_partenaire")
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\LogoPartenaireRepository")
  * @Vich\Uploadable

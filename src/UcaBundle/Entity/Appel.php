@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - Appel:
+ *
+ * Elle permet la gestion de la présence des étudiants.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

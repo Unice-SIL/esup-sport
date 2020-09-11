@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - DoctrineExtensionListener
+ *
+ * Service surchargant certaines méthodes
+*/
+
 namespace UcaBundle\Service\Listener;
 
 class DoctrineExtensionListener
@@ -35,6 +41,7 @@ class DoctrineExtensionListener
         $this->translatableListener->setTranslatableLocale($locale);
         ini_set('intl.default_locale', $locale);
     }
+
     public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {
         $tokenStorage = $this->tokenStorage->getToken();
@@ -47,4 +54,3 @@ class DoctrineExtensionListener
         }
     }
 }
-

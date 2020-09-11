@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - InfosPratiquesController
+ *
+ * Affichage des infos pratiques.
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

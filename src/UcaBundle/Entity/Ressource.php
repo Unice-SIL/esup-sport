@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - Ressources:
+ *
+ * Enttté mère contenant les éléments commun à toutes les ressources.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

@@ -40,11 +40,10 @@
 {% endblock %}
 
 {% block main %}
-    <div class="container p-0 pl-4 pl-xl-0">
+    <div class="container">
         {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     </div>
 
-    
     {% if pageActivity and data is not empty %}
         <h1 class="h1-light">{{ title }}</h1>
         {% if description is not empty %}
@@ -56,7 +55,11 @@
             <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "formatactivite.title"|trans }}</p>
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
                 {% for dataItem in data %}
+                    {% set hasCreneau = true %}
                     {% if dataItem.format == 'FormatAvecCreneau' %}
+                        {% if dataItem.creneaux|length == 0 %}
+                            {% set hasCreneau = false %}
+                        {% endif %}
                         {% set iconFormat = 'fas fa-calendar-alt' %}
                     {% elseif dataItem.format == 'FormatAvecReservation' %}
                         {% set iconFormat = 'fas fa-table-tennis' %}
@@ -65,14 +68,16 @@
                     {% else %}
                         {% set iconFormat = 'fas fa-ticket-alt' %}
                     {% endif %}
-                    {% set ctaButtonFormat = dataItem.format~'.button' %}
-                    <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                        <div class="align-self-center text-center w-100 mb-0">
-                            <i class="{{ iconFormat }} text-white mb-2"></i>
-                            <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
+                    {% if hasCreneau %}
+                        {% set ctaButtonFormat = dataItem.format~'.button' %}
+                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <div class="align-self-center text-center w-100 mb-0">
+                                <i class="{{ iconFormat }} text-white mb-2"></i>
+                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
+                            </div>
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
                         </div>
-                        <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </section>
@@ -191,11 +196,19 @@
         {% endif %}
         <section class="container">
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
+            {% if data|length > 0 %}
                 {% for dataItem in data %}
                     <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
                         <a class="align-self-center text-center" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
                     </div>
                 {% endfor %}
+            {% else %}
+                {% set texte = 'aucune.' ~ entite|lower %}
+                <section class="container container-style bg-white mb-5">
+                    {{ texte|trans }}
+                </section>
+            {% endif %}
+                
             </div>
         </section>
     {% endif %}
@@ -261,68 +274,76 @@
                 }
                 })
                 .done(function(data){
-                    
                     if(data != null){
-                        $("#modalActivite").modal('hide');
+                        $("button.close").click();
                         $("#activities-container").empty();
                         $("#modal-container").empty();
-                        let items = JSON.parse(data);                        
-                        items['activite'].forEach(function(item){
-                            let activity = JSON.parse(item);                            
-                            let listeFormat = items['formatActivite'][activity['id']];
-                            let formats = JSON.parse(listeFormat);
+                        if(data.length > 0){
+                            let items = JSON.parse(data);                        
+                            items['activite'].forEach(function(item){
+                                let activity = JSON.parse(item);                            
+                                let listeFormat = items['formatActivite'][activity['id']];
+                                let formats = JSON.parse(listeFormat);
 
-                            let modalContent = "<ul>"
-                            formats.forEach(function(format){
-                                modalContent += "<li>"+ format +"</li>"
-                            })
-                            modalContent += "</ul>";
-                            
-                            let background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/filename') | imagine_filter('thumb_large_small') }}') no-repeat center center";
-                            background = background.replace('filename', activity['image']);
+                                let modalContent = "<ul>"
+                                formats.forEach(function(format){
+                                    modalContent += "<li>"+ format +"</li>"
+                                })
+                                modalContent += "</ul>";
+                                
+                                let background = "linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/filename') | imagine_filter('thumb_large_small') }}') no-repeat center center";
+                                background = background.replace('filename', activity['image']);
 
-                            let div = '\
-                                <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite">\
-                                    <a class="align-self-center text-center" href="{{ url("UcaWeb_FormatActiviteLister", {id: "idActivite", idCa: "idClasseActivite"}) }}">libelle</a>\
-                                    <a class="align-self-center text-center text-warning detail-activite" data-toggle="modal" data-target="#modalTarget" type="button" style="width: 10%; padding-top: 0%; padding-bottom: 50%;"><i class="fas fa-info-circle fa-2x"></i></a>\
-                                </div>\
-                            ';
-                            div = div.replace('idActivite', activity['id']);
-                            div = div.replace('idClasseActivite', activity['classeActivite']['id']);
-                            div = div.replace('libelle', activity['libelle']);
-                            div = div.replace('modalTarget', "modal"+activity['id']);
-                            
-                            $("#activities-container").append(div);
-                            $("#activities-container div:last-child").css({
-                                'background' : background,
-                                'bacground-size' : 'cover',
-                            });
+                                let div = '\
+                                    <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite">\
+                                        <a class="align-self-center text-center" href="{{ url("UcaWeb_FormatActiviteLister", {id: "idActivite", idCa: "idClasseActivite"}) }}">libelle</a>\
+                                        <a class="align-self-center text-center text-warning detail-activite" data-toggle="modal" data-target="#modalTarget" type="button" style="width: 10%; padding-top: 0%; padding-bottom: 50%;"><i class="fas fa-info-circle fa-2x"></i></a>\
+                                    </div>\
+                                ';
+                                div = div.replace('idActivite', activity['id']);
+                                div = div.replace('idClasseActivite', activity['classeActivite']['id']);
+                                div = div.replace('libelle', activity['libelle']);
+                                div = div.replace('modalTarget', "modal"+activity['id']);
+                                
+                                $("#activities-container").append(div);
+                                $("#activities-container div:last-child").css({
+                                    'background' : background,
+                                    'bacground-size' : 'cover',
+                                });
 
-                            let modal = '\
-                                <div class="modal fade" id="modalTarget" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">\
-                                    <div class="modal-dialog" role="document">\
-                                        <div class="modal-content">\
-                                            <div class="modal-header">\
-                                                <h2 class="modal-title fs-24 hide-border-title" id="exampleModalLongTitle">{{ "common.format.activite.details"|trans }}</h2>\
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
-                                                    <span aria-hidden="true">&times;</span>\
-                                                </button>\
-                                            </div>\
-                                            <div class="modal-body">\
-                                                {{ "contenu" | raw }}\
-                                            </div>\
-                                            <div class="modal-footer">\
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal">{{ "common.fermer"|trans }}</button>\
+                                let modal = '\
+                                    <div class="modal fade" id="modalTarget" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">\
+                                        <div class="modal-dialog" role="document">\
+                                            <div class="modal-content">\
+                                                <div class="modal-header">\
+                                                    <h2 class="modal-title fs-24 hide-border-title" id="exampleModalLongTitle">{{ "common.format.activite.details"|trans }}</h2>\
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">\
+                                                        <span aria-hidden="true">&times;</span>\
+                                                    </button>\
+                                                </div>\
+                                                <div class="modal-body">\
+                                                    {{ "contenu" | raw }}\
+                                                </div>\
+                                                <div class="modal-footer">\
+                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">{{ "common.fermer"|trans }}</button>\
+                                                </div>\
                                             </div>\
                                         </div>\
                                     </div>\
-                                </div>\
-                            ';
+                                ';
 
-                            modal = modal.replace('modalTarget', "modal"+activity['id']);
-                            modal = modal.replace('contenu', modalContent);
-                            $("#modal-container").append(modal);                            
-                        });
+                                modal = modal.replace('modalTarget', "modal"+activity['id']);
+                                modal = modal.replace('contenu', modalContent);
+                                $("#modal-container").append(modal);                            
+                            });
+                        } else {
+                            $("#activities-container").append(
+                                ' <section class="container container-style bg-white mb-5">\
+                                    <div class="text-center">{{ "aucun.resultat"|trans }}</div>\
+                                </section>'
+                            );
+                        }
+                        
                     }
                 })
                 .fail(_uca.ajax.fail);        

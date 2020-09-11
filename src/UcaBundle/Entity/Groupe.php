@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - Groupe:
+ *
+ * hérité du FoS UserBundle cette entité définit les groupes de rôles utilisateurs.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

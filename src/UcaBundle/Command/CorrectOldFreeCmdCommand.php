@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CorrectOldFreeCmdCommand:
+ *
+ * Commande en console pour nettoyer les formats gratuits
+*/
+
 namespace UcaBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - GestionInscriptionDatatable::
+ *
+ * Liste des colonnes afficher dans le reporting Inscription
+ * Permet de définir les flitres.
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

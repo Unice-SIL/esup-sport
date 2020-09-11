@@ -1,16 +1,22 @@
 <?php
 
+/*
+ * Classe - ProfilUtilisateurController
+ *
+ * Gestion du CRUD pour les profils utilisateurs
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Datatables\ProfilUtilisateurDatatable;
+use UcaBundle\Entity\MontantTarifProfilUtilisateur;
 use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Tarif;
-use UcaBundle\Entity\MontantTarifProfilUtilisateur;
 use UcaBundle\Form\ProfilUtilisateurType;
 
 /**
@@ -34,6 +40,7 @@ class ProfilUtilisateurController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
@@ -42,6 +49,7 @@ class ProfilUtilisateurController extends Controller
             $twigConfig['noAddButton'] = true;
         }
         $twigConfig['codeListe'] = 'ProfilUtilisateur';
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
@@ -65,10 +73,12 @@ class ProfilUtilisateurController extends Controller
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
             $this->get('uca.flashbag')->addMessageFlashBag('tarif.mettre.jour', 'warning');
+
             return $this->redirectToRoute('UcaGest_ProfilUtilisateurLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/ProfilUtilisateur/Formulaire.html.twig', $twigConfig);
     }
 
@@ -92,13 +102,14 @@ class ProfilUtilisateurController extends Controller
         }
         if ($r) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('UcaGest_ProfilUtilisateurLister');
-        } else {
-            $em->remove($item);
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
             return $this->redirectToRoute('UcaGest_ProfilUtilisateurLister');
         }
+        $em->remove($item);
+        $em->flush();
+        $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
+        return $this->redirectToRoute('UcaGest_ProfilUtilisateurLister');
     }
 
     /**
@@ -113,10 +124,12 @@ class ProfilUtilisateurController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
             return $this->redirectToRoute('UcaGest_ProfilUtilisateurLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/ProfilUtilisateur/Formulaire.html.twig', $twigConfig);
     }
 }

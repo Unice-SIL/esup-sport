@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Classe - ReportingCommandes
+ *
+ * Gestion des actions liees au Reporting
+ * Reporting des commandes et des crédit
+ * Gestion de l'export des fichier en $pdf
+ * Gestion des avoirs
+*/
+
 namespace UcaBundle\Controller\UcaGest\Gestion;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -16,10 +25,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Datatables\GestionCommandesDatatable;
-use UcaBundle\Datatables\UtilisateurCreditHistoriqueDatatable;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
-use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\Parametrage;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
 use UcaBundle\Form\GestionCommandeType;
@@ -81,9 +88,15 @@ class ReportingController extends Controller
      */
     public function voirAction(Request $request, Commande $commande, $refAvoir = null)
     {
+        /*foreach ($commande->getCommandeDetails() as $cmdDetails) {
+            dump($cmdDetails->getLibelle());
+        }
+        die;*/
         $em = $this->getDoctrine()->getManager();
         $isAjax = $request->isXmlHttpRequest();
         $datatable = $this->get('sg_datatables.factory')->create(DetailsCommandeDatatable::class);
+        $creditRepo = $em->getRepository(UtilisateurCreditHistorique::class);
+        $usr = $this->container->get('security.token_storage')->getToken()->getUser();
         $datatable->buildDatatable();
         $twigConfig['datatable'] = $datatable;
         if ($isAjax) {
@@ -101,17 +114,28 @@ class ReportingController extends Controller
             return $responseService->getResponse();
         }
 
-        if ('termine' == $commande->getStatut()) {
-            $cd = $em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $commande]);
-            if (
-                $cd->getFormatActivite() instanceof FormatAchatCarte
-                and (
-                    null == $cd->getNumeroCarte()
-                    or null == $cd->getDateCarteFInValidite()
-                    or null == $cd->getEtablissementRetraitCarte()
-                    )
-               ) {
-                $twigConfig['commandeDetail'] = $cd;
+        if ($listeCartes = $commande->hasFormatAchatCarte()) {
+            if ('termine' == $commande->getStatut()) {
+                foreach ($listeCartes as $carteTerminee) {
+                    if (null == $carteTerminee->getNumeroCarte()) {
+                        $twigConfig['editCardButton'] = true;
+                    }
+                }
+                $twigConfig['cartes'] = $listeCartes;
+            } elseif ('avoir' == $commande->getStatut()) {
+                $tabCartes = [];
+                foreach ($listeCartes as $carteAvoir) {
+                    if (null == $carteAvoir->getAvoir()) {
+                        $tabCartes[] = $carteAvoir;
+
+                        if (null == $carteAvoir->getNumeroCarte()) {
+                            $twigConfig['editCardButton'] = true;
+                        }
+                    }
+                }
+                if (!empty($tabCartes)) {
+                    $twigConfig['cartes'] = $tabCartes;
+                }
             }
         }
 
@@ -123,6 +147,10 @@ class ReportingController extends Controller
 
         if ('UcaGest_AvoirDetails' == $request->get('_route')) {
             $twigConfig['refAvoir'] = (int) $refAvoir;
+            $creditAssocie = $creditRepo->findOneBy(['avoir' => (int) $refAvoir]);
+            if ('avoir' == $commande->getStatut() && $usr->hasRole('ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE') && 'annule' == $creditAssocie->getStatut()) {
+                $twigConfig['ReportButton'] = true;
+            }
 
             return $this->render('@Uca/UcaGest/Reporting/Avoir/DetailsAvoir.html.twig', $twigConfig);
         }
@@ -137,20 +165,37 @@ class ReportingController extends Controller
     public function ajouterAvoirAction(Request $request, Commande $item)
     {
         $em = $this->getDoctrine()->getManager();
-
         $montant = 0;
         $oldRef = $em->getRepository('UcaBundle:CommandeDetail')->max('referenceAvoir');
         $form = $this->createForm('UcaBundle\Form\AvoirType', $item);
         $form->handleRequest($request);
+        $dtAvoir = new \DateTime();
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('POST')) {
             $this->get('uca.flashbag')->addMessageFlashBag('avoir.ajouter.success', 'success');
             foreach ($item->getAvoirCommandeDetails() as $cmdDetails) {
                 $montant += $cmdDetails->getMontant();
-                $cmdDetails->setReferenceAvoir($oldRef + 1);
-                $cmdDetails->setAvoir($item);
+                $cmdDetails
+                    ->setReferenceAvoir($oldRef + 1)
+                    ->setAvoir($item)
+                    ->setDateAvoir($dtAvoir)
+                ;
+                if ($cmdDetails->getTypeAutorisation()) {
+                    $commandes = $em->getRepository(Commande::class)->findCommandeByTypeAutorisationAndUser($cmdDetails->getTypeAutorisation(), $cmdDetails->getCommande()->getUtilisateur()->getId());
+                    foreach ($commandes as $commande) {
+                        foreach ($commande->getCommandeDetails() as $cd) {
+                            if ($cd->getInscription()) {
+                                $cd->getInscription()->setStatut('ancienneinscription');
+                            }
+                        }
+                    }
+                    $em->flush();
+                } elseif ($cmdDetails->getInscription()) {
+                    $cmdDetails->getInscription()->setStatut('ancienneinscription');
+                    $em->flush();
+                }
             }
             $usr = ($item->getUtilisateur());
-            $credit = new UtilisateurCreditHistorique($usr, $montant, $oldRef + 1, 'credit', "génération d'avoir");
+            $credit = new UtilisateurCreditHistorique($usr, $montant, $oldRef + 1, 'credit', "Génération d'avoir");
             $em->persist($credit);
             $credit->setCommandeAssociee($item->getId());
             $usr->AddCredit($credit);
@@ -165,33 +210,6 @@ class ReportingController extends Controller
         $twigConfig['codeListe'] = 'ClasseActivite';
 
         return $this->render('@Uca/UcaGest/Reporting/Avoir/Formulaire.html.twig', $twigConfig);
-    }
-
-    /**
-     * @Route("/Credits" , name="UcaGest_ReportingCredit")
-     * @Isgranted("ROLE_GESTION_CREDIT_UTILISATEUR_LECTURE")
-     */
-    public function listerCredit(Request $request)
-    {
-        $datatable = $this->get('sg_datatables.factory')->create(UtilisateurCreditHistoriqueDatatable::class);
-        $datatable->buildDatatable();
-        $twigConfig['datatable'] = $datatable;
-        $twigConfig['codeListe'] = 'UtilisateurCreditHistorique';
-
-        if ($request->isXmlHttpRequest()) {
-            $responseService = $this->get('sg_datatables.response');
-            $responseService->setDatatable($datatable);
-            $responseService->getDatatableQueryBuilder();
-
-            return $responseService->getResponse();
-        }
-
-        $usr = $this->container->get('security.token_storage')->getToken()->getUser();
-
-        // L'ajout se fera au niveau de l'utilisateur
-        $twigConfig['noAddButton'] = true;
-
-        return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
     /**
@@ -405,5 +423,32 @@ class ReportingController extends Controller
                 ],
             ],
         ];
+    }
+
+    /**
+     * @Route("/Commande/InformationsCarte/{id}/Modifier", name="UcaGest_CommandeDetails_InformationsCarte", methods={"GET","POST"}, requirements={"id"="\d+"})
+     */
+    public function modifierInformationsCarteAction(Request $request, CommandeDetail $item)
+    {
+        $commande = $item->getCommande();
+        if (!$commande->hasFormatAchatCarte()) {
+            return $this->redirectToRoute('UcaGest_ReportingCommandeDetails', ['id' => $item->getId()]);
+        }
+        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm('UcaBundle\Form\CommandeDetailInformationsCarteType', $item, [
+            'date_paiement' => $commande->getDatePaiement(),
+        ]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid() && $request->isMethod('POST')) {
+            $em->flush();
+            $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
+            return $this->redirectToRoute('UcaGest_ReportingCommandeDetails', ['id' => $commande->getId()]);
+        }
+
+        $twigConfig['commandeDetail'] = $item;
+        $twigConfig['form'] = $form->createView();
+
+        return $this->render('@Uca/UcaGest/Reporting/Commande/FormulaireNumeroCarte.html.twig', $twigConfig);
     }
 }

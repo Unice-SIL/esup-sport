@@ -1,17 +1,20 @@
 <?php
 
+/*
+ * Classe - ImageFond:
+ *
+ * Entité technique permettant d'enregesitrer et de nommer les images de fonds.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Validator\Constraints as Assert;
-
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * Texte
- *
  * @ORM\Table(name="image_fond")
  * @ORM\Entity
  * @Vich\Uploadable
@@ -19,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ImageFond
 {
-    #region Propriétés
+    //region Propriétés
 
     /**
      * @ORM\Column(name="id", type="integer", nullable=false)
@@ -28,7 +31,7 @@ class ImageFond
      */
     private $id;
 
-    /** 
+    /**
      * @ORM\Column(type="string")
      */
     private $emplacement;
@@ -43,7 +46,7 @@ class ImageFond
     /** @ORM\Column(type="string", length=255, nullable=false) */
     private $image;
 
-    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image") 
+    /** @Vich\UploadableField(mapping="map_image", fileNameProperty="image")
      * @Assert\File(
      *     mimeTypes = {"image/png", "image/jpeg", "image/tiff"},
      *     mimeTypesMessage = "imagefond.image.format"
@@ -55,22 +58,25 @@ class ImageFond
     /** @Gedmo\Versioned
      * @ORM\Column(type="datetime", nullable=true) */
     private $updatedAt;
-    #endregion
+    //endregion
 
-    #region Méthodes
+    //region Méthodes
     public function setImageFile(File $imageFile = null)
     {
         $this->imageFile = $imageFile;
-        if ($imageFile)
+        if ($imageFile) {
             $this->updatedAt = new \DateTime('now');
+        }
+
         return $this;
     }
+
     public function getImageFile()
     {
         return $this->imageFile;
     }
-    #endregion
 
+    //endregion
 
     /**
      * Get id.
@@ -157,7 +163,7 @@ class ImageFond
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return ImageFond
      */

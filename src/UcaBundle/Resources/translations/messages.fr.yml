@@ -1,4 +1,6 @@
 
+
+
 FormatAchatCarte.button: "Acheter la carte"
 FormatAvecCreneau.button: "Voir les créneaux disponibles"
 FormatAvecReservation.button: "Réserver"
@@ -47,6 +49,10 @@ actualite.modifier.succes: Actualité modifiée avec succès
 actualite.modifier.title: Modifier une activité
 actualite.supprimer.erreur: Impossible de supprimer cette activité
 actualite.supprimer.succes: Actualité supprimée avec succès
+aucun.resultat: "Aucun résultats"
+aucune.activite: "Aucune activités"
+aucune.classeactivite: "Aucune classes d'activité"
+aucune.formatactivite: "Aucun formats d'activité"
 avoir.ajouter.success: Avoir ajouté avec succès
 bascule.aucun.choix: Aucun choix sélectionné
 bascule.carte.cotisation.supprimer: Supprimer les cartes et cotisations utilisateurs 
@@ -55,6 +61,7 @@ bascule.creneau.dupliquer: Dupliquer les créneaux
 bascule.creneau.option: Options créneaux
 bascule.creneau.supprimer: Supprimer les créneaux
 bascule.evenement.statut: Modifier le statut des inscriptions
+bascule.loader: Bascule en cours. Cette action peut durer plusieurs minutes.
 bascule.reservation.supprimer: Supprimer les réservations de salles et équipements
 bascule.success: Réussite de la bascule
 bouton.ajouter.credit: Ajouter un crédit
@@ -125,9 +132,11 @@ column.valfr: Français
 column.valit: Italien
 comamndedetail.informationscarte.etablissement: Campus de retrait de la carte
 commande.avoir.ajouter.titre: Faire un avoir
+commande.avoir.date: Date de l'avoir
 commande.avoir.libelle: Avoir 
 commande.avoir.lister: Liste des avoirs
-commande.avoir.posseder: Possède avoir(s)
+commande.avoir.posseder: Avoir(s) ?
+commande.avoir.report: Report de l'avoir
 commande.avoirdetails.libelle: Détails de l'avoir
 commande.avoirdetails.referenceavoir: Référence de l'avoir
 commande.avoirdetails.titre: Eléments de l'avoir
@@ -144,10 +153,11 @@ commande.timeout.timer: Il vous reste %temps% pour finaliser votre %typecommande
 commandedetail.informationscarte.ajouter: Saisir les informations
 commandedetail.informationscarte.datefin: Date de fin de validité
 commandedetail.informationscarte.etablissement: '- Sélectionner un campus de retrait -'
-commandedetail.informationscarte.message.bds: Vous venez de valider une commande de carte. Veuillez saisir les informations de cette carte. 
-commandedetail.informationscarte.message.vide: Les informations de cette carte n'ont pas été saisies. 
+commandedetail.informationscarte.libelle: Modifier les informations des cartes
+commandedetail.informationscarte.message.bds: Vous venez de valider une commande de carte. Veuillez saisir les informations des ces cartes. 
+commandedetail.informationscarte.message.vide: Les informations des cartes n'ont pas été saisies. 
 commandedetail.informationscarte.numero: Numéro de la carte
-commandedetail.informationscarte.titre: Modifier les informations de la carte
+commandedetail.informationscarte.titre: Modifier carte
 commandedetail.modifier.succes: Détails de la commande modifiés avec succès
 common.a.venir: À venir
 common.acces.rapide: Accès rapide
@@ -184,6 +194,7 @@ common.coordonnees: Coordonnées
 common.credit: Crédit
 common.creneaux.details: Détails des créneaux
 common.creneaux: Créneaux
+common.date.commande: Date de la commande
 common.date.debut: Date de début
 common.date.effectives: Dates effectives
 common.date.fin: Date de fin
@@ -266,8 +277,8 @@ common.nomencaisseur: Nom Encaisseur
 common.non: "Non"
 common.nonrenseigne: Non renseigné
 common.november: Novembre
-common.numerocommande: Numéro de Commande
-common.numerorecu: Numéro de Reçu
+common.numerocommande: N° de Commande
+common.numerorecu: N° de Reçu
 common.october: Octobre
 common.operation: Opération
 common.ordre: Ordre
@@ -591,6 +602,7 @@ modal.error.inscriptionsterminees: "Erreur lors de l'inscription : Les inscripti
 modal.error.inscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
 modal.error.montantincorrect: "Erreur lors de l'inscription : Ce profil n'est pas autorisé"
 modal.error.nbcreneaumaxatteint: "Erreur lors de l'inscription : Nombre maximum de reservations de créneaux dépassé"
+modal.error.nonconnecte: " Erreur: vous n'êtes pas connéctés"
 modal.error.preinscrit: "Erreur lors de l'inscription : Vous êtes déjà inscrit"
 modal.error.previsualisation: "Erreur lors de l'inscription : Le mode prévisualisation est activé"
 modal.error.profilinvalide: "Erreur lors de l'inscription : Le tarif pour le profil n'est pas défini"
@@ -735,6 +747,7 @@ scheduler.error.capacite.format: Vous ne pouvez pas dépasser la capacité total
 scheduler.error.capacite.profil.debut: La capacité maximale du profil 
 scheduler.error.capacite.profil.fin: est de 
 scheduler.error.capacite.somme: Vous ne pouvez pas dépasser la capacité totale renseignée
+scheduler.error.date.invalid: "La date de fin de répétition ou de période est trop grande. Ce format d'activité prend fin le: "
 scheduler.error.date.prolongation: Le champ date est vide
 scheduler.error.field: Le champ
 scheduler.error.isEmpty: est vide
@@ -830,6 +843,7 @@ security.roles.ROLE_PREVISUALISATION: Gestion de la prévisualisation
 security.roles.ROLE_SUPER_ADMIN: Accès UcaGest (Avancé)
 security.roles.ROLE_USER: Accès UcaWeb
 security.shibboleth.login.submit: "Se connecter"
+sg.datatables.actions.title: "Action"
 shibboleth.error.doctorant: Veuillez vous connecter avec votre compte étudiant
 shibboleth.error.dossierincomplet: Votre dossier d’inscription administratif est incomplet. Merci de vous rapprocher de la scolarité 
 shibboleth.error.profilinconnu: Nous n’arrivons pas à vous identifier comme membre de l’UCA, merci de nous contacter via le formulaire de contact
@@ -853,7 +867,7 @@ sitemap.connexion.selectionprofil: Séléction de votre profil
 sitemap.connexion: Connexion
 sitemap.detailinscription.libelle: Detail de l'inscription
 sitemap.detailsAvoir.libelle: Détail de l'avoir
-sitemap.detailscommande.informationscarte: Informations de la carte
+sitemap.detailscommande.informationscarte.modifiier: Modifier la carte
 sitemap.detailscommande.libelle: Détails de commande
 sitemap.emailing.libelle: Emailing
 sitemap.en: Translate to english
@@ -903,6 +917,7 @@ sitemap.referentiel.libelle: Référentiel
 sitemap.reportingavoirs.libelle: Reporting avoirs
 sitemap.reportingcommandes.libelle: Reporting commandes
 sitemap.reportingcredits.libelle: Reporting credits
+sitemap.reportingcredits.reporter.libelle: Reporter un avoir
 sitemap.reportings.libelle: Reportings
 sitemap.ressource.libelle: Ressources
 sitemap.ressource.lieu.ajouter: Ajouter lieu
@@ -1047,7 +1062,6 @@ typeautorisation.supprimer.succes: "Autorisation supprimée avec succès"
 typeautorisation.tarif: Tarif
 ucagest.libelle: "Uca Gest"
 ucasport.libelle: "Uca Sport"
-utilisater.statu.libelle: Statut de l'utilisateur
 utilisateur.activite.souscrite: Activité souscrite
 utilisateur.adresse.aucune: Aucune adresse enregistrée
 utilisateur.adresse: Adresse
@@ -1071,8 +1085,9 @@ utilisateur.compte.bloque: Votre compte est bloqué – Merci de vous diriger ve
 utilisateur.credit.ajouter.title: Ajout un crédit utilisateur
 utilisateur.credit.bascule.supprimer: Supprimer les crédits utilisateurs
 utilisateur.credit.de: Crédit de
-utilisateur.credit.operation: Operaation
-utilisateur.credit.typeoperation: TYpe d'operation
+utilisateur.credit.operation: Opération
+utilisateur.credit.reporter.title: Reporter le crédit
+utilisateur.credit.typeoperation: Type d'opération
 utilisateur.credits.details: Détails de vos crédits
 utilisateur.credits.total: Total de mes crédits
 utilisateur.date.naissance: "Date de Naissance"

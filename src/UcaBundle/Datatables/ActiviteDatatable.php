@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ActiviteDatable:
+ * 
+ * COntient les champs à afficher pour les activités.
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;

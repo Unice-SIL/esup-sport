@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - InscriptionController
+ *
+ * Vérification des disponibilités
+ * Vérification des droits des utilisateur
+ * Initilise une commande
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

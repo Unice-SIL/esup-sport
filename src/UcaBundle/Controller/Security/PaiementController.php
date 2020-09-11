@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Classe - PaiementController
+ *
+ * Gestion du paimeent pour l'application
+ * Gestion du paiement par PAYBOX (via un service)
+ * Gestion du paiement au BDS
+ * Gesiton du paiement par crédit utilisateur
+*/
+
 namespace UcaBundle\Controller\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -7,7 +16,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Commande;
-use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
 use UcaBundle\Form\NumeroChequeType;
 
@@ -58,11 +66,7 @@ class PaiementController extends Controller
      */
     public function paiementValidationChequeAction(Request $request, Commande $commande, string $source)
     {
-        $em = $this->getDoctrine()->getManager();
-        $cd = $em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $commande]);
-        if ($cd->getFormatActivite() instanceof FormatAchatCarte) {
-            $twigConfig['commandeDetail'] = $cd;
-        }
+        //     UcaWeb/Paiement/Validation/30?typePaiement=BDS&source=gestioncaisse&moyenPaiement=espece&urlHistory=-1
 
         $twigConfig['status'] = 'success';
         $twigConfig['source'] = $source;
@@ -103,11 +107,6 @@ class PaiementController extends Controller
             }
             $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
 
-            $cd = $em->getRepository('UcaBundle:CommandeDetail')->findOneBy(['commande' => $commande]);
-            if ($cd->getFormatActivite() instanceof FormatAchatCarte) {
-                $twigConfig['commandeDetail'] = $cd;
-            }
-
             if ('cheque' == $moyenPaiement) {
                 $form = $this->get('form.factory')->create(NumeroChequeType::class);
                 $form->handleRequest($request);
@@ -133,6 +132,8 @@ class PaiementController extends Controller
             }
             $em->flush();
             $twigConfig['status'] = 'success';
+        } elseif ('termine' == $commande->getStatut()) {
+            return $this->redirectToRoute('UcaGest_ReportingCommandeDetails', ['id' => $commande->getId()]);
         } else {
             $twigConfig['status'] = 'canceled';
         }

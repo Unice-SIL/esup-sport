@@ -5,12 +5,12 @@
 
 {% block main %}
 	{% include "@Uca/Common/Modal/Modal.Confirmation.html.twig" %}
-	{{ flashBag.showAll }}
 	{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
 	<h1>
 		{{ item.prenom }}
 		{{ item.nom }}
 	</h1>
+	{{ flashBag.showAll }}
 	{% if not noEditButton is defined %}
 		<div class='row'>
 			{% if ((not item.enabled) or (item.lastLogin == null))  %}
@@ -73,96 +73,96 @@
 					</div>
 				{% endif %}
 			{% else %}
-
 				{% if statut == 'valider' %}
 					{% set boutonBloquer = true %}
 				{% endif %}
 			{% endif %}
 		</div>
 	{% endif %}
-
-	<br>
-	<h2 class="hide-border-title">{{ 'common.infospersonnelles' | trans }}</h2>
-	<ul>
-		<li>
-			{{'common.nom.utilisateur'|trans}}:{{ item.username }}
-		</li>
-		<li>{{'common.naissance'|trans}}:{{ item.dateNaissance|date('d/m/Y') }}</li>
-		<li>
-			{{'utilisateur.adresse'|trans}}:
-			{{ item.adresse }},
-			{{ item.codePostal }}
-			{{ item.ville|upper }}</li>
-		<li>
-			{{'common.telephone'|trans}}:{{ item.telephone }}</li>
-		<li>
-			{{'common.email'|trans}}:{{ item.email }}</li>
-		<li>
-			{{'common.profil'|trans}}:
-			{{ item.profil.libelle }}</li>
-		{% if not item.groups is empty %}
-			<li>{{'utilisateur.droits.de'|trans}}:
-				{{ item.prenom|title }}
-				{{ item.nom|upper }}:</li>
-			<ul>
-				{% for groups in item.groups %}
-					<li>{{ groups.libelle }}</li>
-				{% endfor %}
-			</ul>
+	<div class='row mb-5'>
+		{% if boutonBloquer is defined %}
+			<a class="btn btn-success" href="{{ path('UcaGest_UtilisateurBloquer', {'id': item.id} ) }}" data-toggle="modal" data-target="#modalConfirmation">
+				{{ 'bouton.bloquer' | trans }}
+			</a>
 		{% endif %}
-		<li>{{'utilisateur.credit.de'|trans}}
-			{{ item.prenom|title }}
-			{{ item.nom|upper }}:&nbsp; {{ item.getCreditTotal() | number_format(0, '.') }} €
-		</li>
-	</ul>
-
-	{% if encadrant %}
-		<h2 class="hide-border-title">
-			{{ 'utilisateur.description' | trans }}:
-		</h2>
-		<p>{{ item.description|nl2br }}</p>
-		<a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurScheduler', {'id': item.id}) }}">{{ 'utilisateur.calendrier.voir' | trans }}r</a>
-	{% endif %}
-
-	<h2 class="hide-border-title">
-		{{ 'common.autorisations' | trans }}</h2>
-	{% if item.autorisations is empty %}
-		<p>
-			{{'utilisateur.autorisation.aucun'|trans}}
-		</p>
-	{% else %}
-		<ul>
-			{% for i in item.autorisations %}
-				<li>
-					{{ i.libelle }}</li>
-			{% endfor %}
-		</ul>
-	{% endif %}
-	<div class='row'>
-		<div class='col-sm-6'>
-			<a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurAjouterAutorisation', {'id': item.id}) }}">{{'utilisateur.autorisation.modifier'|trans}}</a>
-		</div>
 		{% if is_granted('ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE') %}
-		<div class="col-sm-3">
 			<a class='btn btn-warning' href="{{ path('UcaGest_UtilisateurCreditAjouter', {'id': item.id}) }}">
 				<span class="fa fa-credit-card" alt=""></span>
 				{{'bouton.ajouter.credit' | trans }}
 			</a>
-		</div>
-		{% endif %}
-		{% if boutonBloquer is defined %}
-			<div class='col-sm-3'>
-				<a class="btn btn-success" href="{{ path('UcaGest_UtilisateurBloquer', {'id': item.id} ) }}" data-toggle="modal" data-target="#modalConfirmation">
-					{{ 'bouton.bloquer' | trans }}
-				</a>
-			</div>
 		{% endif %}
 	</div>
-{% endblock %}
 
-{% block javascripts %}
-	<script type='text/javascript'>
-		'use_strict';
-		{% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
-	</script>
-{% endblock %}
+	<div class="row">
+		<div class="col-6">
+			<h2 class="hide-border-title">{{ 'common.infospersonnelles' | trans }}</h2>
+			<ul>
+				<li>
+					{{'common.nom.utilisateur'|trans}}:{{ item.username }}
+				</li>
+				<li>{{'common.naissance'|trans}}:{{ item.dateNaissance|date('d/m/Y') }}</li>
+				<li>
+					{{'utilisateur.adresse'|trans}}:
+					{{ item.adresse }},
+					{{ item.codePostal }}
+					{{ item.ville|upper }}
+				</li>
+				<li>
+					{{'common.telephone'|trans}}:{{ item.telephone }}</li>
+				<li>
+					{{'common.email'|trans}}:{{ item.email }}</li>
+				<li>
+					{{'common.profil'|trans}}:
+					{{ item.profil.libelle }}</li>
+				{% if not item.groups is empty %}
+					<li>{{'utilisateur.droits.de'|trans}}:
+						{{ item.prenom|title }}
+						{{ item.nom|upper }}:</li>
+					<ul>
+						{% for groups in item.groups %}
+							<li>{{ groups.libelle }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+				<li>{{'utilisateur.credit.de'|trans}}
+					{{ item.prenom|title }}
+					{{ item.nom|upper }}:&nbsp;
+					{{ item.getCreditTotal()|number_format(0, '.') }} €
+				</li>
+			</ul>
+
+			{% if encadrant %}
+				<h2 class="hide-border-title">
+					{{ 'utilisateur.description' | trans }}:
+				</h2>
+				<p>{{ item.description|nl2br }}</p>
+				<a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurScheduler', {'id': item.id}) }}">{{ 'utilisateur.calendrier.voir' | trans }}r</a>
+			{% endif %}
+			</div>
+			<div class="col-6">
+				<h2 class="hide-border-title">
+					{{ 'common.autorisations' | trans }}</h2>
+				{% if item.autorisations is empty %}
+					<p>
+						{{'utilisateur.autorisation.aucun'|trans}}
+					</p>
+				{% else %}
+					<ul>
+						{% for i in item.autorisations %}
+							<li>
+								{{ i.libelle }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+				<div class='col-sm-6'>
+					<a class="btn btn-outline-primary" href="{{ path('UcaGest_UtilisateurAjouterAutorisation', {'id': item.id}) }}">{{'utilisateur.autorisation.modifier'|trans}}</a>
+				</div>
+			</div>
+		{% endblock %}
+
+		{% block javascripts %}
+			<script type='text/javascript'>
+				'use_strict';
+{% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
+			</script>
+		{% endblock %}

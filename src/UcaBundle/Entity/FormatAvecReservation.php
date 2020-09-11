@@ -1,11 +1,16 @@
 <?php
 
+/*
+ * Classe - FormatAvecReservation:
+ *
+ * L'un des trois formats d'activité disponible (hérité)
+ * Ce format donne accès à la réservation de de ressources par les utilisateurs.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
-    #region Propriétés
+    //region Propriétés
     /** @ORM\ManyToMany(targetEntity="Ressource", inversedBy="formatResa")
      * @Assert\Expression("!this.getRessource().isEmpty()", message="formatactivite.reservation.ressource.notnull")
      */
@@ -27,32 +32,32 @@ class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\
      */
     private $listeRessources;
 
-    #endregion
-
-    #region Méthodes
-    
-    public function updateListeRessources()
-    {
-        $this->listeRessources = '';
-        foreach ($this->getRessource() as $ressource){
-            if(!empty($this->listeRessources)){
-                $this->listeRessources .= ", ";
-            }
-            $this->listeRessources .= $ressource->getLibelle();
-        }
-
-        return $this;
-    }
-
-    #endregion
+    //endregion
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         parent::__construct();
         $this->ressource = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
+
+    public function updateListeRessources()
+    {
+        $this->listeRessources = '';
+        foreach ($this->getRessource() as $ressource) {
+            if (!empty($this->listeRessources)) {
+                $this->listeRessources .= ', ';
+            }
+            $this->listeRessources .= $ressource->getLibelle();
+        }
+
+        return $this;
     }
 
     /**
@@ -72,7 +77,7 @@ class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\
      *
      * @return FormatAvecReservation
      */
-    public function addRessource(\UcaBundle\Entity\Ressource $ressource)
+    public function addRessource(Ressource $ressource)
     {
         $this->ressource[] = $ressource;
 
@@ -84,9 +89,9 @@ class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\
      *
      * @param \UcaBundle\Entity\Ressource $ressource
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeRessource(\UcaBundle\Entity\Ressource $ressource)
+    public function removeRessource(Ressource $ressource)
     {
         return $this->ressource->removeElement($ressource);
     }

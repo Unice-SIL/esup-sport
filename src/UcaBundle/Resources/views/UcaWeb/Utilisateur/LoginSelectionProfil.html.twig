@@ -39,15 +39,8 @@
 {% endblock %}
 		
 {% block javascripts %}
-  <script>
-    $("#connexionSelectionProfil").select2({placeholder: $(this).attr('placeholder')});
-    $("#connexionSelectionProfil").on('change ', function(e) {
-      let listOptions = connexionSelectionProfil.querySelectorAll('option');
-      for (let i = 0; i<listOptions.length; i++) {
-        if (listOptions[i].selected){
-          boutonSelectionProfil.setAttribute('href',listOptions[i].dataset.redirection);
-        }
-      }
-    });
+  <script type='text/javascript'>
+    'use_strict';
+    _uca.redirectionProfil('connexionSelectionProfil', boutonSelectionProfil);
 	</script>
 {% endblock %}

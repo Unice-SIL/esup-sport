@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - PlanningMailType
+ *
+ * Formulaire d'envoi de mails aux participants (encadrants)
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

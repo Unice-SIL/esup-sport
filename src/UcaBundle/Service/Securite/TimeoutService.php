@@ -1,12 +1,15 @@
 <?php
 
+/*
+ * classe - TimeoutService
+ *
+ * Service gérant le détails d'expiration des ommandes
+*/
+
 namespace UcaBundle\Service\Securite;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UcaBundle\Entity\Commande;
-use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\Inscription;
 
 class TimeoutService
@@ -24,7 +27,6 @@ class TimeoutService
         $this->nettoyageInscription();
         $this->em->flush();
     }
-
 
     public function nettoyageCommande()
     {

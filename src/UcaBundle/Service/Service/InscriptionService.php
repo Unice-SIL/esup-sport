@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - Inscription
+ *
+ * Service gérant la logique des inscriptions
+*/
+
 namespace UcaBundle\Service\Service;
 
 use Doctrine\ORM\EntityManagerInterface;

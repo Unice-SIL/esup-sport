@@ -1,28 +1,35 @@
 <?php
 
+/*
+ * Classe - FormatAvecCreneau:
+ *
+ * L'un des trois format d'activtié (hérité)
+ * Il s'agit du format qui contiendra les creneaux auquels l'utilisateur pourra s'inscrire
+ * C'est au niveau du format que plusieurs élément tels que l'étatblissement, le niveau sont définit.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity
  * @Gedmo\Loggable
  */
-class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article 
+class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
-    #region Propriétés
+    //region Propriétés
     /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="formatActivite") */
     private $creneaux;
 
-    #endregion
+    //endregion
 
-    #region Méthodes
-    #endregion
-    
+    //region Méthodes
+    //endregion
+
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
@@ -47,7 +54,7 @@ class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Inte
      *
      * @return FormatAvecCreneau
      */
-    public function addCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function addCreneaux(Creneau $creneaux)
     {
         $this->creneaux[] = $creneaux;
 
@@ -59,9 +66,9 @@ class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Inte
      *
      * @param \UcaBundle\Entity\Creneau $creneaux
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCreneaux(\UcaBundle\Entity\Creneau $creneaux)
+    public function removeCreneaux(Creneau $creneaux)
     {
         return $this->creneaux->removeElement($creneaux);
     }

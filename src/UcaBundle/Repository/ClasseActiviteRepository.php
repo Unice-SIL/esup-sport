@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ClasseActiviteRepository
+ *
+ * Contient les requêtes à la base de données pour l'entité classe d'activité
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;

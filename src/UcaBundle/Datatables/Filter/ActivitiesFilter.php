@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - ActivitiesFilter:
+ *
+ * Filtre pour las activités (Datatable)
+ * Permet d'oganiser les activités en fonction des critères retenus
+*/
+
 namespace UcaBundle\Datatables\Filter;
 
 use Doctrine\ORM\Query\Expr\Composite;

@@ -1,17 +1,22 @@
 <?php
 
+/*
+ * Classe - TraductionController
+ *
+ * Va permettre l'afficher et l'édition des traductions
+*/
+
 namespace UcaBundle\Controller\UcaGest\Outils;
 
-use Doctrine\ORM\Query\Expr\Join;
 use Gedmo\Translatable\Entity\Translation;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\TraductionDatatable;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
-/** 
- * @Route("UcaGest/Traduction") 
+/**
+ * @Route("UcaGest/Traduction")
  * @Isgranted("ROLE_GESTION_TRADUCTION_LECTURE")
  */
 class TraductionController extends Controller
@@ -32,10 +37,12 @@ class TraductionController extends Controller
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
             $queryInfo->qbPersonalize($qb);
+
             return $responseService->getResponse(true, false, false);
         }
         $twigConfig['codeListe'] = 'Traduction';
         $twigConfig['noAddButton'] = true;
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
@@ -56,7 +63,7 @@ class TraductionController extends Controller
         $queryInfo->qbFindOne($qb, $entity, $field, $id);
 
         $twigConfig['queryInfo'] = $queryInfo;
-        
+
         $twigConfig['data'] = $qb->getQuery()->getResult()[0];
 
         $editForm = $this->createForm('UcaBundle\Form\TraductionType', $twigConfig);
@@ -64,23 +71,25 @@ class TraductionController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid() && $request->isMethod('POST')) {
             foreach ($queryInfo->getCols() as $alias => $col) {
-                if (strpos($col['config'], 'write') !== false) {
+                if (false !== strpos($col['config'], 'write')) {
                     $translation = $em->getRepository(Translation::class)->findOneBy(['locale' => $col['lang'], 'objectClass' => $entity,  'field' => $field, 'foreignKey' => $id]);
-                    if ($translation == null) {
+                    if (null == $translation) {
                         $translation = (new Translation())->setLocale($col['lang'])->setObjectClass($entity)->setField($field)->setForeignKey($id);
                     }
-                    $translation->setContent($editForm['val' . $col['lang']]->getData());
+                    $translation->setContent($editForm['val'.$col['lang']]->getData());
                     $em->persist($translation);
                 }
             }
             $em->flush();
 
             $this->get('uca.flashbag')->addActionFlashBag($translation, 'Modifier');
+
             return $this->redirectToRoute('UcaGest_TraductionLister');
         }
 
-        $twigConfig["item"] = null;
-        $twigConfig["form"] = $editForm->createView();
+        $twigConfig['item'] = null;
+        $twigConfig['form'] = $editForm->createView();
+
         return $this->render('@Uca/UcaGest/Outils/Traductions/Formulaire.html.twig', $twigConfig);
     }
 }

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Classe - Commande:
+ *
+ * Une commande est générer lorsque q'un utilisateur valide son panier
+ * Une commande correspond une facture unique (une facture est une commande)
+ * Les inscriptions associée sont des détails des cette commnande
+ * Il est possible de faire un avoir sur un ou plusieurs détail(s) de la commande.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;
@@ -157,7 +166,6 @@ class Commande
             $this->dateAnnulation = new \DateTime();
             $this->traitementPostAnnulation($options);
         } elseif ('avoir' == $statut) {
-            $this->dateAnnulation = new \DateTime();
             $this->traitementPostGenerationAvoir();
         } elseif ('factureAnnulee' == $statut) {
         }
@@ -234,6 +242,20 @@ class Commande
         return false;
     }
 
+    public function hasFormatAchatCarte()
+    {
+        $tabCartes = [];
+        foreach ($this->getCommandeDetails() as $cmdDetails) {
+            if ('autorisation' == $cmdDetails->getType() && 'Achat de Carte' == $cmdDetails->getTypeAutorisation()->getComportementLibelle()) {
+                $tabCartes[] = $cmdDetails;
+            } elseif ('inscription' == $cmdDetails->getType() && $cmdDetails->getFormatActivite() instanceof FormatAchatCarte) {
+                // Cas ou un format == une autorisation
+            }
+        }
+
+        return (!(empty($tabCartes))) ? $tabCartes : false;
+    }
+
     public function getCommmandeDetailsByAvoir($refAvoir)
     {
         $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('referenceAvoir', $refAvoir));
@@ -259,6 +281,13 @@ class Commande
         }
 
         return $totalTva;
+    }
+
+    public function getDateAvoir()
+    {
+        $avoirs = $this->getAvoirCommandeDetails();
+
+        return !empty($avoirs) ? $avoirs->first()->getDateAvoir() : false;
     }
 
     //endregion
@@ -300,7 +329,7 @@ class Commande
     /**
      * Set numeroCommande.
      *
-     * @param int|null $numeroCommande
+     * @param null|int $numeroCommande
      *
      * @return Commande
      */
@@ -314,7 +343,7 @@ class Commande
     /**
      * Get numeroCommande.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getNumeroCommande()
     {
@@ -324,7 +353,7 @@ class Commande
     /**
      * Set numeroRecu.
      *
-     * @param int|null $numeroRecu
+     * @param null|int $numeroRecu
      *
      * @return Commande
      */
@@ -338,7 +367,7 @@ class Commande
     /**
      * Get numeroRecu.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getNumeroRecu()
     {
@@ -372,7 +401,7 @@ class Commande
     /**
      * Set datePanier.
      *
-     * @param \DateTime|null $datePanier
+     * @param null|\DateTime $datePanier
      *
      * @return Commande
      */
@@ -386,7 +415,7 @@ class Commande
     /**
      * Get datePanier.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDatePanier()
     {
@@ -396,7 +425,7 @@ class Commande
     /**
      * Set dateCommande.
      *
-     * @param \DateTime|null $dateCommande
+     * @param null|\DateTime $dateCommande
      *
      * @return Commande
      */
@@ -410,7 +439,7 @@ class Commande
     /**
      * Get dateCommande.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateCommande()
     {
@@ -420,7 +449,7 @@ class Commande
     /**
      * Set datePaiement.
      *
-     * @param \DateTime|null $datePaiement
+     * @param null|\DateTime $datePaiement
      *
      * @return Commande
      */
@@ -434,7 +463,7 @@ class Commande
     /**
      * Get datePaiement.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDatePaiement()
     {
@@ -444,7 +473,7 @@ class Commande
     /**
      * Set dateAnnulation.
      *
-     * @param \DateTime|null $dateAnnulation
+     * @param null|\DateTime $dateAnnulation
      *
      * @return Commande
      */
@@ -458,7 +487,7 @@ class Commande
     /**
      * Get dateAnnulation.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateAnnulation()
     {
@@ -468,7 +497,7 @@ class Commande
     /**
      * Set statut.
      *
-     * @param string|null $statut
+     * @param null|string $statut
      *
      * @return Commande
      */
@@ -482,7 +511,7 @@ class Commande
     /**
      * Get statut.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getStatut()
     {
@@ -492,7 +521,7 @@ class Commande
     /**
      * Set matricule.
      *
-     * @param string|null $matricule
+     * @param null|string $matricule
      *
      * @return Commande
      */
@@ -506,7 +535,7 @@ class Commande
     /**
      * Get matricule.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getMatricule()
     {
@@ -516,7 +545,7 @@ class Commande
     /**
      * Set prenom.
      *
-     * @param string|null $prenom
+     * @param null|string $prenom
      *
      * @return Commande
      */
@@ -530,7 +559,7 @@ class Commande
     /**
      * Get prenom.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getPrenom()
     {
@@ -540,7 +569,7 @@ class Commande
     /**
      * Set nom.
      *
-     * @param string|null $nom
+     * @param null|string $nom
      *
      * @return Commande
      */
@@ -554,7 +583,7 @@ class Commande
     /**
      * Get nom.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNom()
     {
@@ -564,7 +593,7 @@ class Commande
     /**
      * Set email.
      *
-     * @param string|null $email
+     * @param null|string $email
      *
      * @return Commande
      */
@@ -578,7 +607,7 @@ class Commande
     /**
      * Get email.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getEmail()
     {
@@ -636,7 +665,7 @@ class Commande
     /**
      * Set typePaiement.
      *
-     * @param string|null $typePaiement
+     * @param null|string $typePaiement
      *
      * @return Commande
      */
@@ -650,7 +679,7 @@ class Commande
     /**
      * Get typePaiement.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getTypePaiement()
     {
@@ -660,7 +689,7 @@ class Commande
     /**
      * Set moyenPaiement.
      *
-     * @param string|null $moyenPaiement
+     * @param null|string $moyenPaiement
      *
      * @return Commande
      */
@@ -674,7 +703,7 @@ class Commande
     /**
      * Get moyenPaiement.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getMoyenPaiement()
     {
@@ -684,7 +713,7 @@ class Commande
     /**
      * Set prenomEncaisseur.
      *
-     * @param string|null $prenomEncaisseur
+     * @param null|string $prenomEncaisseur
      *
      * @return Commande
      */
@@ -698,7 +727,7 @@ class Commande
     /**
      * Get prenomEncaisseur.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getPrenomEncaisseur()
     {
@@ -708,7 +737,7 @@ class Commande
     /**
      * Set nomEncaisseur.
      *
-     * @param string|null $nomEncaisseur
+     * @param null|string $nomEncaisseur
      *
      * @return Commande
      */
@@ -722,7 +751,7 @@ class Commande
     /**
      * Get nomEncaisseur.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNomEncaisseur()
     {
@@ -732,7 +761,7 @@ class Commande
     /**
      * Set numeroCheque.
      *
-     * @param string|null $numeroCheque
+     * @param null|string $numeroCheque
      *
      * @return Commande
      */
@@ -746,7 +775,7 @@ class Commande
     /**
      * Get numeroCheque.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNumeroCheque()
     {
@@ -756,11 +785,11 @@ class Commande
     /**
      * Set utilisateur.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateur
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
      *
      * @return Commande
      */
-    public function setUtilisateur(\UcaBundle\Entity\Utilisateur $utilisateur = null)
+    public function setUtilisateur(Utilisateur $utilisateur = null)
     {
         $this->utilisateur = $utilisateur;
 
@@ -770,7 +799,7 @@ class Commande
     /**
      * Get utilisateur.
      *
-     * @return \UcaBundle\Entity\Utilisateur|null
+     * @return null|\UcaBundle\Entity\Utilisateur
      */
     public function getUtilisateur()
     {
@@ -784,7 +813,7 @@ class Commande
      *
      * @return Commande
      */
-    public function addCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    public function addCommandeDetail(CommandeDetail $commandeDetail)
     {
         $this->commandeDetails[] = $commandeDetail;
 
@@ -796,9 +825,9 @@ class Commande
      *
      * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeCommandeDetail(\UcaBundle\Entity\CommandeDetail $commandeDetail)
+    public function removeCommandeDetail(CommandeDetail $commandeDetail)
     {
         return $this->commandeDetails->removeElement($commandeDetail);
     }
@@ -820,7 +849,7 @@ class Commande
      *
      * @return Commande
      */
-    public function addAvoirCommandeDetail(\UcaBundle\Entity\CommandeDetail $avoirCommandeDetail)
+    public function addAvoirCommandeDetail(CommandeDetail $avoirCommandeDetail)
     {
         $this->avoirCommandeDetails[] = $avoirCommandeDetail;
 
@@ -832,9 +861,9 @@ class Commande
      *
      * @param \UcaBundle\Entity\CommandeDetail $avoirCommandeDetail
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeAvoirCommandeDetail(\UcaBundle\Entity\CommandeDetail $avoirCommandeDetail)
+    public function removeAvoirCommandeDetail(CommandeDetail $avoirCommandeDetail)
     {
         return $this->avoirCommandeDetails->removeElement($avoirCommandeDetail);
     }
@@ -852,11 +881,11 @@ class Commande
     /**
      * Set utilisateurEncaisseur.
      *
-     * @param \UcaBundle\Entity\Utilisateur|null $utilisateurEncaisseur
+     * @param null|\UcaBundle\Entity\Utilisateur $utilisateurEncaisseur
      *
      * @return Commande
      */
-    public function setUtilisateurEncaisseur(\UcaBundle\Entity\Utilisateur $utilisateurEncaisseur = null)
+    public function setUtilisateurEncaisseur(Utilisateur $utilisateurEncaisseur = null)
     {
         $this->utilisateurEncaisseur = $utilisateurEncaisseur;
 
@@ -866,7 +895,7 @@ class Commande
     /**
      * Get utilisateurEncaisseur.
      *
-     * @return \UcaBundle\Entity\Utilisateur|null
+     * @return null|\UcaBundle\Entity\Utilisateur
      */
     public function getUtilisateurEncaisseur()
     {

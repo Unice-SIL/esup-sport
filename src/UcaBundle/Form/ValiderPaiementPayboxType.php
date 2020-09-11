@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ValiderPaiementPayboxType
+ *
+ * Formulaire de valdiation du paiement par l'utilsiateur
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -10,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ValiderPaiementPayboxType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -19,7 +24,8 @@ class ValiderPaiementPayboxType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label_format' => 'common.paiementcb',
-            ]);
+            ])
+        ;
     }
 
     public function getBlockPrefix()

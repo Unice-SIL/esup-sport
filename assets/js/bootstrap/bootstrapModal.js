@@ -16,4 +16,16 @@ _uca.bootstrap.modal.chargerLienBouton = function () {
       $(target).modal();
     });
   });
-}
+};
+
+/**
+ * Function: formSubmit()
+ * Soumet le formulaire contenu dans le modal
+ * @param: id form 
+ */
+_uca.bootstrap.modal.formSubmit = function(id, form) {
+  $(document).on('click', id , function(event){
+    event.preventDefault();
+    $(form).submit();
+  });
+};

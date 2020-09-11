@@ -20,7 +20,14 @@
 	{% set condition = true %}
 	{% set startDecoration = false %}
 
-	{{ form_start(form) }}
+	{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+	<!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
 
 	<div class="my-5">
 		<hr>
@@ -144,80 +151,12 @@
 
 {% block javascripts %}
 	<script type="text/javascript">
-		$( document ).ready( function ()
-{
-$( ".classe-activite" ).each( function ()
-{
-checkAssociatedActivities( $( this ).attr( 'id' ).substring( 38 ), $( this ).is( ':checked' ) );
-$( this ).click( function ()
-{
-checkAssociatedActivities( $( this ).attr( 'id' ).substring( 38 ), $( this ).is( ':checked' ) );
-} );
-} );
-$( ".activite" ).each( function ()
-{
-$( this ).click( function ()
-{
-let idAct = $( this ).attr( 'id' ).substring( 37 ).split( "-" )[ 0 ];
-let idClassAct = $( this ).attr( 'id' ).substring( 37 ).split( "-" )[ 1 ];
-checkAssociatedActivtyClasses( idClassAct, $( this ).is( ':checked' ) );
-activateAssociatedOptions( idAct, $( this ).is( ':checked' ) );
-} );
-} );
-} );
-
-function checkAssociatedActivities( id, check )
-{
-$( '.activite' + id ).each( function ()
-{
-$( this ).prop( 'checked', check );
-let idAct = $( this ).attr( 'id' ).slice( 37, $( this ).attr( 'id' ).length - id.length - 1 );
-activateAssociatedOptions( idAct, $( this ).is( ':checked' ) );
-} );
-}
-
-function checkAssociatedActivtyClasses( id, check )
-{
-let canICheck = [];
-$( ".classe-activite" + id ).each( function ()
-{
-$( ".activite" + id ).each( function ()
-{
-canICheck.push( $( this ).is( ':checked' ) );
-} );
-$( this ).prop( 'checked', canICheck.includes( true ) );
-} );
-}
-
-function activateAssociatedOptions( id, check )
-{
-$( '.option-creneau' + id ).each( function ()
-{
-let idString = $( this ).attr( 'id' );
-$( '#' + idString + '_0' ).attr( 'disabled', ! check );
-$( '#' + idString + '_0' ).attr( 'checked', check );
-$( '#' + idString + '_1' ).attr( 'disabled', ! check );
-} );
-}
-
-/*function checkUncheck(){
-            if($("#btnCheckUncheck").hasClass("check")){
-                $(".classe-activite").each(function(){
-                    $(this).prop('checked', true);
-                    checkAssociatedActivities($(this).attr('id').substring(38), $(this).is(':checked'));
-                });
-                $("#btnCheckUncheck").removeClass("check btn-primary");
-                $("#btnCheckUncheck").addClass("uncheck btn-secondary");
-                $("#btnCheckUncheck").html("{{ 'bouton.deselectionner.tout'|trans }}");
-            }else{
-                $(".classe-activite").each(function(){
-                    $(this).prop('checked', false);
-                    checkAssociatedActivities($(this).attr('id').substring(38), $(this).is(':checked'));
-                });
-                $("#btnCheckUncheck").removeClass("uncheck btn-secondary");
-                $("#btnCheckUncheck").addClass("check btn-primary");
-                $("#btnCheckUncheck").html("{{ 'bouton.selectionner.tout'|trans }}");
-            }
-        }*/
+		'use_strict';
+		$(document).ready(function () {
+			_uca.bascule.annuelle.selectionActivite();
+			$("#ucabundle_bascule_activites_save").on('click', function(){
+				$("#modalLoader").modal('show');
+			})
+		});
 	</script>
 {% endblock %}

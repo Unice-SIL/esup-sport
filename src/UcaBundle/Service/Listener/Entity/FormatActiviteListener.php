@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - FomratActiviteListener
+ *
+ * Service intervant lors des modification en base de données de l'entitt format d'activité
+*/
+
 namespace UcaBundle\Service\Listener\Entity;
 
 use Doctrine\ORM\Event\PreFlushEventArgs;

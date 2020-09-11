@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ParametrageType
+ *
+ * Formulaire d'édition des paramêtres du site
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LieuType
+ *
+ * Formulaire d'ajout/édition d'un lieu
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

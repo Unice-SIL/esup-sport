@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EvenementController
+ *
+ * Liste des évenements
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

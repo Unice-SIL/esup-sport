@@ -162,24 +162,28 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
         });
     }
 
-    // message d'en-tête
-    scheduler.templates.event_bar_text = function () { 
-        let message ="<span class='alert alert-warning'>" + Translator.trans('scheduler.message.fields')+" ";
-        scheduler.config.lightbox.sections.forEach(function(section) {
-            if (section.dependanceSerie) {
-            message += section.name + " ";   
-            }
-        });
-        message += Translator.trans('scheduler.message.information.modification.serie')+"</span>"; 
-    //console.log(message);
-        return  message;
-    };
+    // message d'en-tête pour prévenir que certains champs ne sont pas modifiable sur les éveènements isolés
+    // scheduler.templates.event_bar_text = function () { 
+    //     let message ="<span class='alert alert-warning'>" + Translator.trans('scheduler.message.fields')+" ";
+    //     scheduler.config.lightbox.sections.forEach(function(section) {
+    //         if (section.dependanceSerie) {
+    //             message += section.name + " ";   
+    //         }
+    //     });
+    //     message += Translator.trans('scheduler.message.information.modification.serie')+"</span>"; 
+    // //console.log(message);
+    //     return  message;
+    // };
 
     //check if the input are correct
 
 
     scheduler.config.lightbox.control = function (params, isNew) {
         let totalCapacites = 0;
+        if(params['_end_date'] > DATEFINEFFECTIVEVERIFICATION || params['end_date'] > DATEFINEFFECTIVEVERIFICATION){
+            displayErrorMessage(Translator.trans("scheduler.error.date.invalid") + DATEFINEFFECTIVE);
+            return false;
+        }
         for (var idElement in scheduler.config.lightbox.get) {
             let element = scheduler.config.lightbox.get[idElement]();
             let typeEvent = isNew ? "new" : "update";
@@ -293,7 +297,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 if('' === checkbox.id) {
                     checkbox.id = 'checkbox_profil_'+index;
                 }
-                checkbox.setAttribute('onchange','_uca.common.afficherCheckbox('+ checkbox.id + ',' + targetId+');');
+                checkbox.setAttribute('onchange','_uca.common.afficherMasquer('+ checkbox.id + ',' + targetId+');');
             });
         }
     });

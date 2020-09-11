@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - CommandeAnnulerButton
+ *
+ * Annulation de commande (filtre render_if)
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class CommandeAnnulerButton extends AnnulerButton

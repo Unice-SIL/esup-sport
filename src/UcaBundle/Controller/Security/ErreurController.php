@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ErreurController
+ *
+ * Contrôleur technqiue : redirection des erreurs
+*/
+
 namespace UcaBundle\Controller\Security;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

@@ -1,38 +1,45 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 {% block stylesheets %}
-    {{ parent() }}
-    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+	{{ parent() }}
+	{{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
 {% endblock %}
 
 {% block main %}
-    <h1 class="h1-light">{{ ('paiement.confirmation.' ~ status) | trans }}</h1>
-    <section class="container">
-        <div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
-            <div class="col-12 px-5 py-3">
-                <p>{{ ('paiement.validation.' ~ status) | trans({'%typePaiement%': commande.moyenPaiement, '%montant%': commande.montantTotal}) }}</p>
-                {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-            </div>
-        </div>            
+	<div class='container'>
+		{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+	</div>
+	<h1 class="h1-light">{{ ('paiement.confirmation.' ~ status) | trans }}</h1>
+	<section class="container">
+		<div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
+			<div class="col-12 px-5 py-3">
+				<p>{{ ('paiement.validation.' ~ status)|trans({'%typePaiement%': commande.moyenPaiement, '%montant%': commande.montantTotal}) }}</p>
+			</div>
+		</div>
 
-        {% if commandeDetail is defined %}
-            <div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
-                <div class="col-12 px-5 py-3">
-                    <h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray"> {{ 'format.achat.carte.libelle' | trans }}</h2>
-                    <p> {{ 'commandedetail.informationscarte.message.bds' | trans}} </p>
-                    <a href="{{ path('UcaGest_CommandeDetails_InformationsCarte', {'id': commandeDetail.id}) }}" class="btn btn-primary" aria-label="{{ 'common.oui' | trans }}"> {{ 'common.oui' | trans }} </a>
-                </div>
-            </div>
-        {% endif %}
-        
-        {% if app.request.server.get('HTTP_HOST') == 'localhost' and commande.statut == 'apayer' and status == 'success' %}
-            <div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
-                <div class="col-12 px-5 py-3">
-                    <h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">Mode local</h2>
-                    <p>Vous êtes en mode local. Le traitement automatique de paybox ne peut pas être effectué. Voulez-vous executer le traitement ?</p>
-                    <a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'PAYBOX', source:'monpanier' })}}">Simulation Paiement PAYBOX</a>
-                </div>
-            </div>
-        {% endif %}
-    </section>
+		{% if commande.hasFormatAchatCarte %}
+			<div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
+				<div class="col-12 px-5 py-3">
+					<h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">
+						{{ 'format.achat.carte.libelle' | trans }}</h2>
+					<p>
+						{{ 'commandedetail.informationscarte.message.bds' | trans}}
+					</p>
+					<a href="{{ path('UcaGest_ReportingCommandeDetails', {'id': commande.id}) }}" class="btn btn-primary" aria-label="{{ 'common.oui'|trans }}">
+						{{ 'common.oui' | trans }}
+					</a>
+				</div>
+			</div>
+		{% endif %}
+
+		{% if app.request.server.get('HTTP_HOST') == 'localhost' and commande.statut == 'apayer' and status == 'success' %}
+			<div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
+				<div class="col-12 px-5 py-3">
+					<h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">Mode local</h2>
+					<p>Vous êtes en mode local. Le traitement automatique de paybox ne peut pas être effectué. Voulez-vous executer le traitement ?</p>
+					<a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'PAYBOX', source:'monpanier' })}}">Simulation Paiement PAYBOX</a>
+				</div>
+			</div>
+		{% endif %}
+	</section>
 {% endblock %}

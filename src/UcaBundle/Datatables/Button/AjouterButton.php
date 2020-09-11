@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - AjouterButton
+ *
+ * Mise en forme des boutons ajouter
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class AjouterButton extends AbstractButton

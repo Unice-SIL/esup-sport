@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - BasculeController
+ *
+ * Gestion des deux types bascules de l'application
+*/
+
 namespace UcaBundle\Controller\UcaGest\Outils;
 
 use DateInterval;
@@ -13,13 +19,11 @@ use UcaBundle\Entity\Autorisation;
 use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
-use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\FormatAvecCreneau;
 use UcaBundle\Entity\FormatSimple;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Lieu;
 use UcaBundle\Entity\Materiel;
-use UcaBundle\Entity\TypeAutorisation;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
 use UcaBundle\Form\BasculeAnneeUniversitaireType;
 use UcaBundle\Form\BasculeType;
@@ -122,6 +126,7 @@ class BasculeController extends Controller
 
     private function basculeAnneeUniversitaireAction($data)
     {
+        ini_set('max_execution_time', 0);
         $listeActivite = [];
         $listeOptionCreneau = [];
         $listeLieu = [];
@@ -142,6 +147,12 @@ class BasculeController extends Controller
         $messageFlashbag = [];
         $cmpt = 0;
 
+        //Suppression (changement de statut) de toutes les inscriptions à chaque bascule
+        $listeInscription = $em->getRepository(Inscription::class)->findInscriptionBascule();
+        foreach ($listeInscription as $inscription) {
+            $inscription->setStatut('ancienneinscription');
+        }
+        $em->flush();
         //Bascule des classes d'activités et activités
 
         //On récupère l'id des activités à basculer et l'option choisi pour les créneaux
@@ -157,7 +168,6 @@ class BasculeController extends Controller
         if (sizeof($listeActivite) > 0) {
             ++$cmpt;
         }
-
         foreach ($listeActivite as $id) {
             $listeFormatActivite = $em->getRepository(FormatAvecCreneau::class)->findByActivite($id);
             if ($listeFormatActivite) {
@@ -175,78 +185,62 @@ class BasculeController extends Controller
                         $formatActivite->setDateDebutPublication($formatActivite->getDateDebutInscription());
                     }
                 }
-                $listeInscription = $formatActivite->getInscriptions();
-                foreach ($listeInscription as $inscription) {
-                    $listeCommandeDetails = $inscription->getCommandeDetails();
-                    foreach ($listeCommandeDetails as $commandeDetail) {
-                        $commandeDetail->setInscription(null);
-                    }
-                    $inscription->setStatut('ancienneinscription');
-                    $em->flush();
-                }
                 $listeCreneau = $formatActivite->getCreneaux();
-                if (0 == $listeOptionCreneau[$id]) {
+
+                $em->flush();
+                if (1 == $listeOptionCreneau[$id]) {
+                    //Duplique tous les créneaux
+                    foreach ($listeCreneau as $creneau) {
+                        if (null != $creneau->getSerie() && null != $creneau->getSerie()->getEvenements()[0]) {
+                            $serie = $creneau->getSerie();
+                            $serie->setDateDebut($nouvelleDateDebutEffective);
+                            $serie->setDateFin($nouvelleDateFinEffective);
+                            $evenement = $creneau->getSerie()->getEvenements()[0];
+                            foreach ($serie->getEvenements() as $event) {
+                                foreach ($event->getAppels() as $appel) {
+                                    $em->remove($appel);
+                                }
+                                $em->remove($event);
+                            }
+                            $interval = DateInterval::createFromDateString('1 day');
+                            $period = new DatePeriod($nouvelleDateDebutEffective, $interval, $nouvelleDateFinEffective);
+                            foreach ($period as $dt) {
+                                if (date_format($dt, 'w') == date_format($evenement->getDateDebut(), 'w')) {
+                                    $tmp = clone $dt;
+                                    $dateDebut = $dt->setTime(
+                                        date_format($evenement->getDateDebut(), 'H'),
+                                        date_format($evenement->getDateDebut(), 'i'),
+                                        date_format($evenement->getDateDebut(), 's')
+                                    );
+                                    $dateFin = $tmp->setTime(
+                                        date_format($evenement->getDateFin(), 'H'),
+                                        date_format($evenement->getDateFin(), 'i'),
+                                        date_format($evenement->getDateFin(), 's')
+                                    );
+                                    $new_evenement = $this->createEvenement($evenement, $dateDebut, $dateFin, $serie);
+                                    $serie->addEvenement($new_evenement);
+                                    $em->persist($new_evenement);
+                                    // $em->persist($serie);
+                                }
+                            }
+                        }
+                    }
+                    $em->flush();
+                } elseif (0 == $listeOptionCreneau[$id]) {
                     //Supprime tous les créneaux
                     foreach ($listeCreneau as $creneau) {
                         $listeDhtmlXSerie = $em->getRepository(DhtmlxSerie::class)->findByCreneau($creneau->getId());
                         foreach ($listeDhtmlXSerie as $serie) {
                             $listeDhtmlXEvenement = $em->getRepository(DhtmlxEvenement::class)->findBySerie($serie->getId());
                             foreach ($listeDhtmlXEvenement as $evenement) {
+                                foreach ($evenement->getAppels() as $appel) {
+                                    $em->remove($appel);
+                                }
                                 $em->remove($evenement);
                             }
-                            $em->remove($serie);
                         }
-                        $em->remove($creneau);
                     }
                     $em->flush();
-                } elseif (1 == $listeOptionCreneau[$id]) {
-                    //Duplique tous les créneaux
-                    foreach ($listeCreneau as $creneau) {
-                        $new_creneau = clone $creneau;
-                        $em->persist($new_creneau);
-                        $em->flush();
-
-                        $listeDhtmlXSerie = $em->getRepository(DhtmlxSerie::class)->findByCreneau($creneau->getId());
-                        foreach ($listeDhtmlXSerie as $serie) {
-                            $new_serie = clone $serie;
-                            $new_serie->setDateDebut($nouvelleDateDebutEffective);
-                            $new_serie->setDateFin($nouvelleDateFinEffective);
-                            $new_serie->setCreneau($new_creneau);
-                            $em->persist($new_serie);
-                            $em->flush();
-
-                            $listeDhtmlXEvenement = $em->getRepository(DhtmlxEvenement::class)->findBySerie($serie->getId());
-                            if (null !== $listeDhtmlXEvenement[0]) {
-                                $condition = true;
-                                $interval = DateInterval::createFromDateString('1 day');
-                                $period = new DatePeriod($nouvelleDateDebutEffective, $interval, $nouvelleDateFinEffective);
-                                foreach ($period as $dt) {
-                                    if ($condition) {
-                                        if (date_format($dt, 'w') == date_format($listeDhtmlXEvenement[0]->getDateDebut(), 'w')) {
-                                            $condition = false;
-                                            $tmp = clone $dt;
-                                            $dateDebut = $dt->setTime(
-                                                date_format($listeDhtmlXEvenement[0]->getDateDebut(), 'H'),
-                                                date_format($listeDhtmlXEvenement[0]->getDateDebut(), 'i'),
-                                                date_format($listeDhtmlXEvenement[0]->getDateDebut(), 's')
-                                            );
-                                            $dateFin = $tmp->setTime(
-                                                date_format($listeDhtmlXEvenement[0]->getDateFin(), 'H'),
-                                                date_format($listeDhtmlXEvenement[0]->getDateFin(), 'i'),
-                                                date_format($listeDhtmlXEvenement[0]->getDateFin(), 's')
-                                            );
-                                            $new_evenement = clone $listeDhtmlXEvenement[0];
-                                            $new_evenement->setSerie($new_serie);
-                                            $new_evenement->setDateDebut($dateDebut);
-                                            $new_evenement->setDateFin($dateFin);
-                                            $em->persist($new_evenement);
-                                            $em->flush();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -258,9 +252,9 @@ class BasculeController extends Controller
                 $inscriptions = $event->getInscriptions();
                 foreach ($inscriptions as $insc) {
                     $insc->setStatut('ancienneinscription');
-                    $em->flush();
                 }
             }
+            $em->flush();
             ++$cmpt;
         }
 
@@ -269,8 +263,8 @@ class BasculeController extends Controller
             $listeInscription = $em->getRepository(Inscription::class)->findReservation();
             foreach ($listeInscription as $inscription) {
                 $inscription->setStatut('ancienneinscription');
-                $em->flush();
             }
+            $em->flush();
             ++$cmpt;
         }
 
@@ -290,9 +284,9 @@ class BasculeController extends Controller
                     $formatActivite->setDateFinEffective($nouvelleDateFinEffective);
                     $formatActivite->setDateDebutInscription($nouvelleDateDebutInscription);
                     $formatActivite->setDateFinInscription($nouvelleDateFinInscription);
-                    $em->flush();
                 }
             }
+            $em->flush();
         }
 
         //Bascule des Equipements
@@ -311,9 +305,9 @@ class BasculeController extends Controller
                     $formatActivite->setDateFinEffective($nouvelleDateFinEffective);
                     $formatActivite->setDateDebutInscription($nouvelleDateDebutInscription);
                     $formatActivite->setDateFinInscription($nouvelleDateFinInscription);
-                    $em->flush();
                 }
             }
+            $em->flush();
         }
 
         //Suppression des crédits
@@ -328,56 +322,22 @@ class BasculeController extends Controller
         }
         //Suppression des cartes et cotisations
         if ($data['basculeCarteEtCotisation']) {
-            $statutValide = ['attentevalidationencadrant', 'attentevalidationgestionnaire', 'attenteajoutpanier', 'attentepaiement', 'valide'];
             //Autorisations
-            $autorisations = $em->getRepository(Autorisation::class)->findFinishedAutorisations();
+            $autorisations = $em->getRepository(Autorisation::class)->findAll();
             foreach ($autorisations as $autorisation) {
-                $inscription = $autorisation->getInscription();
-                if (in_array($inscription->getStatut(), $statutValide)) {
-                    $inscription->setStatut('ancienneinscription');
-                }
                 $em->remove($autorisation);
-                $em->flush();
             }
+            $em->flush();
 
             //Cartes
-            $formats = $em->getRepository(FormatAchatCarte::class)->findFinishedFormats();
-            if (sizeof($formats) > 0) {
-                foreach ($formats as $format) {
-                    if (sizeof($format->getInscriptions()) > 0) {
-                        $typeAutorisation = $em->getRepository(TypeAutorisation::class)->find($format->getCarte()->getId());
-                        foreach ($format->getInscriptions() as $inscription) {
-                            if (in_array($inscription->getStatut(), $statutValide)) {
-                                $inscription->setStatut('ancienneinscription');
-                                $utilisateur = $inscription->getUtilisateur();
-                                $utilisateur->removeAutorisation($typeAutorisation);
-                                $em->flush();
-                            }
-                        }
-                    }
-                }
+            $commandeDetails = $em->getRepository(CommandeDetail::class)->findCommandeDetailWithAutorisationInvalid();
+            foreach ($commandeDetails as $commandeDetail) {
+                $utilisateur = $commandeDetail->getCommande()->getUtilisateur();
+                $typeAutorisation = $commandeDetail->getTypeAutorisation();
+                $utilisateur->removeAutorisation($typeAutorisation);
+                $em->persist($utilisateur);
             }
-        }
-
-        if ($data['basculeCarteEtCotisation']) {
-            //Cartes
-            $formats = $em->getRepository(FormatAchatCarte::class)->findFinishedFormats();
-            if (sizeof($formats) > 0) {
-                foreach ($formats as $format) {
-                    if (sizeof($format->getInscriptions()) > 0) {
-                        $typeAutorisation = $em->getRepository(TypeAutorisation::class)->find($format->getCarte()->getId());
-                        foreach ($format->getInscriptions() as $inscription) {
-                            if (in_array($inscription->getStatut(), $statutValide)) {
-                                $inscription->setStatut('ancienneinscription');
-                                $utilisateur = $inscription->getUtilisateur();
-                                $utilisateur->removeAutorisation($typeAutorisation);
-                                $em->flush();
-                            }
-                        }
-                    }
-                }
-            }
-
+            $em->flush();
             ++$cmpt;
         }
 
@@ -388,5 +348,20 @@ class BasculeController extends Controller
         }
 
         return $messageFlashbag;
+    }
+
+    private function createEvenement(DhtmlxEvenement $evenement, $dateDebut, $dateFin, $serie)
+    {
+        $new_evenement = new DhtmlxEvenement();
+        $new_evenement->setReservabilite($evenement->getReservabilite());
+        $new_evenement->setFormatSimple($evenement->getFormatSimple());
+        $new_evenement->setDescription($evenement->getDescription());
+        $new_evenement->setDependanceSerie($evenement->getDependanceSerie());
+        $new_evenement->setEligibleBonus($evenement->getEligibleBonus());
+        $new_evenement->setDateDebut($dateDebut);
+        $new_evenement->setDateFin($dateFin);
+        $new_evenement->setSerie($serie);
+
+        return $new_evenement;
     }
 }

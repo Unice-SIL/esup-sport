@@ -1,12 +1,19 @@
 <?php
 
+/*
+ * Classe - UtilisateurController
+ *
+ * Gestion des utilisateur côté web.
+ * page mon profil, édition d'information, de modification de mot de passe
+ * Consulter ses crédits
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UcaBundle\Datatables\MesCreditsDatatable;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\UtilisateurType;
 
@@ -110,39 +117,6 @@ class UtilisateurController extends Controller
         $twigConfig['form'] = $form->createView();
 
         return $this->render('@Uca/UcaWeb/Utilisateur/ModifierMonCompte.html.twig', $twigConfig);
-    }
-
-    /**
-     * @Route("/MesCredits", name="UcaWeb_MesCredits", methods={"GET"})
-     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
-     */
-    public function voirCreditsAction(Request $request)
-    {
-        $repo = $this->getDoctrine()->getRepository('UcaBundle:UtilisateurCreditHistorique');
-        $isAjax = $request->isXmlHttpRequest();
-        $datatable = $this->get('sg_datatables.factory')->create(MesCreditsDatatable::class);
-        $datatable->buildDatatable();
-        $twigConfig['datatable'] = $datatable;
-        if ($isAjax) {
-            $responseService = $this->get('sg_datatables.response');
-            $responseService->setDatatable($datatable);
-            $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
-            $qb = $dtQueryBuilder->getQb()
-                ->andWhere('utilisateurcredithistorique.utilisateur = :usr')
-                ->andWhere('utilisateurcredithistorique.statut <> :statut')
-                ->setParameter('usr', $this->getUser())
-                ->setParameter('statut', 'annule')
-            ;
-
-            return $responseService->getResponse();
-        }
-        // Bouton Ajouter
-        $usr = $this->container->get('security.token_storage')->getToken()->getUser();
-        $twigConfig['noAddButton'] = true;
-        $twigConfig['codeListe'] = 'MesCredits';
-        $twigConfig['extraDisplay'] = '@Uca/UcaWeb/Utilisateur/MesCredits.html.twig';
-
-        return $this->render('@Uca/Common/Liste/Datatable_UcaWeb.html.twig', $twigConfig);
     }
 
     public function FormatParActivite(Utilisateur $item)

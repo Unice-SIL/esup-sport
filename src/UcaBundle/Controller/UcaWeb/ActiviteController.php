@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - ActiviteController
+ *
+ * Gestion des activités  et formats d'activités pour les inscriptions
+ * Affichage des activités disponibles
+ * Gestion des types et classes d'activité.
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

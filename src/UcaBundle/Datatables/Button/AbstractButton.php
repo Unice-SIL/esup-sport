@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - AbstractButton
+ *
+ * Classe abstraite ajoute un bouton à une colonne action du datatable
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 abstract class AbstractButton
@@ -18,8 +24,6 @@ abstract class AbstractButton
     private $attributs;
     private $btnConfig;
 
-    abstract function setButtonInfo();
-
     public function __construct($datatable, $route, $params, $droit = null)
     {
         $this->datatable = $datatable;
@@ -33,18 +37,20 @@ abstract class AbstractButton
             'title' => $this->datatable->getTranslator()->trans($this->libelle),
             'class' => $this->bsClass,
             'role' => 'button',
-            'aria-label' => $this->datatable->getTranslator()->trans($this->libelle)
+            'aria-label' => $this->datatable->getTranslator()->trans($this->libelle),
         ], $this->attributsAdditionnels);
 
-        $this->btnConfig =  [
+        $this->btnConfig = [
             'route' => $this->route,
             'route_parameters' => $this->params,
             'button_value' => $this->datatable->getTranslator()->trans($this->libelle),
             'icon' => $this->icone,
             'attributes' => $this->attributs,
-            'render_if' => $this->getRenderIf()
+            'render_if' => $this->getRenderIf(),
         ];
     }
+
+    abstract public function setButtonInfo();
 
     public function getConfig()
     {
@@ -53,8 +59,11 @@ abstract class AbstractButton
 
     public function getRenderIf()
     {
-        if ($this->droit == null) return null;
+        if (null == $this->droit) {
+            return null;
+        }
         $droit = $this->droit;
+
         return function ($row) use ($droit) {
             return $this->datatable->getAuthorizationChecker()->isGranted($this->droit);
         };

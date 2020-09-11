@@ -1,15 +1,19 @@
 <?php
 
+/*
+ * Classe - LogController
+ *
+ * Gestion des log: permet la consultation des logs
+*/
+
 namespace UcaBundle\Controller\UcaGest\Outils;
 
+use Gedmo\Loggable\Entity\LogEntry;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\LogDatatable;
-use Gedmo\Loggable\Entity\LogEntry;
-use UcaBundle\Entity\Ressource;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 /**
  * @Security("has_role('ROLE_ADMIN')")
@@ -19,6 +23,9 @@ class LogController extends Controller
 {
     /**
      * @Route("/Lister/{objectClass}/{objectId}", name="UcaGest_LogLister")
+     *
+     * @param null|mixed $objectClass
+     * @param null|mixed $objectId
      */
     public function listerAction(Request $request, $objectClass = null, $objectId = null)
     {
@@ -34,8 +41,8 @@ class LogController extends Controller
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
             if (!empty($objectClass)) {
-                $objectClass = 'UcaBundle\\Entity\\' . $objectClass;
-                if (!empty($objectId)){
+                $objectClass = 'UcaBundle\\Entity\\'.$objectClass;
+                if (!empty($objectId)) {
                     $object = $em->getRepository($objectClass)->find($objectId);
                     // Permet de gérer l'héritage
                     $objectClass = get_class($object);
@@ -45,12 +52,14 @@ class LogController extends Controller
                 $qb->andWhere('logentry.objectClass = :objectClass');
                 $qb->setParameter('objectClass', $objectClass);
             }
+
             return $responseService->getResponse();
         }
 
         $twigConfig['codeListe'] = 'Log';
         $twigConfig['noAddButton'] = true;
         $twigConfig['retourBouton'] = true;
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
@@ -65,6 +74,7 @@ class LogController extends Controller
         $repo->revert($logs, $item->getVersion());
         $em->persist($logs);
         $em->flush();
+
         return $this->redirectToRoute('UcaGest_LogLister');
     }
 }

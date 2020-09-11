@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EtablissementRepository
+ *
+ * Requêtes à la base de données pour l'entité etabllssement
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\ORM\Query\Expr\Join;
@@ -13,7 +19,10 @@ class EtablissementRepository extends \Doctrine\ORM\EntityRepository
             ->leftJoin('l.formatsActivite', 'f')
             ->leftJoin('f.activite', 'a')
             ->where('a.id = :id')
-            ->setParameter('id', $idActivite)
+            ->andWhere('f.dateDebutPublication <= :date')
+            ->andWhere('f.dateFinPublication >:date')
+            ->andWhere('f.statut=1')
+            ->setParameters(['id' => $idActivite, 'date' => new \DateTime()])
             ->getQuery()
             ->getResult()
         ;

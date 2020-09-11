@@ -1,10 +1,17 @@
 <?php
 
+/*
+ * Classe - ComportementAUtorisation:
+ *
+ * Un Type d'Autorisation va avoir un comportement (Achat de carte, cotisation)
+ * Cette enité permet d'organiser ces comportements
+ * Ces informations ne sont pas éditables dans l'outil.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity
@@ -12,14 +19,6 @@ use Gedmo\Translatable\Translatable;
 class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
-
-    #region Propriétés
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
      * @Gedmo\Translatable
@@ -30,20 +29,28 @@ class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSeria
     /** @ORM\Column(type="string", nullable=false) */
     protected $codeComportement;
 
-    /** 
+    /**
      * @Gedmo\Translatable
      * @ORM\Column(type="string", nullable=true) */
     protected $descriptionComportement;
-    #endregion
 
-    #region Méthodes
+    //region Propriétés
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+    //endregion
+
+    //region Méthodes
 
     public function jsonSerializeProperties()
     {
         return ['libelle', 'codeComportement'];
     }
 
-    #endregion
+    //endregion
 
     /**
      * Get id.
@@ -106,7 +113,7 @@ class ComportementAutorisation implements \UcaBundle\Entity\Interfaces\JsonSeria
     /**
      * Set descriptionComportement.
      *
-     * @param string|null $descriptionComportement
+     * @param null|string $descriptionComportement
      *
      * @return ComportementAutorisation
      */

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Interface - Article:
+ *
+ * Permet d'implémenter les méhtodes nécessaire à la gestion des commandes.
+*/
+
 namespace UcaBundle\Entity\Interfaces;
 
 interface Article

@@ -32,22 +32,9 @@
 {% block javascripts %}
     <script type="text/javascript">
         $(document).ready(function(){
-            changeVisibilityInputDependingCheckedBoxTva();
-            $("#tarif_tva").change(changeVisibilityInputDependingCheckedBoxTva);
+            _uca.changeVisibilityInputDependingCheckedBoxTva();
+            $("#tarif_tva").change(_uca.changeVisibilityInputDependingCheckedBoxTva);
         });
-
-        function changeVisibilityInputDependingCheckedBoxTva() {
-            if($("#tarif_tva").is(':checked')){
-                $('#pourcentageTVA_tarif_hide').hide();                
-                $('#tvaNonApplicable_tarif_hide').show();
-                $('#tarif_pourcentageTVA').attr('value',0);
-            }else{
-                $('#pourcentageTVA_tarif_hide').show();                
-                $('#tvaNonApplicable_tarif_hide').hide();
-                // $('#tarif_tvaNonApplicable').attr('value',"");
-                $('#tarif_tvaNonApplicable').val('');
-            }
-        }
     </script>
 {% endblock %}
 

@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Format d'activité:
+ *
+ * Le format d'activité va correspondre au choix d'inscriptions proposés à l'utilisateur
+ * Il s'agit de la classe mère de tous les formats qui contient donc les informations génériques.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\Common\Collections\Criteria;

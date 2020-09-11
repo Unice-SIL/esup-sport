@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - DataController:
+ *
+ * Classe liée à librairie DHTMLX
+ * Formatage des données pour la librairie javascirpt
+*/
+
 namespace UcaBundle\Controller\Api;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

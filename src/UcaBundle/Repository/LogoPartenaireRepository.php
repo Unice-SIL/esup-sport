@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogoPartenaireRepository
+ *
+ * Requêtes à la base de données pour l'entité Logo Partenaire
+*/
+
 namespace UcaBundle\Repository;
 
 class LogoPartenaireRepository extends \Doctrine\ORM\EntityRepository

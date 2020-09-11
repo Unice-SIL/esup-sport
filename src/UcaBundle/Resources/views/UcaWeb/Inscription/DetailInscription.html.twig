@@ -6,69 +6,74 @@
 {% import '@Uca/Macros/Commande.html.twig' as MacroCommande %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+	{{ parent() }}
+	{{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
 {% endblock %}
 
 {% block main %}
+	<section class="container">
+		{% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
+		{% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
 
-    {{ flashBag.showAll }}
-    {% include "@Uca/Common/Modal/Modal.Suppression.html.twig" %}
-    <h1 class="h1-light">{{ 'sitemap.detailinscription.libelle' | trans}}</h1>
-    <section class="container">
+		<h1 class="h1-light">{{ 'sitemap.detailinscription.libelle' | trans}}</h1>
+		{{ flashBag.showAll }}
 
-        <div class="row">
-            <div class="col-12 mb-4 pl-3 p-xl-0">
-                {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-            </div>
-        </div>
-        {% set item = inscription.item %}
-        <div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+		{% set item = inscription.item %}
+		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+			<p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{item.articleLibelle}}</p>
+        
+			{% if inscription.statut == 'annule' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.annule"|trans}}</p>
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.motifannulation"|trans }}
+					:
+					{{inscription.motifAnnulation}}</p>
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.commentaireannulation"|trans }}
+					:
+					{{inscription.commentaireAnnulation}}</p>
 
-            <p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{item.articleLibelle}}</p>
+			{% elseif inscription.statut == 'valide' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.valide"|trans}}</p>
+			{% elseif inscription.statut == 'attentevalidationencadrant' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationencadrant"|trans}}</p>
+			{% elseif inscription.statut == 'attentevalidationgestionnaire' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationgestionnaire"|trans}}</p>
+			{% elseif inscription.statut == 'ancienneinscription' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.ancienneinscription"|trans}}</p>
+			{% elseif inscription.statut == 'desinscrit' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscrit"|trans}}</p>
+			{% elseif inscription.statut == 'desinscriptionadministrative' %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscriptionadministrative"|trans}}</p>
+			{% endif %}
 
-            {% if inscription.statut == 'annule' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.annule"|trans}}</p>
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.motifannulation"|trans }} : {{inscription.motifAnnulation}}</p>
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{ "detail.inscription.commentaireannulation"|trans }} : {{inscription.commentaireAnnulation}}</p>
+			{{ "common.dateinscription"|trans }}
+			:
+			{{inscription.date|date("d/m/Y")}}
+			<p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDescription}}</p>
 
-            {% elseif inscription.statut == 'valide' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.valide"|trans}}</p>
-            {% elseif inscription.statut == 'attentevalidationencadrant' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationencadrant"|trans}}</p>
-            {% elseif inscription.statut == 'attentevalidationgestionnaire' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.attentevalidationgestionnaire"|trans}}</p>
-            {% elseif inscription.statut == 'ancienneinscription' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"modalinscription.titre.ancienneinscription"|trans}}</p>
-            {% elseif inscription.statut == 'desinscrit' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscrit"|trans}}</p>
-            {% elseif inscription.statut == 'desinscriptionadministrative' %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{"common.desinscriptionadministrative"|trans}}</p>
-            {% endif %}
+			{% if inscription.creneau is not null %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">
+					<a href="{{ url('UcaWeb_FormatActiviteDetailJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : item.SerieEvenements().first().getDateDebut|date("N") , yearWeek: item.SerieEvenements().first().getDateDebut|date("W")} ) }}" class="btn btn-outline-primary">
+						{{ "common.creneaux"|trans }}</a>
+				</p>
+			{% elseif inscription.reservabilite is not null %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDateDebut|date("d/m/Y H:i")}}
+					-
+					{{item.articleDateFin|date("d/m/Y H:i")}}</p>
+				<p class="m-0 mb-1 p-0 col-12 fw-500">
+					<a href="{{ url('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, idRessource: item.ressource.id , year_week: item.evenement.dateDebut|date("Y") ~ '_' ~ item.evenement.dateDebut|date("W"), day_week:item.evenement.dateDebut|date("N")} ) }}" class="btn btn-outline-primary">
+						{{ "formatavecreservation.title"|trans }}</a>
+				</p>
+			{% elseif inscription.formatActivite is not null %}
+				<p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDateDebut|date("d/m/Y")}}
+					-
+					{{item.articleDateFin|date("d/m/Y")}}</p>
+				<p class="m-0 mb-1 p-0 col-12 fw-500">
+					<a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">
+						{{ "formatactivite.libelle"|trans }}</a>
+				</p>
+			{% endif %}
 
-            {{ "common.dateinscription"|trans }} : {{inscription.date|date("d/m/Y")}}
-            <p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDescription}}</p>
+		</div>
 
-            {% if inscription.creneau is not null %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">
-                    <a href="{{ url('UcaWeb_FormatActiviteDetailJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : item.SerieEvenements().first().getDateDebut|date("N") , yearWeek: item.SerieEvenements().first().getDateDebut|date("W")} ) }}" class="btn btn-outline-primary">
-                    {{ "common.creneaux"|trans }}</a>
-                </p>
-            {% elseif inscription.reservabilite is not null %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDateDebut|date("d/m/Y H:i")}} - {{item.articleDateFin|date("d/m/Y H:i")}}</p>
-                <p class="m-0 mb-1 p-0 col-12 fw-500">
-                    <a href="{{ url('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, idRessource: item.ressource.id , year_week: item.evenement.dateDebut|date("Y") ~ '_' ~ item.evenement.dateDebut|date("W"), day_week:item.evenement.dateDebut|date("N")} ) }}" class="btn btn-outline-primary">
-                        {{ "formatavecreservation.title"|trans }}</a>
-                </p>
-            {% elseif inscription.formatActivite is not null %}
-                <p class="m-0 mb-1 p-0 col-12 fw-500">{{item.articleDateDebut|date("d/m/Y")}} - {{item.articleDateFin|date("d/m/Y")}}</p>
-                <p class="m-0 mb-1 p-0 col-12 fw-500">
-                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">
-                        {{ "formatactivite.libelle"|trans }}</a>
-                </p>
-            {% endif %}
-
-        </div>
-
-    </section>
+	</section>
 {% endblock %}

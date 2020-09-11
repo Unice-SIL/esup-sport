@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ReferentielImmobilier:
+ *
+ * Classe dédié à la gestion de l'import du référentiel.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

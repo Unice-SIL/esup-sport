@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - InscriptionAnnulerButton
+ *
+ * Bouton d'annualtion d'une inscription (filtre render_if)
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class InscriptionAnnulerButton extends AnnulerButton

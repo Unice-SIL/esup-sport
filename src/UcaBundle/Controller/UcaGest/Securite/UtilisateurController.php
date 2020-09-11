@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - UtilisateurCreditHistorique
+ *
+ * Gestion du CRUD pour les utilisateur
+ * Valdider un utilisateur et consulter les justificatifs
+*/
+
 namespace UcaBundle\Controller\UcaGest\Securite;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -168,7 +175,7 @@ class UtilisateurController extends Controller
         $statutRepo = $em->getRepository(StatutUtilisateur::class);
         $form = $this->get('form.factory')->create(UtilisateurType::class, $item, ['action_type' => 'modifier']);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            if ($item->getStatut() === $statutRepo->find(1)) {
+            if ($statutRepo->find(1) === $item->getStatut()) {
                 $item->setEnabled(1);
             } else {
                 $item->setEnabled(0);
@@ -277,15 +284,20 @@ class UtilisateurController extends Controller
     }
 
     /**
-     * @Route("/Credit/{id}/Ajouter/{montant]", name="UcaGest_UtilisateurCreditAjouter", methods={"GET","POST"})
+     * @Route("/Credit/{id}/Ajouter", name="UcaGest_UtilisateurCreditAjouter", methods={"GET","POST"})
+     * @Route("/Credit/{id}/{refCommande}/{refAvoir}/Reporter/{montant}", name="UcaGest_UtilisateurCreditReporter", methods={"GET","POST"})
      * @Isgranted("ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE")
      *
      * @param null|mixed $montant
+     * @param null|mixed $refAvoir
+     * @param null|mixed $refCommande
      */
-    public function ajouterCreditAction(Request $request, Utilisateur $item, $montant = 0)
+    public function ajouterCreditAction(Request $request, Utilisateur $item, $refAvoir = null, $refCommande = null, $montant = 0)
     {
         $em = $this->getDoctrine()->getManager();
-        $credit = new UtilisateurCreditHistorique($item, $request->get('montant'), null, 'credit', 'Ajout manuel de crédit');
+        $operation = ('UcaGest_UtilisateurCreditReporter' == $request->get('_route')) ? "Report d'avoir" : 'Ajout manuel de crédit';
+        $titreForm = ('UcaGest_UtilisateurCreditReporter' == $request->get('_route')) ? 'utilisateur.credit.reporter.title' : 'utilisateur.credit.ajouter.title';
+        $credit = new UtilisateurCreditHistorique($item, $request->get('montant'), $refAvoir, 'credit', $operation);
         $form = $this->createForm('UcaBundle\Form\UtilisateurCreditHistoriqueType', $credit);
         $form->handleRequest($request);
 
@@ -299,6 +311,7 @@ class UtilisateurController extends Controller
 
         $twigConfig['credit'] = $credit;
         $twigConfig['form'] = $form->createView();
+        $twigConfig['titreForm'] = $titreForm;
 
         return $this->render('@Uca/UcaGest/Securite/Utilisateur/FormulaireAjouterCredit.html.twig', $twigConfig);
     }

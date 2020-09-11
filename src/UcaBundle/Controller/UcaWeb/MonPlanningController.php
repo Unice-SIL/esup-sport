@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * Classe - MonPlanningController
+ *
+ * Gère la page Mon planning
+ * Lié à la librairie Dhtmlx
+ * Selon le profil d'utilisateur les informations ne seront pas les mêmes
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

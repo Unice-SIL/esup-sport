@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - AvoirType:
+ *
+ * Formulaire d'ajouter un avoir sur une commande
+ * Liste les détails de la commande
+*/
+
 namespace UcaBundle\Form;
 
 use Doctrine\ORM\EntityRepository;

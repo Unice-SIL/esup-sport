@@ -1,11 +1,16 @@
 <?php
 
+/*
+ * Classe - Fichier:
+ *
+ * Entité technique permettant de stocker des fichiers
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
-
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
@@ -13,7 +18,7 @@ use Symfony\Component\HttpFoundation\File\File;
  */
 class Fichier
 {
-    #region Propriétés
+    //region Propriétés
     /**
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -35,14 +40,14 @@ class Fichier
 
     /** @ORM\Column(type="string") */
     private $mimeType;
-    
-    /** @ORM\Column(type="datetime",nullable=true) */
-    private $updatedAt; 
-    #endregion
 
-    #region Méthodes
-    #endregion
-    
+    /** @ORM\Column(type="datetime",nullable=true) */
+    private $updatedAt;
+    //endregion
+
+    //region Méthodes
+    //endregion
+
     /**
      * Get id.
      *
@@ -56,8 +61,9 @@ class Fichier
     public function setImageFile(File $image = null)
     {
         $this->imageFile = $image;
-        if ($image) 
+        if ($image) {
             $this->updatedAt = new \DateTime('now');
+        }
     }
 
     public function getImageFile()
@@ -78,7 +84,7 @@ class Fichier
     /**
      * Set updatedAt.
      *
-     * @param \DateTime|null $updatedAt
+     * @param null|\DateTime $updatedAt
      *
      * @return Activite
      */

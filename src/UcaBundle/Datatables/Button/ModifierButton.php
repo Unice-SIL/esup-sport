@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ModifierButton
+ *
+ * Bouton d'édition de la ligne
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class ModifierButton extends AbstractButton

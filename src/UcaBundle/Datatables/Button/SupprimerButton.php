@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - SuppressionButton
+ *
+ * Bouton de suppression d'une entrée
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class SupprimerButton extends AbstractButton

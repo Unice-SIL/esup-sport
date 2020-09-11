@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - Highlight:
+ *
+ * Il s'agit des highlight générales du site
+ * Ces éléments sont organisable dans l'interface.
+*/
+
 namespace UcaBundle\Entity;
 
 namespace UcaBundle\Entity;
@@ -84,15 +91,18 @@ class Highlight
     /** @ORM\Column(type="string", nullable=true) */
     private $intervenant;
 
+    /** @ORM\Column(type="string", nullable=true) */
+    private $height;
+
     //endregion
 
     // region methods
     public function getImageUrl()
     {
-        if (null != $this->getImage()) {
-            $imageUrl = $this->getImage();
-        } elseif (null != $this->getMiniature()) {
+        if (null != $this->getMiniature()) {
             $imageUrl = $this->getMiniature();
+        } elseif (null != $this->getImage()) {
+            $imageUrl = $this->getImage();
         } else {
             $imageUrl = '';
         }
@@ -139,8 +149,10 @@ class Highlight
             $this->video = $this->getDataFacebook($video)['urlVideo'];
         } elseif (true == strpos($video, 'instagram')) {
             $this->setLecteurVideo('instagram');
-            $this->video = $this->getDataInstagram($video)['urlVideo'];
-            $this->setMiniature($this->getDataInstagram($video)['urlThumb']);
+            $dataInstagram = $this->getDataInstagram($video);
+            $this->video = $dataInstagram['urlVideo'];
+            $this->setMiniature($dataInstagram['urlThumb']);
+            $this->setHeight($dataInstagram['height']);
         } else { //Sinon on convertit on met directement le lien
             $this->video = $video;
         }
@@ -170,19 +182,21 @@ class Highlight
         $idVideo = $this->getIdVideo($video);
 
         return  [
-            'urlVideo' => 'https://www.facebook.com/video/embed?video_id='.$idVideo,
-            'urlThumb' => 'https://graph.facebook.com/'.$idVideo.'/picture', ];
+            'urlVideo' => 'https://www.facebook.com/plugins/video.php?href='.urlencode($video),
+            'urlThumb' => 'https://graph.facebook.com/'.$idVideo.'/picture',
+        ];
     }
 
     public function getDataInstagram($video)
     {
-        $idVideo = (explode('/', explode('/p/', $video)[1]))[0];
+        $idVideo = (explode('/', preg_split('/(\/p\/|\/tv\/)/', $video)[1]))[0];
         $data = file_get_contents('https://api.instagram.com/oembed/?url=http://instagram.com/p/'.$idVideo);
         $data = json_decode($data, true);
 
         return  [
             'urlVideo' => 'http://instagram.com/p/'.$idVideo.'/embed',
             'urlThumb' => $data['thumbnail_url'],
+            'height' => $data['thumbnail_height'],
         ];
     }
 
@@ -408,5 +422,29 @@ class Highlight
     public function getIntervenant()
     {
         return $this->intervenant;
+    }
+
+    /**
+     * Set height.
+     *
+     * @param null|string $height
+     *
+     * @return Highlight
+     */
+    public function setHeight($height = null)
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    /**
+     * Get height.
+     *
+     * @return string|null
+     */
+    public function getHeight()
+    {
+        return $this->height;
     }
 }

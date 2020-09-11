@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - RessourceDatatable
+ *
+ * COntient les colonnes à afficher pour la liste des ressources
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
@@ -17,28 +23,28 @@ class RessourceDatatable extends AbstractTranslatedDatatable
         $this->setUcaDefault();
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('libelle', Column::class, array(
+            ])
+            ->add('libelle', Column::class, [
                 'title' => $this->translator->trans('common.libelle'),
-            ))
-            ->add('description', Column::class, array(
+            ])
+            ->add('description', Column::class, [
                 'title' => $this->translator->trans('common.description'),
-                'class_name' => 'hide-column-md'
-            ))
-            ->add('FormatRessource', TwigVirtualColumn::class, array(
+                'class_name' => 'hide-column-md',
+            ])
+            ->add('FormatRessource', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.type'),
                 'twigTemplate' => 'FormatRessource',
-                'class_name' => 'hide-column-sm'
-            ))
-            ->add('etablissement.libelle', Column::class, array(
+                'class_name' => 'hide-column-sm',
+            ])
+            ->add('etablissement.libelle', Column::class, [
                 'title' => $this->translator->trans('ressource.etablissement'),
                 'default_content' => '(none)',
                 'searchable' => true,
-                'orderable' => true
-            ))
+                'orderable' => true,
+            ])
 
             // ->add('superficie', Column::class, array(
             //     'title' => 'Superficie',
@@ -54,13 +60,14 @@ class RessourceDatatable extends AbstractTranslatedDatatable
             // ))
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
-                'actions' =>  [
+                'actions' => [
                     (new VoirButton($this, 'UcaGest_RessourceVoir', ['id' => 'id']))->getConfig(),
                     (new ModifierButton($this, 'UcaGest_RessourceModifier', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
                     (new SupprimerButton($this, 'UcaGest_RessourceSupprimer', ['id' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Ressource', 'objectId' => 'id'], 'ROLE_GESTION_RESSOURCE_ECRITURE'))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

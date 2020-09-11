@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - VoirButton
+ *
+ * Bouton pour afficbher une entr&e
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class VoirButton extends AbstractButton

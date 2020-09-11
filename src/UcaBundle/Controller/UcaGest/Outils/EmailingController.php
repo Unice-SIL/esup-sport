@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EmailingController
+ *
+ * Gestion des Emailing: selection des utilisateurs et envoi des mailsw
+*/
+
 namespace UcaBundle\Controller\UcaGest\Outils;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;

@@ -1,16 +1,20 @@
 <?php
 
+/*
+ * Classe - TexteType
+ *
+ * Formulaire d'éditer les blocs de texte prédéfinis
+*/
+
 namespace UcaBundle\Form;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use FOS\CKEditorBundle\Form\Type\CKEditorType;
-
 
 class TexteType extends AbstractType
 {
@@ -21,26 +25,26 @@ class TexteType extends AbstractType
         ]);
 
         $builder->add('mobile', ChoiceType::class, [
-            'choices'  => [
+            'choices' => [
                 'Textes identiques sur Desktop et Mobile' => 0,
                 'Textes différents sur Desktop et Mobile' => 1,
                 'Texte à afficher seulement sur Desktop' => 2,
             ],
         ]);
 
-        $builder->add('texte', CKEditorType::class, array(
-            'config' => array(
+        $builder->add('texte', CKEditorType::class, [
+            'config' => [
                 'class' => 'ckeditor',
-            )
-        ));
+            ],
+        ]);
 
-        $builder->add('texteMobile', CKEditorType::class, array(
-            'config' => array(
+        $builder->add('texteMobile', CKEditorType::class, [
+            'config' => [
                 'class' => 'ckeditor',
                 'id' => 'inputTexteMobile',
-                'data' => 'bla'
-            ),
-        ));
+                'data' => 'bla',
+            ],
+        ]);
         $builder->add('save', SubmitType::class, [
             'label_format' => 'bouton.save',
         ]);
@@ -48,9 +52,9 @@ class TexteType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'UcaBundle\Entity\Texte'
-        ));
+        $resolver->setDefaults([
+            'data_class' => 'UcaBundle\Entity\Texte',
+        ]);
     }
 
     public function getBlockPrefix()

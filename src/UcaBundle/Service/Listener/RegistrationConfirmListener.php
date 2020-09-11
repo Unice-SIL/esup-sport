@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - RegistrationConfirmListener
+ *
+ * Service écoutant l'enregistrement d'uitlisateur (changement de statut)
+*/
+
 namespace UcaBundle\Service\Listener;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,7 +33,7 @@ class RegistrationConfirmListener implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            FOSUserEvents::REGISTRATION_CONFIRM => 'onRegistrationConfirm'
+            FOSUserEvents::REGISTRATION_CONFIRM => 'onRegistrationConfirm',
         ];
     }
 

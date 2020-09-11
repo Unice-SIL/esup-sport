@@ -1,45 +1,47 @@
 <?php
 
+/*
+ * Classe - DhtmlxDate:
+ *
+ * La classe mère permettant d'avoir les données de dates communes.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\DhtmlxDateRepository")
- * 
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="format", type="string")
  * @ORM\DiscriminatorMap( {
- *   "DhtmlxEvenement" = "DhtmlxEvenement", 
+ *   "DhtmlxEvenement" = "DhtmlxEvenement",
  *   "DhtmlxSerie" = "DhtmlxSerie"
  * } )
  * @Gedmo\Loggable
  */
 abstract class DhtmlxDate
 {
-    #region Propriétés
+    public $oldId;
+    public $action;
+    //region Propriétés
     /**
-     * 
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     protected $id;
 
-    public $oldId;
-    public $action;
-
     /** @ORM\Column(type="datetime") */
     protected $dateDebut;
 
     /** @ORM\Column(type="datetime") */
     protected $dateFin;
-    #endregion
+    //endregion
 
-    #region Méthodes
-    #endregion
+    //region Méthodes
+    //endregion
 
     /**
      * Get id.

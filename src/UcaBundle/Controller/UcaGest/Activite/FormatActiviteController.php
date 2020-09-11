@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - FormatActiviteController
+ *
+ * Gestion du CRUD pour les formats d'activités
+ * Gestion des trois formats
+*/
+
 namespace UcaBundle\Controller\UcaGest\Activite;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

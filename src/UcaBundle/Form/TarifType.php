@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - TarifType
+ *
+ * Formulaire d'ajout/edition un tarif
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

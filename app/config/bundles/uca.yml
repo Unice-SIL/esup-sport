@@ -96,6 +96,9 @@ services:
         class: UcaBundle\Service\Common\MailService
         arguments: ['@mailer', '%mailer_sender%', '@templating']
     UcaBundle\Service\Common\MailService: '@mailService'
+    uca.creationPdf: 
+        class: UcaBundle\Service\Common\CreationPdf
+        arguments: ['@doctrine.orm.entity_manager','@templating']
     uca.user.registration.listener:
         class: UcaBundle\Service\Listener\RegistrationConfirmListener
         autowire: true
@@ -116,7 +119,8 @@ services:
         class: UcaBundle\Form\FormatActiviteProfilUtilisateurType
         arguments: ['@doctrine.orm.entity_manager']
         tags: [form.type]
-
+    uca.extraction.excel: 
+        class: UcaBundle\Service\Service\ExtractionExcelService
     UcaBundle\Service\Listener\Securite\Utilisateur\LoginListener:
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }

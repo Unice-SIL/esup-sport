@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - PasswordResettingListener
+ *
+ * Surchage de la classe de FOS (changer les redirections)
+*/
+
 namespace UserBundle\EventListener;
 
 use Doctrine\ORM\EntityManagerInterface;

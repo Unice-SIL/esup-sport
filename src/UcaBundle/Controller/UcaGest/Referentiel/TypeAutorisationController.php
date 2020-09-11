@@ -1,12 +1,18 @@
 <?php
 
+/*
+ * Classe - TypeAutorisationController
+ *
+ * Gestion du CRUD pour les types d'autorisation
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Datatables\TypeAutorisationDatatable;
 use UcaBundle\Entity\TypeAutorisation;
 use UcaBundle\Form\TypeAutorisationType;
@@ -14,13 +20,13 @@ use UcaBundle\Form\TypeAutorisationType;
 /**
  * @Route("UcaGest/TypeAutorisation")
  * @Security("has_role('ROLE_ADMIN')")
-*/
+ */
 class TypeAutorisationController extends Controller
 {
     /**
      * @Route("/", name="UcaGest_TypeAutorisationLister")
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_LECTURE")
-    */
+     */
     public function listerAction(Request $request)
     {
         $isAjax = $request->isXmlHttpRequest();
@@ -32,6 +38,7 @@ class TypeAutorisationController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
@@ -40,6 +47,7 @@ class TypeAutorisationController extends Controller
             $twigConfig['noAddButton'] = true;
         }
         $twigConfig['codeListe'] = 'TypeAutorisation';
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
@@ -56,17 +64,19 @@ class TypeAutorisationController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
             return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/TypeAutorisation/Formulaire.html.twig', $twigConfig);
     }
 
     /**
      * @Route("/Modifier/{id}", name="UcaGest_TypeAutorisationModifier", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TYPE_AUTORISATION_ECRITURE")
-    */
+     */
     public function modifierAction(Request $request, TypeAutorisation $item)
     {
         $em = $this->getDoctrine()->getManager();
@@ -74,10 +84,12 @@ class TypeAutorisationController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
             return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/TypeAutorisation/Formulaire.html.twig', $twigConfig);
     }
 
@@ -91,6 +103,7 @@ class TypeAutorisationController extends Controller
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
         return $this->redirectToRoute('UcaGest_TypeAutorisationLister');
     }
 }

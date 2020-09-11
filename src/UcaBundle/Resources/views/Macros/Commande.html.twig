@@ -5,6 +5,7 @@
 		{% else %}
 			{% set tabCmdDetails = commande.commandeDetails %}
 		{% endif %}
+		<!-- Liste Article -->
 		{% for article in tabCmdDetails %}
 			<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none d-flex flex-wrap justify-content-between align-items-center">
 				<div class="col-12 col-sm-8">
@@ -34,10 +35,10 @@
 					{% else %}
 						{% if (article.appartientAvoir() and app.request.attributes.get('_route') == "UcaGest_ReportingCommandeDetails") %}
 							<p class="w-50 m-0 p-0 py-3 text-right fw-500 color-blue">
-								<del> {{ article.montant ~ ' €' }} </del> &nbsp;
 								<a class='btn btn-outline.disabled' tabindex="0" type="button" href="{{ path('UcaGest_AvoirDetails',{'id':article.commande.id, 'refAvoir':article.referenceAvoir}) }}" data-toggle="tooltip" data-placement="top" title="{{ 'commande.details.avoir.message' | trans }}">
 									<span class='fa fa-info-circle' alt='' aria-label="{{ 'commande.details.avoir.message' | trans }}"></span>
-								</a>
+								</a>	
+								&nbsp;	{{ article.montant ~ ' €' }}
 							</p>
 						{% elseif app.request.attributes.get('_route') == "UcaGest_AvoirDetails" %}
 							<p class="w-50 m-0 p-0 py-3 text-right fw-500 color-blue">
@@ -57,9 +58,10 @@
 				</div>
 			</div>
 		{% endfor %}
+
 		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none d-flex flex-wrap justify-content-between align-items-center">
-			{% if commande.id %}
-				<div class="col-6 d-flex align-items-center">
+			<div class="col-sm-6 d-flex align-items-center">
+				{% if commande.id %}
 					<p class="p-0 m-0">
 						{% if source == 'monpanier' %}
 							<a class="d-flex align-items-center justify-content-end fs-12 text-uppercase fw-500 color-taupe-gray" href='{{url('UcaWeb_SuppressionToutArticle', { 'id': commande.id })}}' data-toggle='modal' data-target='#modalSuppression'>
@@ -68,76 +70,89 @@
 							</a>
 						{% endif %}
 					</p>
-				</p>
+				{% endif %}
+			</div>
+
+			{% if ((commande.statut == 'apayer' and source == 'mescommandes') or (commande.statut == 'panier' and source == 'monpanier') or (commande.statut == 'apayer' and source == 'gestioncaisse')) %}
+				{% set credit = commande.utilisateur.getCreditTotal() %}
+			{% else %}
+				{% set credit = commande.creditUtilise %}
+			{% endif %}
+			<div id="totalCommande" class='col-sm-6'>
+				<div class='row offset-4 d-flex flex-wrap justify-content-between'>
+					<p class="p-0 m-0 text-uppercase fw-700 text-left">
+						{{ 'common.total'|trans }}:
+					</p>
+					<span class="color-blue">
+						{% if app.request.attributes.get('_route') != "UcaGest_AvoirDetails" %}
+							{{ commande.montantTotal|number_format(2) ~ ' €' }}
+						{% else %}
+							{{ (commande.getTotalAvoir(refAvoir))|number_format(2) ~ ' €' }}
+						{% endif %}
+					</span>
+				</div>
+				{% if app.request.attributes.get('_route') != "UcaGest_AvoirDetails" %}
+					<div class='row offset-4 d-flex flex-wrap justify-content-between'>
+						<p class="p-0 m-0 text-uppercase fw-700 text-left">
+							{{ 'common.credit'|trans }}:</p>
+						<p>
+							<span class="color-blue ml-3">
+								{{ (credit|number_format(2)) ~ ' €' }}</span>
+						</p>
+					</div>
+					<div class='row offset-4 d-flex flex-wrap justify-content-between'>
+						<p class="p-0 m-0 text-uppercase fw-700 text-left">
+							{{ 'common.montant'|trans }}:
+						</p>
+						<span class="color-blue ml-3">
+							{% if credit > commande.montantTotal %}
+								{{ (0|number_format(2)) ~ ' €' }}
+							{% elseif credit <= commande.montantTotal %}
+								{{ (commande.montantTotal - credit)|number_format(2) ~ ' €' }}
+							{% endif %}
+						</span>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+
+
+		<!-- Validation Commande -->
+		{% if commande.statut == 'apayer' and source == 'mescommandes' or commande.statut == 'panier' and source == 'monpanier' %}
+			<div id="paiementUtilisateur" class="row mb-4 p-0">
+				<div class="col-12 p-0 m-0 text-center text-md-right">
+					{% if commande.montantTotal != 0  %}
+						{% if form is not null and source != 'gestioncaisse' %}
+							{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+							<div class="d-flex">
+								<div class="ml-auto p-2">
+									{{ form_widget(form.cgvAcceptees) }}
+								</div>
+							</div>
+							{{ form_end(form) }}
+						{% endif %}
+						{% if source == 'monpanier' %}
+							<a href="{{url('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
+						{% endif %}
+					{% else %}
+						<a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement: 'NA', source: source })}}">{{ 'paiement.gratuit.validation' | trans }}</a>
+					{% endif %}
+				</div>
 			</div>
 		{% endif %}
 
-		
-		{% if ((commande.statut == 'apayer' and source == 'mescommandes') or (commande.statut == 'panier' and source == 'monpanier') or (commande.statut == 'apayer' and source == 'gestioncaisse')) %}
-			{% set credit = commande.utilisateur.getCreditTotal() %}
-		{% else %}
-			{% set credit = commande.creditUtilise %}
-		{% endif %}
-		<div class="col-6">
-			<p class="p-0 m-0 text-uppercase fw-700 text-right">
-				{{'common.total'|trans}}&nbsp;:&nbsp;&nbsp;
-				<span class="color-blue ml-3">
-					{% if not app.request.attributes.get('_route') == "UcaGest_AvoirDetails" %}
-						{{ commande.montantTotal ~ '€' }}
-					{% else %}
-						{{ commande.getTotalAvoir(refAvoir) ~ '€' }}
-					{% endif %}
-				</span>
-			</p>
-			{% if app.request.attributes.get('_route') != "UcaGest_AvoirDetails" %}
-				<p class="p-0 m-0 text-uppercase fw-700 text-right">
-					{{'common.credit'|trans}}&nbsp;:&nbsp;
-					<span class="color-blue ml-3">
-						{{ (credit | number_format(2)) ~ '€' }}</span>
-				</p>
-				<p class="p-0 m-0 text-uppercase fw-700 text-right">
-					{{ 'common.montant'|trans }}&nbsp;:&nbsp;
-					<span class="color-blue ml-3">
-						{% if credit > commande.montantTotal %}
-							{{ (0 | number_format(2)) ~ '€' }}
-						{% elseif credit <= commande.montantTotal %}
-							{{ (commande.montantTotal - credit | number_format(2)) ~ '€' }}
-						{% endif %}
-					</span>
-				</p>
-			{% endif %}
-		</div>
-	</div>
-	<div class="row mb-4 p-0">
-		<div class="col-12 p-0 m-0 text-center text-md-right">
-			{% if commande.statut == 'apayer' and source == 'mescommandes' or commande.statut == 'panier' and source == 'monpanier' %}
-				{% if commande.montantTotal != 0  %}
-					{% if form is not null and source != 'gestioncaisse' %}
-						{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
-						<div class="d-flex">
-							<div class="ml-auto p-2">
-								{{ form_widget(form.cgvAcceptees) }}
-							</div>
-						</div>
-						{{ form_end(form) }}
-					{% endif %}
-					{% if source == 'monpanier' %}
-						<a href="{{url('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
-					{% endif %}
-
-				{% else %}
-					<a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement: 'NA', source: source })}}">{{ 'paiement.gratuit.validation' | trans }}</a>
+		<!-- Paiement BDS -->
+		{% if commande.statut == 'apayer' and source == 'gestioncaisse' %}
+			<div id="paiementBDS" class="row mb-4 p-0">
+				<div class="col-12 p-0 m-0 text-center text-md-right">
+					<a id="boutonPaiementCarte" data-toggle="modal" data-target="#modalValidationPaiementcarte" class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'cb' })}}">{{ 'paiement.cb.validation' | trans }}</a>
+					<button id="boutonPaiementCheque" data-toggle="modal" data-target="#modalValidationPaiementcheque" class="btn btn-info">{{ 'paiement.cheque.validation' | trans }}</button>
+					<a id="boutonPaiementEspece" data-toggle="modal" data-target="#modalValidationPaiementespece" class="btn btn-info" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'espece' })}}">{{ 'paiement.especes.validation' | trans }}</a>
+					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'carte' } %}
+					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'cheque' } %}
+					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'espece' } %}
 				{% endif %}
-			{% endif %}
+			</div>
 
-			{% if commande.statut == 'apayer' and source == 'gestioncaisse' %}
-				<a id="boutonPaiementCarte" data-toggle="modal" data-target="#modalValidationPaiementcarte" class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'cb' })}}">{{ 'paiement.cb.validation' | trans }}</a>
-				<button id="boutonPaiementCheque" data-toggle="modal" data-target="#modalValidationPaiementcheque" class="btn btn-info">{{ 'paiement.cheque.validation' | trans }}</button>
-				<a id="boutonPaiementEspece" data-toggle="modal" data-target="#modalValidationPaiementespece" class="btn btn-info" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'espece' })}}">{{ 'paiement.especes.validation' | trans }}</a><a id="boutonPaiementEspece" data-toggle="modal" data-target="#modalValidationPaiementespece" class="btn btn-info" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'espece' })}}">{{ 'paiement.especes.validation' | trans }}</a>
-				{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { typePaiement : 'carte' } %}
-				{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { typePaiement : 'cheque' } %}
-				{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { typePaiement : 'espece' } %}
-			{% endif %}
-		</div>
-	</div>
-{% endif %}{% endmacro %}
+		{% endif %}
+	{% endmacro %}

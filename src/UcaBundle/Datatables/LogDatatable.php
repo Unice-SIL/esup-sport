@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - LogDatatable
+ *
+ * COntient les champs à afficher pour la table des logs
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\Column;
@@ -13,27 +19,28 @@ class LogDatatable extends AbstractTranslatedDatatable
         $this->setUcaDefault();
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('data', Column::class, array(
+            ])
+            ->add('data', Column::class, [
                 'title' => 'Data',
                 'visible' => false,
-            ))
-            ->add('loggedAt', DateTimeColumn::class, array(
+            ])
+            ->add('loggedAt', DateTimeColumn::class, [
                 'title' => $this->translator->trans('common.date'),
-            ))
-            ->add('username', Column::class, array(
+            ])
+            ->add('username', Column::class, [
                 'title' => $this->translator->trans('common.utilisateur'),
-            ))
-            ->add('data', TwigDataColumn::class, array(
+            ])
+            ->add('data', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.modifications'),
                 'twigTemplate' => 'LogData',
-            ))
-            ->add('action', Column::class, array(
+            ])
+            ->add('action', Column::class, [
                 'title' => $this->translator->trans('common.evenement'),
-            ));
+            ])
+        ;
     }
 
     public function getEntity()

@@ -1,10 +1,16 @@
 <?php
 
+/*
+ * Classe - TypeAutorisation:
+ *
+ * Un type d'autorisation (cotisation, carte,..)
+ * Il s'agit de l'autorisation 'physique'.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 use UcaBundle\Service\Common\Fn;
@@ -19,7 +25,24 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
     use \UcaBundle\Entity\Traits\Article;
-    #region Propriétés
+
+    /**
+     * @Gedmo\Translatable
+     * @Gedmo\Versioned
+     * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="typeautorisation.libelle.notblank")
+     */
+    protected $libelle;
+
+    /** @ORM\ManyToOne(targetEntity="Tarif", inversedBy="typesAutorisation") */
+    protected $tarif;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="ComportementAutorisation", fetch="EAGER")
+     * @Assert\NotNull(message="typeautorisation.comportement.notnull")
+     */
+    protected $comportement;
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -28,23 +51,6 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     private $id;
 
     /**
-     * @Gedmo\Translatable
-     * @Gedmo\Versioned
-     * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="typeautorisation.libelle.notblank") 
-     */
-    protected $libelle;
-
-    /** @ORM\ManyToOne(targetEntity="Tarif", inversedBy="typesAutorisation") */
-    protected $tarif;
-
-    /** 
-     * @ORM\ManyToOne(targetEntity="ComportementAutorisation", fetch="EAGER")
-     * @Assert\NotNull(message="typeautorisation.comportement.notnull")  
-     */
-    protected $comportement;
-
-    /** 
      * @Gedmo\Versioned
      * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
@@ -67,10 +73,20 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      * @ORM\Column(type="text")
      */
     private $comportementLibelle;
+    //endregion
 
-    #endregion
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formatsAchatCarte = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
-    #region Méthodes
+    //endregion
+
+    //region Méthodes
 
     public function jsonSerializeProperties()
     {
@@ -125,7 +141,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
 
     public function updateTarifLibelle()
     {
-        if ($this->getTarif() != null) {
+        if (null != $this->getTarif()) {
             $this->tarifLibelle = $this->getTarif()->getLibelle();
         } else {
             $this->tarifLibelle = '';
@@ -143,21 +159,11 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
 
     public function getArticleMontant($utilisateur)
     {
-        if (!in_array($this->comportement->getCodeComportement(), ["carte", "cotisation"])) {
+        if (!in_array($this->comportement->getCodeComportement(), ['carte', 'cotisation'])) {
             return 0;
-        } else {
-            return $this->getArticleMontantDefaut($utilisateur);
         }
-    }
-    #endregion
 
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->formatsAchatCarte = new \Doctrine\Common\Collections\ArrayCollection();
+        return $this->getArticleMontantDefaut($utilisateur);
     }
 
     /**
@@ -197,7 +203,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     /**
      * Set informationsComplementaires.
      *
-     * @param string|null $informationsComplementaires
+     * @param null|string $informationsComplementaires
      *
      * @return TypeAutorisation
      */
@@ -221,11 +227,11 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     /**
      * Set tarif.
      *
-     * @param \UcaBundle\Entity\Tarif|null $tarif
+     * @param null|\UcaBundle\Entity\Tarif $tarif
      *
      * @return TypeAutorisation
      */
-    public function setTarif(\UcaBundle\Entity\Tarif $tarif = null)
+    public function setTarif(Tarif $tarif = null)
     {
         $this->tarif = $tarif;
 
@@ -245,11 +251,11 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
     /**
      * Set comportement.
      *
-     * @param \UcaBundle\Entity\ComportementAutorisation|null $comportement
+     * @param null|\UcaBundle\Entity\ComportementAutorisation $comportement
      *
      * @return TypeAutorisation
      */
-    public function setComportement(\UcaBundle\Entity\ComportementAutorisation $comportement = null)
+    public function setComportement(ComportementAutorisation $comportement = null)
     {
         $this->comportement = $comportement;
 
@@ -273,7 +279,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      *
      * @return TypeAutorisation
      */
-    public function addFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function addFormatsActivite(FormatActivite $formatsActivite)
     {
         $this->formatsActivite[] = $formatsActivite;
 
@@ -285,9 +291,9 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      *
      * @param \UcaBundle\Entity\FormatActivite $formatsActivite
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatsActivite(\UcaBundle\Entity\FormatActivite $formatsActivite)
+    public function removeFormatsActivite(FormatActivite $formatsActivite)
     {
         return $this->formatsActivite->removeElement($formatsActivite);
     }
@@ -309,7 +315,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      *
      * @return TypeAutorisation
      */
-    public function addFormatsAchatCarte(\UcaBundle\Entity\FormatAchatCarte $formatsAchatCarte)
+    public function addFormatsAchatCarte(FormatAchatCarte $formatsAchatCarte)
     {
         $this->formatsAchatCarte[] = $formatsAchatCarte;
 
@@ -321,9 +327,9 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      *
      * @param \UcaBundle\Entity\FormatAchatCarte $formatsAchatCarte
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeFormatsAchatCarte(\UcaBundle\Entity\FormatAchatCarte $formatsAchatCarte)
+    public function removeFormatsAchatCarte(FormatAchatCarte $formatsAchatCarte)
     {
         return $this->formatsAchatCarte->removeElement($formatsAchatCarte);
     }

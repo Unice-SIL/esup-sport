@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - ActiviteController
+ *
+ * Gestion du CRUD pour les activités
+*/
+
 namespace UcaBundle\Controller\UcaGest\Activite;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

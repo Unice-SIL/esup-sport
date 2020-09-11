@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - ActiviteController:
+ *
+ * Traitement des activités de amnière générale
+ * Contrôleur technique permettant l'organisation des données
+*/
+
 namespace UcaBundle\Controller\Api;
 
 use DateTime;

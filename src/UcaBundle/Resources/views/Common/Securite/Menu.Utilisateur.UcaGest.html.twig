@@ -39,6 +39,12 @@
                     {{ 'sitemap.mescommandes.libelle' | trans }}
                 </a>
 
+                {# Acces a l'historique des crédits de l'utilisateur connecte #}
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MesCredits') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-euro-sign"></i>
+                    {{ 'sitemap.mescredits.libelle' | trans }}
+                </a>
+                
                 {# Acces aux commandes des utilisateurs apayer #}
                 {% if is_granted('ROLE_GESTION_PAIEMENT_COMMANDE') %}
                     <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_CommandeEnAttenteLister') }}" id="navbarlink" role="menuitem">

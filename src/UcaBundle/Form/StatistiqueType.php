@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - StatistiqueType
+ *
+ * Formulaire de selection des statistiques personnalisées
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

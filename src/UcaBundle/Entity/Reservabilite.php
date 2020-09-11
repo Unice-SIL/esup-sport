@@ -1,24 +1,30 @@
 <?php
 
+/*
+ * Classe - Réservabiltié:.
+ *
+ * Reservalité des ressoruces.
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Translatable\Translatable;
 use UcaBundle\Service\Common\Fn;
-use UcaBundle\Service\Common\Previsualisation;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\ReservabiliteRepository")
- * @Gedmo\Loggable 
+ * @Gedmo\Loggable
  */
 class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
 {
-
     use \UcaBundle\Entity\Traits\JsonSerializable;
     use \UcaBundle\Entity\Traits\Article;
 
-    #region Propriétés
+    /** @ORM\OneToMany(targetEntity="Inscription", mappedBy="reservabilite") */
+    protected $inscriptions;
+
+    //region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -32,14 +38,21 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite") */
     private $evenement;
 
-    /** @ORM\OneToMany(targetEntity="Inscription", mappedBy="reservabilite") */
-    protected $inscriptions;
-
     private $formatActivite;
 
-    #endregion
+    //endregion
 
-    #region Méthodes
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    //endregion
+
+    //region Méthodes
 
     public function jsonSerializeProperties()
     {
@@ -54,8 +67,8 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     public function getArticleLibelle()
     {
         return $this->getRessource()->getLibelle()
-            . ' [' . $this->getArticleDateDebut()->format('d/m/Y H:i')
-            . ' - ' . $this->getArticleDateFin()->format('d/m/Y H:i') . ']';
+            .' ['.$this->getArticleDateDebut()->format('d/m/Y H:i')
+            .' - '.$this->getArticleDateFin()->format('d/m/Y H:i').']';
     }
 
     public function getArticleDescription()
@@ -108,16 +121,6 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
         return $this->getArticleMontantDefaut($utilisateur);
     }
 
-    #endregion
-
-    /**
-     * Constructor
-     */
-    public function __construct()
-    {
-        $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
     /**
      * Get id.
      *
@@ -131,11 +134,11 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     /**
      * Set ressource.
      *
-     * @param \UcaBundle\Entity\Ressource|null $ressource
+     * @param null|\UcaBundle\Entity\Ressource $ressource
      *
      * @return Reservabilite
      */
-    public function setRessource(\UcaBundle\Entity\Ressource $ressource = null)
+    public function setRessource(Ressource $ressource = null)
     {
         $this->ressource = $ressource;
 
@@ -155,11 +158,11 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     /**
      * Set evenement.
      *
-     * @param \UcaBundle\Entity\DhtmlxEvenement|null $evenement
+     * @param null|\UcaBundle\Entity\DhtmlxEvenement $evenement
      *
      * @return Reservabilite
      */
-    public function setEvenement(\UcaBundle\Entity\DhtmlxEvenement $evenement = null)
+    public function setEvenement(DhtmlxEvenement $evenement = null)
     {
         $this->evenement = $evenement;
 
@@ -183,7 +186,7 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
      *
      * @return Reservabilite
      */
-    public function addInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function addInscription(Inscription $inscription)
     {
         $this->inscriptions[] = $inscription;
 
@@ -195,9 +198,9 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
      *
      * @param \UcaBundle\Entity\Inscription $inscription
      *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
      */
-    public function removeInscription(\UcaBundle\Entity\Inscription $inscription)
+    public function removeInscription(Inscription $inscription)
     {
         return $this->inscriptions->removeElement($inscription);
     }

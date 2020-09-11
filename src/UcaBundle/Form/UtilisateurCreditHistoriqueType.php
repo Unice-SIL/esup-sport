@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - UtilisateurCreditHistoriqueType
+
+ * Formulaire d'ajout ou de report d'un crédit utilisateur
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

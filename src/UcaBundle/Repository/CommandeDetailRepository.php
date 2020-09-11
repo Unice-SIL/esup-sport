@@ -1,7 +1,14 @@
 <?php
 
+/*
+ * Classe - CommandeDetailRepository
+ *
+ * Contient les requêtes à la base de données pour l'entité commande détails
+*/
+
 namespace UcaBundle\Repository;
 
+use DateTime;
 use Doctrine\Common\Collections\Criteria;
 
 class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
@@ -64,5 +71,15 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
         $res = $qb->getQuery()->getSingleScalarResult();
 
         return empty($res) ? 0 : $res;
+    }
+
+    public function findCommandeDetailWithAutorisationInvalid()
+    {
+        $qb = $this->createQueryBuilder('cd')
+            ->andWhere('(cd.typeAutorisation IS NOT NULL AND cd.dateCarteFinValidite < :now) OR (cd.typeAutorisation IS NOT NULL AND cd.dateCarteFinValidite IS NULL)')
+            ->setParameter('now', new DateTime())
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

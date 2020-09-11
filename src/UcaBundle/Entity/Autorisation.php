@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * Classe - Autorisation:
+ *
+ * Elle permet de gérer les autorisations d'accès aux différentes activités
+ * Une autorisation existe entre une inscription et un type d'autorisation
+ * Une autorisation exite entre un utilisateur et un type d'autorisation
+ * Le type d'autorisation par exemple : cotisation sportive, carte d'accès, certificat médiécal,...
+*/
+
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;

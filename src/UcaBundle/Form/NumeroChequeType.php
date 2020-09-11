@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - NumeroChequeType
+ *
+ * Formulaire d'édition du numéro de chèque
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

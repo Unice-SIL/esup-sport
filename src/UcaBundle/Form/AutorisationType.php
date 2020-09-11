@@ -1,11 +1,16 @@
 <?php
 
+/*
+ * Classe - AutorisationType
+ *
+ * Formulaire d'ajout/édition d'une autorisation à un utilisateur
+ * Formulaire imbriqué
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -19,11 +24,11 @@ class AutorisationType extends AbstractType
             $infos = [];
             $data = $event->getData();
             $form = $event->getForm();
-            if ($data->getCodeComportement() == 'case') {
+            if ('case' == $data->getCodeComportement()) {
                 $form->add('caseACocher', CheckboxType::class, [
-                    'label' => $data->getInformationsComplementaires()
+                    'label' => $data->getInformationsComplementaires(),
                 ]);
-            } elseif ($data->getCodeComportement() == 'justificatif') {
+            } elseif ('justificatif' == $data->getCodeComportement()) {
                 $form->add('justificatifFile', VichFileType::class, [
                     'label' => $data->getInformationsComplementaires(),
                     'required' => true,
@@ -38,7 +43,7 @@ class AutorisationType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'UcaBundle\Entity\Autorisation',
-            'label' => false
+            'label' => false,
         ]);
     }
 }

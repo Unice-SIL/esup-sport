@@ -4,9 +4,9 @@
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
 
 {% block main %}
-    {{ flashBag.showAll }}
     {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     <h1>{{ item.libelle }}</h1>
+     {{ flashBag.showAll }}
     <div class="row">
         <div class="col-md-4">
             <img class="img-fluid rounded mb-4" alt="" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">

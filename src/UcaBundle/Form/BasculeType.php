@@ -1,5 +1,12 @@
 <?php
 
+/*
+ * Classe - BasculeType
+ *
+ * Formulaire de la bascule semestrielle
+ * Liste tous les champs présent pour cet écran
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EtablissementType
+ *
+ *  Formulaire d'ajout/édition d'un établissement
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

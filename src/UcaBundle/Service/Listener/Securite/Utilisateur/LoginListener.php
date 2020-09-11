@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - LoginListener
+ *
+ * Service surchargant certaines méthodes de FoSUser
+*/
+
 namespace UcaBundle\Service\Listener\Securite\Utilisateur;
 
 use App\Entity\User;

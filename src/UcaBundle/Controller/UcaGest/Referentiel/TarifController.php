@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - TarifController
+ *
+ * Gestion du CRUD pour les tarifs
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -13,14 +19,13 @@ use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Tarif;
 use UcaBundle\Form\TarifType;
 
-/** 
+/**
  * @Security("has_role('ROLE_ADMIN')")
- * @Route("UcaGest/Tarif") 
+ * @Route("UcaGest/Tarif")
  */
 class TarifController extends Controller
 {
-
-    /** 
+    /**
      * @Route("/", name="UcaGest_TarifLister")
      * @Isgranted("ROLE_GESTION_TARIF_LECTURE")
      */
@@ -36,6 +41,7 @@ class TarifController extends Controller
             $responseService->setDatatable($datatable);
             $builder = $responseService->getDatatableQueryBuilder();
             $repository->listAll($builder->getQb());
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
@@ -45,10 +51,11 @@ class TarifController extends Controller
         }
         // return $this->render('@Uca/UcaGest/Referentiel/Tarif/Lister.html.twig', $twigConfig);
         $twigConfig['codeListe'] = 'Tarif';
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
-    /** 
+    /**
      * @Route("/Ajouter", name="UcaGest_TarifAjouter", methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
@@ -65,16 +72,18 @@ class TarifController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
             return $this->redirectToRoute('UcaGest_TarifLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
         $twigConfig['profils'] = $profilsUtilisateurs;
+
         return $this->render('@Uca/UcaGest/Referentiel/Tarif/Formulaire.html.twig', $twigConfig);
     }
 
-    /** 
-     * @Route("/Supprimer/{id}", name="UcaGest_TarifSupprimer",requirements={"id"="\d+"}) 
+    /**
+     * @Route("/Supprimer/{id}", name="UcaGest_TarifSupprimer",requirements={"id"="\d+"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
     public function supprimerAction(Request $request, Tarif $item)
@@ -85,7 +94,7 @@ class TarifController extends Controller
             ['relation' => $item->getTypesAutorisation(), 'message' => 'tarif.supprimer.erreur.autorisations'],
             ['relation' => $item->getRessources(), 'message' => 'tarif.supprimer.erreur.ressources'],
             ['relation' => $item->getCreneaux(), 'message' => 'tarif.supprimer.erreur.creneaux'],
-            ['relation' => $item->getFormatsActivite(), 'message' => "tarif.supprimer.erreur.formatsactivite"]
+            ['relation' => $item->getFormatsActivite(), 'message' => 'tarif.supprimer.erreur.formatsactivite'],
         ];
         foreach ($listeRelations as $relation) {
             if (!$relation['relation']->isEmpty()) {
@@ -95,16 +104,17 @@ class TarifController extends Controller
         }
         if ($r) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
-            return $this->redirectToRoute('UcaGest_TarifLister');
-        } else {
-            $em->remove($item);
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
             return $this->redirectToRoute('UcaGest_TarifLister');
         }
+        $em->remove($item);
+        $em->flush();
+        $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
+        return $this->redirectToRoute('UcaGest_TarifLister');
     }
 
-    /** 
+    /**
      * @Route("/Modifier/{id}", name="UcaGest_TarifModifier",requirements={"id"="\d+"}, methods={"GET", "POST"})
      * @Isgranted("ROLE_GESTION_TARIF_ECRITURE")
      */
@@ -116,10 +126,12 @@ class TarifController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
             return $this->redirectToRoute('UcaGest_TarifLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/Tarif/Formulaire.html.twig', $twigConfig);
     }
 }

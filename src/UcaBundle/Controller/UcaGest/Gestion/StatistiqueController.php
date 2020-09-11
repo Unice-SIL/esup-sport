@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - StatistiqueController
+ *
+ * Gestion du formulaire de personnalisation
+*/
+
 namespace UcaBundle\Controller\UcaGest\Gestion;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;

@@ -1,4 +1,12 @@
 <?php
+
+/*
+ * Classe - TwigDataColumn
+ *
+ * Crée une colonne pour le datatable
+ * Données uniquement
+*/
+
 namespace UcaBundle\Datatables\Column;
 
 use Sg\DatatablesBundle\Datatable\Column\Column;
@@ -11,7 +19,7 @@ class TwigDataColumn extends Column
 
     public function getCellContentTemplate()
     {
-        return '@Uca/Datatables/Column/' . $this->twigTemplate . 'Column.html.twig';
+        return '@Uca/Datatables/Column/'.$this->twigTemplate.'Column.html.twig';
     }
 
     public function renderSingleField(array &$row)
@@ -20,9 +28,9 @@ class TwigDataColumn extends Column
         $data = $this->accessor->getValue($row, $path);
         $twigConfig = [
             'entityClassName' => $this->entityClassName,
-            'propertyPath' => trim($path, "[]"),
+            'propertyPath' => trim($path, '[]'),
             'row' => $row,
-            'data' => $data
+            'data' => $data,
         ];
         $row[$this->data] = $this->twig->render($this->getCellContentTemplate(), $twigConfig);
     }
@@ -33,16 +41,19 @@ class TwigDataColumn extends Column
         $resolver->setDefaults([
             'twigTemplate' => 'Twig',
         ]);
+
         return $this;
     }
 
-    public function setTwigTemplate($twigTemplate) {
+    public function setTwigTemplate($twigTemplate)
+    {
         $this->twigTemplate = $twigTemplate;
+
         return $this;
     }
-    public function getTwigTemplate() {
+
+    public function getTwigTemplate()
+    {
         return $this->twigTemplate;
     }
 }
-
- 

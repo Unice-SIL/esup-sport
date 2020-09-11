@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - SelectionProfil
+ *
+ * Service gérant la selection des profils sur la page d'acceuil
+*/
+
 namespace UcaBundle\Service\Service;
 
 use Sensio\Bundle\FrameworkExtraBundle\Security\ExpressionLanguage;

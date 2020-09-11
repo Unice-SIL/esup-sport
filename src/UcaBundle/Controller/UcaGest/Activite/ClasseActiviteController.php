@@ -1,20 +1,26 @@
 <?php
 
+/*
+ * Classe - ClasseActiviteController
+ *
+ * Gestion du CRUD pour les classes d'activités
+*/
+
 namespace UcaBundle\Controller\UcaGest\Activite;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use UcaBundle\Datatables\ClasseActiviteDatatable;
 use UcaBundle\Entity\ClasseActivite;
 use UcaBundle\Form\ClasseActiviteType;
 
-/** 
+/**
  * @Security("has_role('ROLE_ADMIN')")
  * @Route("UcaGest/ClasseActivite")
-*/
+ */
 class ClasseActiviteController extends Controller
 {
     /**
@@ -42,6 +48,7 @@ class ClasseActiviteController extends Controller
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
             $qb = $dtQueryBuilder->getQb();
+
             return $responseService->getResponse();
         }
         // Bouton Ajouter
@@ -51,6 +58,7 @@ class ClasseActiviteController extends Controller
         }
 
         $twigConfig['codeListe'] = 'ClasseActivite';
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
@@ -67,10 +75,12 @@ class ClasseActiviteController extends Controller
             $em->persist($item);
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+
             return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Activite/ClasseActivite/Formulaire.html.twig', $twigConfig);
     }
 
@@ -85,28 +95,32 @@ class ClasseActiviteController extends Controller
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->flush();
             $this->get('uca.flashbag')->addActionFlashBag($item, 'Modifier');
+
             return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
+
         return $this->render('@Uca/UcaGest/Activite/ClasseActivite/Formulaire.html.twig', $twigConfig);
     }
 
     /**
      * @Route("/Supprimer/{id}", name="UcaGest_ClasseActiviteSupprimer")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
-    */
+     */
     public function supprimerAction(Request $request, ClasseActivite $item)
     {
         $t = $this->get('translator');
         $em = $this->getDoctrine()->getManager();
         if (!$item->getActivites()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
+
             return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
         }
         $em->remove($item);
         $em->flush();
         $this->get('uca.flashbag')->addActionFlashBag($item, 'Supprimer');
+
         return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
     }
 }

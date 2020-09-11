@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - DetailsGestionPanierDatatable:
+ *
+ * COntient les champs à afficher pour le détail du panier (commande)
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
@@ -14,32 +20,33 @@ class DetailsGestionPanierDatatable extends AbstractTranslatedDatatable
         $this->setUcaDefault();
 
         $this->columnBuilder
-            ->add('id', Column::class, array(
+            ->add('id', Column::class, [
                 'title' => 'Id',
                 'visible' => false,
-            ))
-            ->add('libelle', Column::class, array(
+            ])
+            ->add('libelle', Column::class, [
                 'title' => $this->translator->trans('common.libelle'),
-            ))
-            ->add('commande.statut', TwigDataColumn::class, array(
+            ])
+            ->add('commande.statut', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.statut'),
                 'twigTemplate' => 'Trans',
-                'class_name' => 'hide-column-sm'
-            ))
-            ->add('montant', TwigDataColumn::class, array(
+                'class_name' => 'hide-column-sm',
+            ])
+            ->add('montant', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.montant'),
                 'twigTemplate' => 'Montant',
-            ))
-            ->add('dateAjoutPanier', TwigDataColumn::class, array(
+            ])
+            ->add('dateAjoutPanier', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.dateajoutpanier'),
                 'twigTemplate' => 'Date',
-            ))
+            ])
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
                     (new SupprimerButton($this, 'UcaWeb_ArticleSupprimer', ['id' => 'id'], 'ROLE_GESTION_PAIEMENT_COMMANDE'))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

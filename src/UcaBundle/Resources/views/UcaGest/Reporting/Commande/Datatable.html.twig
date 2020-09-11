@@ -23,11 +23,11 @@
     {# Affichage du bouton Exporter tout s'il est défini #}
     <div class="row">
         {% if exportAll is defined %}
-            <a href="{{ url('UcaWeb_MesCommandesExportAll') }}" id="bouton_export_all_facture" class="btn btn-primary ml-md-auto mt-3" >{{ 'bouton.exportallfacture.pdf'|trans }}</a>
+            <a href="#" id="bouton_export_all_facture" class="btn btn-primary ml-md-auto mt-3" role="button">{{ 'bouton.exportallfacture.pdf'|trans }}</a>
         {% endif %}    
 
         {% if gestionButtons is defined %}
-            <a href="{{url('UcaWeb_MesCommandesExtraire')}}" id="bouton_extraction_excel" class="btn btn-primary mt-3">{{'common.extraire'|trans}}</a>
+            <a href="#" id="bouton_extraction_excel" class="btn btn-primary mt-3" role="button">{{'common.extraire'|trans}}</a>
         {% endif %}
     </div>
 {% endblock %}
@@ -36,50 +36,24 @@
     {{ parent() }}
         <script type="text/javascript">        
             $(document).ready(function(){
-                setUrlExtraction();
-                setUrlForExportPDF();
+                $("input[type=text]").each(function(){
+                    $(this).attr('placeholder','');
+                    $(this).css('height','40px');
+                })
+                $("#sg-datatables-Commande_datatable-head-filter-15").next().css('width','100px');
+                _uca.extraction.commande.setUrlExtraction(ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
+                _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
+                
                 $('.champRechercheDatatableCommande').on('change', function() {
-                    setUrlExtraction();
-                    setUrlForExportPDF();
+                    _uca.extraction.commande.setUrlExtraction(ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
+                    _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
                 });
+                
                 $('input[type="search"]').on('change', function(){
-                    setUrlForExportPDF();
+                    _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
+           
                 });
             });
-
-            function setUrlExtraction(){
-                let dateDebut = $('#ucabundle_commande_dateDebut').val();
-                let dateFin = $('#ucabundle_commande_dateFin').val();
-                let url = "{{ url('UcaWeb_MesCommandesExtraire', {'dateDebut': 'date_debut', 'dateFin': 'date_fin' }) }}";
-                if(dateDebut){
-                    url = url.replace('date_debut', dateDebut);
-                } else {
-                    url = url.replace('date_debut', null);
-                }
-                if(dateFin){
-                    url = url.replace('date_fin', dateFin);
-                } else {
-                    url = url.replace('date_fin', null);
-                }
-                $("#bouton_extraction_excel").attr("href", url);
-            } 
-
-            function setUrlForExportPDF(){
-                let recherche = $('input[type="search"]').val();
-                let datePaiement = $('#ucabundle_commande_datePaiement').val();
-                let url = "{{ url('UcaWeb_MesCommandesExportAll', {'datePaiement': 'valeur_date', 'recherche': 'valeur_recherche' }) }}";
-                if(recherche){
-                    url = url.replace('valeur_recherche', recherche);
-                } else {
-                    url = url.replace('valeur_recherche', null);
-                }
-
-                if(datePaiement){
-                    url = url.replace('valeur_date', datePaiement);
-                } else {
-                    url = url.replace('valeur_date', null);
-                }
-                $("#bouton_export_all_facture").attr("href", url);
-            }
+        
         </script>
 {% endblock %}

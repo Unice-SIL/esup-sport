@@ -1,16 +1,20 @@
 <?php
 
+/*
+ * Classe - TexteController
+ *
+ * Lister et modifier les textes
+*/
+
 namespace UcaBundle\Controller\UcaGest\Referentiel;
 
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
-use UcaBundle\Entity\Texte;
 use UcaBundle\Datatables\TexteDatatable;
-use UcaBundle\Form\TexteType;
+use UcaBundle\Entity\Texte;
 
 /**
  * @Route("UcaGest/Texte")
@@ -32,14 +36,15 @@ class TexteController extends Controller
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
             $responseService->getDatatableQueryBuilder();
+
             return $responseService->getResponse();
         }
 
         $twigConfig['noAddButton'] = true;
         $twigConfig['codeListe'] = 'Texte';
+
         return $this->render('@Uca/Common/Liste/Datatable.html.twig', $twigConfig);
     }
-
 
     /**
      * @Route("/{id}/Modifier", name="UcaGest_TexteModifier", methods={"GET", "POST"})
@@ -53,15 +58,17 @@ class TexteController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid() && $request->isMethod('POST')) {
             $this->get('uca.flashbag')->addActionFlashBag($texte, 'Modifier');
-            if (is_null($texte->getTexteMobile()) && $texte->getMobile() == 1) {
+            if (is_null($texte->getTexteMobile()) && 1 == $texte->getMobile()) {
                 $texte->setTexteMobile('');
             }
             $em->flush();
+
             return $this->redirectToRoute('UcaGest_TexteLister');
         }
 
-        $twigConfig["item"] = $texte;
-        $twigConfig["form"] = $editForm->createView();
+        $twigConfig['item'] = $texte;
+        $twigConfig['form'] = $editForm->createView();
+
         return $this->render('@Uca/UcaGest/Referentiel/Texte/Formulaire.html.twig', $twigConfig);
     }
 }

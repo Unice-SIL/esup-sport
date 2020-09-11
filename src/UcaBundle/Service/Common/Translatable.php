@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - Translatable
+ *
+ * Service gérant les traduction et la langue du site
+*/
+
 namespace UcaBundle\Service\Common;
 
 class Translatable
@@ -7,7 +13,7 @@ class Translatable
     private $em;
     private $requestStack;
 
-    private $locale = null;
+    private $locale;
     private $traductions = [];
 
     public function __construct(
@@ -16,14 +22,6 @@ class Translatable
     ) {
         $this->em = $em;
         $this->requestStack = $requestStack;
-    }
-
-    private function init()
-    {
-        if (empty($this->locale)) {
-            $this->locale = $this->requestStack->getCurrentRequest()->getLocale();
-            $this->traductions = $this->em->getRepository(\Gedmo\Translatable\Entity\Translation::class)->findAll();
-        }
     }
 
     public function getTranslation($params)
@@ -40,6 +38,15 @@ class Translatable
             $res = reset($res);
             $res = $res->getContent();
         }
+
         return empty($res) ? $params['data'] : $res;
+    }
+
+    private function init()
+    {
+        if (empty($this->locale)) {
+            $this->locale = $this->requestStack->getCurrentRequest()->getLocale();
+            $this->traductions = $this->em->getRepository(\Gedmo\Translatable\Entity\Translation::class)->findAll();
+        }
     }
 }

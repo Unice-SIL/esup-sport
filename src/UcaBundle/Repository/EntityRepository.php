@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - EntityRepository:
+ *
+ * Deinition des criteria pour les requêtes à la base de onnées
+*/
+
 namespace UcaBundle\Repository;
 
 use Doctrine\Common\Collections\Criteria;
@@ -16,6 +22,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository
             $where = call_user_func_array([Criteria::expr(), $critOperator], [$critProperty, $critValue]);
             $criteria->andWhere($where);
         }
+
         return $criteria;
     }
 }

@@ -1,16 +1,21 @@
 <?php
 
+/*
+ * Classe - MesInscriptionesDatatable
+ *
+ * COntient les colonnes à afficher pour la page mes inscriptions
+*/
+
 namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use UcaBundle\Datatables\Button\InscriptionAjouterPanierButton;
 use UcaBundle\Datatables\Button\InscriptionAnnulerButton;
+use UcaBundle\Datatables\Button\InscriptionDesinscrireButton;
 use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigDataColumn;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 use UcaBundle\Entity\Inscription;
-use Sg\DatatablesBundle\Datatable\Column\Column;
-use UcaBundle\Datatables\Button\InscriptionDesinscrireButton;
 
 class MesInscriptionsDatatable extends AbstractTranslatedDatatable
 {
@@ -31,13 +36,13 @@ class MesInscriptionsDatatable extends AbstractTranslatedDatatable
             'reservabilite.evenement.dateFin',
             'reservabilite.ressource.libelle',
         ]);
-        
-         $qb = $this->em->createQueryBuilder();
-         $qb1 = $this->em->createQueryBuilder();
+
+        $qb = $this->em->createQueryBuilder();
+        $qb1 = $this->em->createQueryBuilder();
 
         $this->columnBuilder
             ->add('Activite', TwigVirtualColumn::class, [
-                'title' => "Mes activités",
+                'title' => 'Mes activités',
                 'twigTemplate' => 'InscriptionData',
                 'class_name' => 'hide-column-sm',
             ])
@@ -52,34 +57,29 @@ class MesInscriptionsDatatable extends AbstractTranslatedDatatable
                 'field' => 'statut',
             ])
             ->add('creneauActivite', TwigDataColumn::class, [
-                'dql' => 
-                "(".$qb->select('a.libelle')
-                ->from('UcaBundle:inscription', 'i')
-                ->leftjoin('i.creneau', 'c')
-                ->leftjoin('c.formatActivite', 'f')
-                ->leftjoin('f.activite', 'a')
-                ->andWhere("i.id = inscription.id")
-                ->getDQL().")"
-                ,
+                'dql' => '('.$qb->select('a.libelle')
+                    ->from('UcaBundle:inscription', 'i')
+                    ->leftjoin('i.creneau', 'c')
+                    ->leftjoin('c.formatActivite', 'f')
+                    ->leftjoin('f.activite', 'a')
+                    ->andWhere('i.id = inscription.id')
+                    ->getDQL().')',
 
                 'type_of_field' => 'string',
                 'visible' => false,
-                'searchable' => false
+                'searchable' => false,
             ])
             ->add('reservabiliteActivite', TwigDataColumn::class, [
-                'dql' => 
-                "(".$qb1->select('a1.libelle')
-                ->from('UcaBundle:inscription', 'i1')
-                ->leftjoin('i1.formatActivite', 'f1')
-                ->leftjoin('f1.activite', 'a1')
-                ->andWhere("i1.id = inscription.id")
-                ->getDQL().")"   
-                ,
+                'dql' => '('.$qb1->select('a1.libelle')
+                    ->from('UcaBundle:inscription', 'i1')
+                    ->leftjoin('i1.formatActivite', 'f1')
+                    ->leftjoin('f1.activite', 'a1')
+                    ->andWhere('i1.id = inscription.id')
+                    ->getDQL().')',
                 'type_of_field' => 'string',
                 'visible' => false,
-                'searchable' => false
-            ])   
-
+                'searchable' => false,
+            ])
 
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
@@ -88,8 +88,9 @@ class MesInscriptionsDatatable extends AbstractTranslatedDatatable
                     (new InscriptionAjouterPanierButton($this, 'UcaWeb_MesInscriptionsAjoutPanier', ['id' => 'id']))->getConfig(),
                     (new InscriptionDesinscrireButton($this, 'UcaWeb_MesInscriptionsSeDesinscrire', ['id' => 'id']))->getConfig(),
                     // (new VoirButton($this, 'UcaWeb_MesInscriptionsVoir', ['id' => 'id']))->getConfig(),
-                ]
-            ]);
+                ],
+            ])
+        ;
     }
 
     public function getEntity()

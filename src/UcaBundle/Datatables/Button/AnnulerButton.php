@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - AnnulerButton
+ *
+ * Mise en forme des boutons annuler
+*/
+
 namespace UcaBundle\Datatables\Button;
 
 class AnnulerButton extends AbstractButton

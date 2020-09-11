@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - SiteMap
+ *
+ * Service gérant le sitemap (fil d'arianne)
+*/
+
 namespace UcaBundle\Service\Common;
 
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;

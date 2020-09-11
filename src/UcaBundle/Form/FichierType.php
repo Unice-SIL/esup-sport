@@ -1,24 +1,25 @@
 <?php
 
+/*
+ * Classe - FichierType
+ *
+ * Formulaire d'ajout/édition d'un Fichier
+ * Le fichier est lié à une entité
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ResetType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Vich\UploaderBundle\Form\Type\VichImageType;
-
 
 class FichierType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('imageFile',VichImageType::class,[
+        $builder->add('imageFile', VichImageType::class, [
             'required' => true,
             'allow_delete' => false,
             'download_uri' => false,
@@ -26,7 +27,7 @@ class FichierType extends AbstractType
             'label_format' => 'referentiel.libelle.maj',
             'translation_domain' => 'messages',
         ]);
-        $builder->add('save', SubmitType::class,[
+        $builder->add('save', SubmitType::class, [
             'label_format' => 'referentiel.bouton.maj',
         ]);
     }
@@ -34,7 +35,7 @@ class FichierType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'UcaBundle\Entity\Fichier'
+            'data_class' => 'UcaBundle\Entity\Fichier',
         ]);
     }
 

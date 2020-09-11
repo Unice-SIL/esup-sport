@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * classe - CommandeListener
+ *
+ * Service intervant lors des modification en base de données de l'entité commande
+*/
+
 namespace UcaBundle\Service\Listener\Entity;
 
 use Doctrine\ORM\Event\PreUpdateEventArgs;

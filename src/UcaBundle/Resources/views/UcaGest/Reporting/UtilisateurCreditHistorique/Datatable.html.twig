@@ -1,0 +1,55 @@
+{% extends "@Uca/Common/Liste/Datatable.html.twig" %}
+
+{% block DatatableHeader %}
+  <div class="well">
+    {{form_start(form)}}
+    <div class="row">        
+      <div class="col-sm-4">
+        {{form_row(form.dateDebut)}}
+      </div>
+      <div class="col-sm-4">
+        {{form_row(form.dateFin)}}
+      </div>
+      <div class="col-sm-4">
+        {{form_row(form.datePaiement)}}
+      </div>
+    </div>
+    {{form_end(form)}}
+  </div>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+    {# Affichage du bouton Exporter tout s'il est défini #}
+    <div class="text-right">
+        {% if exportAll is defined %}
+            <a href="#" id="bouton_export_all_pdf" class="btn btn-primary ml-md-auto mt-3" role="button">
+              <span alt="" class="fa fa-file-pdf mr-1"> </span>
+              {{ 'bouton.exportallfacture.pdf'|trans }}
+            </a>
+        {% endif %}   
+        {% if gestionButtons is defined %}
+            <a href="#" id="bouton_extraction_excel" class="btn btn-primary mt-3" role="button">
+              <span alt="" class="fa fa-file-excel mr-1"> </span>
+              {{ 'common.extraire'|trans }}
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script type="text/javascript">        
+    $(document).ready(function(){
+      _uca.extraction.setUrlExtractionExcel('UcaGest_ReportingCreditExtraction', ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
+      _uca.extraction.setUrlForExportPDF('UcaWeb_MesCreditsExportAll', ucabundle_commande_datePaiement);          
+      $('.champRechercheDatatableCommande').on('change', function() {
+        _uca.extraction.setUrlExtractionExcel('UcaGest_ReportingCreditExtraction', ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
+        _uca.extraction.setUrlForExportPDF('UcaWeb_MesCreditsExportAll', ucabundle_commande_datePaiement);  
+      });
+      $('input[type="search"]').on('change', function(){
+        _uca.extraction.setUrlForExportPDF('UcaWeb_MesCreditsExportAll', ucabundle_commande_datePaiement);  
+      });    
+    });      
+  </script>
+{% endblock %}

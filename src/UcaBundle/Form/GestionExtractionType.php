@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - GestionExtractionType
+ *
+ * Formulaire permetant dze gérér les élements qui seront extraits
+*/
+
 namespace UcaBundle\Form;
 
 use Symfony\Component\Form\AbstractType;

@@ -1,5 +1,11 @@
 <?php
 
+/*
+ * Classe - FooterController
+ *
+ * Gestion du menu de bas de page
+*/
+
 namespace UcaBundle\Controller\UcaWeb;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
