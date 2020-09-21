@@ -129,7 +129,9 @@ class DhtmlxController extends Controller
             }
             $em->flush();
 
-            return $this->redirectToRoute('DhtmlxApi', ['activite' => $ev['itemId'], 'type' => $ev['typeA']]);
+            $res = $creneau->jsonSerialize();
+
+        // return $this->redirectToRoute('DhtmlxApi', ['activite' => $ev['itemId'], 'type' => $ev['typeA']]);
         } else {
             $c = new DhtmlxCommand($em, $ev);
             $c->execute();

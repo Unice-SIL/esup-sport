@@ -5,7 +5,7 @@
   route: 'UcaWeb_ShibLogin'
   shibboleth: 1
   items: 
-    - titre: "Université Côde d'Azur"
+    - titre: "Université Côte d'Azur"
       shibboleth: 1
     - titre: "Villa Arson"
       shibboleth: 0

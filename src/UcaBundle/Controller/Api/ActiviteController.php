@@ -99,7 +99,8 @@ class ActiviteController extends Controller
                 $dt = clone $currentDate->modify('last day of this month');
                 $datefin = $dt;
             }
-        } elseif ('jour' == $parametreData['typeVisualisation']) {
+        }
+        if ('jour' == $parametreData['typeVisualisation']) {
             $dates[] = $currentDate;
             $dateDebut = $currentDate;
             $datefin = $currentDate;
@@ -111,7 +112,13 @@ class ActiviteController extends Controller
         $dataCalendrier = [];
 
         if ('mois' == $parametreData['typeVisualisation']) {
-            $dataCalendrier = array_fill(0, (intval($datefin->format('W')) - intval($dateDebut->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
+            if (01 == $dateDebut->format('m')) {
+                $dataCalendrier = array_fill(0, (intval($datefin->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
+            } elseif (12 == $dateDebut->format('m')) {
+                $dataCalendrier = array_fill(0, (53 - intval($dateDebut->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
+            } else {
+                $dataCalendrier = array_fill(0, (intval($datefin->format('W')) - intval($dateDebut->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
+            }
 
             $dt = clone $dateDebut;
             $dt = $dt->modify('monday this week');
@@ -134,7 +141,14 @@ class ActiviteController extends Controller
 
         foreach ($listeEvenements as $evenement) {
             if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
-                $campus = $em->getRepository(Etablissement::class)->findOneById($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()->getId());
+                if ($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()) {
+                    $campus = $em->getRepository(Etablissement::class)->findOneById($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()->getId());
+                } else {
+                    $translator = $this->get('translator');
+                    $c = [];
+                    $c['libelle'] = $translator->trans('etablissement.exterieur');
+                    $campus = $c;
+                }
             } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
                 $campus = 'Ressource';
             }
@@ -153,7 +167,15 @@ class ActiviteController extends Controller
                 $indexColonneCorrespondantDate = array_search($eventDateDebut, $dates);
             } elseif ('mois' == $parametreData['typeVisualisation']) {
                 $indexColonneCorrespondantDate = $eventDateDebut->format('w') - 1;
-                $indexLigneCorrespondantCampus = intval($eventDateDebut->format('W')) - intval($dateDebut->format('W'));
+                if (53 == $dateDebut->format('W') && 01 == $dateDebut->format('m')) {
+                    if (53 == $eventDateDebut->format('W')) {
+                        $indexLigneCorrespondantCampus = 0;
+                    } else {
+                        $indexLigneCorrespondantCampus = intval($eventDateDebut->format('W'));
+                    }
+                } else {
+                    $indexLigneCorrespondantCampus = intval($eventDateDebut->format('W')) - intval($dateDebut->format('W'));
+                }
             }
 
             if (null == $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]) {

@@ -17,7 +17,6 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Valid;
 
 class LieuType extends AbstractType
@@ -34,8 +33,7 @@ class LieuType extends AbstractType
                 'class' => 'UcaBundle:Etablissement',
                 'choice_label' => 'libelle',
                 'label_format' => 'ressource.etablissement',
-                'required' => true,
-                'constraints' => new NotBlank(['message' => 'etablissement.notblank']),
+                'required' => false,
                 'multiple' => false,
                 'expanded' => false,
                 'disabled' => $options['data']->getSourceReferentiel(),

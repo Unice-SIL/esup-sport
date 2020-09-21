@@ -72,7 +72,23 @@ class ActiviteController extends Controller
         $twigConfig['idCa'] = $idCa;
         $twigConfig['entite'] = 'FormatActivite';
         $twigConfig['item'] = $em->getRepository('UcaBundle:Activite')->findOneBy(['id' => $id]);
-        $twigConfig['data'] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($twigConfig['item'], $this->getUser());
+        $formats = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($twigConfig['item'], $this->getUser());
+        //On check les formats du type FormatAvecReservation pour voir si les ressources à réserver ont des créneaux
+        //Si elles n'en ont pas on ne les affiches pas
+        foreach ($formats as $key => $format) {
+            if ($format instanceof FormatAvecReservation) {
+                $nbRessourceValid = 0;
+                foreach ($format->getRessource() as $ressource) {
+                    if (sizeof($ressource->getReservabilites()) > 0) {
+                        ++$nbRessourceValid;
+                    }
+                }
+                if (0 == $nbRessourceValid) {
+                    unset($formats[$key]);
+                }
+            }
+        }
+        $twigConfig['data'] = $formats;
         $twigConfig['etablissements'] = $em->getRepository('UcaBundle:Etablissement')->findEtablissementByActivite($id);
 
         return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
@@ -116,7 +132,13 @@ class ActiviteController extends Controller
 
     public function formatAvecReservationVoirRessource($item, $twigConfig)
     {
-        $twigConfig['data'] = $item->getRessource();
+        $ressources = $item->getRessource();
+        foreach ($ressources as $key => $ressource) {
+            if (0 == sizeof($ressource->getReservabilites())) {
+                unset($ressources[$key]);
+            }
+        }
+        $twigConfig['data'] = $ressources;
 
         return $this->render('@Uca/UcaWeb/Activite/ListerRessource.html.twig', $twigConfig);
     }

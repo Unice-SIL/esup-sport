@@ -103,6 +103,11 @@
 	<script type='text/javascript'>
 			'use_strict';
 			var CAPACITE = {{ item.capacite }};
+	</script>
+	{% endif %}
+	{% if item.dateFinEffective is defined %}
+	<script type='text/javascript'>
+			'use_strict';
 			//permet de passer la date fin effective 
 			var DATEFINEFFECTIVE = "{{ item.dateFinEffective|date('d-m-Y') }}";
 			//on créer la date fin effective + 1 jour pour vérification dans Lightbox.js

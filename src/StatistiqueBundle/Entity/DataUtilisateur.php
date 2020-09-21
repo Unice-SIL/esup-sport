@@ -11,6 +11,10 @@ namespace StatistiqueBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * @ORM\Table(name="data_utilisateur")
+ * @ORM\Entity(repositoryClass="StatistiqueBundle\Repository\DataUtilisateurRepository")
+ */
 class DataUtilisateur
 {
     /**

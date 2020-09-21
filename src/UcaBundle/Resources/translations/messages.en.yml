@@ -79,6 +79,7 @@ bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
 bouton.exportallfacture.pdf: Export bills
 bouton.exportpdf: Export
+bouton.indisponible.autorisationinvalide: "This time slot requires authorization: %autorisation%. Your authorization expires before the start of the time slot. Expiry date: %dateFinValidite%. Wait until your authorization expires to resume a new one and be able to register for this course. "
 bouton.indisponible.inscriptionsterminees: Registration closed
 bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
 bouton.indisponible.statut.desinscriptionadministrative: You have been unsubscribed by the administration
@@ -383,6 +384,7 @@ etablissement.ajouter.succes: Campus successfully added
 etablissement.ajouter.title: Add a Campus
 etablissement.code: Campus code
 etablissement.email.libelle: Contact email
+etablissement.exterieur: "Outside"
 etablissement.gestion: Campus management
 etablissement.horaires.ouverture.libelle: Opening hours
 etablissement.image.libelle: Select a picture
@@ -932,6 +934,7 @@ sitemap.typeactivite.libelle: Types of activities
 sitemap.typeautorisation.libelle: Types of authorizations
 sitemap.ucagest.libelle: Uca Gest
 sitemap.ucasport.libelle: Uca Sport
+sitemap.utilisateur.changermotdepasse: Change password
 sitemap.utilisateur.credit.ajouter: Adding a user's credit
 sitemap.utilisateur.libelle: Users
 sitemap.utilisateur.verification: Check email

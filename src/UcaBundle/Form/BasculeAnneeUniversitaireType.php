@@ -115,8 +115,16 @@ class BasculeAnneeUniversitaireType extends AbstractType
                 'label' => 'bascule.reservation.supprimer',
                 'required' => false,
             ])
+            ->add('dupliquerFormatAvecReservation', CheckboxType::class, [
+                'label' => 'Dupliquer les formats de réservation de salles et d\'équipements',
+                'required' => false,
+            ])
             ->add('basculeCarteEtCotisation', CheckboxType::class, [
                 'label' => 'bascule.carte.cotisation.supprimer',
+                'required' => false,
+            ])
+            ->add('dupliquerFormatAchatCarte', CheckboxType::class, [
+                'label' => 'Dupliquer les formats d\'achat de carte',
                 'required' => false,
             ])
             ->add('basculeCredit', CheckboxType::class, [

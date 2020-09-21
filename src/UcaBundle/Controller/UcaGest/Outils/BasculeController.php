@@ -19,7 +19,9 @@ use UcaBundle\Entity\Autorisation;
 use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\DhtmlxSerie;
+use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\FormatAvecCreneau;
+use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\FormatSimple;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Lieu;
@@ -238,7 +240,9 @@ class BasculeController extends Controller
                                 }
                                 $em->remove($evenement);
                             }
+                            $em->remove($serie);
                         }
+                        $em->remove($creneau);
                     }
                     $em->flush();
                 }
@@ -263,6 +267,59 @@ class BasculeController extends Controller
             $listeInscription = $em->getRepository(Inscription::class)->findReservation();
             foreach ($listeInscription as $inscription) {
                 $inscription->setStatut('ancienneinscription');
+            }
+            $em->flush();
+            ++$cmpt;
+        }
+
+        //Duplication des formats de réservation de ressources
+        if ($data['dupliquerFormatAvecReservation']) {
+            $formats = $em->getRepository(FormatAvecReservation::class)->findAll();
+            foreach ($formats as $format) {
+                $format->setDateDebutEffective($nouvelleDateDebutEffective);
+                $format->setDateFinEffective($nouvelleDateFinEffective);
+                $format->setDateDebutInscription($nouvelleDateDebutInscription);
+                $format->setDateFinInscription($nouvelleDateFinInscription);
+                if ($format->getDateFinPublication() < $format->getDateFinInscription()) {
+                    $format->setDateFinPublication($format->getDateFinInscription());
+                }
+                if ($format->getDateDebutPublication() > $format->getDateDebutInscription()) {
+                    $format->setDateDebutPublication($format->getDateDebutInscription());
+                }
+            }
+            $seriesReservation = $em->getRepository(DhtmlxSerie::class)->findByCreneau(null);
+            foreach ($seriesReservation as $serie) {
+                $serie->setDateDebut($nouvelleDateDebutEffective);
+                $serie->setDateFin($nouvelleDateFinEffective);
+                if ($serie->getEvenements()) {
+                    $evenement = $serie->getEvenements()[0];
+                    foreach ($serie->getEvenements() as $event) {
+                        foreach ($event->getAppels() as $appel) {
+                            $em->remove($appel);
+                        }
+                        $em->remove($event);
+                    }
+                    $interval = DateInterval::createFromDateString('1 day');
+                    $period = new DatePeriod($nouvelleDateDebutEffective, $interval, $nouvelleDateFinEffective);
+                    foreach ($period as $dt) {
+                        if (date_format($dt, 'w') == date_format($evenement->getDateDebut(), 'w')) {
+                            $tmp = clone $dt;
+                            $dateDebut = $dt->setTime(
+                                date_format($evenement->getDateDebut(), 'H'),
+                                date_format($evenement->getDateDebut(), 'i'),
+                                date_format($evenement->getDateDebut(), 's')
+                            );
+                            $dateFin = $tmp->setTime(
+                                date_format($evenement->getDateFin(), 'H'),
+                                date_format($evenement->getDateFin(), 'i'),
+                                date_format($evenement->getDateFin(), 's')
+                            );
+                            $new_evenement = $this->createEvenement($evenement, $dateDebut, $dateFin, $serie);
+                            $serie->addEvenement($new_evenement);
+                            $em->persist($new_evenement);
+                        }
+                    }
+                }
             }
             $em->flush();
             ++$cmpt;
@@ -336,6 +393,24 @@ class BasculeController extends Controller
                 $typeAutorisation = $commandeDetail->getTypeAutorisation();
                 $utilisateur->removeAutorisation($typeAutorisation);
                 $em->persist($utilisateur);
+            }
+            $em->flush();
+            ++$cmpt;
+        }
+        //Duplication des formats d'achat de carte
+        if ($data['dupliquerFormatAchatCarte']) {
+            $formats = $em->getRepository(FormatAchatCarte::class)->findAll();
+            foreach ($formats as $format) {
+                $format->setDateDebutEffective($nouvelleDateDebutEffective);
+                $format->setDateFinEffective($nouvelleDateFinEffective);
+                $format->setDateDebutInscription($nouvelleDateDebutInscription);
+                $format->setDateFinInscription($nouvelleDateFinInscription);
+                if ($format->getDateFinPublication() < $format->getDateFinInscription()) {
+                    $format->setDateFinPublication($format->getDateFinInscription());
+                }
+                if ($format->getDateDebutPublication() > $format->getDateDebutInscription()) {
+                    $format->setDateDebutPublication($format->getDateDebutInscription());
+                }
             }
             $em->flush();
             ++$cmpt;

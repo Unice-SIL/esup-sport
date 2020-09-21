@@ -33,5 +33,5 @@ interface Article
 
     public function getTarif();
 
-    public function isFull($usr);
+    public function isFull($usr, $format);
 }

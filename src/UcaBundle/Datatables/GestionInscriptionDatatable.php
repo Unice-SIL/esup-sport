@@ -36,6 +36,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
             'statut',
             'utilisateur.id',
             'creneau.formatActivite.libelle',
+            'creneau.listeEncadrants',
             'creneau.serie.evenements.dateDebut',
             'creneau.serie.evenements.dateFin',
             'formatActivite.activite.libelle',

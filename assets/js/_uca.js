@@ -83,6 +83,11 @@ _uca.calendrier.changePeriode = function (forNextPeriode, nbDays) {
     } else if (typeVisualisation == "mois") {
         let oldMonth = date.getMonth();
         date.setMonth(date.getMonth() + 1 * facteur);
+        if(oldMonth == 0 && forNextPeriode == false){
+            oldMonth = 12;
+        } else if (oldMonth == 11 && forNextPeriode == true){
+            oldMonth = -1; 
+        }
         while (date.getMonth() != oldMonth + 1 * facteur) {
             date.setDate(date.getDate() - 1 * facteur * (date.getMonth() - oldMonth + 1 * facteur));
         }

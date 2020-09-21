@@ -39,7 +39,8 @@ etablissement.telephone.invalide: Numéro de téléphone invalide
 etablissement.uniqueentity: Un établissment existe déjà avec ce libellé
 etablissement.ville.notblank: La ville du campus est obligatoire
 formatactivite.achatcarte.carte.notnull: Vous devez choisir une carte
-formatactivite.capaciteprofil.invalide: La capacité totale est inférieure aux capacités par profil
+# formatactivite.capaciteprofil.invalide: La capacité totale est inférieure aux capacités par profil
+formatactivite.capaciteprofil.invalide: Une des capacités par profil est supérieure à la capcité totale
 formatactivite.capaciteprofil.notnull: La capacité par profil ne peut pas être vide
 formatactivite.dateDebutEffective.notblank: La date de début effective est obligatoire
 formatactivite.dateDebutInscription.notblank: La date de début d'inscription est obligatoire

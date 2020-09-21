@@ -36,7 +36,7 @@ class DhtmlxCommand
         $this->em = $em;
         $this->data = $data;
         $this->commands = [];
-        if (in_array($data['action'], ['insert', 'update', 'delete'])) {
+        if (in_array($data['action'], ['insert', 'update', 'delete', 'extend'])) {
             $this->action = $data['action'];
         } else {
             throw new \Exception("L'action ".$data['action']." n'est pas valide !");

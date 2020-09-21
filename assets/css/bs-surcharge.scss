@@ -785,6 +785,14 @@ nav[aria-label="breadcrumb"] ol {
 @include media-breakpoint-down(sm) {
     .carousel {
         margin-top: 50px;
+        height: 100%;
+        min-height: 0;
+    }
+    .carousel-item div {
+        margin: 10% auto 10% auto;
+    }
+    .carousel-item div h2 {
+        padding-top: 5%;
     }
 }
 

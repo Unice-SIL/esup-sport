@@ -186,7 +186,7 @@
       route: fos_user_registration_confirmed
       menu: 0
       plansite: 0
-    - titre: "trans('sitemap.utilisateur.changerMotdePasse')"
+    - titre: "trans('sitemap.utilisateur.changermotdepasse')"
       route: fos_user_change_password
       menu: 0
       plansite: 0

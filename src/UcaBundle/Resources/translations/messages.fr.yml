@@ -81,6 +81,7 @@ bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
+bouton.indisponible.autorisationinvalide: "Ce créneau nécessite l'autorisation : %autorisation%. Votre autorisation expire avant le début du créneau. Date d'expiration : %dateFinValidite%. Attendez l'expiration de votre autorisation pour en reprendre une nouvelle et pouvoir vous inscrire à ce cours."
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
 bouton.indisponible.statut.desinscriptionadministrative: Vous avez été désinscrit par l'administration
@@ -385,6 +386,7 @@ etablissement.ajouter.succes: "Campus ajouté avec succès"
 etablissement.ajouter.title: Ajouter un Campus
 etablissement.code: Code du campus (référentiel immobilier)
 etablissement.email.libelle: Email de contact
+etablissement.exterieur: "Extérieur"
 etablissement.gestion: "Gestion des campus"
 etablissement.horaires.ouverture.libelle: Horaires d'ouverture
 etablissement.image.libelle: "Sélectionner une image"
@@ -934,6 +936,7 @@ sitemap.typeactivite.libelle: Types d'activités
 sitemap.typeautorisation.libelle: Types d'autorisations
 sitemap.ucagest.libelle: Uca Gestion
 sitemap.ucasport.libelle: Uca Sport
+sitemap.utilisateur.changermotdepasse: Changer mot de passe
 sitemap.utilisateur.credit.ajouter: Ajout d'un crédit utilisateur
 sitemap.utilisateur.libelle: Utilisateurs
 sitemap.utilisateur.verification: Vérification Email

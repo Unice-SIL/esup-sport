@@ -32,7 +32,7 @@ $('#btn-extend-send').on('click', function() {
     ev.itemId = ITEM.id;
     ev.typeA = typeA;
     var obj = ev.serialize();
-    
+    Load.start();
     $.ajax({
         type: 'POST',
         url: pathUrl,
@@ -67,16 +67,18 @@ function displayErrorMessage (message){
 
 //use on the first query
 function initLoadData(data){
-    scheduler._series = {}
-    if(data.series != null){
-        data.series.forEach(loadData);
-    }
+    // scheduler._series = {}
+    // if(data.series != null){
+    //     data.series.forEach(loadData);
+    // }
 
-    if(data.evenements != null){
-        data.evenements.forEach(loadData);
-    }
-    scheduler.updateView();
-    Load.stop();
+    // if(data.evenements != null){
+    //     data.evenements.forEach(loadData);
+    // }
+    // loadData(data);
+    // scheduler.updateView();
+    // Load.stop();
+    document.location.reload(true);
 }
 
 //Prolongation

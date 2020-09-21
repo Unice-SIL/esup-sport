@@ -168,13 +168,13 @@
                     var searchValue = JSON.stringify({ id: valueActivite['id'], recherche: valueActivite['recherche'] });
 
                     // Indication de la recherche                    
-                    oTable.column(17).search(valueStatut,true,false);                    
-                    oTable.column(15).search(searchValue,true,false);                    
-                    oTable.column(14).search(valuePrenom,true,false);
-                    oTable.column(13).search(valueNom,true,false);
-                    oTable.column(20).search(valueEncadrant,true,false);
-                    oTable.column(8).search(valueEtablissement,true,false);
-                    oTable.column(21).search(valueLieu,true,false);
+                    oTable.column(18).search(valueStatut,true,false);                    
+                    oTable.column(16).search(searchValue,true,false);                    
+                    oTable.column(15).search(valuePrenom,true,false);
+                    oTable.column(14).search(valueNom,true,false);
+                    oTable.column(4).search(valueEncadrant,true,false);
+                    oTable.column(9).search(valueEtablissement,true,false);
+                    oTable.column(22).search(valueLieu,true,false);
                     oTable.ajax.reload();
                 });
 

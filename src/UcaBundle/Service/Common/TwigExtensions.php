@@ -11,6 +11,8 @@ namespace UcaBundle\Service\Common;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\Reservabilite;
 
 class TwigExtensions extends AbstractExtension
 {
@@ -29,6 +31,7 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('parametrage', [$this, 'getParametrage']),
             new TwigFunction('serverPathToWeb', [$this, 'serverPathToWeb']),
             new TwigFunction('urlRetourPrevisualisation', [$this, 'urlRetourPrevisualisation']),
+            new TwigFunction('isValideAutorisation', [$this, 'getValiditeAutorisation']),
         ];
     }
 
@@ -124,5 +127,40 @@ class TwigExtensions extends AbstractExtension
     public function urlRetourPrevisualisation()
     {
         return Previsualisation::$BACK_URL;
+    }
+
+    public function getValiditeAutorisation($creneau, $utilisateur)
+    {
+        $autorisations = null;
+        if (is_a($creneau, Reservabilite::class)) {
+            if ($creneau->getFormatActivite()) {
+                $autorisations = $creneau->getAutorisations();
+            }
+        } else {
+            $autorisations = $creneau->getFormatActivite()->getAutorisations();
+        }
+
+        if ($autorisations) {
+            foreach ($autorisations as $autorisation) {
+                if (4 == $autorisation->getComportement()->getId()) {
+                    if ($utilisateur->getAutorisations()->contains($autorisation)) {
+                        $commandeDetails = $this->em->getRepository(CommandeDetail::class)->findCommandeDetailWithAutorisationByUser($utilisateur->getId(), $autorisation->getId());
+                        if ($commandeDetails) {
+                            if ($creneau->getSerie()->getEvenements()[0]) {
+                                if ($commandeDetails[0]->getDateCarteFinValidite() < $creneau->getSerie()->getEvenements()[0]->getDateDebut()) {
+                                    return [
+                                        'valid' => false,
+                                        'autorisation' => $autorisation->getLibelle(),
+                                        'dateFinValidite' => $commandeDetails[0]->getDateCarteFinValidite(),
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return ['valid' => true];
     }
 }

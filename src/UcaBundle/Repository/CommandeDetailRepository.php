@@ -82,4 +82,18 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findCommandeDetailWithAutorisationByUser($utilisateur, $autorisation)
+    {
+        $qb = $this->createQueryBuilder('cd')
+            ->leftJoin('cd.commande', 'c')
+            ->andWhere('c.utilisateur = :utilisateur')
+            ->setParameter('utilisateur', $utilisateur)
+            ->andWhere('cd.typeAutorisation = :autorisation')
+            ->setParameter('autorisation', $autorisation)
+            ->orderBy('cd.dateAjoutPanier', 'DESC')
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

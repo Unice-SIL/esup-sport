@@ -128,20 +128,24 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
 
     };
 
-    scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
-        let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
-        scheduler.config.lightbox.get[keyStr] = function () {
-            return {
-                name: formatProfil.profilUtilisateur.libelle,
-                type: 'textarea',
-                map_to: 'capaciteProfil_' + formatProfil.profilUtilisateur.id,
-                dependanceSerie: true,  
-                controls: {
-                    type:'capacite',
-                }
-            };
-        }
-    });
+    if(typeof scheduler.data.item.profilsUtilisateurs !== "undefined")
+    {
+        scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
+            let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
+            scheduler.config.lightbox.get[keyStr] = function () {
+                return {
+                    name: formatProfil.profilUtilisateur.libelle,
+                    type: 'textarea',
+                    map_to: 'capaciteProfil_' + formatProfil.profilUtilisateur.id,
+                    dependanceSerie: true,  
+                    controls: {
+                        type:'capacite',
+                    }
+                };
+            }
+        });
+    }
+    
 
     scheduler.config.lightbox.init = function (params, eventId) {
         scheduler.config.lightbox.sections = [];
@@ -179,11 +183,15 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
 
 
     scheduler.config.lightbox.control = function (params, isNew) {
-        let totalCapacites = 0;
-        if(params['_end_date'] > DATEFINEFFECTIVEVERIFICATION || params['end_date'] > DATEFINEFFECTIVEVERIFICATION){
-            displayErrorMessage(Translator.trans("scheduler.error.date.invalid") + DATEFINEFFECTIVE);
-            return false;
+        // let totalCapacites = 0;
+        if(typeof DATEFINEFFECTIVEVERIFICATION !== "undefined" && typeof DATEFINEFFECTIVE !== "undefined")
+        {
+            if(params['_end_date'] > DATEFINEFFECTIVEVERIFICATION || params['end_date'] > DATEFINEFFECTIVEVERIFICATION){
+                displayErrorMessage(Translator.trans("scheduler.error.date.invalid") + DATEFINEFFECTIVE);
+                return false;
+            }
         }
+        
         for (var idElement in scheduler.config.lightbox.get) {
             let element = scheduler.config.lightbox.get[idElement]();
             let typeEvent = isNew ? "new" : "update";
@@ -226,8 +234,8 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                     displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
                     return false;
                 } 
-                totalCapacites += parseInt(params[element.map_to]);
-                if(totalCapacites > capactiteTotale) {
+                // totalCapacites += parseInt(params[element.map_to]);
+                if(params[element.map_to] > capactiteTotale) {
                     displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capactiteTotale );
                     return false;
                 }
@@ -237,7 +245,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                     }
                 })
                 if(params[element.map_to] > currentProfil.capaciteProfil) {
-                    displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " +element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + capactiteTotale );
+                    displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " +element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + currentProfil.capaciteProfil );
                     return false;
                 }            
             }
@@ -275,30 +283,32 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
         if (ev.dependanceSerie) {
             let hiddenElemIds = new Array();
             let shownElemIds = new Array();
-            scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
-                let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
-                let section = scheduler.config.lightbox.sections.find(elem => elem.map_to == keyStr);
-                if (ev.hasOwnProperty(keyStr) || ev.hasOwnProperty("generatedId") ) {
-                    shownElemIds.push(section);
-                } else { 
-                    hiddenElemIds.push(section);
-                }
-            });
-            show_hide(shownElemIds, hiddenElemIds);
-            scheduler.setLightboxSize();
-
-            // Modifications des classes
-            let divProfils = document.querySelector(".dhx_multi_select_control");
-            let listCheckboxes = Array.apply(null,divProfils.querySelectorAll('input'));
-            listCheckboxes.forEach(function(checkbox,index) {
-                let keyStr = 'capaciteProfil_' + checkbox.value;
-            // console.log(scheduler.config.lightbox.sections);
-                let targetId = scheduler.config.lightbox.sections.find(input => input.map_to == keyStr).id;
-                if('' === checkbox.id) {
-                    checkbox.id = 'checkbox_profil_'+index;
-                }
-                checkbox.setAttribute('onchange','_uca.common.afficherMasquer('+ checkbox.id + ',' + targetId+');');
-            });
+            if(typeof scheduler.data.item.profilsUtilisateurs !== "undefined"){
+                scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
+                    let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
+                    let section = scheduler.config.lightbox.sections.find(elem => elem.map_to == keyStr);
+                    if (ev.hasOwnProperty(keyStr) || ev.hasOwnProperty("generatedId") ) {
+                        shownElemIds.push(section);
+                    } else { 
+                        hiddenElemIds.push(section);
+                    }
+                });
+                show_hide(shownElemIds, hiddenElemIds);
+                scheduler.setLightboxSize();
+                        
+                // Modifications des classes
+                let divProfils = document.querySelector(".dhx_multi_select_control");
+                let listCheckboxes = Array.apply(null,divProfils.querySelectorAll('input'));
+                listCheckboxes.forEach(function(checkbox,index) {
+                    let keyStr = 'capaciteProfil_' + checkbox.value;
+                // console.log(scheduler.config.lightbox.sections);
+                    let targetId = scheduler.config.lightbox.sections.find(input => input.map_to == keyStr).id;
+                    if('' === checkbox.id) {
+                        checkbox.id = 'checkbox_profil_'+index;
+                    }
+                    checkbox.setAttribute('onchange','_uca.common.afficherMasquer('+ checkbox.id + ',' + targetId+');');
+                });
+            }
         }
     });
 

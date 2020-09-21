@@ -39,7 +39,8 @@ etablissement.telephone.invalide: Invalid phone number
 etablissement.uniqueentity: A campus already exists with this label
 etablissement.ville.notblank: The campus city is required
 formatactivite.achatcarte.carte.notnull: You must choose a card
-formatactivite.capaciteprofil.invalide: Total capacity is inferior to the profil's capacities
+# formatactivite.capaciteprofil.invalide: Total capacity is inferior to the profil's capacities
+formatactivite.capaciteprofil.invalide: One of the capacities per profile is greater than the total capacity
 formatactivite.capaciteprofil.notnull: THe profil's capacity cannot be blank
 formatactivite.dateDebutEffective.notblank: Effective start date is required
 formatactivite.dateDebutInscription.notblank: Registration start date is required

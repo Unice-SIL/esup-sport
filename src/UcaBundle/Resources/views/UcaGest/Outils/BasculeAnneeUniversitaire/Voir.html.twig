@@ -95,8 +95,9 @@
 			{{ 'common.ressources'|trans }}
 		</h3>
 		<hr>
-		<div class="my-5">
-			{{ form_row(form.basculeDesReservations) }}
+		<div class="row my-5">
+			<div class="col-12 col-sm-6">{{ form_row(form.basculeDesReservations) }}</div>
+			<div class="col-12 col-sm-6">{{ form_row(form.dupliquerFormatAvecReservation) }}</div>
 		</div>
 		<h3 class="text-center">{{ 'common.lieu'|trans }}</h3>
 		<div class="row mt-2 mb-5">
@@ -128,10 +129,13 @@
 		</h3>
 		<hr>
 		<div class="row mt-5">
-			<div class="col-sm-6">
+			<div class="col-12 col-sm-6">
 				{{ form_row(form.basculeCarteEtCotisation) }}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-12 col-sm-6">
+				{{ form_row(form.dupliquerFormatAchatCarte) }}
+			</div>
+			<div class="col-12 col-sm-6">
 				{{ form_row(form.basculeCredit) }}
 			</div>
 		</div>

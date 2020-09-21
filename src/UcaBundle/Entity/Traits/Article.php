@@ -56,22 +56,26 @@ trait Article
         return new \DateTime() < $this->getDateDebutInscription();
     }
 
-    public function isNotFull($usr)
+    public function isNotFull($usr, $format = null)
     {
         $totalInscrits = 0;
         $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']]]);
+
         foreach ($this->getInscriptions()->matching($criterias) as $inscription) {
             if ($inscription->getUtilisateur()->getProfil() === $usr->getProfil()) {
                 ++$totalInscrits;
             }
         }
+        if ($format) {
+            return !empty($format->getCapaciteProfil($usr->getProfil())) && $totalInscrits < $format->getCapaciteProfil($usr->getProfil());
+        }
 
         return !empty($this->getCapaciteProfil($usr->getProfil())) && $totalInscrits < $this->getCapaciteProfil($usr->getProfil());
     }
 
-    public function isFull($usr)
+    public function isFull($usr, $format)
     {
-        return !$this->isNotFull($usr);
+        return !$this->isNotFull($usr, $format);
     }
 
     public function getArticleAutorisations()
@@ -121,7 +125,7 @@ trait Article
                 $resultat['statut'] = 'inscrit';
             } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
                 $resultat['statut'] = 'preinscrit';
-            } elseif ($this->isFull($utilisateur)) {
+            } elseif ($this->isFull($utilisateur, $format)) {
                 $resultat['statut'] = 'complet';
             } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
                 $resultat['statut'] = 'nbcreneaumaxatteint';
@@ -133,6 +137,8 @@ trait Article
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';
+            } elseif (!is_a($this, Reservabilite::class) && sizeof($this->getAllInscriptions()) >= $this->getCapacite()) {
+                $resultat['statut'] = 'complet';
             } else {
                 $resultat['statut'] = 'disponible';
             }

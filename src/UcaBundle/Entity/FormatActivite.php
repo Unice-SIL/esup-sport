@@ -57,7 +57,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="complement.capacite.notblank")
      * @Assert\Regex(pattern="/^\d+$/", message="message.typeinvalide.entier")
-     * @Assert\Expression("this.getCapaciteTousProfil() <= this.getCapacite()", message="formatactivite.capaciteprofil.invalide" )
+     * @Assert\Expression("this.getMaxCapaciteProfil() <= this.getCapacite()", message="formatactivite.capaciteprofil.invalide" )
      */
     protected $capacite;
 
@@ -466,6 +466,19 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
         return $capaciteTotale;
     }
 
+    public function getMaxCapaciteProfil()
+    {
+        $capaciteMax = 0;
+
+        foreach ($this->getProfilsUtilisateurs() as $formatProfil) {
+            if ((is_integer(intval($formatProfil->getCapaciteProfil())) ? intval($formatProfil->getCapaciteProfil()) : 0) > 0) {
+                $capaciteMax = intval($formatProfil->getCapaciteProfil());
+            }
+        }
+
+        return $capaciteMax;
+    }
+
     public function getCapaciteProfil($profilUtilisateur)
     {
         $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profilUtilisateur', $profilUtilisateur));
@@ -551,7 +564,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Get lienHtml.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLienHtml()
     {
@@ -575,7 +588,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Get lienPdf.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLienPdf()
     {
@@ -767,7 +780,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Get updatedAt.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getUpdatedAt()
     {
@@ -887,7 +900,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Get activite.
      *
-     * @return \UcaBundle\Entity\Activite|null
+     * @return null|\UcaBundle\Entity\Activite
      */
     public function getActivite()
     {
@@ -1081,7 +1094,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /**
      * Get tarif.
      *
-     * @return \UcaBundle\Entity\Tarif|null
+     * @return null|\UcaBundle\Entity\Tarif
      */
     public function getTarif()
     {

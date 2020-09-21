@@ -20,6 +20,7 @@ use UcaBundle\Service\Common\Fn;
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\CreneauRepository")
  * @Gedmo\Loggable
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\CreneauListener"})
  */
 class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBundle\Entity\Interfaces\Article
 {
@@ -81,6 +82,12 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
      * @Assert\NotBlank(message="complement.capacite.notblank")
      */
     private $capacite;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeEncadrants;
 
     //endregion
 
@@ -254,7 +261,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Get lieu.
      *
-     * @return \UcaBundle\Entity\Lieu|null
+     * @return null|\UcaBundle\Entity\Lieu
      */
     public function getLieu()
     {
@@ -278,7 +285,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Get formatActivite.
      *
-     * @return \UcaBundle\Entity\FormatAvecCreneau|null
+     * @return null|\UcaBundle\Entity\FormatAvecCreneau
      */
     public function getFormatActivite()
     {
@@ -338,7 +345,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Get serie.
      *
-     * @return \UcaBundle\Entity\DhtmlxSerie|null
+     * @return null|\UcaBundle\Entity\DhtmlxSerie
      */
     public function getSerie()
     {
@@ -434,7 +441,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     /**
      * Get tarif.
      *
-     * @return \UcaBundle\Entity\Tarif|null
+     * @return null|\UcaBundle\Entity\Tarif
      */
     public function getTarif()
     {
@@ -501,5 +508,42 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
     public function removeNiveauxSportif(NiveauSportif $niveauxSportif)
     {
         return $this->niveauxSportifs->removeElement($niveauxSportif);
+    }
+
+    public function updateListeEncadrants()
+    {
+        $this->listeEncadrants = '';
+        foreach ($this->getEncadrants() as $encadrant) {
+            if (!empty($this->listeEncadrants)) {
+                $this->listeEncadrants .= ', ';
+            }
+            $this->listeEncadrants .= $encadrant->getPrenom().' '.$encadrant->getNom();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set listeEncadrants.
+     *
+     * @param string $listeEncadrants
+     *
+     * @return FormatActivite
+     */
+    public function setListeEncadrants($listeEncadrants)
+    {
+        $this->listeEncadrants = $listeEncadrants;
+
+        return $this;
+    }
+
+    /**
+     * Get listeEncadrants.
+     *
+     * @return string
+     */
+    public function getListeEncadrants()
+    {
+        return $this->listeEncadrants;
     }
 }

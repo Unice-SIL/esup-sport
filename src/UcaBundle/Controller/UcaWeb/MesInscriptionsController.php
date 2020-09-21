@@ -124,7 +124,7 @@ class MesInscriptionsController extends Controller
         $em = $this->getDoctrine()->getManager();
         $inscriptionService = $this->get('uca.inscription');
         $inscriptionService->setInscription($inscription);
-        $inscriptionService->ajoutPanier($inscription);
+        $inscriptionService->ajoutPanier();
         $inscription->setStatut('attentepaiement');
         $em->flush();
         if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
