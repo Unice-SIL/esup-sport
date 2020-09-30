@@ -227,7 +227,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 }
             }
             if (element.controls.type == "capacite") {
-                let capactiteTotale = params['capacite'];
+                let capaciteTotale = params['capacite'];
                 let reg = new RegExp('^[0-9]+$');
                 let currentProfil = "";            
                 if (!reg.test(params[element.map_to]) || '' === params[element.map_to]) {
@@ -235,8 +235,8 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                     return false;
                 } 
                 // totalCapacites += parseInt(params[element.map_to]);
-                if(params[element.map_to] > capactiteTotale) {
-                    displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capactiteTotale );
+                if(parseInt(params[element.map_to]) > parseInt(capaciteTotale)) {
+                    displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capaciteTotale );
                     return false;
                 }
                 scheduler.data.item.profilsUtilisateurs.forEach(function(profil){

@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\CommandeDetailRepository")
  * @ORM\Table(name="commande_detail")
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\CommandeDetailListener"})
  */
 class CommandeDetail
 {

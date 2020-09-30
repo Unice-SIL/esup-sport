@@ -32,6 +32,8 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('serverPathToWeb', [$this, 'serverPathToWeb']),
             new TwigFunction('urlRetourPrevisualisation', [$this, 'urlRetourPrevisualisation']),
             new TwigFunction('isValideAutorisation', [$this, 'getValiditeAutorisation']),
+            new TwigFunction('isCarte', [$this, 'isCarte']),
+            new TwigFunction('getInformationCarte', [$this, 'getInformationCarte']),
         ];
     }
 
@@ -162,5 +164,28 @@ class TwigExtensions extends AbstractExtension
         }
 
         return ['valid' => true];
+    }
+
+    public function isCarte($cmdDetailId)
+    {
+        $cmdDetail = $this->em->getRepository(CommandeDetail::class)->find($cmdDetailId);
+        if ($cmdDetail->getTypeAutorisation()) {
+            if ($cmdDetail->getTypeAutorisation()->getComportement()) {
+                if (4 == $cmdDetail->getTypeAutorisation()->getComportement()->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public function getInformationCarte($cmdDetailId)
+    {
+        $cmdDetail = $this->em->getRepository(CommandeDetail::class)->find($cmdDetailId);
+        $texte = $cmdDetail->getTypeAutorisation()->getLibelle();
+        $cmdDetail->getNumeroCarte() ? $texte .= ' -  N°'.$cmdDetail->getNumeroCarte() : null;
+
+        return $texte;
     }
 }

@@ -1,5 +1,7 @@
 {% for commandeDetail in row.commandeDetails %}
-    {% if commandeDetail.typeArticle == 'FormatAchatCarte' %}
-        {{commandeDetail.libelle}}
+    {% if commandeDetail.typeArticle == "TypeAutorisation" %}
+        {% if isCarte(commandeDetail.id) %}
+            {{ getInformationCarte(commandeDetail.id) }}
+        {% endif %}
     {% endif %}    
 {% endfor %}

@@ -210,7 +210,9 @@ class MonPlanningController extends Controller
                 $participants = $em->getRepository('UcaBundle:Inscription')->findUtilisateurPourDesinscriptionFormat($event->getFormatSimple()->getId(), $user);
             }
             foreach ($participants as $participant) {
-                $this->forward('UcaBundle\Controller\UcaWeb\MesInscriptionsController::seDesinscrireAction', ['request' => $request, 'inscription' => $participant]);
+                if (in_array($participant->getStatut(), ['initialise', 'attentevalidationencadrant', 'attentevalidationgestionnaire', 'attenteajoutpanier', 'attentepaiement', 'valide'])) {
+                    $this->forward('UcaBundle\Controller\UcaWeb\MesInscriptionsController::seDesinscrireAction', ['request' => $request, 'inscription' => $participant]);
+                }
             }
         }
 

@@ -101,3 +101,20 @@
 .ongletClassActivite.active{
     display: none;
 }
+
+/*- Ajustement taille du calendrier -*/
+#scheduler_here {
+    height: 800px;
+}
+
+@include media-breakpoint-down(sm) { 
+    #scheduler_here {
+        height: 1000px;
+    }
+}
+
+@include media-breakpoint-down(xs) { 
+    #scheduler_here {
+        height: 1050px;
+    }
+}

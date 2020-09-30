@@ -166,7 +166,11 @@ class ActiviteController extends Controller
                 }
                 $indexColonneCorrespondantDate = array_search($eventDateDebut, $dates);
             } elseif ('mois' == $parametreData['typeVisualisation']) {
-                $indexColonneCorrespondantDate = $eventDateDebut->format('w') - 1;
+                if (0 == $eventDateDebut->format('w')) {
+                    $indexColonneCorrespondantDate = 6;
+                } else {
+                    $indexColonneCorrespondantDate = $eventDateDebut->format('w') - 1;
+                }
                 if (53 == $dateDebut->format('W') && 01 == $dateDebut->format('m')) {
                     if (53 == $eventDateDebut->format('W')) {
                         $indexLigneCorrespondantCampus = 0;
