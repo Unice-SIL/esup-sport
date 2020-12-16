@@ -67,6 +67,7 @@ bouton.ajouter: Add
 bouton.annuler.commande: Cancel order
 bouton.annuler.inscription: Cancel registration
 bouton.annuler: Cancel
+bouton.appel: Call
 bouton.basculer: Swing
 bouton.bloquer: Block
 bouton.confirmer: Confirm
@@ -79,7 +80,7 @@ bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
 bouton.exportallfacture.pdf: Export bills
 bouton.exportpdf: Export
-bouton.indisponible.autorisationinvalide: "This time slot requires authorization: %autorisation%. Your authorization expires before the start of the time slot. Expiry date: %dateFinValidite%. Wait until your authorization expires to resume a new one and be able to register for this course. "
+bouton.indisponible.autorisationinvalide: "This time slot requires authorization:% autorisation%. Your authorization expires before the time slot begins. Wait until your authorization expires to register for this course."
 bouton.indisponible.inscriptionsterminees: Registration closed
 bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
 bouton.indisponible.statut.desinscriptionadministrative: You have been unsubscribed by the administration
@@ -130,6 +131,8 @@ column.valen: English
 column.valfr: French
 column.valit: Italian
 comamndedetail.informationscarte.etablissement: Pick-up campus
+commande.avoir.ajouter.info.save: This order form is valid for the current calendar year.
+commande.avoir.ajouter.info.unsave: This order form will be valid for the current calendar year.
 commande.avoir.ajouter.titre: Provide a credit note
 commande.avoir.date: Credit's date
 commande.avoir.libelle: Credit
@@ -139,6 +142,7 @@ commande.avoir.report: Skipped credit
 commande.avoirdetails.libelle: Credit note's details
 commande.avoirdetails.referenceavoir: Credit note's reference
 commande.avoirdetails.titre: Credit note's elements
+commande.datepaiement: Buying date
 commande.details.avoir.message: This element belongs to a credit note
 commande.informations: Order's informations
 commande.libelle: Order
@@ -272,6 +276,7 @@ common.niveauSportif: Sport level
 common.nom.prenom: Name and first name
 common.nom.utilisateur: Username
 common.nom: Name
+common.nomacheteur: Buyer name
 common.nomencaisseur: Cashier name
 common.non: "No"
 common.nonrenseigne: No informations
@@ -289,6 +294,7 @@ common.payeavec: Payed with
 common.periode: Period
 common.precedent: Previous
 common.prenom: First name
+common.prennomacheteur: Buyer first name
 common.prenomencaisseur: First name cashier
 common.prixunitaire: Item Price
 common.profil: Profile
@@ -631,6 +637,8 @@ modalinscription.titre.panier: Add to the basket
 modalinscription.titre.preinscription: Pre-registration
 modalinscription.validation.message: Your inscription has been taken into account. 
 monPlanning.modal.mail.title: Send mail to subscribers
+monPlanning.more.appel.message: "Pass the cards on the back of your device or select those present manually."
+monPlanning.more.appel.noninscrit: " is not on the list of registrants."
 monPlanning.more.appel.texte: "Select people present at activity"
 monPlanning.more.appel.titre: Subscibers list
 monPlanning.more.datedebut: beginning date
@@ -660,9 +668,9 @@ paiement.recapitulatif.fin: 'After this time, your order will be automatically c
 paiement.recapitulatif.intro: 'To validate your registration, '
 paiement.recapitulatif.paybox: 'You have %timer% minutes to pay your order of %montant% € by credit card'
 paiement.recapitulatif.titre: 'Important information!'
-paiement.validation.canceled: Your payment of %montant% € has been cancelled
-paiement.validation.denied: Your payment of %montant% € has been refused
-paiement.validation.success: Your payment of %montant% € has been validated
+paiement.validation.canceled: Your payment of %montant% € has been cancelled. Find your order in 
+paiement.validation.denied: Your payment of %montant% € has been refused. Find your order in 
+paiement.validation.success: Your payment of %montant% € has been validated.
 panier.libelle: Shopping Basket
 panier.vide: You cart is empty
 parametrage.adressefacturation: Billing adress
@@ -683,6 +691,26 @@ parametrage.timerpaybox: Timer to pay for an order by card on PayBox (in minutes
 parametrage.timers: Timers
 parametrage.title: Settings
 parametrage.youtube: Youtube link
+paybox.error.00000: "Successful operation."
+paybox.error.00001: "Connection to the authorization center has failed or an internal error has occurred."
+paybox.error.001xx: "Payment refused by the authorization center."
+paybox.error.00003: "Paybox error."
+paybox.error.00004: "Invalid cardholder number or visual cryptogram."
+paybox.error.00006: "Access denied or incorrect site / rank / username."
+paybox.error.00008: "Incorrect expiry date."
+paybox.error.00009: "Error creating a subscription."
+paybox.error.00010: "Unknown currency."
+paybox.error.00011: "Incorrect amount."
+paybox.error.00015: "Payment already made."
+paybox.error.00016: "Already existing subscriber."
+paybox.error.00021: "Unauthorized card."
+paybox.error.00029: "Non-compliant card."
+paybox.error.00030: "Waiting time > 15 minutes by the user / buyer at the level of the payments page."
+paybox.error.00031: "Reserve."
+paybox.error.00032: "Reserve."
+paybox.error.00033: "Country code of the IP address of the unauthorized buyer."
+paybox.error.00040: "Operation without 3-DSecure authentication, blocked by filter."
+paybox.error.99999: "Operation pending validation by the issuer of the payment method."
 preinscription.confirmation.message: Your registration demand was successfull, a confirmation email has been sent to you. Our team will treat you demand shortly.
 preinscription.confirmation.titre: Registration's Demand confirm
 preinscription.demande.validation.message: A pre-registration request was made by the following user
@@ -763,7 +791,8 @@ scheduler.message.information.modification.serie: are linked to the serie theref
 scheduler.message.inscrit_list: Subscribers list
 scheduler.message.prolonger: Extend slot
 scheduler.message.send_mail: Send a mail to the subscribers
-scheduler.message.titre: Confirm the deletion
+scheduler.message.suppression: Confirm the deletion
+scheduler.message.update: Confirm the update
 scheduler.message.valider: Save
 scheduler.message.voirplus: See more
 scheduler.warning.suppression.inscrit: Do you want to delete this serie despite the pre-registrations awaiting ?

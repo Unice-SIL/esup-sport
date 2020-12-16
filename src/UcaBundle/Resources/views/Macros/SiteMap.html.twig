@@ -26,7 +26,7 @@
             {% if item.plansite is not defined or item.plansite != 0 %}
                 <li>
                     {% if item.route is defined and item.route is not null %}
-                        <a href="{{ url(item.route) }}">{{ sitemap.getTitre(item) }}</a>
+                        <a href="{{ path(item.route) }}">{{ sitemap.getTitre(item) }}</a>
                     {% else %}
                         {{ sitemap.getTitre(item) }}
                     {% endif %}

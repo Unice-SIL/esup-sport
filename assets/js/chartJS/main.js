@@ -45,7 +45,7 @@ _chart.colors = [
     "#6E2C00",
 ];
 
-_chart.getNbColors = function () {
+_chart.getNbColors = function() {
     let size = 0;
     for (let color in _chart.colors) {
         size++;
@@ -57,7 +57,7 @@ _chart.nbColors = _chart.getNbColors();
 
 _chart.usedColors = [];
 
-_chart.getNbUsedColors = function () {
+_chart.getNbUsedColors = function() {
     let size = 0;
     for (let color in _chart.usedColors) {
         size++;
@@ -67,7 +67,7 @@ _chart.getNbUsedColors = function () {
 
 _chart.nbUsedColors = _chart.getNbUsedColors();
 
-_chart.createChart = function (data) {
+_chart.createChart = function(data) {
     let option = data[0];
     let recherche = data[1];
     let value = data[2];
@@ -98,14 +98,14 @@ _chart.createChart = function (data) {
 
 /* Creation d'éléments */
 
-_chart.createDiv = function (id, className) {
+_chart.createDiv = function(id, className) {
     var div = document.createElement('div');
     div.className = className;
     div.setAttribute('id', id);
     return div;
 };
 
-_chart.createBouton = function (color, icone, label) {
+_chart.createBouton = function(color, icone, label) {
     var bouton = document.createElement('a');
     bouton.className = 'btn btn-' + color;
     var iconeBouton = document.createElement('spsn');
@@ -117,7 +117,7 @@ _chart.createBouton = function (color, icone, label) {
     return bouton;
 };
 
-_chart.createPieChart = function(title, datas, position, idCanvas, legendPadding = 0){
+_chart.createPieChart = function(title, datas, position, idCanvas, legendPadding = 0) {
     let Chart = require('chart.js');
 
     let dataValues = [];
@@ -125,7 +125,7 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
     let dataLabels = [];
 
     // Tri des donnees pour un affichage par ordre croissant
-    datas.sort(function(itemA, itemB){
+    datas.sort(function(itemA, itemB) {
         var valueA = 0;
         var valueB = 0;
         if (itemA instanceof Object) {
@@ -144,15 +144,13 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
         return 0;
     });
 
-    datas.forEach(function (item) {
+    datas.forEach(function(item) {
         if (item instanceof Object) {
             for (const [key, value] of Object.entries(item)) {
                 dataValues.push(value);
                 dataLabels.push(key);
                 dataColors.push(_chart.getColor());
             }
-        } else {
-
         }
     });
 
@@ -179,18 +177,18 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
                 text: title,
             },
             // Parametrage du tooltip sur le graphique
-	        tooltips: {
-	            callbacks: {
+            tooltips: {
+                callbacks: {
                     label: function(tooltipItem, data) {
                         var dataset = data.datasets[tooltipItem.datasetIndex];
                         var meta = dataset._meta[Object.keys(dataset._meta)[0]];
                         var total = meta.total;
                         var currentValue = dataset.data[tooltipItem.index];
-                        var percentage = parseFloat((currentValue/total*100).toFixed(1));
+                        var percentage = parseFloat((currentValue / total * 100).toFixed(1));
                         return data.labels[tooltipItem.index] + ": " + currentValue + ' (' + percentage + '%)';
                     },
-	            }
-	        },
+                }
+            },
         }
     };
 
@@ -203,14 +201,14 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
     _chart.usedColors = [];
 };
 
-_chart.createVertictalBarChart = function (title, datas, idCanvas) {
+_chart.createVertictalBarChart = function(title, datas, idCanvas) {
     let Chart = require('chart.js');
     let datasets = [];
     let yAxesType = 'linear';
 
-    datas.forEach(function (item) {
+    datas.forEach(function(item) {
         for (const [key, value] of Object.entries(item)) {
-            if(value > 100){
+            if (value > 100) {
                 // Echelle scientifique
                 //yAxesType = 'logarithmic';
                 yAxesType = 'linear';
@@ -260,20 +258,20 @@ _chart.createVertictalBarChart = function (title, datas, idCanvas) {
                 }]
             },
             // Parametrage du tooltip sur le graphique
-	        tooltips: {
-	            callbacks: {
+            tooltips: {
+                callbacks: {
                     label: function(tooltipItem, data) {
                         var total = 0;
-                        data.datasets.forEach(function (dataset) {
+                        data.datasets.forEach(function(dataset) {
                             total += dataset.data[tooltipItem.index];
                         });
                         var dataset = data.datasets[tooltipItem.datasetIndex];
                         var currentValue = dataset.data[tooltipItem.index];
-                        var percentage = parseFloat((currentValue/total*100).toFixed(1));
+                        var percentage = parseFloat((currentValue / total * 100).toFixed(1));
                         return data.labels[tooltipItem.index] + ": " + currentValue + ' (' + percentage + '%)';
                     },
-	            }
-	        },
+                }
+            },
         }
     };
 
@@ -286,7 +284,7 @@ _chart.createVertictalBarChart = function (title, datas, idCanvas) {
     _chart.usedColors = [];
 };
 
-_chart.createVertictalBarGroupChart = function (title, datas, idCanvas) {
+_chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
     let Chart = require('chart.js');
     let datasetsWithKey = [];
     let datasets = [];
@@ -296,17 +294,17 @@ _chart.createVertictalBarGroupChart = function (title, datas, idCanvas) {
     var donnees = datas[0];
     var size = datas[1];
 
-    
+
     var nombreTotal = 0;
     var index = 0;
     for (const [group, item] of Object.entries(donnees)) {
         labels.push(group);
         for (const [key, value] of Object.entries(item)) {
-            if(!(key in datasetsWithKey)){
+            if (!(key in datasetsWithKey)) {
                 let color = _chart.getColor();
-                
+
                 var defaultData = [];
-                for(var i = 0 ; i < size ; i++){
+                for (var i = 0; i < size; i++) {
                     defaultData[i] = 0;
                 }
 
@@ -328,7 +326,7 @@ _chart.createVertictalBarGroupChart = function (title, datas, idCanvas) {
     for (const [key, element] of Object.entries(datasetsWithKey)) {
         datasets.push(element);
     }
-      
+
 
     var barChartData = {
         labels: labels,
@@ -362,17 +360,17 @@ _chart.createVertictalBarGroupChart = function (title, datas, idCanvas) {
                 }]
             },
             // Parametrage du tooltip sur le graphique
-	        tooltips: {
-	            callbacks: {
+            tooltips: {
+                callbacks: {
                     label: function(tooltipItem, data) {
                         var total = this._chart.options.nbreTotal;
                         var dataset = data.datasets[tooltipItem.datasetIndex];
                         var currentValue = dataset.data[tooltipItem.index];
-                        var percentage = parseFloat((currentValue/total*100).toFixed(1));
+                        var percentage = parseFloat((currentValue / total * 100).toFixed(1));
                         return dataset.label + ": " + currentValue + ' (' + percentage + '%)';
                     },
-	            }
-	        },
+                }
+            },
         }
     };
 
@@ -385,11 +383,11 @@ _chart.createVertictalBarGroupChart = function (title, datas, idCanvas) {
     _chart.usedColors = [];
 };
 
-_chart.createPopulationPyramidChart = function (title, datas, idCanvas) {
+_chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
     let Chart = require('chart.js');
-    let datasets = {labels: new Array(), datasets: new Array()};
+    let datasets = { labels: new Array(), datasets: new Array() };
     let color = _chart.getColor();
-    let cpt ;
+    let cpt;
     let homme = {
         label: "",
         barPercentage: 0.5,
@@ -430,14 +428,14 @@ _chart.createPopulationPyramidChart = function (title, datas, idCanvas) {
     datasets.datasets.push(femme);
 
     let options = {
-        tooltips: { 
+        tooltips: {
             enabled: true,
             callbacks: {
                 label: function(tooltipItems, data) {
                     var currentValue = Math.abs(tooltipItems.xLabel);
                     var total = data.datasets[tooltipItems.datasetIndex].total;
-                    var percentage = parseFloat((currentValue/total*100).toFixed(1));
-                    return data.datasets[tooltipItems.datasetIndex].label  + ": " +  currentValue + " (" + percentage + "%)";
+                    var percentage = parseFloat((currentValue / total * 100).toFixed(1));
+                    return data.datasets[tooltipItems.datasetIndex].label + ": " + currentValue + " (" + percentage + "%)";
                 }
             }
         },
@@ -482,16 +480,16 @@ _chart.createPopulationPyramidChart = function (title, datas, idCanvas) {
         },
 
         animation: {
-            onComplete: function () {
+            onComplete: function() {
                 var chartInstance = this.chart;
                 var ctx = chartInstance.ctx;
                 ctx.textAlign = "left";
                 ctx.font = "9px Open Sans";
                 ctx.fillStyle = "#fff";
 
-                Chart.helpers.each(this.data.datasets.forEach(function (dataset, i) {
+                Chart.helpers.each(this.data.datasets.forEach(function(dataset, i) {
                     var meta = chartInstance.controller.getDatasetMeta(i);
-                    Chart.helpers.each(meta.data.forEach(function (bar, index) {
+                    Chart.helpers.each(meta.data.forEach(function(bar, index) {
                         data = dataset.data[index];
                         if (i == 0) {
                             ctx.fillText(data, 50, bar._model.y + 4);
@@ -518,14 +516,14 @@ _chart.createPopulationPyramidChart = function (title, datas, idCanvas) {
     _chart.usedColors = [];
 };
 
-_chart.createLineChart = function (title, label, datas, idCanvas) {
+_chart.createLineChart = function(title, label, datas, idCanvas) {
     let Chart = require('chart.js');
     let dataLabels = [];
     let dataValues = [];
     // let color = '#'+Math.floor(Math.random()*16777215).toString(16);
     let color = _chart.getColor();
 
-    datas.forEach(function (item) {
+    datas.forEach(function(item) {
         if (item instanceof Object) {
             for (const [key, value] of Object.entries(item)) {
                 dataValues.push(value);
@@ -582,28 +580,27 @@ _chart.createLineChart = function (title, label, datas, idCanvas) {
     _chart.usedColors = [];
 }
 
-_chart.getRndInteger = function () {
+_chart.getRndInteger = function() {
     return Math.floor(Math.random() * (_chart.nbColors - 0)) + 0;
 }
 
-_chart.getColor = function () {
-    color = _chart.getRndInteger();
-    if (_chart.nbUsedColors < _chart.nbColors) {
-        while (_chart.usedColors.includes(color)) {
-            color = _chart.getRndInteger();
-        }
-        _chart.usedColors.push(color);
-    } else {
-        _chart.usedColors = [];
-        _chart.usedColors.push(color);
-    }
+_chart.getColor = function() {
+    // color = _chart.getRndInteger();
+    // if (_chart.nbUsedColors < _chart.nbColors) {
+    //     while (_chart.usedColors.includes(color)) {
+    //         color = _chart.getRndInteger();
+    //     }
+    //     _chart.usedColors.push(color);
+    // } else {
+    //     _chart.usedColors = [];
+    //     _chart.usedColors.push(color);
+    // }
 
-    return _chart.colors[color];
+    // return _chart.colors[color];
+    return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-_chart.removeLoader = function (idCanvas) {
+_chart.removeLoader = function(idCanvas) {
     let idLoader = idCanvas + "Loader";
     document.getElementById(idLoader).remove();
 }
-
-

@@ -24,7 +24,7 @@
                         <div class="align-self-center text-center">
                             <i class="{{ iconFormat }} text-white mb-2"></i>
                             <p class="text-white text-uppercase font-weight-bold">{{ dataItem.libelle }}</p>
-                            <a class="btn btn-primary d-block" href="{{ url("UcaWeb_FormatActiviteDetail", params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                            <a class="btn btn-primary d-block" href="{{ path("UcaWeb_FormatActiviteDetail", params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
                         </div>
                     </div>
                 {% endif %}

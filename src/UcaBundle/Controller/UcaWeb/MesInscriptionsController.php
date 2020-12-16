@@ -19,14 +19,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\GestionInscriptionDatatable;
 use UcaBundle\Datatables\MesInscriptionsDatatable;
-use UcaBundle\Entity\Activite;
-use UcaBundle\Entity\ClasseActivite;
 use UcaBundle\Entity\Etablissement;
-use UcaBundle\Entity\FormatActivite;
-use UcaBundle\Entity\Groupe;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Lieu;
-use UcaBundle\Entity\TypeActivite;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\GestionInscriptionType;
 
@@ -41,42 +36,32 @@ class MesInscriptionsController extends Controller
      */
     public function listerAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
         if ('UcaGest_GestionInscription' == $request->get('_route') && !$this->isGranted('ROLE_GESTION_INSCRIPTION')) {
             return $this->redirectToRoute('UcaWeb_MesInscriptions');
         }
+        $em = $this->getDoctrine()->getManager();
         $this->get('uca.timeout')->nettoyageCommandeEtInscription();
         $isAjax = $request->isXmlHttpRequest();
+
         if ('UcaGest_GestionInscription' == $request->get('_route')) {
+            $extraction = $this->get('uca.extraction.inscription');
+            $form = $this->get('form.factory')->create(GestionInscriptionType::class, null, $extraction->getOptionsInscription());
             $datatable = $this->get('sg_datatables.factory')->create(GestionInscriptionDatatable::class);
-            $twigConfig['codeListe'] = 'GestionInscription';
-            $form = $this->get('form.factory')->create(
-                GestionInscriptionType::class,
-                [
-                    'typeActivite' => $em->getRepository(TypeActivite::class)->findAll(),
-                    'classeActivite' => $em->getRepository(ClasseActivite::class)->findAll(),
-                    'listeActivite' => $em->getRepository(Activite::class)->findAll(),
-                    'listeFormatActivite' => $em->getRepository(FormatActivite::class)->findAll(),
-                    'listeEncadrant' => $em->getRepository(Groupe::class)->findByLibelle('Encadrant')[0]->getUtilisateurs(),
-                    'listeEtablissement' => $em->getRepository(Etablissement::class)->findAll(),
-                    'listeLieu' => $em->getRepository(Lieu::class)->findAll(),
-                    'data_class' => null,
-                    'em' => $em,
-                ]
-            );
             $twigConfig['form'] = $form->createView();
+            $twigConfig['codeListe'] = 'GestionInscription';
         } else {
             $datatable = $this->get('sg_datatables.factory')->create(MesInscriptionsDatatable::class);
             $twigConfig['codeListe'] = 'MesInscriptions';
         }
         $datatable->buildDatatable();
+
         $twigConfig['datatable'] = $datatable;
         if ($isAjax) {
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
             $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
-            $qb = $dtQueryBuilder->getQb();
             if ('UcaWeb_MesInscriptions' == $request->get('_route')) {
+                $qb = $dtQueryBuilder->getQb();
                 $qb->andWhere('utilisateur = :objectId');
                 $qb->setParameter('objectId', $this->getUser()->getId());
             }
@@ -146,11 +131,7 @@ class MesInscriptionsController extends Controller
             $inscriptionService->mailDesinscription($inscription);
 
             $em = $this->getDoctrine()->getManager();
-            $inscription->setStatut('desinscrit');
-            $inscription->setDateDesinscription(new \DateTime());
-            $inscription->setUtilisateurDesinscription($this->getUser());
-            $inscription->setNomDesinscription($this->getUser()->getNom());
-            $inscription->setPrenomDesinscription($this->getUser()->getPrenom());
+            $inscription->seDesinscrire($this->getUser());
             $em->flush();
             if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
                 return $this->redirectToRoute('UcaWeb_MesInscriptions');

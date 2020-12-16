@@ -175,7 +175,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $niveauxSportifs;
 
     /**
-     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="formatActivite", fetch="EAGER", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="formatActivite", fetch="LAZY", cascade={"persist", "remove"})
      * @Assert\Valid()
      */
     private $profilsUtilisateurs;

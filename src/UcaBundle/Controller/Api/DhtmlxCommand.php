@@ -57,8 +57,10 @@ class DhtmlxCommand
             $this->item->setDateDebut(new \DateTime($this->data['dateDebut']));
             $this->item->setDateFin(new \DateTime($this->data['dateFin']));
             if ('UcaBundle\Entity\DhtmlxEvenement' == get_class($this->item)) {
-                $this->item->setDescription($this->data['text']);
                 $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && 'true' == $this->data['dependanceSerie']);
+                if ($this->item->getDependanceSerie()) {
+                    $this->item->setDescription($this->data['text']);
+                }
                 if (isset($this->data['eligible_bonus'])) {
                     if ('true' == $this->data['eligible_bonus']) {
                         $this->item->setEligibleBonus(true);

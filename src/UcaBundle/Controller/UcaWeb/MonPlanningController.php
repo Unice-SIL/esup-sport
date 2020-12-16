@@ -209,13 +209,45 @@ class MonPlanningController extends Controller
             } elseif (!is_null($event->getFormatSimple())) {
                 $participants = $em->getRepository('UcaBundle:Inscription')->findUtilisateurPourDesinscriptionFormat($event->getFormatSimple()->getId(), $user);
             }
+
             foreach ($participants as $participant) {
                 if (in_array($participant->getStatut(), ['initialise', 'attentevalidationencadrant', 'attentevalidationgestionnaire', 'attenteajoutpanier', 'attentepaiement', 'valide'])) {
-                    $this->forward('UcaBundle\Controller\UcaWeb\MesInscriptionsController::seDesinscrireAction', ['request' => $request, 'inscription' => $participant]);
+                    $inscriptionService = $this->get('uca.inscription');
+                    $inscriptionService->setInscription($participant);
+                    $inscriptionService->mailDesinscription($participant);
+
+                    $em = $this->getDoctrine()->getManager();
+                    $participant->seDesinscrire($this->getUser());
+                    $em->flush();
+                    $appel = $em->getRepository(Appel::class)->findOneBy(['utilisateur' => $user, 'dhtmlxEvenement' => $evenement]);
+                    if ($appel) {
+                        $em->remove($appel);
+                        $em->flush();
+                    }
+                    // $this->forward('UcaBundle\Controller\UcaWeb\MesInscriptionsController::seDesinscrireAction', ['request' => $request, 'inscription' => $participant]);
                 }
             }
         }
 
         return $this->redirectToRoute('UcaWeb_PlanningMore', ['id' => $evenement]);
+    }
+
+    /**
+     * @Route("/ndef", name="Api_NDEFUser", methods={"POST"}, options={"expose"=true})
+     */
+    public function getNDEFUser(Request $request)
+    {
+        if ($request->get('id')) {
+            $em = $this->getDoctrine()->getManager();
+            //on reforme l'id comme il est stocké en base
+            // ex : 04:25:56:9a:e7:5d:80 => 805DE79A562504
+            $numeroNfc = strtoupper(implode('', array_reverse(explode(':', $request->get('id')))));
+            $utilisateur = $em->getRepository(Utilisateur::class)->findOneBy(['numeroNfc' => $numeroNfc]);
+            if ($utilisateur) {
+                return new JsonResponse(['user' => $utilisateur->getNom().' '.$utilisateur->getPrenom()]);
+            }
+        }
+
+        return new JsonResponse(['user' => 'null']);
     }
 }

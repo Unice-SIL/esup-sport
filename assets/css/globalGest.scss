@@ -6,6 +6,8 @@
 @import "bs-variables-custom.scss";
 // 3. On charge bootstrap à partir de node_modules
 @import "~bootstrap/scss/bootstrap";
+// 3.1 On charge le daterangepicker de bootstrap
+@import "bs-daterangepicker.scss";
 // 4. Si besoin on surcharge les éléments de bootstrap
 @import "bs-surcharge.scss";
 // 5. DHTMLX

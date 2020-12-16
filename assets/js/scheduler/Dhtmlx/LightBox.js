@@ -191,7 +191,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 return false;
             }
         }
-        
+
         for (var idElement in scheduler.config.lightbox.get) {
             let element = scheduler.config.lightbox.get[idElement]();
             let typeEvent = isNew ? "new" : "update";
@@ -200,56 +200,57 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 return false;
             }
 
-            if (scheduler.config.lightbox.toDisplay[typeEvent].indexOf(idElement) == -1) {
-                continue;
-            }
-
-            if (element.controls == null) {
-                continue;
-            }
-
-            if (element.controls.require && params[element.map_to] == "") {
-                displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.isEmpty"));
-                params.event_pid = "";
-                return false;
-            }
-            if (element.controls.type == "int") {
-                if (!isNormalInteger(params[element.map_to])) {
-                    displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
-                    return false;
+            if (typeof params[element.map_to] !== 'undefined') {
+                if (scheduler.config.lightbox.toDisplay[typeEvent].indexOf(idElement) == -1) {
+                    continue;
                 }
 
-                if(element.name == "Capacité") {
-                    if(params['capacite'] > CAPACITE) {
-                        displayErrorMessage(Translator.trans("scheduler.error.capacite.format") + " : " + CAPACITE );
+                if (element.controls == null) {
+                    continue;
+                }
+
+                if (element.controls.require && params[element.map_to] == "") {
+                    displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.isEmpty"));
+                    params.event_pid = "";
+                    return false;
+                }
+                if (element.controls.type == "int") {
+                    if (!isNormalInteger(params[element.map_to])) {
+                        displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
                         return false;
                     }
-                }
-            }
-            if (element.controls.type == "capacite") {
-                let capaciteTotale = params['capacite'];
-                let reg = new RegExp('^[0-9]+$');
-                let currentProfil = "";            
-                if (!reg.test(params[element.map_to]) || '' === params[element.map_to]) {
-                    displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
-                    return false;
-                } 
-                // totalCapacites += parseInt(params[element.map_to]);
-                if(parseInt(params[element.map_to]) > parseInt(capaciteTotale)) {
-                    displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capaciteTotale );
-                    return false;
-                }
-                scheduler.data.item.profilsUtilisateurs.forEach(function(profil){
-                    if(profil.profilUtilisateur.libelle == element.name) {
-                        currentProfil = profil;
-                    }
-                })
-                if(params[element.map_to] > currentProfil.capaciteProfil) {
-                    displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " +element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + currentProfil.capaciteProfil );
-                    return false;
-                }            
-            }
 
+                    if(element.name == "Capacité") {
+                        if(params['capacite'] > CAPACITE) {
+                            displayErrorMessage(Translator.trans("scheduler.error.capacite.format") + " : " + CAPACITE );
+                            return false;
+                        }
+                    }
+                }
+                if (element.controls.type == "capacite") {
+                    let capaciteTotale = params['capacite'];
+                    let reg = new RegExp('^[0-9]+$');
+                    let currentProfil = "";            
+                    if (!reg.test(params[element.map_to]) || '' === params[element.map_to]) {
+                        displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
+                        return false;
+                    } 
+                    // totalCapacites += parseInt(params[element.map_to]);
+                    if(parseInt(params[element.map_to]) > parseInt(capaciteTotale)) {
+                        displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capaciteTotale );
+                        return false;
+                    }
+                    scheduler.data.item.profilsUtilisateurs.forEach(function(profil){
+                        if(profil.profilUtilisateur.libelle == element.name) {
+                            currentProfil = profil;
+                        }
+                    })
+                    if(params[element.map_to] > currentProfil.capaciteProfil) {
+                        displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " +element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + currentProfil.capaciteProfil );
+                        return false;
+                    }            
+                }
+            } 
         }
 
 

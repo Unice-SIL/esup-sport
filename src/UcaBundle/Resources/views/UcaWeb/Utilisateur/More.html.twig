@@ -25,8 +25,7 @@
         {{ evenement.description }}</h2>
 
       <div class="row mb-5 d-flex flex-wrap">
-
-        <div class="col-12 col-md-6 mb-4">
+        <div class="col-12 col-md-6 mb-4 text-center">
           <div class="row">
             <div class="col-12">
               <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.horaires"|trans }}</h2>
@@ -39,31 +38,41 @@
                   :</span>
                 {{ evenement.dateFin|date('d/m/Y H:i:s') }}</p>
             </div>
-          </div>
-          {% if (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is not empty %}
-            <div class="row p-3">
-              <div class="col-12 bg-isabelline p-3 text-center">
-                <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.mail.titre"|trans }}</h2>
-                <button id="mailButton" class="btn btn-primary">{{ "monPlanning.more.mail.button"|trans }}</button>
-              </div>
-            </div>
-          {% endif %}
+          </div>          
         </div>
-        {% if isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')  %}
-          <div class="col-12 col-md-6 mb-4">
 
-            {% if form.appels is empty %}
-                <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
-                <p>{{ "monplanning.more.appel.empty"|trans }}</p>
-            {% else %}
-                <h2 class="hide-border-title fs-21 fw-700">
-                    {{ "monPlanning.more.appel.titre"|trans }} 
-                    <a class="btn-sm btn-primary btn-form" href='{{ path("UcaWeb_PlanningMore_listePdf", {id: evenement.id} )}}' title="{{'bouton.exportpdf'|trans}}" id="btn_export_liste_pdf">
-                        <span class="fas fa-file-download"></span>
-                    </a>                                                     
-                </h2>
-                <p>{{ "monPlanning.more.appel.texte"|trans }}</p>
-
+        {% if (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is not empty %}
+            <div class="col-12 col-md-6 mb-4">
+                <div class="row p-3">
+                <div class="col-12 bg-isabelline p-3 text-center">
+                    <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.mail.titre"|trans }}</h2>
+                    <button id="mailButton" class="btn btn-primary">{{ "monPlanning.more.mail.button"|trans }}</button>
+                </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 text-center">
+                <h2 class="hide-border-title fs-21 fw-700 ">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-auto">{{ "monPlanning.more.appel.titre"|trans }} </div>
+                        <div class="col-12 col-sm-auto mt-2 mt-sm-0">
+                            <a class="btn-sm btn-primary btn-form" href='{{ path("UcaWeb_PlanningMore_listePdf", {id: evenement.id} )}}' title="{{'bouton.exportpdf'|trans}}" id="btn_export_liste_pdf">
+                                <span class="fas fa-file-download"></span>
+                            </a>
+                        </div>
+                    </div>
+                </h2>  
+            </div>
+            <div class="col-12 mb-4 text-center" id="appel-loader">
+                <button class="btn btn-primary" type="button" id="appel-btn">
+                    {{ 'bouton.appel'|trans }}
+                </button> 
+                <div class="text-center" id="loader">
+                    <p>{{ 'monPlanning.more.appel.message'|trans }}</p>
+                    <i class="fas fa-spinner fa-pulse fa-3x my-3"></i>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-4"></div>
+            <div class="col-12 col-md-4 mb-4">
                 {{ form_start(form) }}
                 <table style="width: 100%">
                     {% for appel in form.appels %}
@@ -91,19 +100,32 @@
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </td>                                   
-                        </tr>
+                          </tr>
                     {% endfor %}
-                </table>     
-                {{ form_end(form) }}
-            {% endif %}
-
-          </div>
+                </table>                       
+            </div>
+            <div class="col-12 col-md-4 mb-4"></div>
+            <div class="col-12 my-4">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-2">
+                        <button class="btn btn-danger" type="button" id="annuler-btn">
+                            {{ 'bouton.annuler'|trans }}
+                        </button>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        {% elseif (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is empty %}
+            <div class="col-12 col-md-6 mb-4 text-center">
+                <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
+                <p>{{ "monplanning.more.appel.empty"|trans }}</p>
+            </div>
         {% endif %}
-
       </div>
     </div>
   </section>
-
 
   {% include "@Uca/UcaWeb/Utilisateur/Modal.mail.html.twig" %}
 
@@ -160,5 +182,78 @@
       $("#modalMailForm").submit();
     })
 
+    $(document).ready(function(){
+      appelOff(false);
+      $("#appel-btn").on('click', function(){
+        appelOn();
+      });
+      $("#annuler-btn").on('click', function(){
+        appelOff(false);
+      });
+      $("#ucabundle_evenement_save").on('click', function(){
+        appelOff(true);
+      });      
+    });
+
+    function appelOff(is_end){
+      if(!is_end) {
+        $(".checkbox-presence").each(function(){
+          $(this).attr('disabled', 'disabled');        
+        })
+      }
+      $("#ucabundle_evenement_save").hide();
+      $("#loader").hide();
+      $("#annuler-btn").hide();
+      $("#appel-btn").show();
+    }
+
+    function appelOn(){
+      $(".checkbox-presence").each(function(){
+        $(this).attr('disabled', false);        
+      })
+      $("#ucabundle_evenement_save").show();
+      $("#loader").show();
+      $("#annuler-btn").show();
+      $("#appel-btn").hide();
+      readTag();
+    }
+
+    async function readTag() {
+      if ("NDEFReader" in window) {
+        const reader = new NDEFReader();
+        try {
+          await reader.scan();
+          reader.onreading = event => {
+            //event.serialNumber contient l'identifiant de la carte
+            let uid = event.serialNumber;
+
+            $.ajax({
+              method: "POST",
+              url: Routing.generate("Api_NDEFUser"),
+              data: {
+                id: uid,
+              }
+            })
+            .done(function(data){
+                if(data['user'] != 'null'){
+                  let label = $("label:contains('"+data['user']+"')");
+                  let id = "#" + label.attr("for");
+                  if($(id).length){
+                    $(id).prop("checked", true);
+                  } else {
+                    window.alert(data['user'] + Translator.trans('monPlanning.more.appel.noninscrit'));
+                  }
+                  
+                }
+            })
+            .fail(_uca.ajax.fail);
+          }
+        } catch(error) {
+          console.log(error);
+        }
+      } else {
+        console.log("Web NFC is not supported.");
+      }
+    }
   </script>
 {% endblock %}

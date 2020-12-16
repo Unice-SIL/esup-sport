@@ -75,7 +75,7 @@
                                 <i class="{{ iconFormat }} text-white mb-2"></i>
                                 <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
                             </div>
-                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
                         </div>
                     {% endif %}
                 {% endfor %}
@@ -149,7 +149,7 @@
                     <div class="row mb-5 d-flex flex-wrap justify-content-around">
                         {% for dataItem in data %}
                             <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                                <a class="align-self-center text-center" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                                <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
                             </div>
                         {% endfor %}
                     </div>
@@ -179,7 +179,7 @@
                     <div class="row mb-5 d-flex flex-wrap justify-content-around" id="activities-container">
                         {% for dataItem in activites %}
                             <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite"  style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                                <a class="align-self-center text-center" href="{{ url(routeAct, {id: dataItem.id, idCa: dataItem.classeActivite.id}) }}">{{ dataItem.libelle }}</a>
+                                <a class="align-self-center text-center" href="{{ path(routeAct, {id: dataItem.id, idCa: dataItem.classeActivite.id}) }}">{{ dataItem.libelle }}</a>
                             </div>
                         {% endfor %}
                     </div>
@@ -199,7 +199,7 @@
             {% if data|length > 0 %}
                 {% for dataItem in data %}
                     <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                        <a class="align-self-center text-center" href="{{ url(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                        <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
                     </div>
                 {% endfor %}
             {% else %}
@@ -296,7 +296,7 @@
 
                                 let div = '\
                                     <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite">\
-                                        <a class="align-self-center text-center" href="{{ url("UcaWeb_FormatActiviteLister", {id: "idActivite", idCa: "idClasseActivite"}) }}">libelle</a>\
+                                        <a class="align-self-center text-center" href="{{ path("UcaWeb_FormatActiviteLister", {id: "idActivite", idCa: "idClasseActivite"}) }}">libelle</a>\
                                         <a class="align-self-center text-center text-warning detail-activite" data-toggle="modal" data-target="#modalTarget" type="button" style="width: 10%; padding-top: 0%; padding-bottom: 50%;"><i class="fas fa-info-circle fa-2x"></i></a>\
                                     </div>\
                                 ';

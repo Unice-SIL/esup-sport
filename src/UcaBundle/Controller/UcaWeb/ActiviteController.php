@@ -107,14 +107,15 @@ class ActiviteController extends Controller
     public function FormatActiviteDetailAction($idCa, $idA, $id, $day = 1, $yearWeek = null)
     {
         $em = $this->getDoctrine()->getManager();
-        $item = $em->getRepository('UcaBundle:FormatActivite')->findOneBy(['id' => $id]);
-
-        $twigConfig['data'] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($idA, $this->getUser());
-        $twigConfig['idCa'] = $idCa;
-        $twigConfig['idA'] = $idA;
-        $twigConfig['item'] = $item;
-        $twigConfig['id'] = $item->getId();
-        $twigConfig['creneauParJour'] = [];
+        $item = $em->getReference('UcaBundle:FormatActivite', $id);
+        $twigConfig = [
+            'data' => $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($idA, $this->getUser()),
+            'idCa' => $idCa,
+            'idA' => $idA,
+            'item' => $item,
+            'id' => $item->getId(),
+            'creneauParJour' => [],
+        ];
 
         if (FormatAvecCreneau::class == get_class($item)) {
             return $this->FormatActiviteAvecCreneau($item, $day, $twigConfig);
@@ -146,18 +147,18 @@ class ActiviteController extends Controller
     public function FormatActiviteAvecCreneau($item, $day, $twigConfig)
     {
         $em = $this->getDoctrine()->getManager();
-        $id = $item->getId();
-        $twigConfig['entite'] = 'FormatActiviteDetail';
-
-        $twigConfig['item'] = $item;
-        $twigConfig['itemId'] = $item->getId();
-        $twigConfig['typeVisualisation'] = 'semaine';
-        $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
-        $twigConfig['currentDate'] = new \DateTime();
-        $twigConfig['typeFormat'] = 'FormatAvecCreneau';
-        $twigConfig['widthWindow'] = '1350';
-        $twigConfig['nbJour'] = '7';
-        $twigConfig['idRessource'] = 0;
+        $twigConfig = array_merge($twigConfig, [
+            'entite' => 'FormatActiviteDetail',
+            'item' => $item,
+            'itemId' => $item->getId(),
+            'typeVisualisation' => 'semaine',
+            'listeCampus' => $em->getRepository(Etablissement::class)->findAll(),
+            'currentDate' => new \DateTime(),
+            'typeFormat' => 'FormatAvecCreneau',
+            'widthWindow' => '1350',
+            'nbJour' => '7',
+            'idRessource' => 0,
+        ]);
 
         $dates = [];
         for ($d = 1; $d <= 7; ++$d) {

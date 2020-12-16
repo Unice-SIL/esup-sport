@@ -7,10 +7,11 @@
 		{% endif %}
 		<!-- Liste Article -->
 		{% for article in tabCmdDetails %}
+			{% if article.affichageDetailCommande() %}
 			<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none d-flex flex-wrap justify-content-between align-items-center">
 				<div class="col-12 col-sm-8">
-					<p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{article.item.articleLibelle}}</p>
-					<p class="m-0 mb-1 p-0 col-12">{{article.item.articleDescription}}</p>
+					<p class="m-0 mb-1 p-0 col-12 text-uppercase fw-500 color-blue">{{article.libelle}}</p>
+					<p class="m-0 mb-1 p-0 col-12">{{article.description}}</p>
 					{% if article.inscription is not null  %}
 						{% for autorisation in article.inscription.autorisations %}
 							{% set codeComportement = autorisation.typeAutorisation.comportement.codeComportement %}
@@ -23,7 +24,7 @@
 				<div class="col-12 col-sm-4 d-flex align-items-center">
 					<p class="w-50 p-0 py-3 m-0 text-left text-sm-right">
 						{% if source == 'monpanier' and article.isRemovable %}
-							<a class="d-flex align-items-center justify-content-start justify-content-sm-end fs-12 text-uppercase fw-500 color-taupe-gray" href='{{url('UcaWeb_SuppressionArticle', { id: article.id })}}' data-toggle='modal' data-target='#modalSuppression'>
+							<a class="d-flex align-items-center justify-content-start justify-content-sm-end fs-12 text-uppercase fw-500 color-taupe-gray" href='{{path('UcaWeb_SuppressionArticle', { id: article.id })}}' data-toggle='modal' data-target='#modalSuppression'>
 								{{ 'bouton.supprimer' | trans }}
 								<i class="fas fa-trash ml-2"></i>
 							</a>
@@ -57,6 +58,7 @@
 					{% endif %}
 				</div>
 			</div>
+			{% endif %}
 		{% endfor %}
 
 		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none d-flex flex-wrap justify-content-between align-items-center">
@@ -64,7 +66,7 @@
 				{% if commande.id %}
 					<p class="p-0 m-0">
 						{% if source == 'monpanier' %}
-							<a class="d-flex align-items-center justify-content-end fs-12 text-uppercase fw-500 color-taupe-gray" href='{{url('UcaWeb_SuppressionToutArticle', { 'id': commande.id })}}' data-toggle='modal' data-target='#modalSuppression'>
+							<a class="d-flex align-items-center justify-content-end fs-12 text-uppercase fw-500 color-taupe-gray" href='{{path('UcaWeb_SuppressionToutArticle', { 'id': commande.id })}}' data-toggle='modal' data-target='#modalSuppression'>
 								<i class="fas fa-trash mr-2"></i>
 								Vider le panier
 							</a>
@@ -132,10 +134,10 @@
 							{{ form_end(form) }}
 						{% endif %}
 						{% if source == 'monpanier' %}
-							<a href="{{url('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
+							<a href="{{path('UcaWeb_PaiementRecapitulatif', { id: commande.id, typePaiement: 'BDS' })}}">{{ 'common.moyenpaiementautre' | trans }}</a>
 						{% endif %}
 					{% else %}
-						<a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement: 'NA', source: source })}}">{{ 'paiement.gratuit.validation' | trans }}</a>
+						<a class="btn btn-primary" href="{{path('UcaWeb_PaiementValidation', { id: commande.id, typePaiement: 'NA', source: source })}}">{{ 'paiement.gratuit.validation' | trans }}</a>
 					{% endif %}
 				</div>
 			</div>
@@ -145,9 +147,9 @@
 		{% if commande.statut == 'apayer' and source == 'gestioncaisse' %}
 			<div id="paiementBDS" class="row mb-4 p-0">
 				<div class="col-12 p-0 m-0 text-center text-md-right">
-					<a id="boutonPaiementCarte" data-toggle="modal" data-target="#modalValidationPaiementcarte" class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'cb' })}}">{{ 'paiement.cb.validation' | trans }}</a>
+					<a id="boutonPaiementCarte" data-toggle="modal" data-target="#modalValidationPaiementcarte" class="btn btn-primary" href="{{path('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'cb' })}}">{{ 'paiement.cb.validation' | trans }}</a>
 					<button id="boutonPaiementCheque" data-toggle="modal" data-target="#modalValidationPaiementcheque" class="btn btn-info">{{ 'paiement.cheque.validation' | trans }}</button>
-					<a id="boutonPaiementEspece" data-toggle="modal" data-target="#modalValidationPaiementespece" class="btn btn-info" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'espece' })}}">{{ 'paiement.especes.validation' | trans }}</a>
+					<a id="boutonPaiementEspece" data-toggle="modal" data-target="#modalValidationPaiementespece" class="btn btn-info" href="{{path('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'BDS', source: source, moyenPaiement: 'espece' })}}">{{ 'paiement.especes.validation' | trans }}</a>
 					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'carte' } %}
 					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'cheque' } %}
 					{% include "@Uca/UcaWeb/Commande/Modal.PaiementValidation.html.twig" with { moyenPaiement : 'espece' } %}

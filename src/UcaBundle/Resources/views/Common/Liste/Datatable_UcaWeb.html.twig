@@ -36,7 +36,7 @@
                 {% block DatatableHeader %}
                     {% if not noAddButton is defined %}
                         <div class="row">
-                            <a href="{{ url(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+                            <a href="{{ path(codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
                         </div>
                     {% endif %}
                 {% endblock %}

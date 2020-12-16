@@ -52,7 +52,7 @@
 
 			{% if inscription.creneau is not null %}
 				<p class="m-0 mb-1 p-0 col-12 fw-500">
-					<a href="{{ url('UcaWeb_FormatActiviteDetailJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : item.SerieEvenements().first().getDateDebut|date("N") , yearWeek: item.SerieEvenements().first().getDateDebut|date("W")} ) }}" class="btn btn-outline-primary">
+					<a href="{{ path('UcaWeb_FormatActiviteDetailJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, day : item.SerieEvenements().first().getDateDebut|date("N") , yearWeek: item.SerieEvenements().first().getDateDebut|date("W")} ) }}" class="btn btn-outline-primary">
 						{{ "common.creneaux"|trans }}</a>
 				</p>
 			{% elseif inscription.reservabilite is not null %}
@@ -60,7 +60,7 @@
 					-
 					{{item.articleDateFin|date("d/m/Y H:i")}}</p>
 				<p class="m-0 mb-1 p-0 col-12 fw-500">
-					<a href="{{ url('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, idRessource: item.ressource.id , year_week: item.evenement.dateDebut|date("Y") ~ '_' ~ item.evenement.dateDebut|date("W"), day_week:item.evenement.dateDebut|date("N")} ) }}" class="btn btn-outline-primary">
+					<a href="{{ path('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', {idCa:item.formatActivite.idCa, idA:item.formatActivite.idA, id: item.formatActivite.id, idRessource: item.ressource.id , year_week: item.evenement.dateDebut|date("Y") ~ '_' ~ item.evenement.dateDebut|date("W"), day_week:item.evenement.dateDebut|date("N")} ) }}" class="btn btn-outline-primary">
 						{{ "formatavecreservation.title"|trans }}</a>
 				</p>
 			{% elseif inscription.formatActivite is not null %}
@@ -68,7 +68,7 @@
 					-
 					{{item.articleDateFin|date("d/m/Y")}}</p>
 				<p class="m-0 mb-1 p-0 col-12 fw-500">
-					<a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">
+					<a href="{{ path('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">
 						{{ "formatactivite.libelle"|trans }}</a>
 				</p>
 			{% endif %}

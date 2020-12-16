@@ -15,7 +15,7 @@ use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use UcaBundle\Datatables\Button\CommandeExportButton;
 use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
-use UcaBundle\Datatables\Filter\TwoDatesFilter;
+use UcaBundle\Datatables\Filter\RangeFilter;
 
 class GestionCommandesDatatable extends AbstractTranslatedDatatable
 {
@@ -23,10 +23,11 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
     {
         $this->setUcaDefault(['options' => [
             'individual_filtering' => true,
-            'individual_filtering_position' => 'head',
             'order_cells_top' => true,
             'global_search_type' => 'like',
-        ]]);
+        ],
+            'features' => ['state_save' => false],
+        ]);
 
         $this->addInvisibleColumns([
             'id',
@@ -43,18 +44,27 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
         $formatter = new \NumberFormatter('fr_FR', \NumberFormatter::CURRENCY);
 
         $this->columnBuilder
-
             ->add('numeroCommande', Column::class, [
                 'title' => $this->translator->trans('common.numerocommande'),
-                'searchable' => false,
+                'searchable' => true,
             ])
             ->add('numeroRecu', Column::class, [
                 'title' => $this->translator->trans('common.numerorecu'),
-                'searchable' => false,
+                'searchable' => true,
             ])
             ->add('avoirCommandeDetails', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('commande.avoir.posseder'),
                 'twigTemplate' => 'AvoirCommandeDetails',
+                /*'searchable' => true,
+                'search_column' => 'avoirCommandeDetail',
+                'filter' => [SelectFilter::class, [
+                    'classes' => 'selectCommande',
+                    'initial_search' => '',
+                    'select_options' => [
+                        'oui' => $this->translator->trans('common.oui'),
+                        'non' => $this->translator->trans('common.non'),
+                    ],
+                ]],*/
             ])
             ->add('utilisateur.nom', Column::class, [
                 'title' => $this->translator->trans('common.nom'),
@@ -102,7 +112,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('common.moyenpaiement'),
                 'dql' => "CONCAT(commande.moyenPaiement, ' - ', commande.typePaiement)",
                 'type_of_field' => 'string',
-                'searchable' => false,
+                'searchable' => true,
             ])
             ->add('date', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.date'),
@@ -110,10 +120,12 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'search_column' => 'dateAnnulation',
                 'search_column' => 'dateCommande',
                 'twigTemplate' => 'DateOnlyCommande',
+                'orderable' => true,
+                'order_column' => 'datePaiement',
                 'searchable' => true,
-                'filter' => [TwoDatesFilter::class, [
-                    'classes' => 'datetimepicker',
-                    'attributes' => ['data-datetimepicker-format' => 'd/m/Y'],
+                //'date_format' => 'L',
+                'filter' => [RangeFilter::class, [
+                    'cancel_button' => false,
                 ]],
             ])
             ->add('commandeDetails', TwigVirtualColumn::class, [

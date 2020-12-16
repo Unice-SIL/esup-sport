@@ -217,8 +217,8 @@ class StatistiqueController extends Controller
         $tab = [];
         $listeEtudiantParNiveau = [];
         foreach ($listeUtilisateur as $utilisateur) {
-            $username = $utilisateur->getUsername();
-            $user = $emStat->getRepository('StatistiqueBundle:DataUtilisateur')->findONeBy(['codEtu' => $username, 'anneeUniversitaire' => Parametrage::get()->getAnneeUniversitaire()]);
+            $matricule = $utilisateur->getMatricule();
+            $user = $emStat->getRepository('StatistiqueBundle:DataUtilisateur')->findONeBy(['codEtu' => $matricule, 'anneeUniversitaire' => Parametrage::get()->getAnneeUniversitaire()]);
 
             if (null != $user) {
                 $key = $user->getNiveau();
@@ -279,8 +279,8 @@ class StatistiqueController extends Controller
         $listeLogConnexion = $em->getRepository('UcaBundle:LogConnexion')->findAll();
         foreach ($listeLogConnexion as $logConnexion) {
             $utilisateur = $logConnexion->getUtilisateur();
-            $username = $utilisateur->getUsername();
-            $dataUser = $emStat->getRepository('StatistiqueBundle:DataUtilisateur')->findONeBy(['codEtu' => $username, 'anneeUniversitaire' => Parametrage::get()->getAnneeUniversitaire()]);
+            $matricule = $utilisateur->getMatricule();
+            $dataUser = $emStat->getRepository('StatistiqueBundle:DataUtilisateur')->findONeBy(['codEtu' => $matricule, 'anneeUniversitaire' => Parametrage::get()->getAnneeUniversitaire()]);
 
             if (null != $dataUser) {
                 $horaireConnexion = $logConnexion->getDateConnexion()->format('H');

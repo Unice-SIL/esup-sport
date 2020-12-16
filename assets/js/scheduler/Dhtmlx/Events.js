@@ -4,7 +4,7 @@ import { Evenement } from "./Evenement";
 import { dateToStr } from "./Date";
 import { Serie } from "./Serie";
 
-scheduler.attachEvent("onEventPasted", function (isCopy, pasted_ev, original_ev) {
+scheduler.attachEvent("onEventPasted", function(isCopy, pasted_ev, original_ev) {
 
     var serie = {};
     let orEv = scheduler._events[original_ev.id]
@@ -46,7 +46,7 @@ scheduler.attachEvent("onEventPasted", function (isCopy, pasted_ev, original_ev)
 
 
 // fires when the user adds a new event to the scheduler
-scheduler.attachEvent("onEventAdded", function (id, ev) {
+scheduler.attachEvent("onEventAdded", function(id, ev) {
 
     let item = scheduler.data.item;
 
@@ -66,22 +66,19 @@ function addEl(evenement, item, serie, isSerie) {
 
     if ((typeof evenement.isSerie != "undefined" && evenement.isSerie() && item == null) || isSerie) {
         addSerie(evenement);
-    }
-    else {
+    } else {
         let eventC;
         if (scheduler.data.item.type == "creneau") {
             eventC = Object.create(Creneau);
             eventC.evenementType = 'creneau';
-        }
-        else if (scheduler.data.item.type == "reservation") {
+        } else if (scheduler.data.item.type == "reservation") {
             eventC = Object.create(Reservation);
             eventC.evenementType = 'ressource';
             eventC.resources_ids = scheduler.data.item.id;
             eventC.reference_id = scheduler.data.item.id;
 
 
-        }
-        else if (scheduler.data.item.type == "ressource") {
+        } else if (scheduler.data.item.type == "ressource") {
             eventC = Object.create(Reservation);
             eventC.evenementType = 'ressource';
             eventC.resources_ids = scheduler.data.item.id;
@@ -108,8 +105,7 @@ function addEl(evenement, item, serie, isSerie) {
                 serie.enfants = [];
             }
             serie.enfants.push(eventC);
-        }
-        else {
+        } else {
             eventC.save("insert");
         }
 
@@ -117,7 +113,7 @@ function addEl(evenement, item, serie, isSerie) {
     }
 }
 
-var addSerie = function (evenement) {
+var addSerie = function(evenement) {
     let serie = Object.create(Serie);
     serie.load(evenement);
 
@@ -128,7 +124,7 @@ var addSerie = function (evenement) {
     serie.dependanceSerie = true;
     var childs = [];
     //create evenement and add to scheduler and serie
-    evenement.enfants = scheduler.getRecDates(evenement, 1000 * 1000).map(function (item) {
+    evenement.enfants = scheduler.getRecDates(evenement, 1000 * 1000).map(function(item) {
         addEl(evenement, item, serie);
     });
 
@@ -142,7 +138,7 @@ var addSerie = function (evenement) {
 
 
 // fires when the user clicks on the 'save' button in the lightbox
-scheduler.attachEvent("onEventSave", function (id, ev, is_new) {
+scheduler.attachEvent("onEventSave", function(id, ev, is_new) {
     //call the lightbox again
     if (!scheduler.config.lightbox.control(ev, is_new)) {
         return false;
@@ -152,23 +148,38 @@ scheduler.attachEvent("onEventSave", function (id, ev, is_new) {
         let eventDhtmlx = scheduler.getEvent(id);
 
         let isSerie = eventDhtmlx.evenement.isSerie();
+        let dependance = eventDhtmlx.dependanceSerie;
+        if (dependance) {
+            ev.dateDebut = dateToStr(eventDhtmlx.start_date);
+            ev.dateFin = dateToStr(eventDhtmlx.end_date);
+        } else {
+            ev.dateDebut = dateToStr(ev.start_date);
+            ev.dateFin = dateToStr(ev.end_date);
+        }
 
         ev.nature = 'nativeEvent';
-        ev.dateDebut = dateToStr(eventDhtmlx.start_date);
-        ev.dateFin = dateToStr(eventDhtmlx.end_date);
         ev.id = eventDhtmlx.id;
-
         if (isSerie) {
             ev.serie = { id: eventDhtmlx.evenement.serie.id }
-            let dependance = eventDhtmlx.dependanceSerie;
+
+
             eventDhtmlx.load(ev);
             eventDhtmlx.text = ev.text
-            if (dependance) {
-                scheduler.displaySerieModalBox('update', eventDhtmlx);
-            }
-            else {
-                eventDhtmlx.update();
-            }
+            _uca.ajax.showLoader();
+            isOccurrenceDependance(ev.serie, function(result) {
+                _uca.ajax.hideLoader();
+                // if (result == true) {
+                // eventDhtmlx.update();
+                // } else {
+                //     if (dependance) {
+                // scheduler.displaySerieModalBox('update', eventDhtmlx);
+                scheduler.displaySerieModalBox('update', eventDhtmlx, result);
+                //     } else {
+                //         eventDhtmlx.update();
+                //     }
+                // }
+            });
+
 
         } else {
 
@@ -177,8 +188,7 @@ scheduler.attachEvent("onEventSave", function (id, ev, is_new) {
             eventDhtmlx.dependanceSerie = false;
             eventDhtmlx.save('update');
         }
-    }
-    else {
+    } else {
         //need this to test if series
         let evenement = Object.create(Evenement);
 
@@ -204,16 +214,15 @@ scheduler.attachEvent("onEventSave", function (id, ev, is_new) {
     return true;
 });
 // fires when the event has been changed by drag-n-drop, but the changes aren't saved yet
-scheduler.attachEvent("onBeforeEventChanged", function (ev, e, is_new, original) {
+scheduler.attachEvent("onBeforeEventChanged", function(ev, e, is_new, original) {
     let evenement = Object.create(Evenement);
     evenement.load(ev);
 
     if (!is_new) {
         if (evenement.isSerie()) {
             if (ev.dependanceSerie) {
-                scheduler.displaySerieModalBox('update', ev);
-            }
-            else {
+                scheduler.displaySerieModalBox('update', ev, false);
+            } else {
                 ev.update();
             }
 
@@ -228,14 +237,16 @@ scheduler.attachEvent("onBeforeEventChanged", function (ev, e, is_new, original)
 });
 
 
-scheduler.attachEvent("onBeforeEventDelete", function (id, ev) {
+scheduler.attachEvent("onBeforeEventDelete", function(id, ev) {
     let evenement = Object.create(Evenement);
     evenement.load(ev);
     if (evenement.isSerie()) {
         var ev = ev;
-        scheduler.displaySerieModalBox('delete', ev);
+        isOccurrenceDependance(evenement.serie, function(result) {
+            scheduler.displaySerieModalBox('delete', ev, result);
+        });
     } else {
-        scheduler.displayDeleteModalBox(function (rep) {
+        scheduler.displayDeleteModalBox(function(rep) {
             if (rep == 0) {
                 ev.save('delete');
             } else {
@@ -246,29 +257,29 @@ scheduler.attachEvent("onBeforeEventDelete", function (id, ev) {
     return true;
 });
 
-scheduler.attachEvent("onBeforeLightbox", function (id) {
+scheduler.attachEvent("onBeforeLightbox", function(id) {
     if (scheduler.isNewEvent(id)) {
 
         scheduler._events[id].text = scheduler.data.item.description;
-        scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.new,id);
+        scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.new, id);
     } else {
-        scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.update,id);
+        scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.update, id);
     }
 
     return true;
 });
 
-scheduler.attachEvent("onEventDeleted", function (id, ev) {
+scheduler.attachEvent("onEventDeleted", function(id, ev) {
     scheduler.unactivateCopie();
 });
 
-scheduler.attachEvent("onLightbox", function (id) {
+scheduler.attachEvent("onLightbox", function(id) {
     let day = scheduler._events[id].start_date.getDay();
     $('.dhx_repeat_days input[value="' + day + '"]')[0].checked = true
 
 });
 
-scheduler.attachEvent("onEventCopied", function (ev) {
+scheduler.attachEvent("onEventCopied", function(ev) {
     for (var el in scheduler._events) {
         let elem = scheduler._events[el];
 
@@ -281,7 +292,7 @@ scheduler.attachEvent("onEventCopied", function (ev) {
 
 
 
-scheduler.attachEvent("onEventCreated", function (id, e) {
+scheduler.attachEvent("onEventCreated", function(id, e) {
     let item = scheduler.data.item;
     let eventDhtmlx = scheduler.getEvent(id);
     eventDhtmlx.reference_class = item.objectClass;
@@ -296,7 +307,7 @@ var lastEventClickTimeStamp = 0;
 
 //for click and double click
 // because onDblClick and onClick are not compatible together
-scheduler.attachEvent("onClick", function (id, e) {
+scheduler.attachEvent("onClick", function(id, e) {
     changeColor(id);
     scheduler.updateView();
     if (role == "user")
@@ -313,7 +324,7 @@ scheduler.attachEvent("onClick", function (id, e) {
 });
 
 
-var checkEvents = function (el) {
+var checkEvents = function(el) {
     let email = scheduler.config.icons_select.indexOf("icon_email");
     let registered = scheduler.config.icons_select.indexOf("icon_register");
     let more = scheduler.config.icons_select.indexOf("icon_more");
@@ -338,14 +349,14 @@ var checkEvents = function (el) {
 }
 
 
-scheduler.attachEvent("onBeforeDrag", function (id, e) {
+scheduler.attachEvent("onBeforeDrag", function(id, e) {
     changeColor(id);
 
     return true;
 });
 
 
-var changeColor = function (id) {
+var changeColor = function(id) {
     let eventDhtmlx = scheduler._events[id];
 
     for (var s in scheduler._series) {
@@ -363,10 +374,25 @@ var changeColor = function (id) {
 
     if (eventDhtmlx.getParent() != "undefined") {
         eventDhtmlx.getParent().color();
-    }
-    else {
+    } else {
         eventDhtmlx.color = scheduler.config.activeColor;
     }
+}
+
+
+function isOccurrenceDependance(serieId, callback) {
+    $.ajax({
+        method: "POST",
+        url: Routing.generate('DhtmlxNbOccurrenceDependance'),
+        data: {
+            serieId: serieId
+        },
+        success: function(code_html, statut) {},
+        error: function(resultat, statut, erreur) {},
+        complete: function(resultat, statut) {
+            callback(resultat.responseJSON);
+        }
+    });
 }
 
 

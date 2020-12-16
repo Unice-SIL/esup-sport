@@ -100,9 +100,7 @@ _uca.inscription.addButtonEvent = function () {
             }
         })
             .done(function(data){
-                
                 let html_content = "";
-
                 if(data.html){
                     html_content= data.html;
                 }else{
@@ -111,12 +109,11 @@ _uca.inscription.addButtonEvent = function () {
 
                 $('#modalInscription .modal-dialog').html($(html_content).find('.modal-dialog').html());
                 $('#modalInscription').modal();
-                   
+
                 $(".btn-confirmation").click(function() {
                     if(this.value == 'true'){
                         $('#modalInscription .modal-dialog').html(_uca.inscription.htmlSpinner);
                         $('#modalInscription').modal();
-
                         $.ajax({
                                 method: "POST",
                                 url: Routing.generate('UcaWeb_Inscription'),
@@ -127,8 +124,8 @@ _uca.inscription.addButtonEvent = function () {
                                     idFormat: _uca.inscription.idFormat,
                                 }
                         })
-                            .done(_uca.inscription.formValidation)
-                            .fail(_uca.ajax.fail);
+                        .done(_uca.inscription.formValidation)
+                        .fail(_uca.ajax.fail);
                     }
                 });
             })

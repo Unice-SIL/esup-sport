@@ -37,6 +37,10 @@ class DoctrineExtensionListener
 
     public function onLateKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         $locale = $event->getRequest()->getLocale();
         $this->translatableListener->setTranslatableLocale($locale);
         ini_set('intl.default_locale', $locale);
@@ -44,6 +48,9 @@ class DoctrineExtensionListener
 
     public function onKernelRequest(\Symfony\Component\HttpKernel\Event\GetResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
         $tokenStorage = $this->tokenStorage->getToken();
         $authorizationChecker = $this->authoriaztionChecker;
         if (null !== $tokenStorage && $authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {

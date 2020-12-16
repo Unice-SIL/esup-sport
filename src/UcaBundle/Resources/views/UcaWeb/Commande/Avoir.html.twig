@@ -112,10 +112,14 @@
 				{{commande.moyenPaiement}}
 				{{commande.typePaiement == 'PAYBOX' ? 'en ligne' : '' }}
 				le
-				{{commande.datePaiement|date('d/m/Y')}}</td>
+				{{commande.datePaiement|date('d/m/Y')}}
+				</td>
 		</tr>
 		<tr>		
 			<td class="20p"> {{'commande.avoir.date'|trans }}: {{ commande.getDateAvoir|date('d/m/Y') }}  </td>
+		</tr>
+		<tr>		
+			<td class="20p"> {{'commande.avoir.ajouter.info.save'|trans }}</td>
 		</tr>
 	</table>
 

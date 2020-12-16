@@ -5,7 +5,7 @@
 {% endblock %}
 {% block body_text %}{% endblock %}
 {% block body_html %}
-  {% set confirmationUrl = app.request.schemeAndHttpHost ~ confirmationUrl %}
+  {# {% set confirmationUrl = app.request.schemeAndHttpHost ~ confirmationUrl %} #}
   {{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': confirmationUrl})|nl2br }}
   <br/>
   {{ "common.username"|trans }}

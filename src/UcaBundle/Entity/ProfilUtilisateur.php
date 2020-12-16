@@ -16,7 +16,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\ProfilUtilisateurRepository")
  * @Gedmo\Loggable
  * @UniqueEntity(fields="libelle", message="profilutilisateur.uniqueentity")
  */
@@ -46,7 +46,7 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     protected $montants;
 
     /**
-     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="FormatActiviteProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="LAZY")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
      */
     protected $formatsActivite;

@@ -1,59 +1,67 @@
 {% extends "@Uca/Common/Liste/Datatable.html.twig" %}
 
 {% block DatatableHeader %}
-    <div class="well">
-        {{form_start(form)}}
-        <div class="row">        
-            <div class="col-sm-3">
-                {{form_row(form.dateDebut)}}
-            </div>
-            <div class="col-sm-3">
-                {{form_row(form.dateFin)}}
-            </div>
-            <div class="col-sm-3">
-                {{form_row(form.datePaiement)}}
-            </div>
-        </div>
-        {{form_end(form)}}
-    </div>
+  <div id="load">
+		<img src="{{ asset('images/load.gif') }}" id="load-img">
+	</div>
 {% endblock %}
 
 {% block main %}
     {{ parent() }}
-    {# Affichage du bouton Exporter tout s'il est défini #}
-    <div class="row">
+    <div class="text-right">
         {% if exportAll is defined %}
-            <a href="#" id="bouton_export_all_facture" class="btn btn-primary ml-md-auto mt-3" role="button">{{ 'bouton.exportallfacture.pdf'|trans }}</a>
-        {% endif %}    
-
+            <a href="#" id="bouton_export_all_pdf" class="btn btn-primary ml-md-auto mt-3" role="button">
+              <span alt="" class="fa fa-file-pdf mr-1"> </span>
+              {{ 'bouton.exportallfacture.pdf'|trans }}
+            </a>
+        {% endif %}   
         {% if gestionButtons is defined %}
-            <a href="#" id="bouton_extraction_excel" class="btn btn-primary mt-3" role="button">{{'common.extraire'|trans}}</a>
+            <a href="#" id="bouton_extraction_excel" class="btn btn-primary mt-3" role="button">
+              <span alt="" class="fa fa-file-excel mr-1"> </span>
+              {{ 'common.extraire'|trans }}
+            </a>
         {% endif %}
     </div>
+ 
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-        <script type="text/javascript">        
-            $(document).ready(function(){
-                $("input[type=text]").each(function(){
-                    $(this).attr('placeholder','');
-                    $(this).css('height','40px');
-                })
-                $("#sg-datatables-Commande_datatable-head-filter-15").next().css('width','100px');
-                _uca.extraction.commande.setUrlExtraction(ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
-                _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
-                
-                $('.champRechercheDatatableCommande').on('change', function() {
-                    _uca.extraction.commande.setUrlExtraction(ucabundle_commande_dateDebut, ucabundle_commande_dateFin);
-                    _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
-                });
-                
-                $('input[type="search"]').on('change', function(){
-                    _uca.extraction.commande.setUrlForExportPDF(ucabundle_commande_datePaiement);
-           
-                });
-            });
-        
-        </script>
+  {{ parent() }}
+  {% if exportAll is defined and gestionButtons is defined %}
+    <script type="text/javascript">    
+      _uca.ajax.showLoader();
+      setTimeout(function () {
+        let extraction = {
+          'isCommande': true,
+          'delegator': document.getElementById('sg-datatables-Commande_datatable-filterrow'), 
+          'boutonRemovePlage':  document.querySelector('.cancelBtn'),
+          'numeroCommande':  document.getElementById('sg-datatables-Commande_datatable-head-filter-9'), 
+          'numeroRecu':  document.getElementById('sg-datatables-Commande_datatable-head-filter-10'), 
+          'utilisateurNom': document.getElementById('sg-datatables-Commande_datatable-head-filter-12'), 
+          'utilisateurPrenom': document.getElementById('sg-datatables-Commande_datatable-head-filter-13'), 
+          'montant': document.getElementById('sg-datatables-Commande_datatable-head-filter-14'), 
+          'statut': $('#sg-datatables-Commande_datatable-head-filter-15').val(),
+          'moyen': document.getElementById('sg-datatables-Commande_datatable-head-filter-16'),
+          'plage': $('#sg-datatables-Commande_datatable-head-filter-17'),
+          'recherche': document.querySelector("input[type]"),
+          'urlExcel':'UcaGest_ReportingCommandesExtraction',
+          'boutonExtractionExcel': bouton_extraction_excel,
+          'urlPDF': 'UcaGest_ReportingCommandesExportAll',
+          'boutonExtractionPDF': bouton_export_all_pdf,
+        };
+
+        _uca.extraction.preparationExtraction(extraction);
+        _uca.ajax.hideLoader();
+      },6100);
+    </script>
+  {% else %}
+    <script type="text/javascript">    
+        _uca.ajax.hideLoader();
+    </script>
+  {% endif %}
+  <script>
+    $(document).ready(function(){
+      $("#sg-datatables-Commande_datatable-head-filter-15").next().css('width','100px');
+    })
+  </script>
 {% endblock %}

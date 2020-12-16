@@ -133,7 +133,11 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     public function getArticleDescription()
     {
-        return Fn::strTruncate($this->getSerieEvenements()->first()->getDescription(), 97);
+        if ($this->getSerieEvenements()->first()) {
+            return Fn::strTruncate($this->getSerieEvenements()->first()->getDescription(), 97);
+        }
+
+        return '';
     }
 
     public function getArticleDateDebut()

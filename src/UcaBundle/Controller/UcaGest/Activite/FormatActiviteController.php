@@ -208,9 +208,16 @@ class FormatActiviteController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if (!$formatActivite->getInscriptions()->isEmpty()) {
-            $this->get('uca.flashbag')->addActionErrorFlashBag($formatActivite, 'Supprimer');
+            foreach ($formatActivite->getInscriptions() as $inscription) {
+                if (in_array($inscription->getStatut(), ['valide'])) { //voir quels statuts doivent empêcher la suppression
+                    $this->get('uca.flashbag')->addActionErrorFlashBag($formatActivite, 'Supprimer');
 
-            return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
+                    return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
+                }
+                $inscription->setStatut('ancienneinscription');
+                $formatActivite->removeInscription($inscription);
+                $inscription->setFormatActivite(null);
+            }
         }
         if ($formatActivite instanceof FormatAvecCreneau && !$formatActivite->getCreneaux()->isEmpty()) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($formatActivite, 'Supprimer');

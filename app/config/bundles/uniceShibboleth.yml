@@ -18,6 +18,7 @@ unice_sil_shibboleth:
     # 'givenName' : prénom
     # 'L' (localiy) : ville
     # 'mail' : adresse email de l'université
+    # 'mifare' : identifiant unique carte étudiant
     # 'mobile' : numéro de portable
     # 'telephoneNumer' : numéro de téléphpone
     # 'postalAddress' : adresse
@@ -37,7 +38,8 @@ unice_sil_shibboleth:
         'eduPersonAffiliation',
         'eduPersonPrimaryAffiliation',
         'supannEtuId', 
-        'ptdrouv'] 
+        'ptdrouv',
+        'mifare'] 
     # The route to which the user will be redirected after login. If this parameter is not filled, the user will be redirected to the page from which he comes. (default = null)
     # Probablement UcaWeb_acceuil
     login_target: null  

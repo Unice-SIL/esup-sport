@@ -37,13 +37,13 @@
                 <h2 class="hide-border-title">
                     {{ 'activite.format.ajouter'|trans }}
                 </h2>
-                <a class="btn btn-primary" href="{{ url('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecCreneau'}) }}">
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecCreneau'}) }}">
                     {{ 'activite.formataveccreneau.ajouter'|trans }}</a>
-                <a class="btn btn-primary" href="{{ url('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecReservation'}) }}">
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecReservation'}) }}">
                     {{ 'activite.formatavecreservation.ajouter'|trans }}</a>
-                <a class="btn btn-primary" href="{{ url('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatSimple'}) }}">
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatSimple'}) }}">
                     {{ 'activite.formatsimple.ajouter'|trans }}</a>
-                <a class="btn btn-primary" href="{{ url('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAchatCarte'}) }}">
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAchatCarte'}) }}">
                     {{ 'activite.formatachatcarte.ajouter'|trans }}</a>
             </div>
         </div>

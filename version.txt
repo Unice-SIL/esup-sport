@@ -1,0 +1,92 @@
+Livraison du 11/09/2020
+-	Les 5 points côté gestionnaire du mail d’origine
+-	Les 2 points côté adhérent du mail d’origine
+-	L’inaccessibilité de certaines vidéos
+-	Le design des vidéos
+-	La possibilité de gérer le contenu des pages « Accompagnements » et « Représenter UCA en compétition »
+-	Le problème de créneaux disponibles pour des formats d’activités qui ne sont plus disponibles
+o	reprise de données effectuées
+-	Une activité de musculation impossible à supprimer sachant qu'aucun créneau n'est associé (cas non reproduit en réunion)
+-	Libellé de l’entête qui ne remonte pas dans la facture
+-	Ajustement du design des tableaux  (reporting commandes, …)
+-	Pouvoir rentrer les données d’une carte au moment du paiement
+-	Compte utilisateur qui se désactive lors d’un changement de groupe
+-	Désinscrire un utilisateur à des créneaux lors d’un avoir
+-	Un mauvais affichage des campus qui apparaissent derrière les créneaux horaires
+-	Bascule qui n’a pas fonctionné en recette
+-	Vérifier qu’on ne conserve pas des inscriptions dans la bascule mais qu’on conserve les autorisations pour les cartes qui sont encore valide
+-	Vérifier la fonctionnalité pour modifier la date de fin de validité d’une carte
+-	Le statut pré-inscrit doit avoir lieu seulement si une autorisation encadrant est demandée
+o	Le problème que nous avons constaté ensemble n’était finalement pas une erreur, il y avait un statut pré-inscrit sur un créneau car il y avait une commande en attente de paiement.
+
+Livraison du 21/09/2020
+-	Problème d’affichage de l’actualité sur les mobiles
+-	Format d'activité - Fonctionnement du champ « Nombre de places » qui ne correspond pas au besoin
+o	La capacité par profil ne doit pas former une somme. Pour une capacité total de 4, on peut avoir 4 étudiants, ou 4 personnels, ou 4 etc... On peut aussi indiquer 3 étudiants et 1 personnel par exemple.
+-	Planning - Impossibilité d'aller après décembre
+-	Statistique/KPI - Erreur 500
+-	Date de fin de validité à adapter aux créneaux
+-	Bascule - Format de carte et réservation de ressource à prendre en compte
+-	La lenteur lors de certaines recherches dans « Activités sportives » (exemple : Type d’activité = Sport et Activité = Badminton)
+o	Problème de pop-up qui ne s’enlève pas en production
+-	Ajout au panier après validation par encadrant – Erreur 500
+o	Problème que nous avons constaté : Lorsqu'un encadrant valide l’inscription gratuite et que l’utilisateur essaie de l'ajouter au panier une erreur 500 apparaît.
+-	Planning - Problème d’affichage en Janvier
+-	Correction du libellé « Université Côte d’Azur » dans l’interface de connexion
+-	Rendre le champ Campus non obligatoire
+-	Calendrier ressource - erreur 500
+o	On tombe sur une erreur 500 lorsque l'on souhaite voir un calendrier avec des créneaux pour réserver des ressources
+-	Erreur 500 lors de la navigation sur un planning
+o	Problème dans le cas où une activité n’a pas lieu au sein du campus
+-	Fonction prolonger un créneau qui ne fonctionne pas (Erreur 500)
+-	Gestion des inscriptions - Affectation d'un encadrant à des anciens créneaux (Ex: Fabien Raebiger)
+-	Ne pas afficher côté UcaWeb les formats d’activités qui n’ont pas de créneau (prendre en compte également les réservations de ressources)
+
+Livraison du 30/09/2020
+-	Problème de quota sur les créneaux -> Il n’est plus possible de créer/modifier des créneaux
+-	Le copier-coller ne fonctionne pas sur tous les créneaux (erreur 500)
+-	Achat carte personnels - Doit être valide par défaut
+o	Ce sujet est en lien avec un problème que nous avons déjà corrigé (Compte utilisateur qui se désactive lors d’un changement de groupe).
+o	Nous avons réalisé un correctif également pour que le « Statut de l'utilisateur » soit obligatoire.
+o	Nous ne préférons pas réaliser une reprise de données en masse car nous n’avons pas accès à la liste de utilisateurs en production et en cas d’erreur nous pourrions réactiver des personnes non souhaitées.
+o	Nous pouvons cependant vous préparer une requête à exécuter sur votre base de données de production afin de remonter la liste des utilisateurs dont le « Statut de l'utilisateur » n’est pas renseigné.
+o	Vous pourrez ensuite aller renseigner ce statut au cas par cas.
+-	Suppression des inscrits à une liste -> Lenteur
+o	Nous avons réalisé un petit correctif mais c’est l’envoi du mail qui prend du temps et nous attendons de vérifier que l’envoi a bien été réalisé avant de recharger la page. 
+-	Reporting commandes -> Numéro de carte à indiquer
+-	Inscription impossible après l’achat d’une carte
+o	Renseigner une date de fin de validité par défaut au 01/07
+-	Validation d'un nouvel encadrant URL invalide  Délai d'expiration à vérifier
+-	Mobile/Tablette - Problème d'accès aux plannings en mode gestion depuis un appareil nomade
+
+Livraison du 16/12/2020
+-	Consultation d'une commande - Erreur 500
+-	Reporting Commande - Le filtre par date ne fonctionne pas
+-	Paybox -> Trop d’utilisateurs simultanés  Remplacement des app.ERROR en app.INFO pour les logs de réussite de paiement
+-	Lors d’une désinscription –> Passage de l’utilisateur à préinscrit puis erreur 404 après une nouvelle tentative
+-	Problème de suppression d'une activité (Futsal Centre Sportif Droit)
+-	Reporting Crédit - Le filtre par date ne fonctionne pas
+-	Badgeuse mobile
+-	Le copier-coller ne fonctionne pas sur tous les créneaux 
+-	Impossible de changer la date de validité - Sorain Alexandre  A voir si le problème est résolu après livraison du sujet « Consultation d'une commande - Erreur 500 »
+-	Problème d’affichage des tarifs en doublon
+-	Validation d’un nouvel encadrant URL invalide – Tester avec Safari
+-	Libellé qui ne prend pas en compte l’avoir
+-	La lenteur sur la fonctionnalité « Désinscription de masse »  sur la Préprod il n'y a pas d'inscrit suffisant pour en faire les tests de désinscription de masse
+-	Des éléments manquants sur l'extraction des commandes (date, nom encaisseur, nom et prénom de l’acheteur)
+-	Reporting commande problèmes de filtres et menus déroulants
+-	Planning – Lenteur
+-	Malgré l’autorisation d’une carte, il est impossibilité de s'inscrire (Achraf qui ne pouvait pas s’inscrire)
+-	Créer un script qui tourne toutes les nuits afin de désinscrire les personnes à un créneau supérieur à la date de fin de validité de la carte
+-	Statistique/KPI - Lenteur/Erreur  Vérification à réaliser sur la production
+-	Lorsque l'on veut faire la simulation d'un avoir, impossible de modifier la capacité d'un créneau
+-	Reprise de données pour permettre la suppression de certains formats d'activité
+
+
+
+
+
+
+
+
+

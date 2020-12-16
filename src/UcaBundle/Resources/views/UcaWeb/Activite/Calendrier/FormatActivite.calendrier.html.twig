@@ -47,6 +47,7 @@
 			<div class="w-100"></div> 
 			{% if typeVisualisation != 'mois' %}
 				<div class="col-sm bg-dark-color-blue font-weight-bold fs-24">
+					{# Refaire la requête pour n'avoir que les libéllés #}
 					{% if listeCampus[0] == 'Ressource' %}
 						<span class="cell-title-center text-break">{{ 'common.ressources' | trans | upper}}</span>
 					{% else %}
@@ -94,6 +95,7 @@
 																<span aria-hidden="true">&times;</span>
 															</button>
 														</div>
+														{# Amélioration : le modal n'a pas besoin d'être généréré autautn de fois#}
 														<div class="modal-body">
 															{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_details.html.twig' %}
 														</div>

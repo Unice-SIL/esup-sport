@@ -70,7 +70,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /** @ORM\ManyToMany(targetEntity="TypeAutorisation", cascade={"persist"}, fetch="EAGER") */
     protected $autorisations;
 
-    /** @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="utilisateur", cascade={"persist"})
+    /** @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="utilisateur", cascade={"persist"}, fetch="LAZY")
      * @Assert\NotNull(message="utilisateur.UserProfile.notnull") */
     protected $profil;
 
@@ -248,10 +248,10 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     public function getNbInscriptionCreneau()
     {
-        return $this->getInscriptionsByCriteria([
+        return (int) sizeof($this->getInscriptionsByCriteria([
             ['creneau', 'neq', null],
             ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
-        ])->count();
+        ]));
     }
 
     public function nbCreneauMaximumAtteint()
@@ -344,7 +344,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get description.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getDescription()
     {
@@ -368,7 +368,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get matricule.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getMatricule()
     {
@@ -392,7 +392,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get numeroNfc.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNumeroNfc()
     {
@@ -416,7 +416,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get prenom.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getPrenom()
     {
@@ -440,7 +440,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get nom.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNom()
     {
@@ -464,7 +464,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get sexe.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getSexe()
     {
@@ -488,7 +488,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get adresse.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getAdresse()
     {
@@ -512,7 +512,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get codePostal.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getCodePostal()
     {
@@ -536,7 +536,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get ville.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getVille()
     {
@@ -560,7 +560,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get dateNaissance.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getDateNaissance()
     {
@@ -584,7 +584,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get telephone.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getTelephone()
     {
@@ -632,7 +632,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get document.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getDocument()
     {
@@ -656,7 +656,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get updatedAt.
      *
-     * @return \DateTime|null
+     * @return null|\DateTime
      */
     public function getUpdatedAt()
     {
@@ -762,7 +762,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get profil.
      *
-     * @return \UcaBundle\Entity\ProfilUtilisateur|null
+     * @return null|\UcaBundle\Entity\ProfilUtilisateur
      */
     public function getProfil()
     {
@@ -930,7 +930,7 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
     /**
      * Get statut.
      *
-     * @return \UcaBundle\Entity\StatutUtilisateur|null
+     * @return null|\UcaBundle\Entity\StatutUtilisateur
      */
     public function getStatut()
     {

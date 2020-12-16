@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\UtilisateurDatatable;
+use UcaBundle\Entity\CommandeDetail;
 use UcaBundle\Entity\StatutUtilisateur;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
@@ -175,10 +176,21 @@ class UtilisateurController extends Controller
         $statutRepo = $em->getRepository(StatutUtilisateur::class);
         $form = $this->get('form.factory')->create(UtilisateurType::class, $item, ['action_type' => 'modifier']);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $oldAutorisations = json_decode($this->get('session')->get('oldItem'));
             if ($statutRepo->find(1) === $item->getStatut()) {
                 $item->setEnabled(1);
             } else {
                 $item->setEnabled(0);
+            }
+
+            //si ajout d'une carte, on va mettre à jour la date de fin de validité de la commande la plus récente pour que l'utilisateur puisse s'inscrire
+            foreach ($item->getAutorisations() as $autorisation) {
+                if (!in_array($autorisation->getId(), $oldAutorisations) && 4 == $autorisation->getComportement()->getId()) {
+                    $commandeDetail = $em->getRepository(CommandeDetail::class)->findCommandeDetailWithAutorisationByUser($item->getId(), $autorisation->getId());
+                    if ($commandeDetail) {
+                        $commandeDetail[0]->setDateCarteFinValidite(null);
+                    }
+                }
             }
             $em->persist($item);
             $em->flush();
@@ -186,6 +198,14 @@ class UtilisateurController extends Controller
 
             return $this->redirectToRoute('UcaGest_UtilisateurLister');
         }
+
+        //On récupère les id des autorisations actuelles de l'utilisateur pour pouvoir voir si on lui en a ajouté pour les gérer
+        $oldAutorisations = [];
+        foreach ($item->getAutorisations() as $autorisation) {
+            $oldAutorisations[] = $autorisation->getId();
+        }
+        $this->get('session')->set('oldItem', json_encode($oldAutorisations));
+
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
 

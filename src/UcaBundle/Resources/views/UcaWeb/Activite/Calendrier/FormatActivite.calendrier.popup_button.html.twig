@@ -30,7 +30,7 @@
   {% else %}
     <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
       {{ 'common.indisponible' | trans | upper }}
-      {% set tooltipMessage = (('bouton.indisponible.autorisationinvalide') | trans({'%autorisation%': isValideAutorisation.autorisation, '%dateFinValidite%': isValideAutorisation.dateFinValidite|date('d/m/Y')})) %}
+      {% set tooltipMessage = (('bouton.indisponible.autorisationinvalide') | trans({'%autorisation%': isValideAutorisation.autorisation})) %}
       <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ tooltipMessage }}" aria-label="{{ tooltipMessage }}">
         <i class="fas fa-question-circle"></i>
       </span>

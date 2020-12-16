@@ -62,6 +62,15 @@ _uca.common.afficherMasquer = function (input, target) {
         } 
         if (input.checked === false) {
             target.parentElement.style.display = "none";
+            //si on masque une checkbox profil, on met le champs à 0
+            let label = $(target).find('label');
+            if(label.length) {
+                let textarea = $("#" + label.attr('for'));
+                if(textarea.length) {
+                    textarea.val(0);
+                }
+
+            }
         }
     }
 };
@@ -108,4 +117,13 @@ _uca.common.toutCocherDecocherListener = function(listeBoutons, listeCheckboxes)
             _uca.common.toutCocherDeccocher(action, listeCheckboxes);
         });
     });
-}
+};
+
+/**
+ * Function: inverserChaîne()
+ * Inverse la chaine de caractères donnée
+ * @param chaine
+*/
+_uca.common.inverserChaine = function(chaine) {
+    return (chaine !== "" ? _uca.common.inverserChaine(chaine.substr(1)) + chaine[0] : chaine);
+};

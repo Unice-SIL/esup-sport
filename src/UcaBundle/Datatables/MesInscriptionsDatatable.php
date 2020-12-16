@@ -49,6 +49,7 @@ class MesInscriptionsDatatable extends AbstractTranslatedDatatable
             ->add('date', TwigDataColumn::class, [
                 'title' => $this->translator->trans('common.date'),
                 'twigTemplate' => 'Date',
+                'searchable' => true,
             ])
             ->add('statutTraduit', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.statut'),

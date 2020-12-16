@@ -55,7 +55,10 @@ class CommandeDetail
     /** @ORM\Column(type="string", nullable=true) */
     private $hmac;
 
-    /** @ORM\ManyToOne(targetEntity="FormatActivite") */
+    /**
+     * @ORM\ManyToOne(targetEntity="FormatActivite")
+     * @ORM\JoinColumn(name="format_activite_id", referencedColumnName="id", onDelete="SET NULL")
+     */
     private $formatActivite;
 
     /**
@@ -141,6 +144,17 @@ class CommandeDetail
         $this->setTva($item->getArticleTva($commande->getUtilisateur()));
         $commande->addCommandeDetail($this);
         $commande->updateMontantTotal();
+    }
+
+    public function affichageDetailCommande()
+    {
+        $format = $this->formatActivite;
+        if ('format' === $this->type && ('FormatAvecCreneau' === $this->typeArticle || $format instanceof FormatAvecCreneau)) {
+            //return $format->getEstPayant() xor 0 == $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur())
+            return $format->getEstPayant() && ($format->getEstPayant() && 0 != $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur()));
+        }
+
+        return true;
     }
 
     public function jsonSerializeProperties()
@@ -270,7 +284,7 @@ class CommandeDetail
 
     public function appartientAvoir()
     {
-        if (in_array($this, $this->commande->getAvoirCommandeDetails()->toArray())) {
+        if (in_array($this, $this->commande->getAvoirCommandeDetails()->toArray(), true)) {
             return $this->commande;
         }
 

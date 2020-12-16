@@ -58,4 +58,20 @@ class CreneauRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findCreneauBySerie()
+    {
+        //$qb = $this->createQueryBuilder('creneau')
+        $qb = ($this->_em->createQueryBuilder())
+            ->select('creneau.id', 'serie.id as serieId', 'formatActivite.libelle', 'formatActivite.id as formatId', 'evenement.dateDebut', 'evenement.dateFin')
+            ->from('UcaBundle:Creneau', 'creneau')
+            ->join('creneau.formatActivite', 'formatActivite')
+            ->join('creneau.serie', 'serie')
+            ->join('serie.evenements', 'evenement')
+            ->andWhere('evenement.dependanceSerie = :dependant')
+            ->setParameters(['dependant' => true])
+        ;
+
+        return $qb->getQuery()->getResult();
+    }
 }

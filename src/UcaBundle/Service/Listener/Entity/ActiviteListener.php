@@ -9,10 +9,18 @@
 namespace UcaBundle\Service\Listener\Entity;
 
 use Doctrine\ORM\Event\PreFlushEventArgs;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use UcaBundle\Entity\Activite;
 
 class ActiviteListener
 {
+    public function onLateKernelRequest(GetResponseEvent $event)
+    {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+    }
+
     public function preFlush(Activite $activite, PreFlushEventArgs $event)
     {
         $activite->updateClasseActiviteLibelle();

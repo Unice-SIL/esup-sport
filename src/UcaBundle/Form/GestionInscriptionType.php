@@ -13,196 +13,116 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use UcaBundle\Entity\Activite;
-use UcaBundle\Entity\ClasseActivite;
-use UcaBundle\Entity\Creneau;
-use UcaBundle\Entity\DhtmlxEvenement;
-use UcaBundle\Entity\DhtmlxSerie;
-use UcaBundle\Entity\Etablissement;
-use UcaBundle\Entity\FormatActivite;
-use UcaBundle\Entity\FormatAvecCreneau;
-use UcaBundle\Entity\Groupe;
-use UcaBundle\Entity\Ressource;
-use UcaBundle\Entity\TypeActivite;
 
 class GestionInscriptionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('nom', TextType::class, [
-            'label_format' => 'utilisateur.nom',
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
+        extract($options);
 
-        $builder->add('prenom', TextType::class, [
-            'label_format' => 'utilisateur.prenom',
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
-
-        $builder->add('statut', ChoiceType::class, [
-            'label_format' => 'common.statut',
-            'choices' => [
-                'traduction.tous' => '0',
-                'common.annule' => 'annule',
-                'common.valide' => 'valide',
-                'common.attentepaiement' => 'attentepaiement',
-                'common.attentevalidationencadrant' => 'attentevalidationencadrant',
-                'common.attentevalidationgestionnaire' => 'attentevalidationgestionnaire',
-                'common.ancienneinscription' => 'ancienneinscription',
-                'common.desinscriptionadministrative' => 'desinscriptionadministrative',
-            ],
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
-        $em = $options['data']['em'];
-
-        $listeTypeActivite = ['traduction.tous' => 0];
-        foreach ($em->getRepository(TypeActivite::class)->findAll() as $typeActivite) {
-            $listeTypeActivite[$typeActivite->getLibelle()] = $typeActivite->getId();
-        }
-        $builder->add('type_activite', ChoiceType::class, [
-            'label_format' => 'common.type.activite',
-            'choices' => $listeTypeActivite,
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
-
-        $listeClasseActivite = ['traduction.tous' => 0];
-        foreach ($em->getRepository(ClasseActivite::class)->findAll() as $classeActivite) {
-            $listeClasseActivite[$classeActivite->getLibelle()] = $classeActivite->getId();
-        }
-        $builder->add('classe_activite', ChoiceType::class, [
-            'label_format' => 'common.classe.activite',
-            'choices' => $listeClasseActivite,
-            'choice_attr' => function ($val, $key) use ($em) {
-                return 0 != $val ? ['data-classe_activite-id' => $val, 'data-type_activite-id' => $em->getRepository(ClasseActivite::class)->findOneById($val)->getTypeActivite()->getId()]
-                : ['data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
-            },
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
-
-        $choixActivite = ['traduction.tous' => 0];
-        foreach ($em->getRepository(Activite::class)->findAll() as $activite) {
-            $choixActivite[$activite->getLibelle()] = $activite->getId();
-        }
-        $builder->add('activite', ChoiceType::class, [
-            'label_format' => 'activite.libelle',
-            'choices' => $choixActivite,
-            'choice_attr' => function ($val, $key) use ($em) {
-                return 0 != $val ? ['data-activite-id' => $val, 'data-classe_activite-id' => $em->getRepository(Activite::class)->findOneById($val)->getClasseActivite()->getId(),
-                    'data-type_activite-id' => $em->getRepository(Activite::class)->findOneById($val)->getClasseActivite()->getTypeActivite()->getId(), ]
-                : ['data-activite-id' => 0, 'data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
-            },
-            'attr' => ['class' => 'champRechercheDatatableInscription'],
-        ]);
-
-        $choixFormatActivite = ['traduction.tous' => 0];
-
-        $listeCreneau = ['traduction.tous' => 0];
-
-        foreach ($em->getRepository(FormatActivite::class)->findAll() as $formatActivite) {
-            if ($formatActivite instanceof FormatAvecCreneau) {
-                $listeCreneau[$formatActivite->getLibelle()] = 'allCreneaux_'.$formatActivite->getId();
-            }
-            $choixFormatActivite[$formatActivite->getLibelle()] = $formatActivite->getId();
-        }
-
-        $builder->add(
-            'formatActivite',
-            ChoiceType::class,
-            [
+        $builder
+            ->add('nom', TextType::class, [
+                'label_format' => 'utilisateur.nom',
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('prenom', TextType::class, [
+                'label_format' => 'utilisateur.prenom',
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('statut', ChoiceType::class, [
+                'label_format' => 'common.statut',
+                'choices' => [
+                    'traduction.tous' => '0',
+                    'common.annule' => 'annule',
+                    'common.valide' => 'valide',
+                    'common.attentepaiement' => 'attentepaiement',
+                    'common.attentevalidationencadrant' => 'attentevalidationencadrant',
+                    'common.attentevalidationgestionnaire' => 'attentevalidationgestionnaire',
+                    'common.ancienneinscription' => 'ancienneinscription',
+                    'common.desinscriptionadministrative' => 'desinscriptionadministrative',
+                ],
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('type_activite', ChoiceType::class, [
+                'label_format' => 'common.type.activite',
+                'choices' => $typeActivite['choicesList'],
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('classe_activite', ChoiceType::class, [
+                'label_format' => 'common.classe.activite',
+                'choices' => $classeActivite['choicesList'],
+                'choice_attr' => function ($val, $key) use ($classeActivite) {
+                    return 0 != $val ? ['data-classe_activite-id' => $val, 'data-type_activite-id' => $classeActivite['typeActivite'][$val]]
+                    : ['data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
+                },
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('activite', ChoiceType::class, [
+                'label_format' => 'activite.libelle',
+                'choices' => $listeActivite['choicesList'],
+                'choice_attr' => function ($val, $key) use ($listeActivite) {
+                    return 0 != $val ? ['data-activite-id' => $val, 'data-classe_activite-id' => $listeActivite['classeActivite'][$val], 'data-type_activite-id' => $listeActivite['typeActivite'][$val]]
+                    : ['data-activite-id' => 0, 'data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
+                },
+                'attr' => ['class' => 'champRechercheDatatableInscription'],
+            ])
+            ->add('formatActivite', ChoiceType::class, [
                 'label_format' => 'formatactivite.libelle',
-                'choices' => $choixFormatActivite,
-                'choice_attr' => function ($val, $key) use ($em) {
-                    return 0 != $val ? ['data-activite-id' => $em->getRepository(FormatActivite::class)->findOneById($val)->getActivite()->getId(),
-                        'data-format_activite-id' => $em->getRepository(FormatActivite::class)->findOneById($val)->getId(),
-                        'data-creneau' => $em->getRepository(FormatActivite::class)->findOneById($val) instanceof FormatAvecCreneau ? 'true' : 'false', ]
-                        : ['data-activite-id' => 0, 'data-format_activite-id' => 0];
+                'choices' => $listeFormatActivite['choicesList'],
+                'choice_attr' => function ($val, $key) use ($listeFormatActivite) {
+                    return 0 != $val ? ['data-activite-id' => $listeFormatActivite['activite'][$val], 'data-format_activite-id' => $val, 'data-creneau' => $listeFormatActivite['hasCreneau'][$val]]
+                    : ['data-activite-id' => 0, 'data-format_activite-id' => 0];
                 },
                 'attr' => ['class' => 'hidden champRechercheDatatableInscription'],
-            ]
-        );
-
-        foreach ($em->getRepository(Creneau::class)->findAll() as $creneau) {
-            if ($em->getRepository(DhtmlxSerie::class)->findOneByCreneau($creneau->getId())) {
-                $idSerie = $em->getRepository(DhtmlxSerie::class)->findOneByCreneau($creneau->getId())->getID();
-
-                if ($em->getRepository(DhtmlxEvenement::class)->findOneBySerie($idSerie)) {
-                    $listeCreneau[$creneau->getArticleLibelle()] = $idSerie;
-                }
-            }
-        }
-
-        foreach ($em->getRepository(FormatActivite::class)->findAll() as $format) {
-        }
-
-        $builder->add(
-            'creneau',
-            ChoiceType::class,
-            [
+            ])
+            ->add('creneau', ChoiceType::class, [
                 'label_format' => 'common.creneaux',
-                'choices' => $listeCreneau,
-                'choice_attr' => function ($val, $key) use ($em) {
+                'choices' => $listeCreneau['choicesList'],
+                'choice_attr' => function ($val, $key) use ($listeCreneau) {
                     if (0 === strpos($val, 'allCreneaux')) {
                         return ['data-format_activite-id' => str_replace('allCreneaux_', '', $val), 'data-type' => 'format'];
                     }
 
-                    return 0 != $val ? ['data-format_activite-id' => $em->getRepository(DhtmlxSerie::class)->findOneById($val)->getCreneau()->getFormatActivite()->getId(), 'data-type' => 'creneau']
+                    return 0 != $val ? ['data-format_activite-id' => $listeCreneau['formatActivite'][$val], 'data-type' => 'creneau']
                     : ['data-format_activite-id' => 0, 'data-type' => 'creneau'];
                 },
                 'attr' => ['class' => 'hidden champRechercheDatatableInscription'],
-            ]
-        );
-
-        $encadrants = ['traduction.tous' => 0];
-        foreach ($em->getRepository(Groupe::class)->findByLibelle('Encadrant')[0]->getUtilisateurs() as $encadrant) {
-            $encadrants[$encadrant->getPrenom().' '.$encadrant->getNom()] = $encadrant->getId();
-        }
-        $builder->add(
-            'encadrants',
-            ChoiceType::class,
-            [
+            ])
+            ->add('encadrants', ChoiceType::class, [
                 'label_format' => 'common.encadrant',
-                'choices' => $encadrants,
+                'choices' => $listeEncadrant['choicesList'],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
-            ]
-        );
-
-        $etablissements = ['traduction.tous' => 0];
-        foreach ($em->getRepository(Etablissement::class)->findAll() as $etablissement) {
-            $etablissements[$etablissement->getLibelle()] = $etablissement->getId();
-        }
-        $builder->add(
-            'etablissements',
-            ChoiceType::class,
-            [
+            ])
+            ->add('etablissements', ChoiceType::class, [
                 'label_format' => 'etablissement.libelle',
-                'choices' => $etablissements,
+                'choices' => $listeEtablissement['choicesList'],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
-            ]
-        );
-
-        $lieux = ['traduction.tous' => 0];
-        foreach ($em->getRepository(Ressource::class)->findAllLieu() as $lieu) {
-            $lieux[$lieu->getLibelle()] = $lieu->getId();
-        }
-        $builder->add(
-            'lieux',
-            ChoiceType::class,
-            [
+            ])
+            ->add('lieux', ChoiceType::class, [
                 'label_format' => 'common.lieu',
-                'choices' => $lieux,
-                'choice_attr' => function ($val, $key) use ($em) {
-                    return 0 != $val ? ['data-lieux-id' => $val, 'data-etablissements-id' => $em->getRepository(Ressource::class)->findOneById($val)->getEtablissement()->getId()]
+                'choices' => $listeLieu['choicesList'],
+                'choice_attr' => function ($val, $key) use ($listeLieu) {
+                    return 0 != $val ? ['data-lieux-id' => $val, 'data-etablissements-id' => $listeLieu['etablissement'][$val]]
                     : ['data-lieux-id' => 0, 'data-etablissements-id' => 0];
                 },
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
-            ]
-        );
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => null,
+            'em' => null,
+            'typeActivite' => null,
+            'classeActivite' => null,
+            'listeActivite' => null,
+            'listeFormatActivite' => null,
+            'listeCreneau' => null,
+            'listeEncadrant' => null,
+            'listeEtablissement' => null,
+            'listeLieu' => null,
         ]);
     }
 

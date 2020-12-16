@@ -27,14 +27,14 @@
                                 <h3 class="event-title">{{ item.libelle }}</h3>
                                 <p class="event-text">{{ item.libelle }}</p>
                                 <p class="text-right mb-0">
-                                    <a href="{{ url('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "acceuil.prochainement.consulter"|trans }}</a>
+                                    <a href="{{ path('UcaWeb_FormatActiviteDetail', {idCa:item.idCa, idA:item.idA, id: item.id} ) }}" class="btn btn-outline-primary">{{ "acceuil.prochainement.consulter"|trans }}</a>
                                 </p>
                             </div>
                         </div>
                     {% endfor %}                    
                     <div class="events-link d-flex justify-content-center align-items-center flex-fill">
                         {% if item_format_activite|length != 0 %}
-                            <a href="{{ url('UcaWeb_Evenement', { page: 1} ) }}">
+                            <a href="{{ path('UcaWeb_Evenement', { page: 1} ) }}">
                                 <span>{{ "acceuil.evenements.liste"|trans }}</span>
                             </a>
                         {% else %}
@@ -46,15 +46,15 @@
         </div>
     </section>
 
-    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
+    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), path('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
         <div class="container">
             <div class="row d-block">
                 <h2 class="text-center h2-light">{{ "accueil.classeActivite.title"|trans }}</h2>
             </div>
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
                 {% for item in item_class_activite %}
-                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
-                        <a class="align-self-center text-center" href="{{ url('UcaWeb_ActiviteLister', {id: item.id}) }}">{{ item.libelle }}</a>
+                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), path('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                        <a class="align-self-center text-center" href="{{ path('UcaWeb_ActiviteLister', {id: item.id}) }}">{{ item.libelle }}</a>
                     </div>
                 {% endfor %}
             </div>
@@ -62,7 +62,7 @@
     </section>
 
     {% if app.user is null %}
-        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center;background-size: cover;">
+        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), path('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center;background-size: cover;">
             <div class="container mb-5">
                 <div class="row d-block">
                     <h2 class="text-center h2-light">{{ "accueil.inscription.title"|trans }}</h2>
@@ -74,15 +74,15 @@
                         <div class="row ">
                             <div class="col text-center">
                                 {% if app.user %}
-                                    <a href="{{ url('UcaWeb_Accueil') }}" class="btn btn-primary">{{'accueil.connexion' | trans | upper}}</a>
+                                    <a href="{{ path('UcaWeb_Accueil') }}" class="btn btn-primary">{{'accueil.connexion' | trans | upper}}</a>
                                 {% else %}
-                                    <a href="{{ url('UcaWeb_ConnexionSelectionProfil') }}" class="btn btn-primary">{{'accueil.connexion' | trans | upper}}</a>
+                                    <a href="{{ path('UcaWeb_ConnexionSelectionProfil') }}" class="btn btn-primary">{{'accueil.connexion' | trans | upper}}</a>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col text-center">
-                                <a href="{{ url('UcaWeb_InfosPratiques') }}" class="btn btn-outline-primary">{{'accueil.cotisations.infos' | trans | upper}}</a>
+                                <a href="{{ path('UcaWeb_InfosPratiques') }}" class="btn btn-outline-primary">{{'accueil.cotisations.infos' | trans | upper}}</a>
                             </div>
                         </div>
                     </div>
@@ -93,7 +93,7 @@
                         {{ emplacement("Accueil - Information externes")|raw }}
                         <div class="row">
                             <div class="col text-center">
-                                <a href="{{ url('UcaWeb_preInscription') }}" class="btn btn-primary">{{'accueil.demander.inscription' | trans | upper}}</a>
+                                <a href="{{ path('UcaWeb_preInscription') }}" class="btn btn-primary">{{'accueil.demander.inscription' | trans | upper}}</a>
                             </div>
                         </div>
                     </div>

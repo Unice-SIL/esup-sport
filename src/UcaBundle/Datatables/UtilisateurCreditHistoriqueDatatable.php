@@ -10,19 +10,25 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
+use Sg\DatatablesBundle\Datatable\Column\DateTimeColumn;
 use Sg\DatatablesBundle\Datatable\Column\NumberColumn;
 use UcaBundle\Datatables\Button\CommandeExportAvoirButton;
 use UcaBundle\Datatables\Button\CommandeExportPaiementButton;
 use UcaBundle\Datatables\Button\CreditAjouterExportButton;
 use UcaBundle\Datatables\Button\VoirCommandeButton;
 use UcaBundle\Datatables\Button\VoirCreditButton;
-use  UcaBundle\Datatables\Column\TwigDataColumn;
+use UcaBundle\Datatables\Filter\RangeFilter;
 
 class UtilisateurCreditHistoriqueDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
-        $this->setUcaDefault();
+        $this->setUcaDefault(['options' => [
+            'individual_filtering' => true,
+            'individual_filtering_position' => 'head',
+            'order_cells_top' => true,
+            'global_search_type' => 'like',
+        ]]);
 
         $this->addInvisibleColumns([
             'id',
@@ -34,10 +40,13 @@ class UtilisateurCreditHistoriqueDatatable extends AbstractTranslatedDatatable
         $qb = $this->em->createQueryBuilder();
 
         $this->columnBuilder
-
-            ->add('date', TwigDataColumn::class, [
+            ->add('date', DateTimeColumn::class, [
                 'title' => $this->translator->trans('common.date'),
-                'twigTemplate' => 'Date',
+                //'searchable' => true,
+                'date_format' => 'L',
+                'filter' => [RangeFilter::class, [
+                    'cancel_button' => false,
+                ]],
             ])
             ->add('utilisateur.nom', Column::class, [
                 'title' => $this->translator->trans('common.nom'),
@@ -49,9 +58,11 @@ class UtilisateurCreditHistoriqueDatatable extends AbstractTranslatedDatatable
             ])
             ->add('operation', Column::class, [
                 'title' => $this->translator->trans('common.operation'),
+                'searchable' => true,
             ])
             ->add('statut', Column::class, [
                 'title' => $this->translator->trans('common.statut'),
+                'searchable' => true,
             ])
             ->add('montant', NumberColumn::class, [
                 'title' => $this->translator->trans('common.montant'),

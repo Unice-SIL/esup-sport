@@ -94,10 +94,12 @@ trait Article
         return isset($profil) && !in_array($profil->getCapaciteProfil(), [null, 0]);
     }
 
-    public function getInscriptionInformations($utilisateur, $format = null)
+    public function getInscriptionInformations($utilisateur, $format = null, int $maxCreneau = null)
     {
         $resultat['montant'] = ['article' => -1, 'total' => -1];
-        if (is_a($this, FormatActivite::class)) {
+        $estResa = $this instanceof Reservabilite;
+
+        if ($this instanceof FormatActivite) {
             $formatReference = $this;
         } elseif (empty($format)) {
             $formatReference = $this->getFormatActivite();
@@ -107,9 +109,7 @@ trait Article
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (is_a($this, Reservabilite::class) && !$formatReference->autoriseProfil($utilisateur->getProfil())) {
-            $resultat['statut'] = 'profilinvalide';
-        } elseif (!is_a($this, Reservabilite::class) && !$this->autoriseProfil($utilisateur->getProfil())) {
+        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || (!$estResa && !$this->autoriseProfil($utilisateur->getProfil()))) {
             $resultat['statut'] = 'profilinvalide';
         } elseif (!$utilisateur->getCgvAcceptees()) {
             $resultat['statut'] = 'cgvnonacceptees';
@@ -119,30 +119,57 @@ trait Article
                 [Inscription::getItemColumn($this), 'eq', $this],
                 ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
             ]);
+
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';
-            } elseif (!$inscriptions->isEmpty() && 'valide' == $inscriptions->first()->getStatut()) {
-                $resultat['statut'] = 'inscrit';
-            } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
-                $resultat['statut'] = 'preinscrit';
-            } elseif ($this->isFull($utilisateur, $format)) {
+            } elseif (!$inscriptions->isEmpty()) {
+                if ('valide' == $inscriptions->first()->getStatut()) {
+                    $resultat['statut'] = 'inscrit';
+                } else {
+                    $resultat['statut'] = 'preinscrit';
+                }
+            } elseif ($this->isFull($utilisateur, $format) || (!$estResa && sizeof($this->getAllInscriptions()) >= $this->getCapacite())) {
                 $resultat['statut'] = 'complet';
-            } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
+            } elseif ($this instanceof Creneau && (null !== $maxCreneau && $utilisateur->getNbInscriptionCreneau() >= $maxCreneau)) {
                 $resultat['statut'] = 'nbcreneaumaxatteint';
             } elseif ($formatReference->inscriptionsTerminees()) {
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($formatReference->inscriptionsAVenir()) {
                 $resultat['statut'] = 'inscriptionsavenir';
-            } elseif (is_a($this, Reservabilite::class) && $this->dateReservationPasse()) {
+            } elseif ($estResa && $this->dateReservationPasse()) {
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';
-            } elseif (!is_a($this, Reservabilite::class) && sizeof($this->getAllInscriptions()) >= $this->getCapacite()) {
-                $resultat['statut'] = 'complet';
             } else {
                 $resultat['statut'] = 'disponible';
             }
         }
+        /*
+        if (Previsualisation::$IS_ACTIVE) {
+            $resultat['statut'] = 'previsualisation';
+        } elseif (!$inscriptions->isEmpty() && 'valide' == $inscriptions->first()->getStatut()) {
+            $resultat['statut'] = 'inscrit';
+        } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
+            $resultat['statut'] = 'preinscrit';
+        } elseif ($this->isFull($utilisateur, $format)) {
+            $resultat['statut'] = 'complet';
+        } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
+            $resultat['statut'] = 'nbcreneaumaxatteint';
+        } elseif ($formatReference->inscriptionsTerminees()) {
+            $resultat['statut'] = 'inscriptionsterminees';
+        } elseif ($formatReference->inscriptionsAVenir()) {
+            $resultat['statut'] = 'inscriptionsavenir';
+        } elseif ($this instanceof Reservabilite && $this->dateReservationPasse()) {
+            $resultat['statut'] = 'inscriptionsterminees';
+        } elseif ($resultat['montant']['total'] < 0) {
+            $resultat['statut'] = 'montantincorrect';
+        } elseif (!($this instanceof Reservabilite) && sizeof($this->getAllInscriptions()) >= $this->getCapacite()) {
+            $resultat['statut'] = 'complet';
+        } else {
+            $resultat['statut'] = 'disponible';
+        }*/
+        //dump($resultat);
+        //die;
 
         return $resultat;
     }

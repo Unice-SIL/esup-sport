@@ -11,14 +11,8 @@
 
 namespace UcaBundle\Controller\UcaGest\Gestion;
 
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat as FormatCell;
-use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Spipu\Html2Pdf\Html2Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -27,7 +21,6 @@ use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Datatables\GestionCommandesDatatable;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\CommandeDetail;
-use UcaBundle\Entity\Parametrage;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
 use UcaBundle\Form\GestionCommandeType;
 
@@ -41,6 +34,8 @@ class ReportingController extends Controller
      * @Route("/Commandes",name="UcaGest_ReportingCommandes")
      *
      * @param null|mixed $avoir
+     *
+     * Fonction qui retourne la page reporting commande dans laquelle on retrouve un datatable listant toutes les commandes
      */
     public function listerAction(Request $request, Commande $item = null)
     {
@@ -48,8 +43,8 @@ class ReportingController extends Controller
         $datatable = $this->get('sg_datatables.factory')->create(GestionCommandesDatatable::class);
         $datatable->buildDatatable();
         $twigConfig['datatable'] = $datatable;
-        $form = $this->get('form.factory')->create(GestionCommandeType::class);
-        $twigConfig['form'] = $form->createView();
+        //$form = $this->get('form.factory')->create(GestionCommandeType::class);
+        //$twigConfig['form'] = $form->createView();
         if ($isAjax) {
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
@@ -85,6 +80,8 @@ class ReportingController extends Controller
      * @Route("/Avoir/{id}/{refAvoir}", name="UcaGest_AvoirDetails", methods={"GET"})
      *
      * @param null|mixed $refAvoir
+     *
+     * Fonction qui permet de voir le détail d'une commande
      */
     public function voirAction(Request $request, Commande $commande, $refAvoir = null)
     {
@@ -161,15 +158,19 @@ class ReportingController extends Controller
     /**
      * @Route("/{id}/Avoir/Ajouter", name="UcaGest_AvoirAjouter", options={"expose"=true}, methods={"GET", "POST"}, requirements={"id"="\d+"})
      * @Isgranted("ROLE_GESTION_AVOIR")
+     *
+     * Fonction qui permet de générer un avoir à partir d'un commande
      */
     public function ajouterAvoirAction(Request $request, Commande $item)
     {
         $em = $this->getDoctrine()->getManager();
-        $montant = 0;
+        $usr = ($item->getUtilisateur());
         $oldRef = $em->getRepository('UcaBundle:CommandeDetail')->max('referenceAvoir');
         $form = $this->createForm('UcaBundle\Form\AvoirType', $item);
         $form->handleRequest($request);
         $dtAvoir = new \DateTime();
+        $montant = 0;
+
         if ($form->isSubmitted() && $form->isValid() && $request->isMethod('POST')) {
             $this->get('uca.flashbag')->addMessageFlashBag('avoir.ajouter.success', 'success');
             foreach ($item->getAvoirCommandeDetails() as $cmdDetails) {
@@ -180,21 +181,22 @@ class ReportingController extends Controller
                     ->setDateAvoir($dtAvoir)
                 ;
                 if ($cmdDetails->getTypeAutorisation()) {
-                    $commandes = $em->getRepository(Commande::class)->findCommandeByTypeAutorisationAndUser($cmdDetails->getTypeAutorisation(), $cmdDetails->getCommande()->getUtilisateur()->getId());
-                    foreach ($commandes as $commande) {
-                        foreach ($commande->getCommandeDetails() as $cd) {
-                            if ($cd->getInscription()) {
-                                $cd->getInscription()->setStatut('ancienneinscription');
-                            }
+                    $cmdDetails->getCommande()->getUtilisateur()->removeAutorisation($cmdDetails->getTypeAutorisation());
+                    foreach ($cmdDetails->getCommande()->getCommandeDetails() as $cd) {
+                        if ($cd->getInscription()) {
+                            $cd->getInscription()->setStatut('ancienneinscription');
                         }
                     }
                     $em->flush();
                 } elseif ($cmdDetails->getInscription()) {
-                    $cmdDetails->getInscription()->setStatut('ancienneinscription');
+                    $cmdDetails->getInscription()
+                        ->setStatut('ancienneinscription')
+                        ->seDesinscrire($usr, true)
+                    ;
                     $em->flush();
                 }
             }
-            $usr = ($item->getUtilisateur());
+
             $credit = new UtilisateurCreditHistorique($usr, $montant, $oldRef + 1, 'credit', "Génération d'avoir");
             $em->persist($credit);
             $credit->setCommandeAssociee($item->getId());
@@ -210,219 +212,6 @@ class ReportingController extends Controller
         $twigConfig['codeListe'] = 'ClasseActivite';
 
         return $this->render('@Uca/UcaGest/Reporting/Avoir/Formulaire.html.twig', $twigConfig);
-    }
-
-    /**
-     * @Route("ExtractionExcel/{dateDebut}/{dateFin}", name="UcaWeb_MesCommandesExtraire", options={"expose"=true})
-     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
-     *
-     * @param null|mixed $dateDebut
-     * @param null|mixed $dateFin
-     */
-    public function exctractAction(Request $request, $dateDebut = null, $dateFin = null)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        'null' !== $dateDebut ? $dateDebut = \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : $dateDebut = null;
-        'null' !== $dateFin ? $dateFin = \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : $dateFin = null;
-
-        $commandes = $em->getRepository(CommandeDetail::class)->findCommandeDetails($dateDebut, $dateFin, false);
-        $commandesNonGratuites = $em->getRepository(CommandeDetail::class)->findCommandeDetails($dateDebut, $dateFin, true);
-
-        $translator = $this->get('translator');
-
-        if (!empty($commandesNonGratuites) && !empty($commandes)) {
-            $titleColumn = [
-                $translator->trans('common.nomencaisseur'),
-                $translator->trans('common.prenomencaisseur'),
-                $translator->trans('common.numerorecu'),
-                $translator->trans('commande.numero.commande'),
-                $translator->trans('common.libelle'),
-                $translator->trans('commandedetail.informationscarte.numero'),
-                $translator->trans('commande.paybox'),
-                $translator->trans('common.cb'),
-                $translator->trans('common.espece'),
-                $translator->trans('common.cheque'),
-                $translator->trans('commande.numero.cheque'),
-            ];
-
-            $styleArray = $this->setStyleArrayForExcel(true, 10);
-
-            $spreadsheet = new Spreadsheet();
-            $spreadsheet->removeSheetByIndex(0);
-            foreach (['Fiche de caisse', 'Liste commandes'] as $worksheet) {
-                $sheet = new Worksheet();
-
-                $sheet->setTitle($worksheet);
-                //En-tête du fichier excel
-                $logo = new Drawing();
-                $logo->setName('Logo');
-                $logo->setPath('build/images/logo-UCA-large-transp.png');
-                $logo->setCoordinates('A1');
-                $logo->setWorksheet($sheet, true);
-
-                $spreadsheet->addSheet($sheet);
-                $sheet->setCellValue('E3', 'DVU Sport');
-
-                if (null != $dateDebut and null != $dateFin) {
-                    $sheet->setCellValue('A6', $worksheet.' du '.$dateDebut->format('d/m/Y').' au '.$dateFin->format('d/m/Y'));
-                } elseif (null != $dateDebut and null == $dateFin) {
-                    $sheet->setCellValue('A6', $worksheet.' depuis le '.$dateDebut->format('d/m/Y'));
-                } elseif (null == $dateDebut and null != $dateFin) {
-                    $sheet->setCellValue('A6', $worksheet.' jusqu\'au '.$dateFin->format('d/m/Y'));
-                } else {
-                    $sheet->setCellValue('A6', $worksheet.' toutes périodes');
-                }
-
-                //Définition des titres des colonnes
-                $index = 0;
-                foreach (range('A', 'K') as $col) {
-                    $sheet->getColumnDimension($col)->setAutoSize(true);
-                    $sheet->setCellValue($col.'7', $titleColumn[$index]);
-                    $sheet->getStyle($col.'7')->applyFromArray($styleArray);
-                    ++$index;
-                }
-
-                $sheet = ('Liste commandes' == $worksheet ? $this->createWorksheet($commandes, $sheet) : $this->createWorksheet($commandesNonGratuites, $sheet));
-            }
-            $writer = new Xlsx($spreadsheet);
-            $response = new StreamedResponse(
-                function () use ($writer) {
-                    $writer->save('php://output');
-                }
-            );
-            $filename = 'extract_commande_'.date('Y-m-d').'_'.date('H-i-s').'.xlsx';
-            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-            $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
-
-            return $response;
-        }
-
-        return $this->redirectToRoute('UcaGest_ReportingCommandes');
-    }
-
-    /**
-     * @Route("ExportAll/{datePaiement}/{recherche}",name="UcaWeb_MesCommandesExportAll", options={"expose"=true})
-     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
-     *
-     * @param null|mixed $datePaiement
-     * @param null|mixed $recherche
-     */
-    public function exportAllAction(Request $request, $datePaiement = null, $recherche = null)
-    {
-        $em = $this->getDoctrine()->getManager();
-        'null' !== $datePaiement ?: $datePaiement = null;
-        'null' !== $recherche ?: $recherche = null;
-        $parametrage = $em->getRepository(Parametrage::class)->findOneById(1);
-        $commandes = $em->getRepository(Commande::class)->findAllFacture($datePaiement, $recherche);
-        $i = 0;
-        foreach ($commandes as $commande) {
-            $content[$i] = $this->renderView('@Uca/UcaWeb/Commande/Facture.html.twig', ['commande' => $commande, 'parametrage' => $parametrage]);
-            ++$i;
-        }
-        if (isset($content)) {
-            try {
-                $pdf = new HTML2PDF('p', 'A4', 'fr');
-                $pdf->pdf->SetAuthor('Université de Nice');
-                $pdf->pdf->SetTitle('Facture');
-                for ($i = 0; $i < sizeof($content); ++$i) {
-                    $pdf->writeHTML($content[$i]);
-                }
-                $pdf->Output('Factures.pdf');
-            } catch (HTML2PDF_exception $e) {
-                die($e);
-            }
-        } else {
-            $this->get('uca.flashbag')->addMessageFlashBag('common.aucune.facture', 'danger');
-
-            return $this->redirectToRoute('UcaGest_ReportingCommandes');
-        }
-    }
-
-    public function createWorksheet($listeCommandeDetail, $sheet)
-    {
-        $cmd = [];
-        $row = 8;
-        $styleArray = $this->setStyleArrayForExcel(false, 10);
-        //Définitions des lignes de commandes
-        foreach ($listeCommandeDetail as $detail) {
-            $commande = $detail->getCommande();
-            $numeroCheque = $commande->getNumeroCheque();
-            $cmd = [
-                0 => $commande->getNomEncaisseur(),
-                1 => $commande->getPrenomEncaisseur(),
-                2 => $commande->getNumeroRecu(),
-                3 => $commande->getNumeroCommande(),
-                4 => $detail->getLibelle(),
-                5 => $detail->getNumeroCarte(),
-                6 => '',
-                7 => '',
-                8 => '',
-                9 => '',
-                10 => '',
-            ];
-
-            $montant = $detail->getMontant(); //.'€';
-            switch ($commande->getTypePaiement()) {
-                case 'BDS':
-                    switch ($commande->getMoyenPaiement()) {
-                        case 'cb': $cmd[7] = $montant;
-
-                        break;
-                        case 'espece': $cmd[8] = $montant;
-
-                        break;
-                        case 'cheque':
-                            $cmd[9] = $montant;
-                            $cmd[10] = $numeroCheque;
-
-                        break;
-                        case null:
-                        break;
-                    }
-
-                break;
-                case 'PAYBOX': $cmd[6] = $montant;
-
-                break;
-                case 'NA':
-
-                break;
-                case null:
-                break;
-            }
-
-            if (!empty($cmd)) {
-                $column = 'A';
-
-                foreach ($cmd as $data) {
-                    $sheet->setCellValue($column.$row, $data);
-                    if (in_array($column, range('G', 'J'))) {
-                        $sheet->getStyle($column.$row)->getNumberFormat()->setFormatCode(FormatCell::FORMAT_CURRENCY_EUR_SIMPLE);
-                    }
-                    $sheet->getStyle($column.$row)->applyFromArray($styleArray);
-                    ++$column;
-                }
-                ++$row;
-            }
-        }
-
-        return $sheet;
-    }
-
-    public function setStyleArrayForExcel($bold, $size): array
-    {
-        return [
-            'font' => [
-                'bold' => $bold,
-                'size' => $size,
-            ],
-            'borders' => [
-                'allBorders' => [
-                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
-                ],
-            ],
-        ];
     }
 
     /**
@@ -450,5 +239,111 @@ class ReportingController extends Controller
         $twigConfig['form'] = $form->createView();
 
         return $this->render('@Uca/UcaGest/Reporting/Commande/FormulaireNumeroCarte.html.twig', $twigConfig);
+    }
+
+    /**
+     * @Route("/Commandes/Extraction/{dateDebut}/{dateFin}/{numCommande}/{numRecu}/{nom}/{prenom}/{montant}/{statut}/{moyen}/{recherche}" , name="UcaGest_ReportingCommandesExtraction", options={"expose"=true})
+     *
+     * @param mixed $dateDebut
+     * @param mixed $dateFin
+     * @param mixed $nom
+     * @param mixed $prenom
+     * @param mixed $numCommande
+     * @param mixed $numRecu
+     * @param mixed $montant
+     * @param mixed $statut
+     * @param mixed $moyen
+     * @param mixed $recherche
+     */
+    public function commandesExtractionAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $numCommande, $numRecu, $montant, $statut, $moyen, $recherche)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dateDebut = 'null' !== $dateDebut ? \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : null;
+        $dateFin = 'null' !== $dateFin ? \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : null;
+        'null' != $nom ?: $nom = null;
+        'null' != $prenom ?: $prenom = null;
+        'null' != $montant ?: $montant = null;
+        'null' != $numCommande ?: $numCommande = null;
+        'null' != $numRecu ?: $numRecu = null;
+        'null' != $statut ?: $statut = null;
+        'null' != $moyen ?: $moyen = null;
+        $recherche = ('null' != $recherche) ? str_replace('/', '-', $recherche) : null;
+
+        $cmdDetailsPayant = $em->getRepository(CommandeDetail::class)
+            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche, true)
+        ;
+        $cmdDetailsAll = $em->getRepository(CommandeDetail::class)
+            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche)
+        ;
+
+        if (!empty($cmdDetailsAll)) {
+            $datas = ['Fiche de caisse' => $cmdDetailsPayant, 'Liste commandes' => $cmdDetailsAll];
+            $extractionService = $this->container->get('uca.extraction.excel');
+            $extractionService->getExtractionReportingCommande($datas, $dateDebut, $dateFin);
+            $writer = $extractionService->getWriter();
+            $response = new StreamedResponse(
+                function () use ($writer) {
+                    $writer->save('php://output');
+                }
+            );
+
+            $filename = 'extract_commandes_'.date('Y-m-d').'_'.date('H-i-s').'.xlsx';
+            $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+            $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
+
+            return $response;
+        }
+
+        $this->get('uca.flashbag')->addMessageFlashBag('common.aucune.facture', 'danger');
+
+        return $this->redirectToRoute('UcaGest_ReportingCommandes');
+    }
+
+    /**
+     * @Route("/Commandes/ExportAll/{dateDebut}/{dateFin}/{numCommande}/{numRecu}/{nom}/{prenom}/{montant}/{statut}/{moyen}/{recherche}", name="UcaGest_ReportingCommandesExportAll", options={"expose"=true})
+     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
+     *
+     * @param mixed $dateDebut
+     * @param mixed $dateFin
+     * @param mixed $nom
+     * @param mixed $prenom
+     * @param mixed $recherche
+     * @param mixed $numCommande
+     * @param mixed $numRecu
+     * @param mixed $montant
+     * @param mixed $statut
+     * @param mixed $moyen
+     */
+    public function exportAllAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $numCommande, $numRecu, $montant, $statut, $moyen, $recherche)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $dateDebut = 'null' !== $dateDebut ? \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : null;
+        $dateFin = 'null' !== $dateFin ? \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : null;
+        'null' != $nom ?: $nom = null;
+        'null' != $prenom ?: $prenom = null;
+        'null' != $montant ?: $montant = null;
+        'null' != $numCommande ?: $numCommande = null;
+        'null' != $numRecu ?: $numRecu = null;
+        'null' != $statut ?: $statut = null;
+        'null' != $moyen ?: $moyen = null;
+        $recherche = ('null' != $recherche) ? str_replace('/', '-', $recherche) : null;
+
+        $commandes = $em->getRepository(Commande::class)
+            ->findExtractedCommandes($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche)
+        ;
+
+        if (!empty($commandes)) {
+            $pdf = $this->container->get('uca.creationpdf');
+            foreach ($commandes as $commande) {
+                $twigConfig = ['commande' => $commande];
+                $pdf->createMultipleView('@Uca/UcaWeb/Commande/Facture.html.twig', $twigConfig);
+            }
+
+            $pdf->createMultiplePdf(['author' => 'Université de Nice', 'title' => 'Facture', 'output' => 'Factures.pdf']);
+        } else {
+            $this->get('uca.flashbag')->addMessageFlashBag('common.aucune.facture', 'danger');
+
+            return $this->redirectToRoute('UcaGest_ReportingCommandes');
+        }
     }
 }

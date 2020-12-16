@@ -19,6 +19,7 @@ class AppelType extends AbstractType
     {
         $builder
             ->add('present', CheckboxType::class, [
+                'attr' => ['class' => 'checkbox-presence'],
             ])
         ;
     }

@@ -1,6 +1,6 @@
 {% macro show(tableData, entityName, params) %}
     {% if not params.no_add is defined or params.no_add == false %}
-        <a href="{{ url(entityName~'Ajouter') }}">{{ 'bouton.ajouter'|trans }}</a>
+        <a href="{{ path(entityName~'Ajouter') }}">{{ 'bouton.ajouter'|trans }}</a>
     {% endif %}
     <div>
         {% if tableData %}
@@ -27,16 +27,16 @@
                             {% for button in params.buttons %}
                                 {% if button == 'bloquer' %}
                                     <td>
-                                        <a href="{{ url(entityName ~ 'Bloquer', {id: item.id}) }}">{% if item.enabled %} {{ 'bouton.bloquer'|trans }} {% else %}  {{ 'bouton.debloquer'|trans }}  {% endif %}</a>
+                                        <a href="{{ path(entityName ~ 'Bloquer', {id: item.id}) }}">{% if item.enabled %} {{ 'bouton.bloquer'|trans }} {% else %}  {{ 'bouton.debloquer'|trans }}  {% endif %}</a>
                                     </td>
                                 {% else %}
                                     {% if entityName == 'Traduction' and button == 'modifier' %}
                                         <td>
-                                            <a class="btn btn-primary" href="{{ url(entityName ~ button|capitalize, {id: item.id, entity: item.entity, field: item.field}) }}"><i class="fas fa-edit"></i>{{ ('bouton.' ~ button)|trans }}</a>
+                                            <a class="btn btn-primary" href="{{ path(entityName ~ button|capitalize, {id: item.id, entity: item.entity, field: item.field}) }}"><i class="fas fa-edit"></i>{{ ('bouton.' ~ button)|trans }}</a>
                                         </td>
                                     {% else %}
                                         <td>
-                                            <a href="{{ url(entityName ~ button|capitalize, {id: item.id}) }}">{{ ('bouton.' ~ button)|trans }}</a>
+                                            <a href="{{ path(entityName ~ button|capitalize, {id: item.id}) }}">{{ ('bouton.' ~ button)|trans }}</a>
                                         </td>
                                     {% endif %}
                                 {% endif %}

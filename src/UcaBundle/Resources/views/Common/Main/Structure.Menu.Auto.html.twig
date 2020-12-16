@@ -1,7 +1,7 @@
 {% set item = item is defined ? item : null %}
 {% set menu = sitemap.getCurrentMenu %}
 <li aria-expanded="false" class="nav-item dropdown" role="menu">
-    <a role="option" class="nav-link nav-home d-flex align-items-center" href="{{url('UcaWeb_Accueil')}}">
+    <a role="option" class="nav-link nav-home d-flex align-items-center" href="{{path('UcaWeb_Accueil')}}">
         <i class="fas fa-home"></i>
     </a>
 </li>
@@ -11,9 +11,9 @@
         {% set current = (sitemap.isCurrentAncestor(itemMenu.route) ? 'active' : '') %}
         {% if not itemMenu.items is defined and not itemMenu.route is empty %}
             {% if itemMenu.param is defined %}
-                {% set url = url(itemMenu.route, itemMenu.param) %}
+                {% set url = path(itemMenu.route, itemMenu.param) %}
             {% else %}
-                {% set url = url(itemMenu.route)  %}
+                {% set url = path(itemMenu.route)  %}
             {% endif %}
             <a role="option" class="nav-link nav-link-border d-flex align-items-center {{ current }}" href="{{ url }}">
                 <span>{{ sitemap.getTitre(itemMenu, _context) }}</span>
@@ -25,7 +25,7 @@
             <div aria-expanded="false" aria-labelledby="{{'menu'~sitemap.getTitre(itemMenu, _context)}}" class="dropdown-menu" role="menu">
                 {% for itemSubMenu in itemMenu.items %}
                     {% set current = (sitemap.isCurrentAncestor(itemSubMenu.route) ? 'active' : '') %}
-                    <a role="menuitem" class="dropdown-item  {{ current }}" href="{{ url(itemSubMenu.route) }}">
+                    <a role="menuitem" class="dropdown-item  {{ current }}" href="{{ path(itemSubMenu.route) }}">
                         {{ sitemap.getTitre(itemSubMenu, _context) }}
                     </a>
                 {% endfor %}

@@ -29,7 +29,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /** @ORM\Column(type="text") */
     protected $description;
 
-    /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER") */
+    /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER", orphanRemoval=true) */
     protected $appels;
     //region Propriétés
 
@@ -126,7 +126,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Get serie.
      *
-     * @return \UcaBundle\Entity\DhtmlxSerie|null
+     * @return null|\UcaBundle\Entity\DhtmlxSerie
      */
     public function getSerie()
     {
@@ -150,7 +150,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Get reservabilite.
      *
-     * @return \UcaBundle\Entity\Reservabilite|null
+     * @return null|\UcaBundle\Entity\Reservabilite
      */
     public function getReservabilite()
     {
@@ -174,7 +174,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Get formatSimple.
      *
-     * @return \UcaBundle\Entity\FormatSimple|null
+     * @return null|\UcaBundle\Entity\FormatSimple
      */
     public function getFormatSimple()
     {
@@ -198,7 +198,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     /**
      * Get appels.
      *
-     * @return \UcaBundle\Entity\Appel|null
+     * @return null|\UcaBundle\Entity\Appel
      */
     public function getAppels()
     {

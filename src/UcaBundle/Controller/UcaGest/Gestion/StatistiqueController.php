@@ -26,14 +26,8 @@ class StatistiqueController extends Controller
     public function voirAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-
-        $form = $this->get('form.factory')->create(
-            StatistiqueType::class,
-            [
-                'data_class' => null,
-                'em' => $em,
-            ]
-        );
+        $extraction = $this->get('uca.extraction.inscription');
+        $form = $this->get('form.factory')->create(StatistiqueType::class, null, $extraction->getOptionsInscription());
         $twigConfig['form'] = $form->createView();
 
         return $this->render('@Uca/UcaGest/Reporting/Statistiques/Voir.html.twig', $twigConfig);

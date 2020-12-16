@@ -5,7 +5,9 @@
     <p>{{'modalinscription.message.validation.article'|trans}}</p>
     <ul>
         {% for article in articles %}
-            <li><strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€</li>        
+            {% if article.affichageDetailCommande() %}
+                <li><strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€</li>        
+            {% endif %}
         {% endfor %}
     </ul>
 {% endblock %}

@@ -127,13 +127,15 @@
 			{% set totalTva = 0 %}
 			<!-- Liste des articles --> 
 			{% for article in commande.commandeDetails %}
-				<tr>
-					<td class="60p"> {{article.libelle}}</td>
-					<td> {{ article.tva }}&nbsp;€</td>
-					<td> {{ (article.montant - article.tva) | number_format(2) }}&nbsp;€</td>
-					<td> {{ article.montant }}&nbsp;€</td>
-				</tr>
-				{% set totalTva = totalTva + article.tva %}
+				{% if article.affichageDetailCommande() %}
+					<tr>
+						<td class="60p"> {{article.libelle}}</td>
+						<td> {{ article.tva }}&nbsp;€</td>
+						<td> {{ (article.montant - article.tva) | number_format(2) }}&nbsp;€</td>
+						<td> {{ article.montant }}&nbsp;€</td>
+					</tr>
+					{% set totalTva = totalTva + article.tva %}
+				{% endif %}
 			{% endfor %}
 
 			{% if commande.tva == 0 %}

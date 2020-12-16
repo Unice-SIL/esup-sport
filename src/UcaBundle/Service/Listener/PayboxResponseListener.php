@@ -25,25 +25,25 @@ class PayboxResponseListener
 
     public function onPayboxIpnResponse(PayboxResponseEvent $event)
     {
-        $this->logger->error('PAYBOX -- catched : '.$_SERVER['REQUEST_URI']);
+        $this->logger->info('PAYBOX -- catched : '.$_SERVER['REQUEST_URI']);
         if ($event->isVerified() && 0 == $event->getData()['Erreur']) {
-            $this->logger->error('PAYBOX -- verified ! ');
+            $this->logger->info('PAYBOX -- verified ! ');
             $idCommande = $_GET['id'];
             $noCommande = $event->getData()['Ref'];
             $montant = $event->getData()['Mt'];
-            $this->logger->error('PAYBOX -- Id: '.$idCommande);
-            $this->logger->error('PAYBOX -- Ref: '.$noCommande);
-            $this->logger->error('PAYBOX -- Mt: '.$montant);
+            $this->logger->info('PAYBOX -- Id: '.$idCommande);
+            $this->logger->info('PAYBOX -- Ref: '.$noCommande);
+            $this->logger->info('PAYBOX -- Mt: '.$montant);
             $commande = $this->em->getRepository('UcaBundle:Commande')->findOneBy(['id' => $idCommande, 'montantTotal' => $montant / 100]);
             if (!empty($commande) && $commande->getMontantTotal() == $montant / 100) {
-                $this->logger->error('PAYBOX -- commande finded ! ');
-                $this->logger->error('PAYBOX -- commande->getId: '.$commande->getId());
-                $this->logger->error('PAYBOX -- commande->getNumeroCommande: '.$commande->getNumeroCommande());
+                $this->logger->info('PAYBOX -- commande found ! ');
+                $this->logger->info('PAYBOX -- commande->getId: '.$commande->getId());
+                $this->logger->info('PAYBOX -- commande->getNumeroCommande: '.$commande->getNumeroCommande());
                 $commande->changeStatut('termine', ['typePaiement' => 'PAYBOX', 'moyenPaiement' => 'cb']);
                 $this->em->persist($commande);
                 $this->em->flush();
             } else {
-                $this->logger->error('PAYBOX -- commande not finded ! ');
+                $this->logger->error('PAYBOX -- commande not found ! ');
             }
         } else {
             $this->logger->error('PAYBOX -- failed ! ');

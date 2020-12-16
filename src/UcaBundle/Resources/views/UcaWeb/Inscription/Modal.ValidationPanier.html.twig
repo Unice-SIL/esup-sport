@@ -3,13 +3,16 @@
 {% block modalTitle 'modalinscription.titre.panier' %}
 {% block modalBody %}
     {% for article in articles %}
-        <div>
-            <h3>{{ article.getItem().getArticleLibelle() }}</h3>
-            <p>{{ article.getItem().getArticleDescription() }}</p>
-            <p>{{ article.montant }}&nbsp;€</p>
-        </div>
+        {% if article.affichageDetailCommande() %}
+            <div>
+                <h3>{{ article.getItem().getArticleLibelle() }}</h3>
+                <p>{{ article.getItem().getArticleDescription() }}</p>
+                <p>{{ article.montant }}&nbsp;€</p>
+            </div>
+        {% endif %}
     {% endfor %}
 {% endblock %}
+
 {% block modalFooter %}
     <button class="btn btn-outline-primary" data-dismiss="modal" type="button">
         {{'modalinscription.continuer' | trans }}

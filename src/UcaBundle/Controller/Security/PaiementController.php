@@ -151,6 +151,10 @@ class PaiementController extends Controller
     public function paiementRetourPayboxAction(Request $request, $status)
     {
         $em = $this->getDoctrine()->getManager();
+        $retour = $request->get('Erreur');
+        if ($retour) {
+            '00000' == $retour ? $this->addFlash('success', 'paybox.error.'.$retour) : $this->addFlash('danger', 'paybox.error.'.$retour);
+        }
         $noCommande = $request->get('Ref');
         $montant = $request->get('Mt');
         $commande = $em->getRepository('UcaBundle:Commande')->findOneBy(['numeroCommande' => $noCommande, 'montantTotal' => $montant / 100]);

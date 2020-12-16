@@ -52,7 +52,7 @@
 					<p
 						class="p-0 m-0">
 						{# <strong>Timeout :</strong>
-																		                        span id='commande-timer'/> #}
+																																				                        span id='commande-timer'/> #}
 						{% set temps = ('common.temps.heure' | transchoice(commande.timeout.d * 24 + commande.timeout.h)) ~ ' ' ~ ('common.et' | transchoice(commande.timeout.h and commande.timeout.i)) ~ ' ' ~ ('common.temps.minute' | transchoice(commande.timeout.i)) %}
 						{% if source == 'monpanier' %}
 							{% set typeCommande = 'panier' %}
@@ -80,41 +80,37 @@
 					<p class="p-0 m-0 text-center">{{ 'panier.vide' | trans }}</p>
 				</div>
 			</div>
-		</div>
-	{% endif %}
-</section>{% endblock %}{% block javascripts %}
-{{ parent() }}
-<script type='text/javascript'>
-	'use_strict';
-{% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
+		{% endif %}
+	</section>
+{% endblock %}
+{% block javascripts %}
+	{{ parent() }}
+	<script type='text/javascript'>
+		'use_strict';
+		{% include '@Uca/Common/Modal/Modal.Information.js.twig' %}
 
-_uca.timer.init( 'commande-timer', {{ commande.timeout | json_encode | raw }} );{% if commande != null and commande.id != null %}const PATH_VALIDATION = "{{ path('UcaWeb_PaiementValidation', {id: commande.id}) }}" + '?typePaiement=BDS' + '&moyenPaiement=cheque' + '&source=gestioncaisse';{% if 'gestioncaisse' == source  and form is defined and not form.vars.valid %}$( '#boutonPaiementCheque' ).click();{% endif %}{% if 'gestioncaisse' == source %}$( document ).on( 'click', '#ucabundle_numeroCheque_save', function ( event )
-{
-event.preventDefault();
-$( "#formNumeroCheque" ).submit();
-} );
+		_uca.timer.init( 'commande-timer', {{ commande.timeout | json_encode | raw }} );{% if commande != null and commande.id != null %}const PATH_VALIDATION = "{{ path('UcaWeb_PaiementValidation', {id: commande.id}) }}" + '?typePaiement=BDS' + '&moyenPaiement=cheque' + '&source=gestioncaisse';{% if 'gestioncaisse' == source  and form is defined and not form.vars.valid %}$( '#boutonPaiementCheque' ).click();{% endif %}{% if 'gestioncaisse' == source %}$( document ).on( 'click', '#ucabundle_numeroCheque_save', function ( event ) {
+			event.preventDefault();
+			$( "#formNumeroCheque" ).submit();
+		});
 
-$( document ).on( 'submit', '#formNumeroCheque', function ( event )
-{
-event.preventDefault();
-$.ajax( {
-type: 'POST',
-url: PATH_VALIDATION,
-data: $( this ).serialize(),
-beforeSend: function ()
-{
-$( 'modalValidationPaiementcheque .modal-dialog' ).html( _uca.inscription.htmlSpinner );
-}
-} ).done( function ( result )
-{
-if ( result.formValid )
-{
-window.location.href = result.redirection;
-}
-else
-{
-$( "#modalValidationPaiementcheque form" ).replaceWith( result.form );
-}
-} ).fail( _uca.ajax.fail );
-} );{% endif %}{% endif %}
-</script>{% endblock %}
+		$( document ).on( 'submit', '#formNumeroCheque', function ( event ) {
+			event.preventDefault();
+			$.ajax({
+				type: 'POST',
+				url: PATH_VALIDATION,
+				data: $( this ).serialize(),
+				beforeSend: function () {
+					$( 'modalValidationPaiementcheque .modal-dialog' ).html( _uca.inscription.htmlSpinner );
+				}
+			}).done( function ( result ) {
+				if ( result.formValid ) {
+					window.location.href = result.redirection;
+				} else {
+					$( "#modalValidationPaiementcheque form" ).replaceWith( result.form );
+				}
+			}).fail( _uca.ajax.fail );
+		});
+	</script>
+	{% endif %} {% endif %}
+{% endblock %}

@@ -1,4 +1,8 @@
-/* Gestion des extractions */ 
+const { controllers } = require("chart.js");
+/* Gestion des extractions */
+const { param } = require("jquery");
+
+ 
 
 /* Gestion des extractions globale (reporting) */
 _uca.extraction = {};
@@ -156,57 +160,131 @@ _uca.extraction.envoiExtractionPersonnalise = function (bouton) {
 };
 
 
+/**
+ * Function setUrlParametersCredit
+ * Initialise les paramêtres pour les urls d'extraction (Excel et PDF) pour les crédits
+ * @param plage,nom,prenom 
+ */
+_uca.extraction.setUrlParametersCredit = function (plage, nom, prenom, operation, statut, montant, picker, recherche) {
+  let parameters = {};
+  if ('undefined' != typeof(picker) && picker != "") {
+    parameters.dateDebut = ('undefined' != typeof(picker.dateDebut) && picker.dateDebut != "") ? picker.dateDebut : 'null';
+    parameters.dateFin = ('undefined' != typeof(picker.dateFin) && picker.dateFin != "") ? picker.dateFin : 'null';
+  } else {
+    parameters.dateDebut = ('undefined' != typeof(plage) && plage != "") ? plage.substr(0,plage.indexOf(' ')) : 'null';
+    parameters.dateFin = ('undefined' != typeof(plage) && plage != "") ? plage.substr(plage.lastIndexOf(" ") + 1, plage.length) : 'null';  
+  }
+  parameters.nom =  ('undefined' != typeof(nom) && nom !="") ? nom : 'null';
+  parameters.prenom = ('undefined' != typeof(prenom) && prenom !="") ? prenom : 'null';
+  parameters.operation = ('undefined' != typeof(operation) && operation !="") ? operation : 'null';
+  parameters.statut = ('undefined' != typeof(statut) && statut !="") ? statut : 'null';
+  parameters.montant = ('undefined' != typeof(montant) && montant !="") ? montant : 'null';
+  parameters.recherche = ('undefined' != typeof(recherche) && recherche !="") ? recherche : 'null';
+
+  return parameters;
+};
 
 /**
- * Function: setUrlForExportPDF
- * Contruit l'url pour l'export pdf 
- * @param: dtPaiement 
+ * Function setUrlParametersCommande
+ * Initialise les paramêtres pour les urls d'extraction (Excel et PDF) pour les commandes
+ * @param plage,nom,prenom 
  */
-_uca.extraction.setUrlForExportPDF = function (url, dtPaiement) {
-  let exportData = {};
-  exportData.recherche = ($('input[type="search"]').val()) ? $('input[type="search"]').val() : 'null';
-  exportData.date =  ($(dtPaiement).val()) ? $(dtPaiement).val() : 'null',
-  bouton_export_all_pdf.href = Routing.generate(url, exportData);
+_uca.extraction.setUrlParametersCommande = function (numCommande, numRecu, nom, prenom, montant, statut, moyen, plage, picker, recherche) {
+  let parameters = {};
+  if ('undefined' != typeof(picker) && picker != "") {
+    parameters.dateDebut = ('undefined' != typeof(picker.dateDebut) && picker.dateDebut != "") ? picker.dateDebut : 'null';
+    parameters.dateFin = ('undefined' != typeof(picker.dateFin) && picker.dateFin != "") ? picker.dateFin : 'null';
+  } else {
+    parameters.dateDebut = ('undefined' != typeof(plage) && plage != "") ? plage.substr(0,plage.indexOf(' ')) : 'null';
+    parameters.dateFin = ('undefined' != typeof(plage) && plage != "") ? plage.substr(plage.lastIndexOf(" ") + 1, plage.length) : 'null';  
+  }
+  parameters.numCommande = ('undefined' != typeof(numCommande) && numCommande != "") ? numCommande : 'null';
+  parameters.numRecu = ('undefined' != typeof(numRecu) && numRecu != "") ? numRecu : 'null';
+  parameters.nom =  ('undefined' != typeof(nom) && nom !="") ? nom : 'null';
+  parameters.prenom = ('undefined' != typeof(prenom) && prenom !="") ? prenom : 'null';
+  parameters.moyen = ('undefined' != typeof(moyen) && moyen !="") ? moyen : 'null';
+  parameters.statut = ('undefined' != typeof(statut) && statut !="") ? statut : 'null';
+  parameters.montant = ('undefined' != typeof(montant) && montant !="") ? montant : 'null';
+  parameters.recherche = ('undefined' != typeof(recherche) && recherche !="") ? recherche : 'null';
+
+  return parameters;
 };
 
 /**
  * Function setUrlExtractionExcel()
  * Contruit l'url d'extraction en fonction des dates
- * @param: dtDebut, dtFin 
+ * @param url,boutonExtraction
  */
-_uca.extraction.setUrlExtractionExcel = function (url, dtDebut, dtFin) {
-  let exportData = {};
-  exportData.dateDebut = ($(dtDebut).val()) ? $(dtDebut).val() : 'null';
-  exportData.dateFin = ($(dtFin).val()) ? $(dtFin).val() : 'null';
-  bouton_extraction_excel.href = Routing.generate(url, exportData);
-};
-
-/* Gestion des extractions des commandes */
-_uca.extraction.commande = {};
-
-/**
- * Function setUrlExtraction()
- * Contruit l'url d'extraction en fonction des dates
- * @param: dtDebut, dtFin 
- */
-_uca.extraction.commande.setUrlExtraction = function (dtDebut, dtFin) {
-  let exportData = {};
-  let url = 'UcaWeb_MesCommandesExtraire';
-  exportData.dateDebut = ($(dtDebut).val()) ? $(dtDebut).val() : 'null';
-  exportData.dateFin = ($(dtFin).val()) ? $(dtFin).val() : 'null';
-  bouton_extraction_excel.href = Routing.generate(url, exportData);
+_uca.extraction.setUrlExtractionExcel = function (url, parameters, boutonExtraction) {
+  boutonExtraction.href = Routing.generate(url, parameters);
 };
 
 /**
- * Function: setUrlForExportPDF
- * Contruit l'url pour l'export pdf 
- * @param: dtPaiement 
+ * Function setUrlExtractionPDF()
+ * Contruit l'url d'extraction des fichiers PDF
+ * @param url,boutonExtraction
  */
-_uca.extraction.commande.setUrlForExportPDF = function (dtPaiement) {
-  let exportData = {};
-  let url = 'UcaWeb_MesCommandesExportAll';
-  exportData.recherche = ($('input[type="search"]').val()) ? $('input[type="search"]').val() : 'null';
-  exportData.datePaiement =  ($(dtPaiement).val()) ? $(dtPaiement).val() : 'null',
-  bouton_export_all_facture.href = Routing.generate(url, exportData);
+_uca.extraction.setUrlExtractionPDF = function (url, parameters, boutonExtraction) {
+  boutonExtraction.href = Routing.generate(url, parameters);
 };
 
+
+/**
+ * Function initUrls()
+ * Initalise les urls au chargment de la page (permet le rafraichissement)
+ * @param params
+ */
+_uca.extraction.initUrls = function (params) {
+  
+  if (null != document.querySelector('.alert-danger')) {
+    document.querySelector('.alert-danger').style.display = 'none';
+  }
+
+  let  urlParameters;
+  if ('undefined' != typeof(params.isCommande)) {
+    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut.value, params.moyen.value, params.plage.value, params.picker, params.recherche.value.replaceAll("/","-"));
+  } else { 
+    urlParameters = _uca.extraction.setUrlParametersCredit(params.plage.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.operation.value, params.statut.value, params.montant.value, params.picker, params.recherche.value); 
+  }
+
+   _uca.extraction.setUrlExtractionExcel(params.urlExcel, urlParameters, params.boutonExtractionExcel);
+  _uca.extraction.setUrlExtractionPDF(params.urlPDF, urlParameters, params.boutonExtractionPDF);
+};
+/* Il peut être intéressant de dissocier l'aficahge de la div alert pour plus de fluidité */
+/**
+ * Function: preparationExtraction()
+ * Filtre le datatable en fonction des champs de l'extraction
+ * Construit les liens associées
+ * @param params
+ */
+_uca.extraction.preparationExtraction = function (params) {
+  params.plage.on('apply.daterangepicker', function(ev, picker) {
+    params.picker = {};
+    params.picker.dateDebut = picker.startDate.format('YYYY-MM-DD');
+    params.picker.dateFin = picker.endDate.format("YYYY-MM-DD");
+    _uca.extraction.initUrls(params);
+  });
+  params.plage.on('cancel.daterangepicker', function(ev, picker) {
+    params.picker.dateDebut = "";
+    params.picker.dateFin = "";
+    _uca.extraction.initUrls(params);
+  });
+  params.recherche.addEventListener('change', function() {
+    _uca.extraction.initUrls(params);
+  });
+  params.delegator.addEventListener('change', function() {
+    _uca.extraction.initUrls(params);
+  });
+
+
+  let urlParameters;
+  if ('undefined' != typeof(params.isCommande)) {
+    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut.value, params.moyen.value, params.plage.val(),params.picker, params.recherche.value.replaceAll('/','-'));
+  } else { 
+    urlParameters = _uca.extraction.setUrlParametersCredit(params.plage.val(), params.utilisateurNom.value, params.utilisateurPrenom.value, params.operation.value, params.statut.value, params.montant.value, params.recherche.value.replaceAll('/','-')); 
+  }
+
+  _uca.extraction.setUrlExtractionExcel(params.urlExcel, urlParameters, params.boutonExtractionExcel);
+  _uca.extraction.setUrlExtractionPDF(params.urlPDF, urlParameters, params.boutonExtractionPDF);
+  
+};

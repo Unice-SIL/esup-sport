@@ -69,6 +69,7 @@ bouton.ajouter: Ajouter
 bouton.annuler.commande: Annuler la commande
 bouton.annuler.inscription: Annuler l'inscription
 bouton.annuler: Annuler
+bouton.appel: Appel
 bouton.basculer: Basculer
 bouton.bloquer: Bloquer
 bouton.confirmer: Confirmer
@@ -81,7 +82,7 @@ bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
-bouton.indisponible.autorisationinvalide: "Ce créneau nécessite l'autorisation : %autorisation%. Votre autorisation expire avant le début du créneau. Date d'expiration : %dateFinValidite%. Attendez l'expiration de votre autorisation pour en reprendre une nouvelle et pouvoir vous inscrire à ce cours."
+bouton.indisponible.autorisationinvalide: "Ce créneau nécessite l'autorisation : %autorisation%. Votre autorisation expire avant le début du créneau. Attendez l'expiration de votre autorisation pour pouvoir vous inscrire à ce créneau."
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
 bouton.indisponible.statut.desinscriptionadministrative: Vous avez été désinscrit par l'administration
@@ -132,6 +133,8 @@ column.valen: Anglais
 column.valfr: Français
 column.valit: Italien
 comamndedetail.informationscarte.etablissement: Campus de retrait de la carte
+commande.avoir.ajouter.info.save: Ce bon de commande est valable pour l'année civile en cours.
+commande.avoir.ajouter.info.unsave: Ce bon de commande sera valable pour l'année civile en cours.
 commande.avoir.ajouter.titre: Faire un avoir
 commande.avoir.date: Date de l'avoir
 commande.avoir.libelle: Avoir 
@@ -141,6 +144,7 @@ commande.avoir.report: Report de l'avoir
 commande.avoirdetails.libelle: Détails de l'avoir
 commande.avoirdetails.referenceavoir: Référence de l'avoir
 commande.avoirdetails.titre: Eléments de l'avoir
+commande.datepaiement: Date de paiement
 commande.details.avoir.message: Cet élement fait l'objet d'un avoir
 commande.informations: Informations de la commande
 commande.libelle: Commande
@@ -274,6 +278,7 @@ common.niveauSportif: Niveau sportif
 common.nom.prenom: Nom et prénom
 common.nom.utilisateur: Nom d'utilisateur
 common.nom: Nom
+common.nomacheteur: Nom Acheteur
 common.nomencaisseur: Nom Encaisseur
 common.non: "Non"
 common.nonrenseigne: Non renseigné
@@ -291,6 +296,7 @@ common.payeavec: Payée avec
 common.periode: Période
 common.precedent: Précédent
 common.prenom: Prénom
+common.prenomacheteur: Prénom Acheteur
 common.prenomencaisseur: Prénom encaisseur
 common.prixunitaire: Prix Unitaire
 common.profil: Profil
@@ -633,6 +639,8 @@ modalinscription.titre.panier: Ajouté au panier
 modalinscription.titre.preinscription: Préinscription
 modalinscription.validation.message: Votre inscription a bien été prise en compte
 monPlanning.modal.mail.title: Envoyer un mail à tous les inscrits
+monPlanning.more.appel.message: "Passer les cartes au dos de votre appareil ou bien sélectionner les personnes présentes manuellement."
+monPlanning.more.appel.noninscrit: " ne fait pas partie de la liste des inscrits."
 monPlanning.more.appel.texte: "Sélectionnez les personnes présentes à la séance :"
 monPlanning.more.appel.titre: Liste des inscrits
 monPlanning.more.datedebut: Début de la séance
@@ -662,9 +670,9 @@ paiement.recapitulatif.fin: "Passé ce délai, votre commande sera automatiqueme
 paiement.recapitulatif.intro: "Pour valider votre inscription, "
 paiement.recapitulatif.paybox: "vous devez régler votre commande de %montant% € par carte bancaire sous %timer% minutes."
 paiement.recapitulatif.titre: "Information importante !"
-paiement.validation.canceled: Votre paiement de %montant% € a été annulé
-paiement.validation.denied: Votre paiement de %montant% € a été refusé
-paiement.validation.success: Votre paiement de %montant% € a été validé
+paiement.validation.canceled: Votre paiement de %montant% € a été annulé. Retrouvez votre commande dans 
+paiement.validation.denied: Votre paiement de %montant% € a été refusé. Retrouvez votre commande dans 
+paiement.validation.success: Votre paiement de %montant% € a été validé.
 panier.libelle: Panier
 panier.vide: Votre panier est vide
 parametrage.adressefacturation: Adresse de facturation
@@ -685,6 +693,26 @@ parametrage.timerpaybox: Délai pour payer une commande par carte bancaire depui
 parametrage.timers: Délais
 parametrage.title: Paramétrage
 parametrage.youtube: Lien Youtube
+paybox.error.00000: "Opération réussie."
+paybox.error.00001: "La connexion au centre d’autorisation a échoué ou une erreur interne est survenue."
+paybox.error.001xx: "Paiement refusé par le centre d’autorisation"
+paybox.error.00003: "Erreur Paybox."
+paybox.error.00004: "Numéro de porteur ou cryptogramme visuel invalide."
+paybox.error.00006: "Accès refusé ou site/rang/identifiant incorrect."
+paybox.error.00008: "Date de fin de validité incorrecte."
+paybox.error.00009: "Erreur de création d’un abonnement."
+paybox.error.00010: "Devise inconnue."
+paybox.error.00011: "Montant incorrect."
+paybox.error.00015: "Paiement déjà effectué."
+paybox.error.00016: "Abonné déjà existant."
+paybox.error.00021: "Carte non autorisée."
+paybox.error.00029: "Carte non conforme."
+paybox.error.00030: "Temps d’attente > 15 mn par l’internaute/acheteur au niveau de la page de paiements."
+paybox.error.00031: "Réservé."
+paybox.error.00032: "Réservé."
+paybox.error.00033: "Code pays de l’adresse IP du navigateur de l’acheteur non autorisé."
+paybox.error.00040: "Opération sans authentification 3-DSecure, bloquée par le filtre."
+paybox.error.99999: "Opération en attente de validation par l’émetteur du moyen de paiement."
 preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais.
 preinscription.confirmation.titre: Demande d'incription confirmée
 preinscription.demande.validation.message: Une demande de pré-inscription a été faite par l'utilisateur suivant
@@ -765,7 +793,8 @@ scheduler.message.information.modification.serie: concernent la série et ne pou
 scheduler.message.inscrit_list: Liste des inscrits
 scheduler.message.prolonger: Prolonger l'évènement
 scheduler.message.send_mail: Envoyer un mail à tous les inscrits de ce créneau
-scheduler.message.titre: Confirmez la suppression
+scheduler.message.suppression: Confirmez la suppression
+scheduler.message.update: Confirmez la modification
 scheduler.message.valider: Enregistrer
 scheduler.message.voirplus: Voir plus
 scheduler.warning.suppression.inscrit: Voulez-vous supprimer la série malgré les pré-inscriptions en attente ?

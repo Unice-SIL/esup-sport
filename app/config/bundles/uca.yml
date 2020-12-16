@@ -3,6 +3,7 @@ parameters:
     lang.default: fr
 
 services:
+    # SERVICES - GENERAL
     uca.tools:
         class: UcaBundle\Service\Common\Tools
     uca.sitemap:
@@ -20,12 +21,32 @@ services:
     uca.shibboleth.provider:
         class: UcaBundle\Service\Securite\GestionnaireUtilisateurShibboleth
         arguments: ['@doctrine.orm.entity_manager','@fos_user.user_manager']
+   
+    # SERVICES - FONCTIONNALITES
     uca.paybox:
         class: UcaBundle\Service\Securite\PayBox
         arguments: ['@lexik_paybox.request_handler', '@router', '@templating']
     uca.inscription:
         class: UcaBundle\Service\Service\InscriptionService
         autowire: true
+        public: true
+    uca.timeout:
+        class: UcaBundle\Service\Securite\TimeoutService
+        autowire: true
+        public: true
+    uca.creationPdf: 
+        class: UcaBundle\Service\Common\CreationPdf
+        arguments: ['@doctrine.orm.entity_manager','@templating']
+    uca.extraction.excel: 
+        class: UcaBundle\Service\Service\ExtractionExcelService
+        arguments: ['@translator']
+    mailService:
+        class: UcaBundle\Service\Common\MailService
+        arguments: ['@mailer', '%mailer_sender%', '@templating']
+    UcaBundle\Service\Common\MailService: '@mailService'
+
+    # SERVICES - LISTENERS
+    # Entity Listeners
     uca.doctrine.commande.listener:
         class: UcaBundle\Service\Listener\Entity\CommandeListener
         autowire: true
@@ -41,14 +62,22 @@ services:
         class: UcaBundle\Service\Listener\Entity\ClasseActiviteListener
         tags:
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\ClasseActivite, method: preFlush }
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
     uca.doctrine.activite.listener:
         class: UcaBundle\Service\Listener\Entity\ActiviteListener
         tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Activite, method: preFlush }
     uca.doctrine.format_activite.listener:
         class: UcaBundle\Service\Listener\Entity\FormatActiviteListener
         tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\FormatActivite, method: preFlush }
+    uca.doctrine.creneau.listener:
+        class: UcaBundle\Service\Listener\Entity\CreneauListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Creneau, method: preFlush }
     uca.doctrine.format_achat_carte.listener:
         class: UcaBundle\Service\Listener\Entity\FormatAchatCarteListener
         tags:
@@ -69,6 +98,8 @@ services:
         class: UcaBundle\Service\Listener\Entity\LogoPartenaireListener
         tags:
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\LogoPartenaire, method: preFlush }
+    
+    # Other Listerners
     uca.paybox_response_listener:
         class: UcaBundle\Service\Listener\PayboxResponseListener
         autowire: true
@@ -89,16 +120,6 @@ services:
         autowire: true
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    uca.timeout:
-        class: UcaBundle\Service\Securite\TimeoutService
-        autowire: true
-    mailService:
-        class: UcaBundle\Service\Common\MailService
-        arguments: ['@mailer', '%mailer_sender%', '@templating']
-    UcaBundle\Service\Common\MailService: '@mailService'
-    uca.creationPdf: 
-        class: UcaBundle\Service\Common\CreationPdf
-        arguments: ['@doctrine.orm.entity_manager','@templating']
     uca.user.registration.listener:
         class: UcaBundle\Service\Listener\RegistrationConfirmListener
         autowire: true
@@ -114,14 +135,19 @@ services:
         class: UcaBundle\Service\Service\SelectionProfil
         arguments: ['%kernel.root_dir%','@router', '@translator']
     UcaBundle\Service\Service\SelectionProfil: '@uca.selection.profil'
-
     uca.form.profilUtilisateur:
         class: UcaBundle\Form\FormatActiviteProfilUtilisateurType
         arguments: ['@doctrine.orm.entity_manager']
         tags: [form.type]
-    uca.extraction.excel: 
-        class: UcaBundle\Service\Service\ExtractionExcelService
     UcaBundle\Service\Listener\Securite\Utilisateur\LoginListener:
+        arguments: ['@doctrine.orm.entity_manager']
         tags:
             - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+    uca.extraction.inscription:
+        class: UcaBundle\Service\Service\ExtractionInscriptionService
         arguments: ['@doctrine.orm.entity_manager']
+    uca.form.gestioninscription:
+        class: UcaBundle\Form\GestionInscriptionType
+        arguments: ['@uca.extraction.inscription']
+        tags: [form.type]
+      

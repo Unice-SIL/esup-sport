@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\UtilisateurCreditHistoriqueDatatable;
 use UcaBundle\Entity\Commande;
 use UcaBundle\Entity\UtilisateurCreditHistorique;
-use UcaBundle\Form\GestionCommandeType;
+use UcaBundle\Form\FiltreExtractionType;
 
 /**
  * @Route("UcaGest/Reporting/Credits")
@@ -24,38 +24,57 @@ use UcaBundle\Form\GestionCommandeType;
  */
 class HistoriqueCreditController extends Controller
 {
-    /** @Route("/" , name="UcaGest_ReportingCredit") */
+    /** @Route("/" , name="UcaGest_ReportingCredit")*/
     public function listerCredit(Request $request)
     {
+        $repo = $this->getDoctrine()->getRepository(UtilisateurCreditHistorique::class);
         $datatable = $this->get('sg_datatables.factory')->create(UtilisateurCreditHistoriqueDatatable::class);
         $datatable->buildDatatable();
-        $form = $this->get('form.factory')->create(GestionCommandeType::class);
-        $twigConfig['datatable'] = $datatable;
-        $twigConfig['codeListe'] = 'UtilisateurCreditHistorique';
-        $twigConfig['form'] = $form->createView();
+        //$form = $this->get('form.factory')->create(FiltreExtractionType::class);
 
-        if ($request->isXmlHttpRequest()) {
+        if ($request->isXmlHttpRequest() || 'UcaGest_ReportingCreditRecherche' == $request->get('_route')) {
             $responseService = $this->get('sg_datatables.response');
             $responseService->setDatatable($datatable);
-            $responseService->getDatatableQueryBuilder();
+            $dtQueryBuilder = $responseService->getDatatableQueryBuilder();
 
             return $responseService->getResponse();
         }
-        // L'ajout se fera au niveau de l'utilisateur
-        $twigConfig['noAddButton'] = true;
-        $twigConfig['gestionButtons'] = true;
-        $twigConfig['exportAll'] = true;
+
+        $twigConfig = [
+            'datatable' => $datatable,
+            'codeListe' => 'UtilisateurCreditHistorique',
+            //'form' => $form->createView(),
+            'noAddButton' => true,
+            // 'endDate' => (new \DateTime('now'))->format('Y-m-d'),
+            //'startDate' => substr($repo->minDateCredit(), 0, strpos($repo->minDateCredit(), ' ')),
+        ];
+
+        $usr = $this->container->get('security.token_storage')->getToken()->getUser();
+        if ($usr->hasRole('ROLE_GESTION_EXTRACTION')) {
+            $twigConfig['gestionButtons'] = true;
+            $twigConfig['exportAll'] = true;
+        }
 
         return $this->render('@Uca/UcaGest/Reporting/UtilisateurCreditHistorique/Datatable.html.twig', $twigConfig);
     }
 
-    /** @Route("/Extraction/{dateDebut}/{dateFin}" , name="UcaGest_ReportingCreditExtraction", options={"expose"=true})*/
-    public function creditsExtractionAction(Request $request, $dateDebut, $dateFin)
+    /** @Route("/Extraction/{dateDebut}/{dateFin}/{nom}/{prenom}/{recherche}/{operation}/{statut}/{montant}" , name="UcaGest_ReportingCreditExtraction", options={"expose"=true})*/
+    public function creditsExtractionAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $recherche, $operation, $statut, $montant)
     {
-        $em = $this->getDoctrine()->getManager();
         $dateDebut = 'null' !== $dateDebut ? \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : null;
         $dateFin = 'null' !== $dateFin ? \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : null;
-        $listeCredit = $em->getRepository(UtilisateurCreditHistorique::class)->findExtractedCredits($dateDebut, $dateFin);
+        'null' != $nom ?: $nom = null;
+        'null' != $prenom ?: $prenom = null;
+        'null' != $recherche ?: $recherche = null;
+        'null' != $operation ?: $operation = null;
+        'null' != $montant ?: $montant = null;
+        'null' != $statut ?: $statut = null;
+
+        $em = $this->getDoctrine()->getManager();
+        $listeCredit = $em->getRepository(UtilisateurCreditHistorique::class)
+            ->findExtractedCredits($dateDebut, $dateFin, $nom, $prenom, $recherche, $operation, $statut, $montant, true)
+        ;
+
         if (!empty($listeCredit)) {
             $translator = $this->get('translator');
             $extractionService = $this->container->get('uca.extraction.excel');
@@ -67,9 +86,9 @@ class HistoriqueCreditController extends Controller
                 2 => $translator->trans('commande.libelle'),
                 3 => $translator->trans('utilisateur.nom'),
                 4 => $translator->trans('utilisateur.prenom'),
-                5 => $translator->trans('utilsateur.credit.operation'),
+                5 => $translator->trans('utilisateur.credit.operation'),
                 6 => $translator->trans('common.statut'),
-                7 => $translator->trans('utilsateur.credit.typeoperation'),
+                7 => $translator->trans('utilisateur.credit.typeoperation'),
                 8 => $translator->trans('common.total'),
             ]];
 
@@ -91,7 +110,7 @@ class HistoriqueCreditController extends Controller
 
             $extractionService->setWorksheets($dataHeader, $dateDebut, $dateFin);
             foreach ($extractionService->getSpreadsheet()->getAllSheets() as $worksheet) {
-                $extractionService->setWorksheet($worksheet, $datas, 'I');
+                $extractionService->setWorksheet($worksheet, $datas, ['I']);
             }
 
             $writer = $extractionService->getWriter();
@@ -109,21 +128,29 @@ class HistoriqueCreditController extends Controller
             return $response;
         }
 
+        $this->get('uca.flashbag')->addMessageFlashBag('common.aucune.facture', 'danger');
+
         return $this->redirectToRoute('UcaGest_ReportingCredit');
     }
 
-    /** @Route("/ExportAll/{date}/{recherche}", name="UcaWeb_MesCreditsExportAll", options={"expose"=true})*/
-    public function exportAllAction(Request $request, $date = null, $recherche = null)
+    /** @Route("/ExportAll/{dateDebut}/{dateFin}/{nom}/{prenom}/{recherche}/{operation}/{statut}/{montant}", name="UcaGest_ReportingCreditExportAll", options={"expose"=true})*/
+    public function exportAllAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $recherche, $operation = null, $statut, $montant)
     {
         $em = $this->getDoctrine()->getManager();
         $repo = $em->getRepository(UtilisateurCreditHistorique::class);
 
-        'null' !== $date ?: $date = null;
-        'null' !== $recherche ?: $recherche = null;
-        $credits = $repo->findAllCreditsByOperation($date, $recherche, 'Ajout manuel de crédit');
-        $avoirs = $repo->findAllCreditsByOperation($date, $recherche, ["Génération d'avoir", "Report d'avoir"]);
+        $dateDebut = 'null' !== $dateDebut ? \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : null;
+        $dateFin = 'null' !== $dateFin ? \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : null;
+        'null' != $nom ?: $nom = null;
+        'null' != $prenom ?: $prenom = null;
+        'null' != $recherche ?: $recherche = null;
+        'null' != $statut ?: $statut = null;
+        'null' != $montant ?: $montant = null;
 
-        if (!empty($avoirs) || !empyt($credits)) {
+        $credits = $repo->findExtractedCredits($dateDebut, $dateFin, $nom, $prenom, $recherche, 'Ajout manuel de crédit', $statut, $montant, false);
+        $avoirs = $repo->findExtractedCredits($dateDebut, $dateFin, $nom, $prenom, $recherche, ["Génération d'avoir", "Report d'avoir"], $statut, $montant, false);
+
+        if (!empty($avoirs) || !empty($credits)) {
             $pdf = $this->container->get('uca.creationpdf');
             foreach ($credits as $credit) {
                 $pdf->createMultipleView('@Uca/UcaWeb/Utilisateur/Credit.html.twig', ['credit' => $credit]);

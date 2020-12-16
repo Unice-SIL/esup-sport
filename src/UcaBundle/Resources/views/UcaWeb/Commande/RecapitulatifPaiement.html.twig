@@ -15,11 +15,11 @@
             <div class="col-12 px-5 py-3">
 
                 <h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">{{ 'paiement.recapitulatif.titre' | trans }}</h2>
-
+                {% set credit = panier.utilisateur.getCreditTotal() %}
                 {% if panier.typePaiement == 'PAYBOX' %}
                 <p class="text-center">
                     {{ 'paiement.recapitulatif.intro' | trans }}
-                    <strong>{{ 'paiement.recapitulatif.paybox' | trans({'%timer%': parametrage().timerPaybox, '%montant%': panier.montantTotal }) }}</strong>
+                    <strong>{{ 'paiement.recapitulatif.paybox' | trans({'%timer%': parametrage().timerPaybox, '%montant%': (panier.montantTotal - credit) }) }}</strong>
                     <br/>{{ 'paiement.recapitulatif.fin' | trans }}
                 </p>
                 <form action="{{ url }}" method="post" class="text-center">
@@ -29,7 +29,7 @@
                 {% elseif panier.typePaiement == 'BDS' %}
                 <p class="text-center">
                     {{ 'paiement.recapitulatif.intro' | trans }}
-                    <strong>{{ 'paiement.recapitulatif.bds' | trans({'%timer%': parametrage().timerBds, '%montant%': panier.montantTotal }) }}</strong>
+                    <strong>{{ 'paiement.recapitulatif.bds' | trans({'%timer%': parametrage().timerBds, '%montant%': (panier.montantTotal - credit) }) }}</strong>
                     <br/>{{ 'paiement.recapitulatif.fin' | trans }}
                 </p>
                 <p class="text-center">

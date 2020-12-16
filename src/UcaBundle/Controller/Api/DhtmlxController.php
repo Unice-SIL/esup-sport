@@ -153,6 +153,18 @@ class DhtmlxController extends Controller
         return new JsonResponse($em->getRepository(Inscription::class)->inscriptionParCreneauStatut($serie->getCreneau(), $request->request->get('statut')));
     }
 
+     /**
+     * @Route("/DhtmlxNbOccurrenceDependance", methods={"POST"}, name="DhtmlxNbOccurrenceDependance", options={"expose"=true})
+     */
+    public function isSeuleOccurrenceDependance(Request $request)
+    {
+        $serie = $request->request->get('serieId');
+        $em = $this->getDoctrine()->getManager();
+        $serie = $em->getRepository(DhtmlxEvenement::class)->findBy(['serie' => $serie, 'dependanceSerie' => true]);
+
+        return count($serie) > 1 ? new JsonResponse(false) : new JsonResponse(true);
+    }
+
     /**
      * @Route("/DhtmlxAnnulerInscription", methods={"POST"}, name="DhtmlxAnnulerInscription", options={"expose"=true})
      */

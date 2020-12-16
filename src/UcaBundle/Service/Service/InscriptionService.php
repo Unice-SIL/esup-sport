@@ -110,6 +110,7 @@ class InscriptionService
             }
             array_push($articles, $article);
         }
+        $panier->changeStatut('panier');
 
         if (!$confirmation) {
             $this->em->persist($this->inscription);

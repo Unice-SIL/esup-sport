@@ -30,7 +30,10 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $id;
 
-    /** @ORM\ManyToOne(targetEntity="FormatActivite", inversedBy="inscriptions") */
+    /**
+     * @ORM\ManyToOne(targetEntity="FormatActivite", inversedBy="inscriptions", cascade={"persist"})
+     * @ORM\JoinColumn(name="format_activite_id", referencedColumnName="id", onDelete="SET NULL")
+     */
     private $formatActivite;
 
     /**
@@ -82,6 +85,18 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\Column(type="string", nullable=true) */
     private $nomDesinscription;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $libelle;
+
+    /** @ORM\Column(type="text", nullable=true) */
+    private $description;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $prenomInscrit;
+
+    /** @ORM\Column(type="string", nullable=true) */
+    private $nomInscrit;
     //endregion
 
     //region Méthodes
@@ -95,7 +110,11 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             $options['typeInscription'] = 'principale';
         }
         $this->setUtilisateur($user);
+        $this->setNomInscrit($user->getNom());
+        $this->setPrenomInscrit($user->getPrenom());
         $this->setItem($item, $options['format']);
+        $this->setLibelle($item->getArticleLibelle());
+        $this->setDescription($item->getArticleDescription());
         $this->setDate(new \DateTime());
         if ('principale' == $options['typeInscription']) {
             foreach ($this->getItem()->getEncadrants()->getIterator() as $encadrant) {
@@ -202,6 +221,42 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         }
 
         return $this;
+    }
+
+    public function seDesinscrire(Utilisateur $utilisateur, $avoir = false)
+    {
+        if (!$avoir) {
+            $date = new \DateTime();
+            $this->setStatut('desinscrit');
+            $this->setDateDesinscription($date);
+            $this->setUtilisateurDesinscription($utilisateur);
+            $this->setNomDesinscription($utilisateur->getNom());
+            $this->setPrenomDesinscription($utilisateur->getPrenom());
+        }
+        if ($creneau = $this->getCreneau()) {
+            $format = $creneau->getFormatActivite();
+            foreach ($utilisateur->getInscriptionsByCriteria([
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
+                ['id', 'neq', $this->getId()],
+            ]) as $inscription) {
+                if ($inscription->getCreneau() && $format == $inscription->getCreneau()->getFormatActivite()) {
+                    $autreCreneau = true;
+                }
+                if ($format == $inscription->getFormatActivite()) {
+                    $inscriptionFormat = $inscription;
+                }
+            }
+        }
+        if (!isset($autreCreneau) && !$avoir && isset($inscriptionFormat)) {
+            $date = new \DateTime();
+            $inscriptionFormat->setStatut('desinscrit');
+            $inscriptionFormat->setDateDesinscription($date);
+            $inscriptionFormat->setUtilisateurDesinscription($utilisateur);
+            $inscriptionFormat->setNomDesinscription($utilisateur->getNom());
+            $inscriptionFormat->setPrenomDesinscription($utilisateur->getPrenom());
+        } elseif ($avoir && !isset($autreCreneau)) {
+            $inscriptionFormat->setStatut('ancienneinsciption');
+        }
     }
 
     public function updateStatut()
@@ -621,7 +676,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get prenomDesinscription.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getPrenomDesinscription()
     {
@@ -645,7 +700,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get nomDesinscription.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getNomDesinscription()
     {
@@ -669,11 +724,107 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
     /**
      * Get utilisateurDesinscription.
      *
-     * @return \UcaBundle\Entity\Utilisateur|null
+     * @return null|\UcaBundle\Entity\Utilisateur
      */
     public function getUtilisateurDesinscription()
     {
         return $this->utilisateurDesinscription;
+    }
+
+    /**
+     * Set libelle.
+     *
+     * @param null|string $libelle
+     *
+     * @return Inscription
+     */
+    public function setLibelle($libelle = null)
+    {
+        $this->libelle = $libelle;
+
+        return $this;
+    }
+
+    /**
+     * Get libelle.
+     *
+     * @return null|string
+     */
+    public function getLibelle()
+    {
+        return $this->libelle;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param null|string $description
+     *
+     * @return Inscription
+     */
+    public function setDescription($description = null)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description.
+     *
+     * @return null|string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set prenomInscrit.
+     *
+     * @param null|string $prenomInscrit
+     *
+     * @return Inscription
+     */
+    public function setPrenomInscrit($prenomInscrit = null)
+    {
+        $this->prenomInscrit = $prenomInscrit;
+
+        return $this;
+    }
+
+    /**
+     * Get prenomInscrit.
+     *
+     * @return null|string
+     */
+    public function getPrenomInscrit()
+    {
+        return $this->prenomInscrit;
+    }
+
+    /**
+     * Set nomInscrit.
+     *
+     * @param null|string $nomInscrit
+     *
+     * @return Inscription
+     */
+    public function setNomInscrit($nomInscrit = null)
+    {
+        $this->nomInscrit = $nomInscrit;
+
+        return $this;
+    }
+
+    /**
+     * Get nomInscrit.
+     *
+     * @return null|string
+     */
+    public function getNomInscrit()
+    {
+        return $this->nomInscrit;
     }
 
     private function setItem($item, $format)

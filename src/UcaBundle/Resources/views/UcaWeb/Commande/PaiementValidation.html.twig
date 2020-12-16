@@ -1,5 +1,6 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 {% block stylesheets %}
 	{{ parent() }}
 	{{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
@@ -11,9 +12,16 @@
 	</div>
 	<h1 class="h1-light">{{ ('paiement.confirmation.' ~ status) | trans }}</h1>
 	<section class="container">
+		{{ flashBag.showAll }}
 		<div class="row mb-4 px-2 py-3 container-style bg-white justify-content-between align-items-center">
 			<div class="col-12 px-5 py-3">
-				<p>{{ ('paiement.validation.' ~ status)|trans({'%typePaiement%': commande.moyenPaiement, '%montant%': commande.montantTotal}) }}</p>
+				<p>
+					{{ ('paiement.validation.' ~ status)|trans({'%typePaiement%': commande.moyenPaiement, '%montant%': commande.montantTotal}) }}
+					{% if status != 'success' %}
+						<a href="{{ path('UcaWeb_MesCommandes')}}">{{ 'mescommandes.list.title'|trans }}</a>
+					{% endif %}
+					
+				</p>
 			</div>
 		</div>
 
@@ -37,7 +45,7 @@
 				<div class="col-12 px-5 py-3">
 					<h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">Mode local</h2>
 					<p>Vous êtes en mode local. Le traitement automatique de paybox ne peut pas être effectué. Voulez-vous executer le traitement ?</p>
-					<a class="btn btn-primary" href="{{url('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'PAYBOX', source:'monpanier' })}}">Simulation Paiement PAYBOX</a>
+					<a class="btn btn-primary" href="{{path('UcaWeb_PaiementValidation', { id: commande.id, typePaiement:'PAYBOX', source:'monpanier' })}}">Simulation Paiement PAYBOX</a>
 				</div>
 			</div>
 		{% endif %}

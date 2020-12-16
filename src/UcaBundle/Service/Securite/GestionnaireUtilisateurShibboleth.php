@@ -105,6 +105,7 @@ class GestionnaireUtilisateurShibboleth implements SUP
             ->setPrenom($credentials['givenName'])
             ->setShibboleth(true)
             ->setEnabled(true)
+            ->setNumeroNfc($credentials['mifare'])
         ;
         if (!$utilisateur->hasAutorisation($objCotisationSportive) && in_array(4, $arrayAffiliationNumber)) {
             $utilisateur->addAutorisation($objCotisationSportive);

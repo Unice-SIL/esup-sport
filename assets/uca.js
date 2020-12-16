@@ -21,6 +21,8 @@ ES6Promise.polyfill();
 /* Boostrap */
 require('bootstrap');
 const dt = require('datatables.net-bs4');
+require('bootstrap-daterangepicker');
+
 
 /* var globales js */ 
 var uca = {

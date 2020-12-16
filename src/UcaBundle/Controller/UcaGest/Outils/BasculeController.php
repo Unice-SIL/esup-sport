@@ -38,6 +38,8 @@ class BasculeController extends Controller
 {
     /**
      * @Route("/Bascule", name="UcaGest_BasculeAccueil")
+     *
+     * Fonction qui permet de récupérer toutes les informations et créer des formulaires pour réaliser la bascule semestrielle
      */
     public function afficherAction(Request $request)
     {
@@ -64,6 +66,8 @@ class BasculeController extends Controller
 
     /**
      * @Route("/Bascule/AnneeUniversitaire", name="UcaGest_BasculeAnneeUniversitaireAccueil")
+     *
+     * Fonction qui permet de récupérer toutes les informations et créer des formulaires pour réaliser la bascule d'année universitaire
      */
     public function voirAction(Request $request)
     {
@@ -82,6 +86,15 @@ class BasculeController extends Controller
         return $this->render('@Uca/UcaGest/Outils/BasculeAnneeUniversitaire/Voir.html.twig', $twigConfig);
     }
 
+    /**
+     * Fonction qui permet de faire la bascule semestrielle.
+     *
+     * @param [type] $listeActiviteId
+     * @param [type] $nouvelleDateDebutInscription
+     * @param [type] $nouvelleDateFinInscription
+     * @param [type] $nouvelleDateDebutEffective
+     * @param [type] $nouvelleDateFinEffective
+     */
     private function basculeAction($listeActiviteId, $nouvelleDateDebutInscription, $nouvelleDateFinInscription, $nouvelleDateDebutEffective, $nouvelleDateFinEffective)
     {
         $em = $this->getDoctrine()->getManager();
@@ -126,6 +139,11 @@ class BasculeController extends Controller
         return $this->redirectToRoute('UcaGest_BasculeAccueil');
     }
 
+    /**
+     * Fonction qui permet de faire la bascule d'année universitaire.
+     *
+     * @param [type] $data
+     */
     private function basculeAnneeUniversitaireAction($data)
     {
         ini_set('max_execution_time', 0);
@@ -387,7 +405,7 @@ class BasculeController extends Controller
             $em->flush();
 
             //Cartes
-            $commandeDetails = $em->getRepository(CommandeDetail::class)->findCommandeDetailWithAutorisationInvalid();
+            $commandeDetails = $em->getRepository('UcaBundle:CommandeDetail')->findCommandeDetailAncienneCarte();
             foreach ($commandeDetails as $commandeDetail) {
                 $utilisateur = $commandeDetail->getCommande()->getUtilisateur();
                 $typeAutorisation = $commandeDetail->getTypeAutorisation();
@@ -425,6 +443,13 @@ class BasculeController extends Controller
         return $messageFlashbag;
     }
 
+    /**
+     * Fonction qui permet de créer un nouvel événement lors de la duplication de créneau de la bascule d'année universitaire.
+     *
+     * @param [type] $dateDebut
+     * @param [type] $dateFin
+     * @param [type] $serie
+     */
     private function createEvenement(DhtmlxEvenement $evenement, $dateDebut, $dateFin, $serie)
     {
         $new_evenement = new DhtmlxEvenement();
