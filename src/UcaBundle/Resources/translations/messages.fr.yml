@@ -1,6 +1,3 @@
-
-
-
 FormatAchatCarte.button: "Acheter la carte"
 FormatAvecCreneau.button: "Voir les créneaux disponibles"
 FormatAvecReservation.button: "Réserver"
@@ -695,7 +692,6 @@ parametrage.title: Paramétrage
 parametrage.youtube: Lien Youtube
 paybox.error.00000: "Opération réussie."
 paybox.error.00001: "La connexion au centre d’autorisation a échoué ou une erreur interne est survenue."
-paybox.error.001xx: "Paiement refusé par le centre d’autorisation"
 paybox.error.00003: "Erreur Paybox."
 paybox.error.00004: "Numéro de porteur ou cryptogramme visuel invalide."
 paybox.error.00006: "Accès refusé ou site/rang/identifiant incorrect."
@@ -712,6 +708,7 @@ paybox.error.00031: "Réservé."
 paybox.error.00032: "Réservé."
 paybox.error.00033: "Code pays de l’adresse IP du navigateur de l’acheteur non autorisé."
 paybox.error.00040: "Opération sans authentification 3-DSecure, bloquée par le filtre."
+paybox.error.001xx: "Paiement refusé par le centre d’autorisation"
 paybox.error.99999: "Opération en attente de validation par l’émetteur du moyen de paiement."
 preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais.
 preinscription.confirmation.titre: Demande d'incription confirmée
@@ -975,11 +972,11 @@ sitemap.utlisateur.reinitialiser: Réinitialisation du mot de passe
 sitemap.validation.libelle: Utilisateurs pré-inscrits
 sitemap.validationcommande.libelle: Paiement
 sitemap.voir: Voir
-sportdehautniveau.accompagnements: Accompagnements
-sportdehautniveau.candidater: Candidater
+sportdehautniveau.accompagnements: Vous êtes déjà étudiant UCA, candidatez pour le statut de SHN
+sportdehautniveau.candidater: Vous souhaitez intégrer UCA en tant que Sportif de Haut Niveau
 sportdehautniveau.highlights: Nos ambassadeurs
 sportdehautniveau.partenaires: "Partenaires"
-sportdehautniveau.representer: Représenter Université Côte d'Azur en compétition
+sportdehautniveau.representer: Accompagnement
 sportdehautniveau.title: "Sport de haut niveau"
 sressource.lieu.imagesupplementaire.ajoutmessage: Pour ajouter des images supplémentaire à une salle, il faut d'abord la créer.
 statistique.KPI.autres.title: Autres KPI

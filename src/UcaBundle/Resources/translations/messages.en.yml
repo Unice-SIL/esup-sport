@@ -1,4 +1,3 @@
-
 FormatAchatCarte.button: 'Buy the card'
 FormatAvecCreneau.button: 'See the available slots' 
 FormatAvecReservation.button: Book
@@ -293,8 +292,8 @@ common.payant: Paying
 common.payeavec: Payed with
 common.periode: Period
 common.precedent: Previous
-common.prenom: First name
 common.prennomacheteur: Buyer first name
+common.prenom: First name
 common.prenomencaisseur: First name cashier
 common.prixunitaire: Item Price
 common.profil: Profile
@@ -693,7 +692,6 @@ parametrage.title: Settings
 parametrage.youtube: Youtube link
 paybox.error.00000: "Successful operation."
 paybox.error.00001: "Connection to the authorization center has failed or an internal error has occurred."
-paybox.error.001xx: "Payment refused by the authorization center."
 paybox.error.00003: "Paybox error."
 paybox.error.00004: "Invalid cardholder number or visual cryptogram."
 paybox.error.00006: "Access denied or incorrect site / rank / username."
@@ -710,6 +708,7 @@ paybox.error.00031: "Reserve."
 paybox.error.00032: "Reserve."
 paybox.error.00033: "Country code of the IP address of the unauthorized buyer."
 paybox.error.00040: "Operation without 3-DSecure authentication, blocked by filter."
+paybox.error.001xx: "Payment refused by the authorization center."
 paybox.error.99999: "Operation pending validation by the issuer of the payment method."
 preinscription.confirmation.message: Your registration demand was successfull, a confirmation email has been sent to you. Our team will treat you demand shortly.
 preinscription.confirmation.titre: Registration's Demand confirm
@@ -973,11 +972,11 @@ sitemap.utlisateur.reinitialiser: Reset password
 sitemap.validation.libelle: Pre-register users
 sitemap.validationcommande.libelle: Paiement
 sitemap.voir: See
-sportdehautniveau.accompagnements: Accompaniments
-sportdehautniveau.candidater: Apply
+sportdehautniveau.accompagnements: You are already a UCA student, apply for SHN status
+sportdehautniveau.candidater: You wish to join UCA as a High Level Athlete
 sportdehautniveau.highlights: Our Ambassadors
 sportdehautniveau.partenaires: 'Partners'
-sportdehautniveau.representer: Represent Côte d'Azur University in competition
+sportdehautniveau.representer: Accompaniments
 sportdehautniveau.title: 'High-level sport'
 sressource.lieu.imagesupplementaire.ajoutmessage: In order to add more pictures, you'll to create the place first.
 statistique.KPI.autres.title: Other KPIs
