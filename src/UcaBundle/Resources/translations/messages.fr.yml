@@ -580,6 +580,7 @@ mentions.informations.validation: "J'accepte les conditions générales de vente
 mescommandes.list.title: Mes commandes
 mescredits.list.title: Mes crédits
 mesinscriptions.list.title: Mes inscriptions
+mesinscriptions.label.ancienne.activite: Ancienne activité
 message.confirmation.annulation.commande.titre: Confirmez l'annulation
 message.confirmation.annulation.commande: Toutes les inscriptions liées à cette commande seront supprimées. Annuler la commande ?
 message.confirmation.annulation.inscription.titre: Confirmez l'annulation
@@ -983,7 +984,7 @@ statistique.KPI.autres.title: Autres KPI
 statistique.KPI.etudiants.tableau.nbre_annee_n: Nombre total d'étudiants en année
 statistique.KPI.etudiants.tableau.nbre_annee_n_1: Nombre total d'étudiants en année
 statistique.KPI.etudiants.tableau.nbre_boursier: Nombre étudiants boursiers
-statistique.KPI.etudiants.tableau.nbre_inscrits: Nombre totale d'étudiants inscrits
+statistique.KPI.etudiants.tableau.nbre_inscrits: Nombre total d'étudiants inscrits
 statistique.KPI.etudiants.tableau.nbre_shnu: Nombre étudiants SHNU
 statistique.KPI.etudiants.tableau.percent_boursier: '% étudiants boursiers inscrits'
 statistique.KPI.etudiants.tableau.percent_inscrit_activite: "% d'étudiants inscrits aux activités sportives sur le nombre total d'étudiants"
@@ -999,7 +1000,7 @@ statistique.KPI.personnels.tableau.nbre_annee_n_1: Nombre total de personnel en 
 statistique.KPI.personnels.tableau.nbre_inscrits: Nombre de personnels inscrits
 statistique.KPI.personnels.tableau.percent_inscrit: "% de personnels inscrits"
 statistique.KPI.personnels.tableau.rendement: Rendement/evol vs n-1
-statistique.KPI.personnels.title: KPI généraux sur les étudiants
+statistique.KPI.personnels.title: KPI généraux sur le personnel
 statistique.KPI.title: KPI
 statistique.customgraph: Graphique personnalisé
 statistique.graph.title.categories: Détail des membres du personnel par catégories
@@ -1011,8 +1012,8 @@ statistique.graph.title.detailuser: Détail du nombre d'utilisateurs
 statistique.graph.title.genre: Nombre d'utilisateurs par genre
 statistique.graph.title.nbboursier: Nombre d'étudiants boursier
 statistique.graph.title.nbcarteachete: Nombre de cartes achetées
-statistique.graph.title.nbinscription.activite: Nombre de d'inscription par activité
-statistique.graph.title.nbinscription.classeactivite: Nombre de d'inscription par classe d'activité
+statistique.graph.title.nbinscription.activite: Nombre d'inscription par activité
+statistique.graph.title.nbinscription.classeactivite: Nombre d'inscription par classe d'activité
 statistique.graph.title.nbinscription: Nombre d'inscriptions
 statistique.graph.title.nbpresent: Nombre de présents
 statistique.graph.title.nbshnu: Nombre d'étudiants SHNU

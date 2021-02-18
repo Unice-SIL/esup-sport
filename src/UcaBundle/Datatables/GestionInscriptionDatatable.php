@@ -18,6 +18,7 @@ use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigDataColumn;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 use UcaBundle\Datatables\Filter\ActivitiesFilter;
+use UcaBundle\Datatables\Filter\SelectInVirtualColumnFilter;
 use UcaBundle\Entity\Inscription;
 
 class GestionInscriptionDatatable extends AbstractTranslatedDatatable
@@ -79,6 +80,20 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                 'field' => 'statut',
                 'searchable' => true,
                 'search_column' => 'statut',
+                'filter' => [SelectInVirtualColumnFilter::class, [
+                    'classes' => '',
+                    'initial_search' => '',
+                    'select_options' => [
+                        '' => $this->translator->trans('traduction.tous'),
+                        'annule' => $this->translator->trans('common.annule'),
+                        'valide' => $this->translator->trans('common.valide'),
+                        'attentepaiement' => $this->translator->trans('common.attentepaiement'),
+                        'attentevalidationencadrant' => $this->translator->trans('common.attentevalidationencadrant'),
+                        'attentevalidationgestionnaire' => $this->translator->trans('common.attentevalidationgestionnaire'),
+                        'ancienneinscription' => $this->translator->trans('common.ancienneinscription'),
+                        'desinscriptionadministrative' => $this->translator->trans('common.desinscriptionadministrative'),
+                    ],
+                ]],
             ])
             ->add('creneauActivite', TwigDataColumn::class, [
                 'dql' => '('.$qb->select('a.libelle')

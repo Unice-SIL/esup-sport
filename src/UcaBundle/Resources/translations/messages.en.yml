@@ -580,6 +580,7 @@ mentions.informations.validation: "I accept the general conditions of sales"
 mescommandes.list.title: My orders
 mescredits.list.title: My credits
 mesinscriptions.list.title: My registrations
+mesinscriptions.label.ancienne.activite: Old activity
 message.confirmation.annulation.commande.titre: Confirm cancellation
 message.confirmation.annulation.commande: All entries related to this order will be deleted. Cancel the order ?
 message.confirmation.annulation.inscription.titre: Confirm cancellation

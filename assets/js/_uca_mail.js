@@ -67,7 +67,7 @@ _uca.mail.emailing.setListeDestinataires = function (boutonEmailing, boutonEnvoy
  * @param: boutonEmailing
 */
 _uca.mail.emailing.seturlListeDestinataires = function (boutonEmailing) {
-  var url = "{{ path('UcaGest_EmailingListeEmails', {'nom': 'filtre_nom', 'prenom': 'filtre_prenom','statut':'valide', 'idTypeActivite': 'id_typeActivite', 'idClasseActivite': 'id_classeActivite', 'idActivite': 'id_activite', 'idFormatActivite': 'id_formatActivite', 'idCreneau': 'id_creneau', 'idEncadrant': 'id_encadrant', 'idEtablissement': 'id_etablissement', 'idLieu': 'id_lieu' }) }}";
+  var url = _uca.mail.emailing.url_emailing;
 
   if ($("#ucabundle_inscription_nom").val() == "") {
     url = url.replace('filtre_nom', null);

@@ -46,14 +46,14 @@
         </div>
     </section>
 
-    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), path('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
+    <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
         <div class="container">
             <div class="row d-block">
                 <h2 class="text-center h2-light">{{ "accueil.classeActivite.title"|trans }}</h2>
             </div>
             <div class="row mb-5 d-flex flex-wrap justify-content-around">
                 {% for item in item_class_activite %}
-                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), path('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
                         <a class="align-self-center text-center" href="{{ path('UcaWeb_ActiviteLister', {id: item.id}) }}">{{ item.libelle }}</a>
                     </div>
                 {% endfor %}

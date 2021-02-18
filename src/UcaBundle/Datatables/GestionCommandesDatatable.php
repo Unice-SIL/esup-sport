@@ -11,11 +11,11 @@ namespace UcaBundle\Datatables;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\NumberColumn;
-use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use UcaBundle\Datatables\Button\CommandeExportButton;
 use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 use UcaBundle\Datatables\Filter\RangeFilter;
+use UcaBundle\Datatables\Filter\SelectInVirtualColumnFilter;
 
 class GestionCommandesDatatable extends AbstractTranslatedDatatable
 {
@@ -57,7 +57,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'twigTemplate' => 'AvoirCommandeDetails',
                 /*'searchable' => true,
                 'search_column' => 'avoirCommandeDetail',
-                'filter' => [SelectFilter::class, [
+                'filter' => [SelectInVirtualColumnFilter::class, [
                     'classes' => 'selectCommande',
                     'initial_search' => '',
                     'select_options' => [
@@ -89,7 +89,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'search_column' => 'statut',
                 'orderable' => true,
                 'order_column' => 'statut',
-                'filter' => [SelectFilter::class, [
+                'filter' => [SelectInVirtualColumnFilter::class, [
                     'classes' => 'selectCommande',
                     'initial_search' => '',
                     'select_search_types' => [

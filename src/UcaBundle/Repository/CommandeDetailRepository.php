@@ -107,7 +107,7 @@ class CommandeDetailRepository extends \Doctrine\ORM\EntityRepository
         }
 
         if ($estPayant) {
-            $qb->addCriteria($repo::criteriabyStatut(['termine', 'avoir']));
+            $qb->addCriteria($repo::criteriabyStatut(['termine', 'avoir'], 'commande.'));
             $qb->addCriteria(self::criteriaEstPayant());
         }
         if (null !== $dateDebut || null !== $dateFin) {

@@ -13,12 +13,12 @@ use UcaBundle\Service\Common\Parametrage;
 
 class CommandeRepository extends \Doctrine\ORM\EntityRepository
 {
-    public static function criteriaByStatut($statut)
+    public static function criteriaByStatut($statut, $prefixe = '')
     {
         if (is_array($statut)) {
-            $expr = Criteria::expr()->in('commande.statut', $statut);
+            $expr = Criteria::expr()->in($prefixe.'statut', $statut);
         } else {
-            $expr = Criteria::expr()->eq('commande.statut', $statut);
+            $expr = Criteria::expr()->eq($prefixe.'statut', $statut);
         }
 
         return Criteria::create()->andWhere($expr);

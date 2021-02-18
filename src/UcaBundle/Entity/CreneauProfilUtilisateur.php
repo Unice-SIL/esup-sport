@@ -62,6 +62,11 @@ class CreneauProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSeria
         return ['creneau', 'profilUtilisateur', 'capaciteProfil'];
     }
 
+    public function getLibelle()
+    {
+        return $this->profilUtilisateur->getLibelle();
+    }
+
     // endregion
 
     /**

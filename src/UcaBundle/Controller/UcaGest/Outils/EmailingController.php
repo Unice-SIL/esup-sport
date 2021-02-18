@@ -33,19 +33,8 @@ class EmailingController extends Controller
         $formMail = $this->get('form.factory')->create(EmailingType::class, null);
         $twigConfig['formMail'] = $formMail->createView();
 
-        $form = $this->get('form.factory')->create(
-            GestionInscriptionType::class,
-            [
-                'typeActivite' => $em->getRepository(Entity\TypeActivite::class)->findAll(),
-                'classeActivite' => $em->getRepository(Entity\ClasseActivite::class)->findAll(),
-                'listeActivite' => $em->getRepository(Entity\Activite::class)->findAll(),
-                'listeFormatActivite' => $em->getRepository(Entity\FormatActivite::class)->findAll(),
-                'listeEtablissement' => $em->getRepository(Entity\Etablissement::class)->findAll(),
-                'listeLieu' => $em->getRepository(Entity\Lieu::class)->findAll(),
-                'data_class' => null,
-                'em' => $em,
-            ]
-        );
+        $extraction = $this->get('uca.extraction.inscription');
+        $form = $this->get('form.factory')->create(GestionInscriptionType::class, null, $extraction->getOptionsInscription());
 
         $twigConfig['form'] = $form->createView();
 

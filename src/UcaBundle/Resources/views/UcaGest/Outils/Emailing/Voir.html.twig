@@ -59,6 +59,9 @@
     $(document).ready(function() {  
         _uca.ajax.hideLoader();
         _uca.datatable.filter.getInscriptionsForEmailing($('#sg-datatables-gestioninscription_datatable').DataTable());
+
+        _uca.mail.emailing.url_emailing = "{{ path('UcaGest_EmailingListeEmails', {'nom': 'filtre_nom', 'prenom': 'filtre_prenom', 'idTypeActivite': 'id_typeActivite', 'idClasseActivite': 'id_classeActivite', 'idActivite': 'id_activite', 'idFormatActivite': 'id_formatActivite', 'idCreneau': 'id_creneau', 'idEncadrant': 'id_encadrant', 'idEtablissement': 'id_etablissement', 'idLieu': 'id_lieu' }) }}";
+
         _uca.mail.emailing.seturlListeDestinataires(boutonEmailing);
         _uca.mail.emailing.setListeDestinataires(boutonEmailing, ucabundle_mail_save);
         _uca.mail.emailing.envoyerMail('#modalMailForm');

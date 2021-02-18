@@ -117,7 +117,7 @@ _chart.createBouton = function(color, icone, label) {
     return bouton;
 };
 
-_chart.createPieChart = function(title, datas, position, idCanvas, legendPadding = 0) {
+_chart.createPieChart = function(title, datas, position, idCanvas, legendPadding = 0, displayLegend = true) {
     let Chart = require('chart.js');
 
     let dataValues = [];
@@ -165,6 +165,7 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
         },
         options: {
             legend: {
+                display: displayLegend,
                 position: position,
                 labels: {
                     fontSize: 10,

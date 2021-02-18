@@ -24,10 +24,12 @@ class GestionInscriptionType extends AbstractType
             ->add('nom', TextType::class, [
                 'label_format' => 'utilisateur.nom',
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
             ])
             ->add('prenom', TextType::class, [
                 'label_format' => 'utilisateur.prenom',
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
             ])
             ->add('statut', ChoiceType::class, [
                 'label_format' => 'common.statut',
@@ -42,11 +44,15 @@ class GestionInscriptionType extends AbstractType
                     'common.desinscriptionadministrative' => 'desinscriptionadministrative',
                 ],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('type_activite', ChoiceType::class, [
                 'label_format' => 'common.type.activite',
                 'choices' => $typeActivite['choicesList'],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('classe_activite', ChoiceType::class, [
                 'label_format' => 'common.classe.activite',
@@ -56,6 +62,8 @@ class GestionInscriptionType extends AbstractType
                     : ['data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
                 },
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('activite', ChoiceType::class, [
                 'label_format' => 'activite.libelle',
@@ -65,6 +73,8 @@ class GestionInscriptionType extends AbstractType
                     : ['data-activite-id' => 0, 'data-classe_activite-id' => 0, 'data-type_activite-id' => 0];
                 },
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('formatActivite', ChoiceType::class, [
                 'label_format' => 'formatactivite.libelle',
@@ -74,6 +84,8 @@ class GestionInscriptionType extends AbstractType
                     : ['data-activite-id' => 0, 'data-format_activite-id' => 0];
                 },
                 'attr' => ['class' => 'hidden champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('creneau', ChoiceType::class, [
                 'label_format' => 'common.creneaux',
@@ -87,16 +99,22 @@ class GestionInscriptionType extends AbstractType
                     : ['data-format_activite-id' => 0, 'data-type' => 'creneau'];
                 },
                 'attr' => ['class' => 'hidden champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('encadrants', ChoiceType::class, [
                 'label_format' => 'common.encadrant',
                 'choices' => $listeEncadrant['choicesList'],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('etablissements', ChoiceType::class, [
                 'label_format' => 'etablissement.libelle',
                 'choices' => $listeEtablissement['choicesList'],
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
             ->add('lieux', ChoiceType::class, [
                 'label_format' => 'common.lieu',
@@ -106,6 +124,8 @@ class GestionInscriptionType extends AbstractType
                     : ['data-lieux-id' => 0, 'data-etablissements-id' => 0];
                 },
                 'attr' => ['class' => 'champRechercheDatatableInscription'],
+                'required' => false,
+                'data' => 0,
             ])
         ;
     }

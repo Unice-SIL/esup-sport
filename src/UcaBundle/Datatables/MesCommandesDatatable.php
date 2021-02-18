@@ -10,12 +10,12 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
-use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use UcaBundle\Datatables\Button\CommandeAnnulerButton;
 use UcaBundle\Datatables\Button\CommandeExportButton;
 use UcaBundle\Datatables\Button\VoirButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 use UcaBundle\Datatables\Filter\DateFilter;
+use UcaBundle\Datatables\Filter\SelectInVirtualColumnFilter;
 
 class MesCommandesDatatable extends AbstractTranslatedDatatable
 {
@@ -60,7 +60,7 @@ class MesCommandesDatatable extends AbstractTranslatedDatatable
                 'twigTemplate' => 'Montant',
                 'searchable' => true,
                 'search_column' => 'montantTotal',
-                'filter' => [SelectFilter::class, [
+                'filter' => [SelectInVirtualColumnFilter::class, [
                     'select_search_types' => [
                         '' => null,
                         '0' => 'neq',
@@ -79,7 +79,7 @@ class MesCommandesDatatable extends AbstractTranslatedDatatable
                 'search_column' => 'statut',
                 'orderable' => true,
                 'order_column' => 'statut',
-                'filter' => [SelectFilter::class, [
+                'filter' => [SelectInVirtualColumnFilter::class, [
                     'classes' => 'selectCommande',
                     'initial_search' => '',
                     'select_search_types' => [

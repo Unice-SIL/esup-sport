@@ -239,10 +239,10 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
                 ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
                 ['id', 'neq', $this->getId()],
             ]) as $inscription) {
-                if ($inscription->getCreneau() && $format == $inscription->getCreneau()->getFormatActivite()) {
+                if ($inscription->getCreneau() && $format === $inscription->getCreneau()->getFormatActivite()) {
                     $autreCreneau = true;
                 }
-                if ($format == $inscription->getFormatActivite()) {
+                if ($format === $inscription->getFormatActivite()) {
                     $inscriptionFormat = $inscription;
                 }
             }

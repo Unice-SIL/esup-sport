@@ -10,7 +10,6 @@ namespace UcaBundle\Datatables;
 
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
-use Sg\DatatablesBundle\Datatable\Filter\SelectFilter;
 use UcaBundle\Datatables\Button\ModifierButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
 
@@ -52,7 +51,7 @@ class TraductionDatatable extends AbstractNotTranslatedDatatable
                 $config['searchable'] = true;
             } else {
                 $config['searchable'] = true;
-                $config['filter'] = [SelectFilter::class, [
+                $config['filter'] = [SelectInVirtualColumnFilter::class, [
                     'select_search_types' => [
                         'all' => null,
                         'isnull' => 'isNull',

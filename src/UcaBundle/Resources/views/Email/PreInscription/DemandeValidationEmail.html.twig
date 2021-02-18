@@ -8,7 +8,7 @@
         </p>
         <p>
             Pour aller consulter sa fiche, merci de vous rendre sur le lien suivant: 
-            <a class="btn btn-primary" href="{{ path('UcaGest_UtilisateurVoir',{'id': id }) }}"> {{ path('UcaGest_UtilisateurVoir',{'id': id }) }} </a>
+            <a class="btn btn-primary" href="{{ app.request.schemeAndHttpHost }}{{ path('UcaGest_UtilisateurVoir',{'id': id }) }}"> {{ app.request.schemeAndHttpHost }}{{ path('UcaGest_UtilisateurVoir',{'id': id }) }} </a>
         </p>
     </div>
 {% endblock %}

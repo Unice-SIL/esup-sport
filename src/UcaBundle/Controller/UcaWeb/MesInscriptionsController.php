@@ -243,14 +243,17 @@ class MesInscriptionsController extends Controller
                                     $inscrit++;
 
                                     break;
+
                                 case 'attentepaiement':
                                     $attentepaiement++;
 
                                     break;
+
                                 case 'attentevalidationgestionnaire':
                                     $validationgestionnaire++;
 
                                     break;
+
                                 case 'attentevalidationencadrant':
                                     $validationencadrant++;
 

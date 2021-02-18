@@ -152,20 +152,24 @@ class ExtractionController extends Controller
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
 
                         break;
+
                     case 'Format_d\'activité':
                         array_push($titleColumn, str_replace('_', ' ', $key));
                         $details = $request->get('Détails_format_d\'activité');
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
 
                         break;
+
                     case 'Inscription':
                         array_push($titleColumn, 'Statut');
                         $details = $request->get('Détails_inscription');
                         $titleColumn = $this->addTitleColumn($titleColumn, $details);
 
                         break;
+
                     case 'Statut inscription':
                         break;
+
                     default:
                         array_push($titleColumn, str_replace('_', ' ', $key));
 
@@ -243,6 +247,7 @@ class ExtractionController extends Controller
                         '1' === $request->get('Détails_créneau')['Lieu'] ? $lieuValue = $this->getLieuValue($ligne->getLieu()) : $lieuValue = null;
 
                         break;
+
                     case 'FormatActivite':
                         '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($ligne->getEncadrants()) : $encadrantValue = null;
                         '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByFormatActivite($ligne->getId()) : $typeActiviteValue = null;
@@ -252,6 +257,7 @@ class ExtractionController extends Controller
                         '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
 
                         break;
+
                     case 'Activite':
                         '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByActivite($ligne->getId())) : $encadrantValue = null;
                         '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $em->getRepository(TypeActivite::class)->findTypeActiviteByActivite($ligne->getId()) : $typeActiviteValue = null;
@@ -260,6 +266,7 @@ class ExtractionController extends Controller
                         '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
 
                         break;
+
                     case 'ClasseActivite':
                         '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByClasseActivite($ligne->getId())) : $encadrantValue = null;
                         '1' === $request->get("Type_d'activité") ? $typeActiviteValue = $ligne->getTypeActivite() : $typeActiviteValue = null;
@@ -267,21 +274,25 @@ class ExtractionController extends Controller
                         '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
 
                         break;
+
                     case 'TypeActivite':
                         '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(Utilisateur::class)->findEncadrantByTypeActivite($ligne->getId())) : $encadrantValue = null;
                         $typeActiviteValue = $ligne;
                         '1' === $request->get('Inscription') ? $inscriptionValue = $this->getInscriptionValue($em, $main, '1' === $request->get('Statut'), $ligne->getId()) : $inscriptionValue = null;
 
                         break;
+
                     case 'Inscription':
                         '1' === $request->get('Encadrants') ? $encadrantValue = $this->getEncadrantValue($em->getRepository(FormatActivite::class)->find($ligne->getFormatActivite())->getEncadrants()) : $encadrantValue = null;
                         $inscriptionValue = $ligne;
 
                         break;
+
                     case 'Encadrant':
                         $encadrantValue = $ligne;
 
                         break;
+
                     default:
                         break;
                 }
@@ -651,29 +662,35 @@ class ExtractionController extends Controller
                 foreach ($inscription as $inscrit) {
                     switch ($detail) {
                         case 'nomprenom':
-                            $result .= strtoupper($inscrit->getUtilisateur()->getNom()).' '.$inscrit->getUtilisateur()->getNom()."\n";
+                            $result .= strtoupper($inscrit->getUtilisateur()->getNom()).' '.$inscrit->getUtilisateur()->getPrenom()."\n";
 
                             break;
+
                         case 'dateinscription':
                             $result .= date_format($inscrit->getDate(), 'd/m/Y')."\n";
 
                             break;
+
                         case 'datevalidation':
                             null != $inscrit->getDateValidation() ? $result .= date_format($inscrit->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n";
 
                             break;
+
                         case 'datedesinscription':
                             null != $inscrit->getDateDesinscription() ? $result .= date_format($inscrit->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n";
 
                             break;
+
                         case 'motifannulation':
                             null != $inscrit->getMotifAnnulation() ? $result .= $inscrit->getMotifAnnulation()."\n" : $result .= "\n";
 
                             break;
+
                         case 'commentaireannulation':
                             null != $inscrit->getCommentaireAnnulation() ? $result .= $inscrit->getCommentaireAnnulation()."\n" : $result .= "\n";
 
                             break;
+
                         default:
                             $result = '';
 
@@ -683,29 +700,35 @@ class ExtractionController extends Controller
             } else {
                 switch ($detail) {
                     case 'nomprenom':
-                        $result .= strtoupper($inscription->getUtilisateur()->getNom()).' '.$inscription->getUtilisateur()->getNom()."\n";
+                        $result .= strtoupper($inscription->getUtilisateur()->getNom()).' '.$inscription->getUtilisateur()->getPrenom()."\n";
 
                         break;
+
                     case 'dateinscription':
                         $result .= date_format($inscription->getDate(), 'd/m/Y')."\n";
 
                         break;
+
                     case 'datevalidation':
                         null != $inscription->getDateValidation() ? $result .= date_format($inscription->getDateValidation(), 'd/m/Y')."\n" : $result .= "\n";
 
                         break;
+
                     case 'datedesinscription':
                         null != $inscription->getDateDesinscription() ? $result .= date_format($inscription->getDateDesinscription(), 'd/m/Y')."\n" : $result .= "\n";
 
                         break;
+
                     case 'motifannulation':
                         null != $inscription->getMotifAnnulation() ? $result .= $inscription->getMotifAnnulation()."\n" : $result .= "\n";
 
                         break;
+
                     case 'commentaireannulation':
                         null != $inscription->getCommentaireAnnulation() ? $result .= $inscription->getCommentaireAnnulation()."\n" : $result .= "\n";
 
                         break;
+
                     default:
                         $result = '';
 
@@ -729,7 +752,7 @@ class ExtractionController extends Controller
             return $collection;
         }
 
-        return'aucun';
+        return 'aucun';
     }
 
     private function getInscriptionValue($em, $main, $statut, $id)

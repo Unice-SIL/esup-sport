@@ -229,7 +229,7 @@
         .done(function(data){
             if(data != null){   
                 _chart.createPieChart("{{ 'statistique.graph.title.nbinscription.classeactivite'|trans|escape('js') }}", data[0], 'bottom', 'canvasCoursParActivite');
-                _chart.createPieChart("{{ 'statistique.graph.title.nbinscription.activite'|trans|escape('js') }}", data[1], 'bottom', 'canvasCoursParFormat');
+                _chart.createPieChart("{{ 'statistique.graph.title.nbinscription.activite'|trans|escape('js') }}", data[1], 'bottom', 'canvasCoursParFormat', 0, false);
             }
         })
         .fail(_uca.ajax.fail);
