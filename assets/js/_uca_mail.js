@@ -121,7 +121,7 @@ _uca.mail.emailing.getEmailParameters = function (mailContent, objetMail, bouton
 _uca.mail.emailing.envoyerMail = function (idForm) {
   $(document).on('submit', idForm, function (event) {
     event.preventDefault();
-    let data = _uca.mail.emailing.getEmailParameters(ucabundle_mail_mail, ucabundle_mail_objet, ucabundle_mail_sav);
+    let data = _uca.mail.emailing.getEmailParameters(ucabundle_mail_mail, ucabundle_mail_objet, ucabundle_mail_save);
     if (false != data) {
       $.ajax({
         method: "POST",

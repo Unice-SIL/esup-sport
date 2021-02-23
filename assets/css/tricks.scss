@@ -1,21 +1,23 @@
-.no-after:after{
+.no-after:after {
     content: none;
 }
 
-.nav-infospratiques{
+.nav-infospratiques {
     font-size: 1.5em;
     background-color: $gray-400;
     color: $gray-700;
     font-weight: bold;
 }
 
+
 /*- Mise en forme du calendrier -*/
-#sectionCalendrier .row .col-sm{
+
+#sectionCalendrier .row .col-sm {
     border: 2px solid $white;
     text-align: center;
 }
 
-#sectionCalendrier .row .col-sm .modal{
+#sectionCalendrier .row .col-sm .modal {
     border: none;
     text-align: left;
 }
@@ -25,35 +27,36 @@
     display: flex;
 }
 
-@include media-breakpoint-down(md) { 
+@include media-breakpoint-down(md) {
     .partenaires-type {
         width: 75%;
         display: flex;
     }
 }
 
-@include media-breakpoint-down(sm) { 
+@include media-breakpoint-down(sm) {
     .partenaires-type {
         width: 100%;
         display: inline-block;
     }
 }
+
 .bg-dark-color-blue {
     background: $eerie-black !important;
     color: $maximum-blue !important;
 }
 
-.curentSelectionTypeVisualisation{
+.curentSelectionTypeVisualisation {
     color: $maximum-blue !important;
     text-decoration: underline $maximum-blue !important;
     font-weight: bold;
 }
 
-.cursor-pointer{
+.cursor-pointer {
     cursor: pointer;
 }
 
-.otherMonth{
+.otherMonth {
     opacity: 0.5;
 }
 
@@ -71,25 +74,26 @@
     // display: table-cell;
 }
 
-.calendar-entete{
+.calendar-entete {
     line-height: 1;
     padding-top: 10px;
     padding-bottom: 10px;
 }
 
-.calendar-entete span{
+.calendar-entete span {
     font-size: 2em;
 }
 
-#sectionCalendrier{
+#sectionCalendrier {
     background-color: rgba(0, 0, 0, 0.5) !important;
 }
 
-.data-div{
+.data-div {
     background-color: rgba(250, 250, 250, 0.5) !important;
 }
 
-.data-div, .calendar-entete{
+.data-div,
+.calendar-entete {
     min-width: 170px;
 }
 
@@ -97,24 +101,34 @@
     color: $blanc !important;
 }
 
+
 /*- Mise en forme gestion d'onglet dans la liste des classe d'activité -*/
-.ongletClassActivite.active{
+
+.ongletClassActivite.active {
     display: none;
 }
 
+
 /*- Ajustement taille du calendrier -*/
+
 #scheduler_here {
     height: 800px;
 }
 
-@include media-breakpoint-down(sm) { 
+@include media-breakpoint-down(sm) {
     #scheduler_here {
         height: 1000px;
     }
 }
 
-@include media-breakpoint-down(xs) { 
+@include media-breakpoint-down(xs) {
     #scheduler_here {
         height: 1050px;
+    }
+}
+
+.modal-footer {
+    a {
+        -webkit-appearance: none;
     }
 }

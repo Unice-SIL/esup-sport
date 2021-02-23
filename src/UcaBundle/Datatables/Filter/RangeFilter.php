@@ -28,6 +28,11 @@ class RangeFilter extends AbstractFilter
      */
     public function addAndExpression(Andx $andExpr, QueryBuilder $qb, $searchField, $searchValue, $searchTypeOfField, &$parameterCounter)
     {
+        // Gestion de la recherche dans une colonne TwigVirtualColumn
+        if (is_array($searchField)) {
+            $searchField = $searchField[0];
+        }
+
         list($_dateStart, $_dateEnd) = explode(' - ', $searchValue);
         $dateStart = new DateTime($_dateStart);
         $dateEnd = new DateTime($_dateEnd);
