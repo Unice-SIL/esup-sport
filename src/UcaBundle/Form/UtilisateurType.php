@@ -9,6 +9,7 @@
 namespace UcaBundle\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -166,6 +167,7 @@ class UtilisateurType extends AbstractType
                     'translation_domain' => 'messages',
                     'constraints' => new Assert\NotBlank(['message' => 'utilisateur.document.notBlank']),
                 ])
+                ->add('captcha', CaptchaType::class)
             ;
         } elseif (!$profil) {
             $builder

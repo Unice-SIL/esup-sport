@@ -31,6 +31,7 @@ class AppKernel extends Kernel
             new Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle(),
             new Lexik\Bundle\PayboxBundle\LexikPayboxBundle(),
             new SunCat\MobileDetectBundle\MobileDetectBundle(),
+            new Gregwar\CaptchaBundle\GregwarCaptchaBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

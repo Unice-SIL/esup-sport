@@ -8,6 +8,7 @@
 
 namespace UcaBundle\Form;
 
+use Gregwar\CaptchaBundle\Type\CaptchaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -30,6 +31,7 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class, [
                 'label_format' => 'contact.message',
             ])
+            ->add('captcha', CaptchaType::class)
             ->add('save', SubmitType::class, [
                 'label_format' => 'contact.save',
             ])

@@ -27,6 +27,7 @@
         "doctrine/orm": "^2.5",
         "friendsofsymfony/ckeditor-bundle": "^2.1",
         "friendsofsymfony/user-bundle": "^2.1",
+        "gregwar/captcha-bundle": "2.0.*",
         "incenteev/composer-parameter-handler": "^2.0",
         "league/csv": "^9.2",
         "lexik/paybox-bundle": "^2.1",
