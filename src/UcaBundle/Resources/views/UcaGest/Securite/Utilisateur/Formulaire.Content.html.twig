@@ -108,11 +108,13 @@
     </div>
   {% endif %}
 
-  <div class="row">
-    <div class="col-sm-12 col-md-12">
-      {{ form_row(form.captcha)}}
+  {% if (action == 'preInscription') %}
+    <div class="row">
+      <div class="col-sm-12 col-md-12">
+        {{ form_row(form.captcha)}}
+      </div>
     </div>
-  </div>
+  {% endif %}
   
   <!-- Boutons -->
   <div class="col-sm-12">
