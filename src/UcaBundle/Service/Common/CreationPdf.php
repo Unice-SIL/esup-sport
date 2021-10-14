@@ -40,7 +40,7 @@ class CreationPdf
             $pdf->writeHTML($this->view);
             $pdf->Output($fileParams['output']);
         } catch (HTML2PDF_exception $e) {
-            die($e);
+            exit($e);
         }
     }
 
@@ -52,16 +52,16 @@ class CreationPdf
 
     public function createMultiplePdf(array $fileParams)
     {
-        try {
-            $pdf = new HTML2PDF('p', 'A4', 'fr');
-            $pdf->pdf->SetAuthor($fileParams['author']);
-            $pdf->pdf->SetTitle($fileParams['title']);
-            foreach ($this->view as $view) {
-                $pdf->writeHTML($view);
-            }
-            $pdf->Output($fileParams['output']);
-        } catch (HTML2PDF_exception $e) {
-            die($e);
+        // try {
+        $pdf = new HTML2PDF('p', 'A4', 'fr');
+        $pdf->pdf->SetAuthor($fileParams['author']);
+        $pdf->pdf->SetTitle($fileParams['title']);
+        foreach ($this->view as $view) {
+            $pdf->writeHTML($view);
         }
+        $pdf->Output($fileParams['output']);
+        // } catch (HTML2PDF_exception $e) {
+        //     die($e);
+        // }
     }
 }

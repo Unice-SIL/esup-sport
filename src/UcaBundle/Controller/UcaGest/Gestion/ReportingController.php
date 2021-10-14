@@ -204,7 +204,7 @@ class ReportingController extends Controller
             $item->changeStatut('avoir');
             $em->flush();
 
-            return  $this->redirectToRoute('UcaGest_ReportingCommandes');
+            return $this->redirectToRoute('UcaGest_ReportingCommandes');
         }
 
         $twigConfig['commande'] = $item;
