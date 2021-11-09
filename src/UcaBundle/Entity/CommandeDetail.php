@@ -149,7 +149,7 @@ class CommandeDetail
     public function affichageDetailCommande()
     {
         $format = $this->formatActivite;
-        if ('format' === $this->type && ('FormatAvecCreneau' === $this->typeArticle || $format instanceof FormatAvecCreneau)) {
+        if (null != $format && ('format' === $this->type && ('FormatAvecCreneau' === $this->typeArticle || $format instanceof FormatAvecCreneau))) {
             //return $format->getEstPayant() xor 0 == $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur())
             return $format->getEstPayant() && ($format->getEstPayant() && 0 != $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur()));
         }
@@ -825,7 +825,7 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeReference
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeLigneCommandeReference(CommandeDetail $ligneCommandeReference)
     {
@@ -861,7 +861,7 @@ class CommandeDetail
      *
      * @param \UcaBundle\Entity\CommandeDetail $ligneCommandeLiee
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeLigneCommandeLiee(CommandeDetail $ligneCommandeLiee)
     {
