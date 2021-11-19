@@ -254,7 +254,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             $inscriptionFormat->setUtilisateurDesinscription($utilisateur);
             $inscriptionFormat->setNomDesinscription($utilisateur->getNom());
             $inscriptionFormat->setPrenomDesinscription($utilisateur->getPrenom());
-        } elseif ($avoir && !isset($autreCreneau)) {
+        } elseif ($avoir && !isset($autreCreneau) && isset($inscriptionFormat)) {
             $inscriptionFormat->setStatut('ancienneinsciption');
         }
     }

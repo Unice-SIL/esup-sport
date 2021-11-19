@@ -170,6 +170,8 @@ class BasculeController extends Controller
         //Suppression (changement de statut) de toutes les inscriptions à chaque bascule
         $listeInscription = $em->getRepository(Inscription::class)->findInscriptionBascule();
         foreach ($listeInscription as $inscription) {
+            $inscription->setCreneau(null);
+            $inscription->setReservabilite(null);
             $inscription->setStatut('ancienneinscription');
         }
         $em->flush();
@@ -244,6 +246,9 @@ class BasculeController extends Controller
                                 }
                             }
                         }
+                        foreach ($creneau->getInscriptions() as $inscription) {
+                            $creneau->removeInscription($inscription);
+                        }
                     }
                     $em->flush();
                 } elseif (0 == $listeOptionCreneau[$id]) {
@@ -259,6 +264,10 @@ class BasculeController extends Controller
                                 $em->remove($evenement);
                             }
                             $em->remove($serie);
+                        }
+                        foreach ($creneau->getInscriptions() as $inscription) {
+                            $creneau->removeInscription($inscription);
+                            $inscription->setCreneau(null);
                         }
                         $em->remove($creneau);
                     }
@@ -314,6 +323,11 @@ class BasculeController extends Controller
                     foreach ($serie->getEvenements() as $event) {
                         foreach ($event->getAppels() as $appel) {
                             $em->remove($appel);
+                        }
+                        if ($reservabilite = $event->getReservabilite()) {
+                            foreach ($em->getRepository(CommandeDetail::class)->findByReservabilite($reservabilite->getId()) as $commandeDetail) {
+                                $commandeDetail->setReservabilite(null);
+                            }
                         }
                         $em->remove($event);
                     }

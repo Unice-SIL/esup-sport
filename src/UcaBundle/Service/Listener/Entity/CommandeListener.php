@@ -29,7 +29,7 @@ class CommandeListener
                 $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
                 $commande->setNumeroCommande($numero);
 
-                if ('BDS' != $event->getOldValue('typePaiement') && 'BDS' == $event->getNewValue('typePaiement')) {
+                if ('BDS' != $event->getOldValue('typePaiement') && 'BDS' == $event->getNewValue('typePaiement') && $commande->getUtilisateur()->getEmail()) {
                     $this->mailer->sendMailWithTemplate(
                         'Commande à régler au bureau des sports',
                         $commande->getUtilisateur()->getEmail(),
@@ -48,14 +48,16 @@ class CommandeListener
                     $commande->setNumeroCommande($numero);
                 }
 
-                $this->mailer->sendMailWithTemplate(
-                    'Validation de la commande',
-                    $commande->getUtilisateur()->getEmail(),
-                    '@Uca/Email/Commande/ValidationCommande.html.twig',
-                    ['commande' => $commande]
-                );
+                if ($commande->getUtilisateur()->getEmail()) {
+                    $this->mailer->sendMailWithTemplate(
+                        'Validation de la commande',
+                        $commande->getUtilisateur()->getEmail(),
+                        '@Uca/Email/Commande/ValidationCommande.html.twig',
+                        ['commande' => $commande]
+                    );
+                }
             }
-            if ('annule' != $event->getOldValue('statut') && 'annule' == $event->getNewValue('statut')) {
+            if ('annule' != $event->getOldValue('statut') && 'annule' == $event->getNewValue('statut') && $commande->getUtilisateur()->getEmail()) {
                 $this->mailer->sendMailWithTemplate(
                     'Annulation de la commande',
                     $commande->getUtilisateur()->getEmail(),
