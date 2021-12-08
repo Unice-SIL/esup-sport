@@ -24,13 +24,6 @@ class UtilisateurCreditHistoriqueType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('utilisateur', EntityType::class, [
-                'class' => 'UcaBundle:Utilisateur',
-                'expanded' => false,
-                'multiple' => false,
-                'disabled' => true,
-                'label_format' => 'common.utilisateur',
-            ])
             ->add('montant', NumberType::class, [
                 'label_format' => 'common.montant',
                 'required' => true,

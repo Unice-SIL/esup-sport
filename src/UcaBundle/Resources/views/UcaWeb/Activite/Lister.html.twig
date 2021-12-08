@@ -274,8 +274,10 @@
                 }
                 })
                 .done(function(data){
+                    $("#modalActivite").hide();
+                    $('.modal-backdrop.show').remove();
+                    $('body').removeClass('modal-open');
                     if(data != null){
-                        $(".close").click();
                         $("#activities-container").empty();
                         $("#modal-container").empty();
                         if(data.length > 0){

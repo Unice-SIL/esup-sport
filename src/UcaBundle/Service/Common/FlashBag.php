@@ -42,10 +42,10 @@ class FlashBag
         $this->addFlashBag($item, $action.'.erreur', 'danger');
     }
 
-    public function addMessageFlashBag($message, $bootstrapColor)
+    public function addMessageFlashBag($message, $bootstrapColor, $params = [])
     {
         $fb = $this->requestStack->getCurrentRequest()->getSession()->getFlashBag();
-        $translatedMessage = $this->translator->trans($message);
+        $translatedMessage = $this->translator->trans($message, $params);
         $fb->add(strtolower($bootstrapColor), ucfirst($translatedMessage));
     }
 }

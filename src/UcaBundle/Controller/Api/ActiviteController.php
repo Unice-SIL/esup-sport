@@ -55,17 +55,17 @@ class ActiviteController extends Controller
         }
 
         $nbJour = 0;
-        if ($parametreData['widthWindow'] > 1350) {
+        if ($parametreData['widthWindow'] > 1425) {
             $nbJour = 7;
-        } elseif ($parametreData['widthWindow'] <= 1350 && $parametreData['widthWindow'] > 1150) {
+        } elseif ($parametreData['widthWindow'] <= 1425 && $parametreData['widthWindow'] > 1250) {
             $nbJour = 6;
-        } elseif ($parametreData['widthWindow'] <= 1150 && $parametreData['widthWindow'] > 1000) {
+        } elseif ($parametreData['widthWindow'] <= 1250 && $parametreData['widthWindow'] > 1100) {
             $nbJour = 5;
-        } elseif ($parametreData['widthWindow'] <= 1000 && $parametreData['widthWindow'] > 825) {
+        } elseif ($parametreData['widthWindow'] <= 1100 && $parametreData['widthWindow'] > 910) {
             $nbJour = 4;
-        } elseif ($parametreData['widthWindow'] <= 825 && $parametreData['widthWindow'] > 650) {
+        } elseif ($parametreData['widthWindow'] <= 910 && $parametreData['widthWindow'] > 750) {
             $nbJour = 3;
-        } elseif ($parametreData['widthWindow'] <= 650 && $parametreData['widthWindow'] > 580) {
+        } elseif ($parametreData['widthWindow'] <= 750 && $parametreData['widthWindow'] > 580) {
             $nbJour = 2;
         } elseif ($parametreData['widthWindow'] <= 580) {
             $nbJour = 1;

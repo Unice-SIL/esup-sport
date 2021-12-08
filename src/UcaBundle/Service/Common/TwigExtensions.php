@@ -34,6 +34,7 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('isValideAutorisation', [$this, 'getValiditeAutorisation']),
             new TwigFunction('isCarte', [$this, 'isCarte']),
             new TwigFunction('getInformationCarte', [$this, 'getInformationCarte']),
+            new TwigFunction('var_dump', [$this, 'varDump'])
         ];
     }
 
@@ -236,5 +237,14 @@ class TwigExtensions extends AbstractExtension
         $cmdDetail->getNumeroCarte() ? $texte .= ' -  N°'.$cmdDetail->getNumeroCarte() : null;
 
         return $texte;
+    }
+
+    /**
+     * @param [type] $value
+     * @return void
+     */
+    public function varDump($value): void
+    {
+        var_dump($value);
     }
 }

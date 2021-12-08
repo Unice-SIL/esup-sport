@@ -79,12 +79,14 @@ class ExtractionInscriptionService
         }
 
         foreach ($this->em->getRepository(Entity\Creneau::class)->findCreneauBySerie() as $data) {
-            $libelle = $data['libelle']
-                .' ['.Fn::intlDateFormat($data['dateDebut'], 'cccc')
-                .' '.$data['dateDebut']->format('H:i')
-                .' - '.$data['dateFin']->format('H:i').']';
-            $choicesList[$libelle] = $data['serieId'];
-            $formatActivite[$data['serieId']] = $data['formatId'];
+            if(!isset($formatActivite[$data['serieId']])){
+                $libelle = $data['libelle']
+                    .' ['.Fn::intlDateFormat($data['dateDebut'], 'cccc')
+                    .' '.$data['dateDebut']->format('H:i')
+                    .' - '.$data['dateFin']->format('H:i').']';
+                $choicesList[$libelle] = $data['serieId'];
+                $formatActivite[$data['serieId']] = $data['formatId'];
+            }
         }
 
         return ['choicesList' => $choicesList, 'formatActivite' => $formatActivite];

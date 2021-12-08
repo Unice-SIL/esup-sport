@@ -3,11 +3,11 @@
 		<img src="{{ asset('images/load.gif') }}" id="load-img">
 	</div>
 	<div class="row d-flex">
-		<div class="col-2">
+		<div class="col-2 d-flex">
 			<a class="cursor-pointer color-blanc" onclick="_uca.calendrier.changePeriode(false, {{ nbJour }})">
 				<i class="fas fa-caret-square-left"></i>
 			</a>
-			<a class="cursor-pointer color-blanc" onclick="_uca.calendrier.changePeriode(true, {{ nbJour }})">
+			<a class="cursor-pointer color-blanc ml-1" onclick="_uca.calendrier.changePeriode(true, {{ nbJour }})">
 				<i class="fas fa-caret-square-right"></i>
 			</a>
 		</div>

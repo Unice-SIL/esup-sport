@@ -90,16 +90,32 @@ class ProfilUtilisateurController extends Controller
     {
         $r = false;
         $em = $this->getDoctrine()->getManager();
-        $listeRelations = [
-            ['relation' => $item->getUtilisateur(), 'message' => 'profilutilisateur.supprimer.erreur.utilisateurs'],
-            ['relation' => $item->getFormatsActivite(), 'message' => 'profilutilisateur.supprimer.erreur.formatactivite'],
-        ];
-        foreach ($listeRelations as $relation) {
-            if (!$relation['relation']->isEmpty()) {
-                $this->get('uca.flashbag')->addMessageFlashBag($relation['message'], 'danger');
-                $r = true;
+
+        if (!($utilisateurs = $item->getUtilisateur())->isEmpty()) {
+            $r = true;
+            $param = '<ul>';
+            foreach ($utilisateurs as $utilisateur) {
+                $param .= '<li>'.$utilisateur->getNom().' '.$utilisateur->getPrenom().'</li>';
             }
+
+            $param .= '</ul>';
+
+            $this->get('uca.flashbag')->addMessageFlashBag('profilutilisateur.supprimer.erreur.utilisateurs', 'danger', ['%utilisateurs%' => $param]);
         }
+
+        if (!($formats = $item->getFormatsActivite())->isEmpty()) {
+            $r = true;
+            $param = '<ul>';
+            foreach ($formats as $format) {
+                $param .= '<li>'.$format->getFormatActivite()->getLibelle().'</li>';
+            }
+
+            $param .= '</ul>';
+
+            $this->get('uca.flashbag')->addMessageFlashBag('profilutilisateur.supprimer.erreur.formatactivite', 'danger', ['%formats%' => $param]);
+        }
+
+        
         if ($r) {
             $this->get('uca.flashbag')->addActionErrorFlashBag($item, 'Supprimer');
 

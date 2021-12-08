@@ -19,8 +19,9 @@
     </div>
 
     <div class="container-style bg-white mb-5">
+      {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
 
-      <h2 class="hide-border-title fs-21 fw-700 text-uppercase mb-5">{{ eventName }}
+      <h2 class="hide-border-title fs-21 fw-700 text-uppercase mt-5 mb-5">{{ eventName }}
         ---
         {{ evenement.description }}</h2>
 
@@ -65,7 +66,12 @@
             <div class="col-12 mb-4 text-center" id="appel-loader">
                 <button class="btn btn-primary" type="button" id="appel-btn">
                     {{ 'bouton.appel'|trans }}
-                </button> 
+                </button>
+                {% if form.appels|length > 0 %}
+                  <a href="{{ path('UcaWeb_PlanningMore_DesinscrireTout', { 'id': evenement.id }) }}" class="btn btn-danger" type="button">
+                      {{ 'bouton.desinscrire.tout'|trans }}
+                  </a>
+                {% endif %}
                 <div class="text-center" id="loader">
                     <p>{{ 'monPlanning.more.appel.message'|trans }}</p>
                     <i class="fas fa-spinner fa-pulse fa-3x my-3"></i>

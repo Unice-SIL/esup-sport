@@ -7,7 +7,7 @@ parameters:
     database_password: --
     database_statistiques_name: uca_statistique
     mailer_transport: smtp
-    mailer_host: mail.laynis.com
+    mailer_host: outlook.office.com
     mailer_port: 587
     mailer_encryption: tls
     mailer_user: noreply@acatus.fr
@@ -15,3 +15,4 @@ parameters:
     mailer_auth_mode: login
     mailer_name: 'Uca Sport'
     secret: 98e78e48892642ddbe22ca2cdb74ac607130daa8
+    mailer_exception: ['laura.paumier@acatus.fr', 'valentin.gimonnet@acatus.fr']

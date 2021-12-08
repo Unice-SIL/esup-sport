@@ -281,4 +281,40 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
     {
         return $this->utilisateur;
     }
+
+    /**
+     * Add formatActivite.
+     *
+     * @param \UcaBundle\Entity\FormatActiviteProfilUtilisateur $formatActivite
+     *
+     * @return ProfilUtilisateur
+     */
+    public function addFormatActivite(FormatActiviteProfilUtilisateur $formatActivite)
+    {
+        $this->formatsActivite[] = $formatActivite;
+
+        return $this;
+    }
+
+    /**
+     * Remove formatActivite.
+     *
+     * @param \UcaBundle\Entity\FormatActiviteProfilUtilisateur $formatActivite
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeFormatActivite(FormatActiviteProfilUtilisateur $formatActivite)
+    {
+        return $this->formatsActivite->removeElement($formatActivite);
+    }
+
+    /**
+     * Get formatActivites.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFormatsActivite()
+    {
+        return $this->formatsActivite;
+    }
 }

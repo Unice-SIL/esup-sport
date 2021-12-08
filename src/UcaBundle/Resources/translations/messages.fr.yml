@@ -76,6 +76,7 @@ bouton.descendre: Descendre
 bouton.deselectionner.tout: Désélectionner tout
 bouton.desinscrire.inscription: Désinscrire
 bouton.desinscrire: Désinscrire
+bouton.desinscrire.tout: Désinscrire tout le monde
 bouton.enregistrer: Enregistrer
 bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
@@ -289,6 +290,7 @@ common.oui: "Oui"
 common.paiementcb: Payer par carte bancaire
 common.password: Mot de passe
 common.payant: Payant
+common.paye: Montant payé
 common.payeavec: Payée avec
 common.periode: Période
 common.precedent: Précédent
@@ -579,8 +581,8 @@ mentions.conditions.nonvalide: "Veuillez accepter les conditions générales de 
 mentions.informations.validation: "J'accepte les conditions générales de vente"
 mescommandes.list.title: Mes commandes
 mescredits.list.title: Mes crédits
-mesinscriptions.list.title: Mes inscriptions
 mesinscriptions.label.ancienne.activite: Ancienne activité
+mesinscriptions.list.title: Mes inscriptions
 message.confirmation.annulation.commande.titre: Confirmez l'annulation
 message.confirmation.annulation.commande: Toutes les inscriptions liées à cette commande seront supprimées. Annuler la commande ?
 message.confirmation.annulation.inscription.titre: Confirmez l'annulation
@@ -599,6 +601,7 @@ message.confirmation.paiementcheque: Confirmez-vous le paiement par chèque ?
 message.confirmation.paiementespece: Confirmez-vous le paiement par espèce ?
 message.confirmation.suppression.titre: "Confirmez la suppression"
 message.confirmation.suppression: "Supprimer l'enregistrement ?"
+message.desinscription.success: Désinscription réussie
 message.desinscriptionmassive.success: Désinscription massive effectué avec succès.
 message.selection.filtre.desinscription: "Vous n'avez pas filtrer votre recherche ou aucune inscription n'a été trouvé. Merci de bien vouloir filtrer ou modifier vos filtres afin de pouvoir procéder à la désincription."
 modal.error.complet: "Erreur lors de l'inscription : La capacité maximale a été dépassée"
@@ -723,9 +726,9 @@ profilutilisateur.modifier.succes: "Profil d'utilisateur modifié avec succès"
 profilutilisateur.modifier.title: Modifier un profil d'utilisateur
 profilutilisateur.nbmaxinscriptions.libelle: "Nombre de créneaux maximum"
 profilutilisateur.preinscription: Ce profil peut-il se pré-inscrire
-profilutilisateur.supprimer.erreur.formatactivite: Des formats d'activités utilisent ce profil
+profilutilisateur.supprimer.erreur.formatactivite: "Des formats d'activités utilisent ce profil : <br>%formats%"
 profilutilisateur.supprimer.erreur.montants: Des tarifs sont associés à ce profil
-profilutilisateur.supprimer.erreur.utilisateurs: Des utilisateurs utilisent ce profil
+profilutilisateur.supprimer.erreur.utilisateurs: "Des utilisateurs utilisent ce profil : <br>%utilisateurs%"
 profilutilisateur.supprimer.erreur: Impossible de supprimer le profil
 profilutilisateur.supprimer.succes: "Profil d'utilisateur supprimé avec succès"
 referentiel.bouton.maj: Mettre à jour le référentiel

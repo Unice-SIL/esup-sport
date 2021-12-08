@@ -76,6 +76,7 @@ bouton.descendre: Drop
 bouton.deselectionner.tout: Unselect all
 bouton.desinscrire.inscription: Unsubscribe
 bouton.desinscrire: Unsubscribe
+bouton.desinscrire.tout: Unsubscribe everyone
 bouton.enregistrer: Save
 bouton.exportallfacture.pdf: Export bills
 bouton.exportpdf: Export
@@ -289,6 +290,7 @@ common.oui: 'Yes'
 common.paiementcb: Pay with credit card
 common.password: Password
 common.payant: Paying
+common.paye: Payroll amount
 common.payeavec: Payed with
 common.periode: Period
 common.precedent: Previous
@@ -599,6 +601,7 @@ message.confirmation.paiementcheque: Do you confirm paying with a check ?
 message.confirmation.paiementespece: Do you confirm paying with cash ?
 message.confirmation.suppression.titre: "Confirm deletion"
 message.confirmation.suppression: "Delete entry ?"
+message.desinscription.success: Successful unsubscription
 message.desinscriptionmassive.success: Massive unsubscription successfully completed.
 message.selection.filtre.desinscription: "You did not filter your search or no registration was found. Please filter or modify your filters in order to be able to unsubscribe."
 modal.erro.nonconnecte: "Error: Your are not logged in"
@@ -723,9 +726,9 @@ profilutilisateur.modifier.succes: User profile successfully modified
 profilutilisateur.modifier.title: Modify a user profile
 profilutilisateur.nbmaxinscriptions.libelle: Maximum time slots subscriptions
 profilutilisateur.preinscription: Can this profiles pre-register ? 
-profilutilisateur.supprimer.erreur.formatactivite: Activities format use this profile 
+profilutilisateur.supprimer.erreur.formatactivite: "Activities format use this profile : <br>%formats%"
 profilutilisateur.supprimer.erreur.montants: Rates are assigned to this profile
-profilutilisateur.supprimer.erreur.utilisateurs: Users use this profile
+profilutilisateur.supprimer.erreur.utilisateurs: "Users use this profile :  : <br>%utilisateurs%"
 profilutilisateur.supprimer.erreur: Cannot delete profile
 profilutilisateur.supprimer.succes: User profile successfully deleted
 referentiel.bouton.maj: Update the repository

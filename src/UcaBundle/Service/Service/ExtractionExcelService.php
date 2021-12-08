@@ -160,14 +160,17 @@ class ExtractionExcelService
                         case 'cb': $cmd[11] = $montant;
 
                         break;
+
                         case 'espece': $cmd[12] = $montant;
 
                         break;
+
                         case 'cheque':
                             $cmd[13] = $montant;
                             $cmd[14] = $cmdDetail->getCommande()->getNumeroCheque();
 
                         break;
+
                         case null:
                         break;
                     }
@@ -180,7 +183,7 @@ class ExtractionExcelService
                 }
                 $data[] = $cmd;
             }
-            $this->setWorksheet($worksheet, $data, ['G', 'H', 'I', 'J', 'K']);
+            $this->setWorksheet($worksheet, $data, ['J', 'K', 'L', 'M', 'N']);
         }
     }
 

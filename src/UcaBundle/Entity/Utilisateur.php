@@ -248,10 +248,12 @@ class Utilisateur extends FOSUser implements \UcaBundle\Entity\Interfaces\JsonSe
 
     public function getNbInscriptionCreneau()
     {
-        return (int) sizeof($this->getInscriptionsByCriteria([
-            ['creneau', 'neq', null],
-            ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
-        ]));
+        return (int) sizeof(
+            $this->getInscriptionsByCriteria([
+                ['creneau', 'neq', null],
+                ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
+            ])->filter(function($insc) { return $insc->getFormatActivite() && $insc->getFormatActivite()->getFormat() == 'FormatAvecCreneau';})
+        );
     }
 
     public function nbCreneauMaximumAtteint()

@@ -68,7 +68,7 @@ class Highlight
      */
     private $video;
 
-    /** @ORM\Column(type="string", length=255, nullable=true)*/
+    /** @ORM\Column(type="text", nullable=true)*/
     private $miniature;
 
     /** @ORM\Column(type="datetime", nullable=true) */
@@ -181,7 +181,7 @@ class Highlight
     {
         $idVideo = $this->getIdVideo($video);
 
-        return  [
+        return [
             'urlVideo' => 'https://www.facebook.com/plugins/video.php?href='.urlencode($video),
             'urlThumb' => 'https://graph.facebook.com/'.$idVideo.'/picture',
         ];
@@ -193,7 +193,7 @@ class Highlight
         $data = file_get_contents('https://api.instagram.com/oembed/?url=http://instagram.com/p/'.$idVideo);
         $data = json_decode($data, true);
 
-        return  [
+        return [
             'urlVideo' => 'http://instagram.com/p/'.$idVideo.'/embed',
             'urlThumb' => $data['thumbnail_url'],
             'height' => $data['thumbnail_height'],
@@ -393,7 +393,7 @@ class Highlight
     /**
      * Get lecteurVideo.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getLecteurVideo()
     {
@@ -417,7 +417,7 @@ class Highlight
     /**
      * Get intervenant.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getIntervenant()
     {
@@ -441,7 +441,7 @@ class Highlight
     /**
      * Get height.
      *
-     * @return string|null
+     * @return null|string
      */
     public function getHeight()
     {

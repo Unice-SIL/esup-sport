@@ -3,7 +3,7 @@
     {% for type, messages in app.session.flashbag.all() %}
         {% for text in messages %}
             <div class="alert alert-{{ type }}" role="alert">
-                {{ text|trans }}
+                {{ text|trans|raw }}
             </div>
         {% endfor %}
     {% endfor %}

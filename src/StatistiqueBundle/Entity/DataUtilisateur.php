@@ -24,7 +24,7 @@ class DataUtilisateur
      */
     private $id;
 
-    /** @ORM\Column(name="codEtu", type="string", length=255, unique=true)*/
+    /** @ORM\Column(name="codEtu", type="string", length=255)*/
     private $codEtu;
 
     /** @ORM\Column(name="codEtp", type="string", length=255, nullable=true)*/

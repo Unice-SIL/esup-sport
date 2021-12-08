@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Appel;
+use UcaBundle\Entity\DhtmlxDate;
 use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Utilisateur;
@@ -181,11 +182,11 @@ class MonPlanningController extends Controller
             try {
                 $pdf = new HTML2PDF('p', 'A4', 'fr');
                 $pdf->pdf->SetAuthor('Université de Nice');
-                $pdf->pdf->SetTitle('Facture');
+                $pdf->pdf->SetTitle('Listing');
                 $pdf->writeHTML($content);
-                $pdf->Output('Facture.pdf');
+                $pdf->Output('Listing.pdf');
             } catch (HTML2PDF_exception $e) {
-                die($e);
+                exit($e);
             }
         } else {
             return $this->redirectToRoute('UcaWeb_MonPlanning');
@@ -230,6 +231,44 @@ class MonPlanningController extends Controller
         }
 
         return $this->redirectToRoute('UcaWeb_PlanningMore', ['id' => $evenement]);
+    }
+
+    /**
+     * @Route("/DesinscrireTout/{id}", name="UcaWeb_PlanningMore_DesinscrireTout")
+     *
+     * @param mixed $user
+     * @param mixed $evenement
+     */
+    public function desinscrireTout(DhtmlxEvenement $event)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $inscriptions = [];
+        if (!is_null($event->getSerie())) {
+            $inscriptions = $em->getRepository('UcaBundle:Inscription')->findBy(['creneau' => $event->getSerie()->getCreneau()->getId()]);
+        } elseif (!is_null($event->getFormatSimple())) {
+            $inscriptions = $em->getRepository('UcaBundle:Inscription')->findBy(['formatActivite' => $event->getFormatSimple()->getId()]);
+        }
+
+        foreach ($inscriptions as $inscription) {
+            if (in_array($inscription->getStatut(), ['initialise', 'attentevalidationencadrant', 'attentevalidationgestionnaire', 'attenteajoutpanier', 'attentepaiement', 'valide'])) {
+                $inscriptionService = $this->get('uca.inscription');
+                $inscriptionService->setInscription($inscription);
+                $inscriptionService->mailDesinscription($inscription);
+                $inscription->seDesinscrire($this->getUser());                
+            }
+        }
+
+        $appels = $em->getRepository(Appel::class)->findBy(['dhtmlxEvenement' => $event->getId()]);
+        foreach ($appels as $appel) {
+            $em->remove($appel);
+        }
+
+        $em->flush();
+
+        $this->addFlash('success', 'message.desinscription.success');
+
+
+        return $this->redirectToRoute('UcaWeb_PlanningMore', ['id' => $event->getId()]);
     }
 
     /**
