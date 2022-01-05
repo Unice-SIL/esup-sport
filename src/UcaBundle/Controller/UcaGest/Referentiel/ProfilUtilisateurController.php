@@ -61,9 +61,9 @@ class ProfilUtilisateurController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $item = new ProfilUtilisateur($em);
-        $tarifs = $this->getDoctrine()->getRepository(Tarif::class)->findAll();
         $form = $this->get('form.factory')->create(ProfilUtilisateurType::class, $item);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $tarifs = $this->getDoctrine()->getRepository(Tarif::class)->findAll();
             // Pour le nouveau profil, ajout d'un montant à -1 pour chaque Tarif existant
             foreach ($tarifs as $tarif) {
                 $montantTarifProfil = new MontantTarifProfilUtilisateur($tarif, $item, -1);
@@ -101,6 +101,18 @@ class ProfilUtilisateurController extends Controller
             $param .= '</ul>';
 
             $this->get('uca.flashbag')->addMessageFlashBag('profilutilisateur.supprimer.erreur.utilisateurs', 'danger', ['%utilisateurs%' => $param]);
+        }
+
+        if (!($enfants = $item->getEnfants())->isEmpty()) {
+            $r = true;
+            $param = '<ul>';
+            foreach ($enfants as $enfant) {
+                $param .= '<li>'.$enfant->getLibelle().'</li>';
+            }
+
+            $param .= '</ul>';
+
+            $this->get('uca.flashbag')->addMessageFlashBag('profilutilisateur.supprimer.erreur.profils', 'danger', ['%profils%' => $param]);
         }
 
         if (!($formats = $item->getFormatsActivite())->isEmpty()) {

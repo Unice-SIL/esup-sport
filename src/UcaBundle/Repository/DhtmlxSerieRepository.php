@@ -15,7 +15,7 @@ class DhtmlxSerieRepository extends \Doctrine\ORM\EntityRepository
         $query = $this->createQueryBuilder('d');
         if ('ressource' == $type) {
             $query->join('d.evenements', 'e')
-                ->join('e.reservabilite', 're')
+                ->join('d.reservabilite', 're')
                 ->join('re.ressource', 'r')
                 ->where('r.id = :id')
                 ->addSelect('e, re')
@@ -66,5 +66,13 @@ class DhtmlxSerieRepository extends \Doctrine\ORM\EntityRepository
         ;
 
         return $qb->getQuery()->getResult();
+    }
+
+    public function findSerieReservation() {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.reservabilite is not null and s.creneau is null')
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

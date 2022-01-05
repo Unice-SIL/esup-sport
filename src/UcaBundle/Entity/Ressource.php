@@ -94,6 +94,18 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
      */
     private $etablissementLibelle;
 
+    /**
+     * @ORM\OneToMany(targetEntity="RessourceProfilUtilisateur", mappedBy="ressource", fetch="LAZY", cascade={"persist", "remove"})
+     * @Assert\Valid()
+     */
+    private $profilsUtilisateurs;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $listeProfils;
+
     //endregion
 
     /**
@@ -103,6 +115,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     {
         $this->formatResa = new \Doctrine\Common\Collections\ArrayCollection();
         $this->reservabilites = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     //endregion
@@ -116,7 +129,7 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
 
     public function jsonSerializeProperties()
     {
-        return ['libelle', 'description', 'etablissementLibelle'];
+        return ['libelle', 'description', 'etablissementLibelle', 'profilsUtilisateurs'];
     }
 
     public function setImageFile(File $imageFile = null)
@@ -452,5 +465,94 @@ abstract class Ressource implements \UcaBundle\Entity\Interfaces\JsonSerializabl
     public function getEtablissementLibelle()
     {
         return $this->etablissementLibelle;
+    }
+
+    /**
+     * Add profilsUtilisateur.
+     *
+     * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
+     *
+     * @return Ressource
+     */
+    public function addProfilsUtilisateur(RessourceProfilUtilisateur $profilsUtilisateur)
+    {
+        $this->profilsUtilisateurs[] = $profilsUtilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Remove profilsUtilisateur.
+     *
+     * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeProfilsUtilisateur(RessourceProfilUtilisateur $profilsUtilisateur)
+    {
+        return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
+    }
+
+    /**
+     * Get profilsUtilisateurs.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProfilsUtilisateurs()
+    {
+        return $this->profilsUtilisateurs;
+    }
+
+    public function updateListeProfils()
+    {
+        $this->listeProfils = '';
+        foreach ($this->getProfilsUtilisateurs() as $ressourceProfil) {
+            if (!empty($this->listeProfils)) {
+                $this->listeProfils .= ', ';
+            }
+            $this->listeProfils .= $ressourceProfil->getProfilUtilisateur()->getLibelle();
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set listeProfils.
+     *
+     * @param string $listeProfils
+     *
+     * @return Ressource
+     */
+    public function setListeProfils($listeProfils)
+    {
+        $this->listeProfils = $listeProfils;
+
+        return $this;
+    }
+
+    /**
+     * Get listeProfils.
+     *
+     * @return string
+     */
+    public function getListeProfils()
+    {
+        return $this->listeProfils;
+    }
+
+    /**
+     * Fonction qui permet de savoir si la ressource concerne un profil donné
+     *
+     * @param ProfilUtilisateur $profil
+     * @return boolean
+     */
+    public function hasProfil(ProfilUtilisateur $profil): bool {
+        foreach ($this->profilsUtilisateurs as $profilsUtilisateur) {
+            if ($profilsUtilisateur->getProfilUtilisateur()->getId() == $profil->getId()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

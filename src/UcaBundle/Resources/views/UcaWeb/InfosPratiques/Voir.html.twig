@@ -10,14 +10,10 @@
 
 {% block main %}
     <section class="container my-5">
-            <ul class="nav nav-tabs nav-justified">
-                <li class="nav-item">
-                    <a href="#infosPratiques" class="active btn btn-outline-primary" data-toggle="tab">{{ 'infospratiques.title'|trans }}</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#installations" class="btn btn-outline-primary" data-toggle="tab">{{ 'installationssportives.title'|trans }}</a>
-                </li>
-            </ul>
+            <nav class="d-flex flex-row flex-nowrap m-auto" id="nav-infosPratiques">
+                <a href="#infosPratiques" class="active btn btn-tab d-flex justify-content-center align-items-center" data-toggle="tab">{{ 'infospratiques.title'|trans }}</a>
+                <a href="#installations" class="btn btn-tab d-flex justify-content-center align-items-center" data-toggle="tab">{{ 'installationssportives.title'|trans }}</a>
+            </nav>
             <div class="tab-content">
                 <div class="tab-pane fade show active" id="infosPratiques">
                     <h1 class="h1-light">{{'infospratiques.title'|trans}}</h1>
@@ -58,7 +54,7 @@
                                     {% endfor %}
 
                                     <div class="card-header" id="heading{{loop.index}}">
-                                        <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12" data-target="#collapse{{loop.index}}" data-toggle="collapse">
+                                        <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12 text-decoration-none" data-target="#collapse{{loop.index}}" data-toggle="collapse">
                                             <div class="row text-left d-flex flex-wrap">
                                                 <h2 class="mb-0 col-11 col-md-5 col-lg-7 text-dark text-uppercase order-1">{{ item.libelle }}</h2>
                                                 <p class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-md-3 col-lg-2 order-3 order-md-2">
@@ -104,12 +100,15 @@
                                             <h3 class="text-uppercase">{{ "installationssportives.activitepropose.title"|trans }}</h3>
                                             {% if activities is not empty %}
                                                 {% for activity in activities %}
-                                                    <div class="p-0 col-6 col-sm-4 col-md-3 col-lg-2">
+                                                    {# <div class="p-0 col-6 col-sm-4 col-md-3 col-lg-2">
                                                         <p class="mr-2 mb-2 h-100 d-flex align-items-center">
                                                             <span class="ml-auto mr-auto">
                                                                 {{ activity.libelle|upper }}
                                                             </span>
                                                         </p>
+                                                    </div> #}
+                                                    <div class="activity-type activity-type-small d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ activity.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                                        <a class="align-self-center text-center" href="{{ path('UcaWeb_FormatActiviteLister', { idCa: activity.classeActivite.id, id: activity.id } ) }}">{{ activity.libelle }}</a>
                                                     </div>
                                                 {% endfor %}
                                             {% else %}
@@ -118,6 +117,14 @@
                                                 </p>
                                             {% endif %}
                                         </div>
+
+                                        {# <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                                            {% for dataItem in data %}
+                                                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                                    <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                                                </div>
+                                            {% endfor %}
+                                        </div> #}
 
                                         <div class="row card-header border-0 install-activity p-1" id="headingPlace{{loop.index}}">
                                             <a aria-controls="collapsePlace{{loop.index}}" aria-expanded="false" class="col-12 p-2 collapsed" data-target="#collapsePlace{{loop.index}}" data-toggle="collapse">
@@ -205,5 +212,18 @@
 {% endblock %}
 
 {% block javascripts %}	
+    {{ parent() }}
 	{{ OpenLayersMap.Js }}
+    <script>
+        $(document).ready(function(){
+            $('a.btn-tab').on('click', function() {
+                $('a.active').removeClass('active');
+                $('div.show.active').removeClass('show active');
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active');
+                    $($(this).attr('href')).addClass('show active');
+                }
+            })
+        });
+    </script>
 {% endblock %}

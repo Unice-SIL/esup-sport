@@ -93,7 +93,7 @@ class UtilisateurController extends Controller
         if ('valider' == $action) {
             $usr->addRole('ROLE_USER');
             $usr->setStatut($statutRepo->find(1));
-            $messageTitre = 'confirmation.inscription';
+            $messageTitre = $this->get('translator')->trans('confirmation.inscription');
             $messageView = '@Uca/Email/PreInscription/ConfirmationEmail.html.twig';
             $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
             $url = $this->generateUrl('fos_user_registration_confirm', ['token' => $token], true);
@@ -101,7 +101,7 @@ class UtilisateurController extends Controller
             $this->get('uca.flashbag')->addActionFlashBag($usr, 'valider');
         } elseif ('refuser' == $action) {
             $usr->setStatut($statutRepo->find(3));
-            $messageTitre = 'refus.inscription';
+            $messageTitre = $this->get('translator')->trans('refus.inscription');
             $messageView = '@Uca/Email/PreInscription/RefusEmail.html.twig';
             $this->get('uca.flashbag')->addActionFlashBag($usr, 'refuser');
         }

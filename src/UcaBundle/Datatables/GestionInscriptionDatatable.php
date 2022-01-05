@@ -29,6 +29,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
             'individual_filtering' => true,
             'order_cells_top' => true,
             'global_search_type' => 'like',
+            'dom' => 'lrt<"row"<"col-sm-12 col-md-5"i><"col-sm-12 col-md-7"p>>',
         ],
             'features' => ['state_save' => false],
         ]);

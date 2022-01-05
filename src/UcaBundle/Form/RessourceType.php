@@ -14,7 +14,11 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class RessourceType extends AbstractType
@@ -35,10 +39,13 @@ class RessourceType extends AbstractType
             'class' => 'UcaBundle:Tarif',
             'choice_label' => 'libelle',
             'label_format' => 'ressource.tarif',
-            'required' => false,
+            'required' => true,
             'multiple' => false,
             'expanded' => false,
             'placeholder' => 'common.aucun',
+            'constraints' => [
+                new NotBlank()
+            ]
         ])
         ;
         $builder->add('imageFile', VichImageType::class, [
@@ -49,6 +56,22 @@ class RessourceType extends AbstractType
             'label_format' => 'ressource.image.libelle',
             'translation_domain' => 'messages',
         ]);
+        
+        $builder->add(
+            $builder->create('profils', RessourceProfilUtilisateurType::class, [
+                'constraints' => new Assert\Valid(),
+                'mapped' => false,
+            ])
+        );
+    }
+
+    public function finishView(FormView $view, FormInterface $form, array $options)
+    {
+        if (!$view->vars['valid']) {
+            ksort($view['profils']['capaciteProfil']->vars['value']);
+            ksort($view['profils']['capaciteProfil']->vars['data']);
+            ksort($view['profils']['capaciteProfil']->children);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

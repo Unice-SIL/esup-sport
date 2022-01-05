@@ -1,12 +1,12 @@
-import {Mail} from "./Mail.js";
-import {Registered} from "./Registered.js";
-import {Evenement} from "./Evenement";
-import {transformDate} from "./handleEvent";
-import {dateToStr} from "./Date";
-import {loadData} from "./Config";
-import {changeColor} from "./Events";
-import {Load} from "./Load";
-import {More} from "./More";
+import { Mail } from "./Mail.js";
+import { Registered } from "./Registered.js";
+import { Evenement } from "./Evenement";
+import { transformDate } from "./handleEvent";
+import { dateToStr } from "./Date";
+import { loadData } from "./Config";
+import { changeColor } from "./Events";
+import { Load } from "./Load";
+import { More } from "./More";
 import { controllers } from "chart.js";
 
 var Creneau = {
@@ -16,7 +16,7 @@ var Creneau = {
     hasSerie: true,
 
     //object from database
-    load: function(data){
+    load: function(data) {
         this.evenement = Object.create(Evenement)
         this.evenement.load(data);
         //this.extend(this, data);
@@ -29,35 +29,38 @@ var Creneau = {
         this.dateDebut = data.dateDebut;
         this.dateFin = data.dateFin;
         this.text = this.evenement.text;
+        this.infos = this.evenement.infos;
         this.dependanceSerie = data.dependanceSerie;
 
-        if(data.eligibleBonus != undefined){
+        if (data.eligibleBonus != undefined) {
             this.eligible_bonus = data.eligibleBonus;
-        }else{
+        } else {
             this.eligible_bonus = data.eligible_bonus;
         }
-        
+
+        this.capacite = data.capacite;
+
         //if action is insert, creneau don't have serie parent yet 
-        if(typeof this.evenement.serie != "undefined"){
+        if (typeof this.evenement.serie != "undefined") {
             //this.text = this.getParent().creneau.formatActivite.description;
-            this.serieOffset = this.start_date.getTime() - (transformDate(this.getParent().dateDebut)).getTime();       
+            this.serieOffset = this.start_date.getTime() - (transformDate(this.getParent().dateDebut)).getTime();
             this.capacite = this.getParent().creneau.capacite;
             //get all the profils
             this.profil_ids = [];
             let profils = this.getParent().creneau.profilsUtilisateurs;
             for (var p in profils) {
                 let element = profils[p].profilUtilisateur;
-                let capacite =  profils[p].capaciteProfil;
+                let capacite = profils[p].capaciteProfil;
                 let keyStr = 'capaciteProfil_' + element.id;
                 this[keyStr] = capacite;
                 this.profil_ids.push(element.id);
             }
             this.profil_ids = this.profil_ids.join(",");
-            
-    
+
+
             //get all encadrants
             this.encadrant_ids = [];
-            if(typeof this.getParent().creneau.encadrants != "undefined"){
+            if (typeof this.getParent().creneau.encadrants != "undefined") {
                 let encadrants = this.getParent().creneau.encadrants;
                 for (var e in encadrants) {
                     const element = encadrants[e];
@@ -66,28 +69,26 @@ var Creneau = {
                 this.encadrant_ids = this.encadrant_ids.join(",");
 
                 this.eligible_bonus = data.eligibleBonus;
-            }
-            else{
+            } else {
                 this.encadrant_ids = "";
             }
 
             //get all the niveau sportif
             this.niveau_sportif_ids = [];
-            
-            if(typeof this.getParent().creneau.niveauxSportifs != "undefined"){
-            let niveauSportif = this.getParent().creneau.niveauxSportifs;
+
+            if (typeof this.getParent().creneau.niveauxSportifs != "undefined") {
+                let niveauSportif = this.getParent().creneau.niveauxSportifs;
                 for (var n in niveauSportif) {
                     const element = niveauSportif[n];
                     this.niveau_sportif_ids.push(element.id);
                 }
                 this.niveau_sportif_ids = this.niveau_sportif_ids.join(",");
-            }
-            else{
+            } else {
                 this.niveau_sportif_ids = "";
             }
-            
+
             this.tarif_id = this.getParent().creneau.tarif.id;
-            if(this.getParent().creneau.lieu != null){
+            if (this.getParent().creneau.lieu != null) {
                 this.lieu_id = this.getParent().creneau.lieu.id;
             }
         }
@@ -96,27 +97,28 @@ var Creneau = {
 
     },
 
-    loadEvent: function(){
+    loadEvent: function() {
         this.callBackBeforeLigthBox();
         //init the mail event for the Creneau, this add the mail button and open the mail popup
         //when user click in it
-/*         Mail.init();
-        Registered.init(); */
+        /*         Mail.init();
+                Registered.init(); */
         More.init();
-    }, 
+    },
 
     //send data to symfony
-    save: function (action){
+    save: function(action) {
         this.action = action;
         this.evenement.save(this);
 
     },
-    
 
-    update: function(){
+
+    update: function() {
         this.dateDebut = dateToStr(this.start_date);
         this.dateFin = dateToStr(this.end_date);
         this.evenement.text = this.text;
+        this.evenement.infos = this.infos;
         this.dependanceSerie = false;
         this.evenement.eligible_bonus = this.eligible_bonus;
 
@@ -128,23 +130,23 @@ var Creneau = {
         return obj;
     },
 
-    
+
     //attach an event when the ligthbox is open
     //if is a new event we check all profils, and expant recurring area
-    callBackBeforeLigthBox: function(){
+    callBackBeforeLigthBox: function() {
         var obj = this;
-        scheduler.attachEvent("onLightbox", function (id) {
+        scheduler.attachEvent("onLightbox", function(id) {
             //we are on insert mode
             let ev = scheduler._events[id];
-            if(typeof ev.generatedId !== "undefined"){
-                $($(".dhx_multi_select_"+obj.getNameSelect("common.profils"))[0]).find("input").each(function(){ 
-                    $(this)[0].checked = true 
+            if (typeof ev.generatedId !== "undefined") {
+                $($(".dhx_multi_select_" + obj.getNameSelect("common.profils"))[0]).find("input").each(function() {
+                    $(this)[0].checked = true
                 });
-                $($(".dhx_multi_select_"+obj.getNameSelect("common.encadrants"))[0]).find("input").each(function(){ 
-                    $(this)[0].checked = true 
+                $($(".dhx_multi_select_" + obj.getNameSelect("common.encadrants"))[0]).find("input").each(function() {
+                    $(this)[0].checked = true
                 });
-                $($(".dhx_multi_select_"+obj.getNameSelect("common.niveauSportif"))[0]).find("input").each(function(){ 
-                    $(this)[0].checked = true 
+                $($(".dhx_multi_select_" + obj.getNameSelect("common.niveauSportif"))[0]).find("input").each(function() {
+                    $(this)[0].checked = true
                 });
                 $(".dhx_custom_button")[0].click()
             }
@@ -153,22 +155,22 @@ var Creneau = {
         });
     },
 
-    getNameSelect: function(translatorName){
+    getNameSelect: function(translatorName) {
         return Translator.trans(translatorName).split(" ")[0];
     },
 
-    isNew: function(){
+    isNew: function() {
         if (typeof this.generatedId === "undefined") {
             return false;
         }
         return true;
     },
 
-    getParent: function(){
+    getParent: function() {
         return this.evenement.getParent();
     },
-    
-    getCopie: function(){
+
+    getCopie: function() {
         let copie = Object.create(Creneau)
         copie.load(this)
         copie.id = this.id;
@@ -176,18 +178,16 @@ var Creneau = {
     },
 
     //call after saveDb return 
-    saveCallback: function(data)
-    {
-        if(data.id != data.oldId){
+    saveCallback: function(data) {
+        if (data.id != data.oldId) {
             delete scheduler._events[data.oldId];
             Load.stop();
             scheduler.updateView();
         }
-        if(data.action != "delete"){
-            scheduler.updateEvent(data.id);     
+        if (data.action != "delete") {
+            scheduler.updateEvent(data.id);
             loadData(data);
-        }
-        else{
+        } else {
             Load.stop();
             scheduler.updateView();
         }
@@ -196,25 +196,25 @@ var Creneau = {
 
     },
 
-    color: function(){
+    color: function() {
         this.color = scheduler.config.activeColor;
         return true;
     },
 
-    defaultColor: function(){
-        if(this.encadrant_ids != null){
-            if(this.encadrant_ids.split(",").indexOf(USERID) != -1){
+    defaultColor: function() {
+        if (this.encadrant_ids != null) {
+            if (this.encadrant_ids.split(",").indexOf(USERID) != -1) {
                 this.color = scheduler.config.encadrantColor;
                 return true;
             }
         }
-        
+
         this.color = scheduler.config.defaultColor;
         return true;
     },
 
     //delete element we don't want to send
-    serialize: function(){
+    serialize: function() {
 
         var obj = {};
         this.extend(obj, this);
@@ -226,4 +226,4 @@ var Creneau = {
     },
 
 };
-export {Creneau}
+export { Creneau }

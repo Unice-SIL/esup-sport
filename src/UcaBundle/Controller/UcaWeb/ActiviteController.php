@@ -28,20 +28,24 @@ use UcaBundle\Form\RechercheActiviteType;
 class ActiviteController extends Controller
 {
     /**
-     * @Route("/ClasseActiviteLister", name="UcaWeb_ClasseActiviteLister", methods={"GET"})
+     * @Route("/ClasseActiviteLister", name="UcaWeb_ClasseActiviteLister", methods={"GET", "POST"})
      */
-    public function ClasseActiviteListerAction()
+    public function ClasseActiviteListerAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
         $twigConfig['entite'] = 'ClasseActivite';
         $twigConfig['data'] = $em->getRepository('UcaBundle:ClasseActivite')->findAll();
-        $twigConfig['activites'] = $em->getRepository('UcaBundle:Activite')->findBy(
-            [],
-            ['ordre' => 'asc']
-        );
+        $twigConfig['activites'] = [];
+
         $form = $this->get('form.factory')->create(RechercheActiviteType::class, ['em' => $em]);
+        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+            $twigConfig['entite'] = 'Activite';
+            $twigConfig['data'] = [];
+            $twigConfig['activites'] = $em->getRepository(Activite::class)->findRecherche($form->getData()['activite'], $form->getData()['etablissement']);
+        }
         $twigConfig['form'] = $form->createView();
         // $twigConfig["item"] = array_chunk($data, round(count($data) / 2, 0, PHP_ROUND_HALF_UP));
+        
         return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
     }
 
@@ -151,7 +155,7 @@ class ActiviteController extends Controller
             'entite' => 'FormatActiviteDetail',
             'item' => $item,
             'itemId' => $item->getId(),
-            'typeVisualisation' => 'semaine',
+            'typeVisualisation' => 'mois',
             'listeCampus' => $em->getRepository(Etablissement::class)->findAll(),
             'currentDate' => new \DateTime(),
             'typeFormat' => 'FormatAvecCreneau',
@@ -202,7 +206,7 @@ class ActiviteController extends Controller
         $twigConfig['data'] = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($activite, $this->getUser());
 
         $twigConfig['itemId'] = $id;
-        $twigConfig['typeVisualisation'] = 'semaine';
+        $twigConfig['typeVisualisation'] = 'mois';
         $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
         $twigConfig['currentDate'] = new \DateTime();
         $twigConfig['typeFormat'] = 'FormatAvecReservation';

@@ -95,17 +95,30 @@ class RessourceController extends Controller
         } else {
             throw new \Exception("Format <{$format}> d'activité non valide");
         }
+        $tousProfils = $em->getRepository('UcaBundle:ProfilUtilisateur')->findAll();
+        
         $form = $this->get('form.factory')->create($typeClassName, $item);
-        if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-            $item->setSourceReferentiel(false);
-            $em->persist($item);
-            $em->flush();
-            $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
-
-            return $this->redirectToRoute('UcaGest_RessourceLister');
+        $form->handleRequest($request);
+        
+        if ($request->isMethod('POST')) {
+            $profilsExistants = [];
+            foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
+                $profilsExistants[] = $formatProfil->getProfilUtilisateur()->getLibelle();
+            }
+            $twigConfig['profilsExistants'] = $profilsExistants;
+            
+            if ($form->isValid()) {
+                $item->setSourceReferentiel(false);
+                $em->persist($item);
+                $em->flush();
+                $this->get('uca.flashbag')->addActionFlashBag($item, 'Ajouter');
+                
+                return $this->redirectToRoute('UcaGest_RessourceLister');
+            }
         }
 
         $twigConfig['item'] = $item;
+        $twigConfig['tousProfils'] = $tousProfils;
         $twigConfig['addAction'] = true;
         $twigConfig['form'] = $form->createView();
 
@@ -156,12 +169,24 @@ class RessourceController extends Controller
             }
         }
 
+        $item->updateListeProfils();
+        $tousProfils = $em->getRepository('UcaBundle:ProfilUtilisateur')->findAll();
+        $profilsExistants = explode(', ', $item->getListeProfils());
+
         $form = $this->get('form.factory')->createNamed('editRessourceForm', $typeClassName, $item);
 
+        $form->handleRequest($request);
         if ($request->isMethod('POST')) {
-            $form->handleRequest($request);
-            //dump($item);
-            //die;
+            $profilsExistants = [];
+            $tabProfil = [];
+            foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
+                $tabProfil[$formatProfil->getProfilUtilisateur()->getId()] = $formatProfil->getProfilUtilisateur()->getLibelle();
+                ksort($tabProfil);
+            }
+            foreach ($tabProfil as $profil) {
+                $profilsExistants[] = $profil;
+            }
+            
             if ($form->isSubmitted() && $form->isValid()) {
                 if ($item instanceof Lieu) {
                     foreach ($imagesSupplementaires as $img) {
@@ -182,6 +207,8 @@ class RessourceController extends Controller
         }
 
         $twigConfig['item'] = $item;
+        $twigConfig['profilsExistants'] = $profilsExistants;
+        $twigConfig['tousProfils'] = $tousProfils;
         $twigConfig['form'] = $form->createView();
 
         return $this->render('@Uca/UcaGest/Referentiel/Ressource/'.$item_class.'/Formulaire.html.twig', $twigConfig);

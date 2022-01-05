@@ -105,4 +105,8 @@ import "./js/mail.js";
 
 import "./js/bootstrap/bootstrapModal.js";
 import "./js/bootstrap/bootstrapTooltip.js";
+
+/* Gestion des graphiques */
+const { Chart } = require("chart.js");
+const { ChartDataLabels } = require("chartjs-plugin-datalabels");
 import "./js/chartJS/main.js";

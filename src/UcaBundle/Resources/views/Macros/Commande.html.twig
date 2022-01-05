@@ -57,6 +57,15 @@
 						{% endif %}
 					{% endif %}
 				</div>
+				{% if 
+					(article.inscription is not null and article.inscription.formatActivite is not null and article.inscription.formatActivite is formatType('FormatAvecCreneau')) 
+					or 
+					(article.formatActivite is not null and article.formatActivite is formatType('FormatAvecCreneau'))
+				%}
+					<div class="col-12">
+						<p class="color-red fs-18 fw-700">{{ 'formataveccreneau.panier.info'|trans }}</p>
+					</div>
+				{% endif %}
 			</div>
 			{% endif %}
 		{% endfor %}

@@ -1,10 +1,10 @@
-import {Load} from "./Load.js";
-import {ACL} from "./ACL.js";
-import {Creneau} from "./Creneau.js";
-import {Reservation} from "./Reservation";
-import {Serie} from "./Serie.js";
-import {Prolongation} from "./Prolongation.js";
-import {SchedulerExtends} from "./Scheduler.Extends.js";
+import { Load } from "./Load.js";
+import { ACL } from "./ACL.js";
+import { Creneau } from "./Creneau.js";
+import { Reservation } from "./Reservation";
+import { Serie } from "./Serie.js";
+import { Prolongation } from "./Prolongation.js";
+import { SchedulerExtends } from "./Scheduler.Extends.js";
 
 scheduler.config.details_on_create = true;
 scheduler.config.multi_day = true;
@@ -28,7 +28,7 @@ scheduler.config.modified_event_id = null;
 scheduler.locale = scheduler_lang[$("html").attr("lang")];
 scheduler.config.time_step = 15;
 scheduler.config.buttons_left = [];
-scheduler.config.buttons_right = ["dhx_save_btn","dhx_cancel_btn"];
+scheduler.config.buttons_right = ["dhx_save_btn", "dhx_cancel_btn"];
 scheduler.config.include_end_by = true;
 scheduler.config.repeat_precise = true;
 scheduler.config.icons_select = [
@@ -40,27 +40,27 @@ scheduler.locale.labels.icon_prolonger = "Prolonger";
 Load.start();
 
 //hide left toolbar
-if(role == "user")
-scheduler.xy.menu_width = 0; 
+if (role == "user")
+    scheduler.xy.menu_width = 0;
 
 //remove icon_edit
-var index =  scheduler.config.icons_select.indexOf("icon_edit");
-if (index !== -1)  scheduler.config.icons_select.splice(index, 1);
-scheduler.config.icons_select.splice(1,0)
+var index = scheduler.config.icons_select.indexOf("icon_edit");
+if (index !== -1) scheduler.config.icons_select.splice(index, 1);
+scheduler.config.icons_select.splice(1, 0)
 
 ACL.init();
 ACL.utilisateur = role;
 
 var dataRender = 0;
-scheduler.attachEvent("onDataRender", function (){
-    if(dataRender ==1 ){
+scheduler.attachEvent("onDataRender", function() {
+    if (dataRender == 1) {
         Load.stop()
     }
-    dataRender ++;
+    dataRender++;
 
 });
 
-scheduler.templates.event_class = function (start, end, event) {
+scheduler.templates.event_class = function(start, end, event) {
     if (scheduler.isCopied(event.id)) {
         return "copied_event";
     }
@@ -68,19 +68,18 @@ scheduler.templates.event_class = function (start, end, event) {
 };
 
 var initDate = new Date()
-if(typeof(ITEM.dateDebutEffective) !== "undefined" && new Date(ITEM.dateDebutEffective) > new Date()){
+if (typeof(ITEM.dateDebutEffective) !== "undefined" && new Date(ITEM.dateDebutEffective) > new Date()) {
     initDate = new Date(ITEM.dateDebutEffective);
 }
 scheduler.init('scheduler_here', initDate, "week");
 var type = "formatActivite";
-if(
-    scheduler.data.item.objectClass == "UcaBundle\\Entity\\Lieu" 
-    || scheduler.data.item.objectClass == "UcaBundle\\Entity\\Materiel"
-){
+if (
+    scheduler.data.item.objectClass == "UcaBundle\\Entity\\Lieu" ||
+    scheduler.data.item.objectClass == "UcaBundle\\Entity\\Materiel"
+) {
     type = "ressource";
     scheduler.data.item.type = "ressource";
-}
-else{
+} else {
     scheduler.data.item.type = "creneau";
 }
 
@@ -94,27 +93,29 @@ $.ajax({
         type: typeA,
 
     }
-}).done(function (data) {
+}).done(function(data) {
 
     initLoadData(data);
 }).fail(_uca.ajax.fail);
 
-if(typeA == "encadrant"){
+if (typeA == "encadrant") {
     scheduler.data.item.type = "creneau";
 }
 
-if(scheduler.data.item.type == "creneau"){
+if (scheduler.data.item.type == "creneau") {
     Creneau.loadEvent();
+} else if (scheduler.data.item.type == 'ressource') {
+    Reservation.loadEvent();
 }
 
 //use on the first query
-function initLoadData(data){
+function initLoadData(data) {
     scheduler._series = {}
-    if(data.series != null){
+    if (data.series != null) {
         data.series.forEach(loadData);
     }
 
-    if(data.evenements != null){
+    if (data.evenements != null) {
         data.evenements.forEach(loadData);
     }
     scheduler.updateView();
@@ -123,32 +124,31 @@ function initLoadData(data){
 }
 
 //use to load data
-var loadData = function(item)
-{
+var loadData = function(item) {
 
-    
-        if(item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie"){
+
+    if (item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie") {
         delete scheduler._series[item.oldId];
         let event = Object.create(Serie);
         event.load(item);
         scheduler._series[item.id] = event;
-        if(item.evenements != null ){
+        if (item.evenements != null) {
 
-            item.evenements.forEach(function(child){
-                
+            item.evenements.forEach(function(child) {
+
                 delete scheduler._events[child.oldId];
-                if(child.action == "delete"){
+                if (child.action == "delete") {
                     return;
                 }
                 child.serie = {
                     id: item.id
                 };
                 loadObjects(child)
-    
+
             });
         }
-    
-    }else {
+
+    } else {
         loadObjects(item)
     }
     scheduler.updateView();
@@ -157,48 +157,44 @@ var loadData = function(item)
 }
 
 //loading objects depending of format
-var loadObjects = function(item){
+var loadObjects = function(item) {
     let event;
-    
-    if(item.serie != null){
-        if(scheduler._series[item.serie.id].creneau != null){
+
+    if (item.serie != null) {
+        if (scheduler._series[item.serie.id].creneau != null) {
             event = Object.create(Creneau);
-        }
-        else{
+        } else {
             event = Object.create(Reservation);
-            event.resources_ids = scheduler.data.item.id;     
+            event.resources_ids = scheduler.data.item.id;
         }
-    }
-    else if (item.reservabilite != null){
+    } else if (item.reservabilite != null) {
         event = Object.create(Reservation);
-        event.resources_ids = scheduler.data.item.id;        
+        event.resources_ids = scheduler.data.item.id;
     }
     //item formatSimple is like Reservation
-    else if(item.formatSimple != null){
+    else if (item.formatSimple != null) {
         event = Object.create(Reservation);
-        event.resources_ids = scheduler.data.item.id;      
+        event.resources_ids = scheduler.data.item.id;
     }
 
     event.load(item);
     scheduler._events[item.id] = event;
 }
 
-var itemType = function(){
+var itemType = function() {
     let type;
 
-    if(item.serie != null){
-        if(scheduler._series[item.serie.id].creneau != null){
+    if (item.serie != null) {
+        if (scheduler._series[item.serie.id].creneau != null) {
             type = "creneau";
-        }
-        else{
+        } else {
             type = "reservation";
         }
-    }
-    else if (item.reservabilite != null){
+    } else if (item.reservabilite != null) {
         type = "reservation";
     }
 
     return type;
 }
 
-export {loadData}
+export { loadData }

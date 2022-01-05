@@ -81,20 +81,18 @@
 					{% endfor %}
 				</ul>
 			{% endif %}
-			{% if format == "FormatSimple" %}
-				{% if item.promouvoir == 0 %}
-					<p>
-						{{'format.promouvoir'|trans}}
-						:
-						{{'common.non'|trans}}
-					</p>
-				{% else %}
-					<p>
-						{{'format.promouvoir'|trans}}
-						:
-						{{'common.oui'|trans}}
-					</p>
-				{% endif %}
+			{% if item.promouvoir == 0 %}
+				<p>
+					{{'format.promouvoir'|trans}}
+					:
+					{{'common.non'|trans}}
+				</p>
+			{% else %}
+				<p>
+					{{'format.promouvoir'|trans}}
+					:
+					{{'common.oui'|trans}}
+				</p>
 			{% endif %}
 		</div>
 		<div class="col-md-4">

@@ -7,12 +7,14 @@
 
 namespace UcaBundle\Service\Service;
 
+use UcaBundle\Entity\DhtmlxEvenement;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat as FormatCell;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Translation\TranslatorInterface;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat as FormatCell;
 
 class ExtractionExcelService
 {
@@ -214,5 +216,122 @@ class ExtractionExcelService
     public function getSpreadsheet()
     {
         return $this->spreadsheet;
+    }
+
+    public function getExtractionListeInscription(DhtmlxEvenement $dhtmlxEvenement) {
+        $inscriptions = [];
+        $eventName = '';
+
+        if (null != $dhtmlxEvenement->getSerie()) {
+            if (null != $dhtmlxEvenement->getSerie()->getCreneau()) {
+                $inscriptions = $dhtmlxEvenement->getSerie()->getCreneau()->getAllInscriptions();
+                $eventName = $dhtmlxEvenement->getSerie()->getCreneau()->getFormatActivite()->getActivite()->getLibelle();
+            }
+        }
+        if ($dhtmlxEvenement->getFormatSimple()) {
+            $inscriptions = $dhtmlxEvenement->getFormatSimple()->getAllInscriptions();
+            $eventName = $dhtmlxEvenement->getFormatSimple()->getActivite()->getLibelle();
+        }
+
+        $columnName = ['Nom', 'Prénom', 'Téléphone', 'Statut'];
+
+        $spreadsheet = new Spreadsheet();
+        $spreadsheet->removeSheetByIndex(0);
+        $sheet = new Worksheet();
+        $sheet->setTitle('Inscriptions');
+        $sheet->setCellValue('A6', $eventName.' du '.$dhtmlxEvenement->getDateDebut()->format('d/m/Y H:i').' - '.$dhtmlxEvenement->getDateFin()->format('d/m/Y H:i'));
+        $sheet->mergeCells('A6:F6');
+
+        $this->createExcelHeader($spreadsheet, $sheet, $columnName);
+
+        $styleArray = $this->setStyleArrayForExcel(false, 10);
+        $idCol = 8;
+
+        if (null != $inscriptions && sizeof($inscriptions) > 0) {
+            foreach ($inscriptions as $inscription) {
+                $utilisateur = $inscription->getUtilisateur();
+                $dataLine = [
+                    $utilisateur->getPrenom(),
+                    $utilisateur->getNom(),
+                    $utilisateur->getTelephone() ?? '',
+                    $inscription->getStatut() == 'valide' ? $this->translator->trans('formatSimple.list.inscrit') : $this->translator->trans('creneau.list.preinscrit')
+                ];
+
+                if (!empty($dataLine)) {
+                    $index = 0;
+                    foreach (range('A', 'D') as $col) {
+                        $sheet->setCellValue($col.$idCol, $dataLine[$index]);
+                        $sheet->getStyle($col.$idCol)->applyFromArray($styleArray);
+                        ++$index;
+                    }
+                    ++$idCol;
+                }
+            }
+        }
+
+        return $this->createExcelStreamedResponse($spreadsheet, 'Inscription '.$eventName.' ');
+    }
+
+    //Function permettant la création du fichier Excel
+    private function createExcelHeader($spreadsheet, $sheet, $titleColumn)
+    {
+        $styleArray = $this->setStyleArrayForExcel(true, 10);
+
+        //En-tête du fichier excel
+        $logo = new Drawing();
+        $logo->setName('Logo');
+        $logo->setPath('build/images/logo-UCA-large-transp.png');
+        $logo->setCoordinates('A1');
+        $logo->setWorksheet($sheet, true);
+
+        $spreadsheet->getDefaultStyle()->getAlignment()->setWrapText(true);
+
+        $spreadsheet->addSheet($sheet);
+        $sheet->setCellValue('F3', 'DVU Sport');
+
+        $index = 0;
+        $alphabet = range('A', 'Z');
+        $premiereLettre = 0;
+        $deuxiemeLettre = 0;
+        $currentLettre = 0;
+
+        for ($i = 0; $i < sizeof($titleColumn); ++$i) {
+            if ($i < 26) {
+                $sheet->setCellValue($alphabet[$i].'7', $titleColumn[$index]);
+                $sheet->getStyle($alphabet[$i].'7')->applyFromArray($styleArray);
+                $sheet->getColumnDimension($alphabet[$i])->setAutoSize(true);
+                $currentLettre = $i;
+            } else {
+                $sheet->setCellValue($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre].'7', $titleColumn[$index]);
+                $sheet->getStyle($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre].'7')->applyFromArray($styleArray);
+                $sheet->getColumnDimension($alphabet[$premiereLettre].$alphabet[$deuxiemeLettre])->setAutoSize(true);
+                $currentLettre = [$premiereLettre, $deuxiemeLettre];
+                ++$deuxiemeLettre;
+                if (26 == $deuxiemeLettre) {
+                    $deuxiemeLettre = 0;
+                    ++$premiereLettre;
+                }
+            }
+
+            //On freeze la top bar pour garder le nom des colonnes au scroll
+            $sheet->freezePane('A8');
+
+            ++$index;
+        }
+    }
+
+    private function createExcelStreamedResponse($spreadsheet, $extract_name)
+    {
+        $writer = new Xlsx($spreadsheet);
+        $response = new StreamedResponse(
+            function () use ($writer) {
+                $writer->save('php://output');
+            }
+        );
+        $filename = $extract_name.date('Y-m-d').'_'.date('H-i-s').'.xlsx';
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment;filename='.$filename);
+
+        return $response;
     }
 }

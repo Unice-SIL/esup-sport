@@ -28,5 +28,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
 	{% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
 {% endblock %}

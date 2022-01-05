@@ -31,7 +31,8 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
     public function findDhtmlxReservabiliteByUser($user)
     {
         return  $this->createQueryBuilder('d')
-            ->join('d.reservabilite', 'r')
+            ->join('d.serie', 's')
+            ->join('s.reservabilite', 'r')
             ->join('r.inscriptions', 'i')
             ->where('i.utilisateur = :user')
             ->setParameter('user', $user)
@@ -106,7 +107,7 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         $this->createQueryBuilder('e')
             ->where('e.id in (:ids)')
             ->setParameter('ids', $qb)
-            ->delete()
+               ->delete()
             ->getQuery()
             ->execute()
         ;
@@ -132,9 +133,12 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
     public function findEvenementChaqueSerieDuFormatBetwennDatesByRessource($ressourceId, $dateDebut, $dateFin)
     {
         return $this->createQueryBuilder('d')
-            ->leftJoin('d.reservabilite', 'revervabilite')
+            ->leftJoin('d.reservabilite', 'resa')
+            ->leftJoin('resa.ressource', 'ress')
+            ->leftJoin('d.serie', 's')
+            ->leftJoin('s.reservabilite', 'revervabilite')
             ->leftjoin('revervabilite.ressource', 'ressource')
-            ->where('ressource.id = :idRessource')
+            ->where('ressource.id = :idRessource or ress.id = :idRessource')
             ->andWhere('d.dateDebut <= :dateFin')
             ->andWhere('d.dateFin >= :dateDebut')
             ->setParameter('idRessource', $ressourceId)

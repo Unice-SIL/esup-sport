@@ -1,5 +1,5 @@
 {% for commandeDetail in row.commandeDetails %}
-    {% if commandeDetail.typeArticle == "TypeAutorisation" %}
+    {% if commandeDetail.typeArticle == "TypeAutorisation" or commandeDetail.type == 'autorisation' %}
         {% if isCarte(commandeDetail.id) %}
             {{ getInformationCarte(commandeDetail.id) }}
         {% endif %}

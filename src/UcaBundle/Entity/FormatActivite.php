@@ -234,6 +234,9 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
      * @ORM\Column(type="text")
      */
     private $listeEncadrants;
+    /** @Gedmo\Versioned
+     * @ORM\Column(type="boolean", nullable=false) */
+    private $promouvoir = false;
     //endregion
 
     /**
@@ -1279,5 +1282,45 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     public function getListeEncadrants()
     {
         return $this->listeEncadrants;
+    }
+
+    /**
+     * Set promouvoir.
+     *
+     * @param bool $promouvoir
+     *
+     * @return FormatSimple
+     */
+    public function setPromouvoir($promouvoir)
+    {
+        $this->promouvoir = $promouvoir;
+
+        return $this;
+    }
+
+    /**
+     * Get promouvoir.
+     *
+     * @return bool
+     */
+    public function getPromouvoir()
+    {
+        return $this->promouvoir;
+    }
+
+    /**
+     * Fonction qui permet de savoir si un Etablissment est associé à un des lieux du format
+     *
+     * @param [type] $idEtablissement
+     * @return boolean
+     */
+    public function hasEtablissement($idEtablissement): bool {
+        foreach ($this->lieu as $l) {
+            if ($l->getEtablissement() && $l->getEtablissement()->getId() == $idEtablissement) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

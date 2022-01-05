@@ -6,7 +6,16 @@
     <ul>
         {% for article in articles %}
             {% if article.affichageDetailCommande() %}
-                <li><strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€</li>        
+                <li>
+                    <strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€
+                    {% if 
+                        (article.inscription is not null and article.inscription.formatActivite is not null and article.inscription.formatActivite is formatType('FormatAvecCreneau')) 
+                        or 
+                        (article.formatActivite is not null and article.formatActivite is formatType('FormatAvecCreneau'))
+                    %}
+                        <p class="color-red fs-18 fw-700">{{ 'formataveccreneau.panier.info'|trans }}</p>
+                    {% endif %}
+                </li>
             {% endif %}
         {% endfor %}
     </ul>

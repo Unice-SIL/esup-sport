@@ -19,6 +19,7 @@ use UcaBundle\Entity\Lieu;
 use UcaBundle\Entity\NiveauSportif;
 use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Reservabilite;
+use UcaBundle\Entity\ReservabiliteProfilUtilisateur;
 use UcaBundle\Entity\Ressource;
 use UcaBundle\Entity\Tarif;
 use UcaBundle\Entity\Utilisateur;
@@ -58,6 +59,7 @@ class DhtmlxCommand
             $this->item->setDateFin(new \DateTime($this->data['dateFin']));
             if ('UcaBundle\Entity\DhtmlxEvenement' == get_class($this->item)) {
                 $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && 'true' == $this->data['dependanceSerie']);
+                $this->item->setInformations($this->data['infos']);
                 if ($this->item->getDependanceSerie()) {
                     $this->item->setDescription($this->data['text']);
                 }
@@ -74,7 +76,7 @@ class DhtmlxCommand
                 }
                 $this->dateFinSerie = new \DateTime($this->data['dateFinSerie']);
             }
-            if ($this->isCreneauEvent() && isset($this->data['capacite'])) {
+            if (($this->isCreneauEvent() || $this->isRessourceEvent()) && isset($this->data['capacite'])) {
                 $this->getReferenceItem()->setCapacite($this->data['capacite']);
             }
 
@@ -148,7 +150,7 @@ class DhtmlxCommand
 
     private function isRessourceEvent()
     {
-        return !isset($this->data['enfants']) && (
+        return (isset($this->data['enfants']) || (isset($this->data['hasSerie']) && $this->data['hasSerie'] == 'false')) && (
             (isset($this->data['evenementType']) && 'ressource' == $this->data['evenementType'])
             || isset($this->data['reservabilite'])
             || (isset($this->data['reference_class']) && 'UcaBundle\Entity\Lieu' == $this->data['reference_class'])
@@ -176,6 +178,7 @@ class DhtmlxCommand
             $this->item->setCreneau($c);
         } elseif ($this->isRessourceEvent()) {
             $r = new Reservabilite();
+            $r->setCapacite($this->data['capacite'] ?? 0);
             $r->setRessource($this->em->getReference(Ressource::class, $this->data['reference_id']));
             $this->item->setReservabilite($r);
         }
@@ -214,12 +217,20 @@ class DhtmlxCommand
                 foreach (explode(',', $this->data['profil_ids']) as $key => $profil) {
                     $keyStr = 'capaciteProfil_'.$profil;
                     $capaciteProfil = (isset($this->data[$keyStr]) && '' !== $this->data[$keyStr]) ? $this->data[$keyStr] : 0;
-                    $creneauProfil = new CreneauProfilUtilisateur(
-                        $item,
-                        $this->em->getReference(ProfilUtilisateur::class, $profil),
-                        $capaciteProfil
-                    );
-
+                    if ($item instanceof Reservabilite) {                        
+                        $creneauProfil = new ReservabiliteProfilUtilisateur(
+                            $item,
+                            $this->em->getReference(ProfilUtilisateur::class, $profil),
+                            $capaciteProfil
+                        );
+                    } else {
+                        $creneauProfil = new CreneauProfilUtilisateur(
+                            $item,
+                            $this->em->getReference(ProfilUtilisateur::class, $profil),
+                            $capaciteProfil
+                        );
+                    }
+                        
                     $item->addProfilsUtilisateur($creneauProfil);
                 }
             }

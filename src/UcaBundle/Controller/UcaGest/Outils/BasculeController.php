@@ -314,7 +314,9 @@ class BasculeController extends Controller
                     $format->setDateDebutPublication($format->getDateDebutInscription());
                 }
             }
-            $seriesReservation = $em->getRepository(DhtmlxSerie::class)->findByCreneau(null);
+
+            $seriesReservation = $em->getRepository(DhtmlxSerie::class)->findSerieReservation();
+            // $seriesReservation = $em->getRepository(DhtmlxSerie::class)->findByCreneau(null);
             foreach ($seriesReservation as $serie) {
                 $serie->setDateDebut($nouvelleDateDebutEffective);
                 $serie->setDateFin($nouvelleDateFinEffective);

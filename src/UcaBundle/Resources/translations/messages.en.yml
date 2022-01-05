@@ -11,6 +11,9 @@ accueil.connexion: Log in
 accueil.cotisations.infos: More about fees
 accueil.demander.inscription: Make an account creation request
 accueil.inscription.title: Registration
+accueil.miseavantcarte.title: Promoted card purchase
+accueil.miseavantcours.title: Featured courses
+accueil.miseavantreservation.title: Free practice
 accueil.prochainement.title: 'Comming soon'
 accueil.ucagest.title: Welcome to UCA Sport
 activite.ajouter.succes: Activity successfully added 
@@ -75,8 +78,8 @@ bouton.debloquer: Unblock
 bouton.descendre: Drop
 bouton.deselectionner.tout: Unselect all
 bouton.desinscrire.inscription: Unsubscribe
-bouton.desinscrire: Unsubscribe
 bouton.desinscrire.tout: Unsubscribe everyone
+bouton.desinscrire: Unsubscribe
 bouton.enregistrer: Save
 bouton.exportallfacture.pdf: Export bills
 bouton.exportpdf: Export
@@ -107,8 +110,10 @@ bouton.selectionner.tout: Select all
 bouton.supprimer: Delete
 bouton.tout.supprimer: Delete all
 bouton.voir: See
+calendrier.etablissements: "Activity offred on %nbCampus% campus :"
 cgv.acceptees: Thank you for accepting the general terms and conditions of sale 
 cgv.information: Please accept the general terms and conditions of sale 
+cgv.modal.titre: General terms and conditions of sale
 cgv.refusees: You must tick the box in order to accept the general terms and conditions of sale 
 cgv.validation: I accept the general terms and conditions of sale 
 classeActivite.list.title: List of activity classes
@@ -183,6 +188,7 @@ common.avoir: Credit note
 common.capacite.totale: Total
 common.capacite: Capacity
 common.carte.acheter: Card to buy
+common.carte.retrait: Card withdrawn
 common.carte: Card
 common.cb: Credit Card
 common.chargement: Loading...
@@ -220,6 +226,7 @@ common.eligible: Eligible for bonus
 common.email: Email
 common.emplacement: Location
 common.encadrant: Supervisor
+common.encadrant.s: Supervisor(s)
 common.encadrants.aucun: no supervisor
 common.encadrants: Supervisors
 common.espece: Cash
@@ -238,6 +245,7 @@ common.horaires.ouverture: Opening hours
 common.horaires: Schedules
 common.ht: Excluding tax
 common.indisponible: Unavailable
+common.infos: Informations
 common.infospersonnelles: Personal Information
 common.infossupplementaires: Additional information
 common.inscription.details: Registration details
@@ -324,6 +332,7 @@ common.texte: Text
 common.thursday: Thursday
 common.titre: Title
 common.total: Total
+common.toutescartes: All cards
 common.toutescommandes: All orders
 common.ttc: Including all taxes
 common.tuesday: Tuesday
@@ -336,8 +345,10 @@ common.username: Login
 common.utilisateur: User
 common.valide: Valid
 common.wednesday: Wednesday
+common.weekfrom: "Week from %start% to %end%"
 confirmation.action.message: Are you sure ?
 confirmation.action.titre: Confirmation window
+confirmation.inscription: Confirmed registration
 contact.compteactif.remplir: Fill the form by clicking on this link
 contact.compteactif: You have an enabled UNice account
 contact.compteinactif.remplir: Write your request by filling the form below
@@ -387,6 +398,8 @@ erreur.formulaire.champ.incorrect: One or more fields are incorrects
 erreur.generale.icon: "fas fa-question-circle"
 erreur.generale.message: An error occured. Please contact us if it happens again.
 erreur.generale: Error
+erreur.info: "For more information, you can contact us from the contact form: "
+erreur.info.contact: "contact us"
 etablissement.ajouter.succes: Campus successfully added 
 etablissement.ajouter.title: Add a Campus
 etablissement.code: Campus code
@@ -482,6 +495,7 @@ formatactivite.simple.modifier.title: Edit an event
 formatactivite.title: "Registration and reservation"
 formataveccreneau.ajouter.succes: Format with time slot successfully added
 formataveccreneau.modifier.succes: Format with time slot successfully modified
+formataveccreneau.panier.info: Registration for the time slot is valid for all the semester
 formataveccreneau.supprimer.erreur: Impossible to delete this activity. There'are still link registrations or times slots to delte before
 formataveccreneau.supprimer.succes: Format with time slot successfully deleted
 formataveccreneau.title: Time slot reservation
@@ -581,8 +595,8 @@ mentions.conditions.nonvalide: "Please accept the general conditions of sales"
 mentions.informations.validation: "I accept the general conditions of sales"
 mescommandes.list.title: My orders
 mescredits.list.title: My credits
-mesinscriptions.list.title: My registrations
 mesinscriptions.label.ancienne.activite: Old activity
+mesinscriptions.list.title: My registrations
 message.confirmation.annulation.commande.titre: Confirm cancellation
 message.confirmation.annulation.commande: All entries related to this order will be deleted. Cancel the order ?
 message.confirmation.annulation.inscription.titre: Confirm cancellation
@@ -724,16 +738,19 @@ profilutilisateur.libelle: User profile
 profilutilisateur.list.title: User profile management
 profilutilisateur.modifier.succes: User profile successfully modified
 profilutilisateur.modifier.title: Modify a user profile
+profilutilisateur.parent: Parent profile
 profilutilisateur.nbmaxinscriptions.libelle: Maximum time slots subscriptions
 profilutilisateur.preinscription: Can this profiles pre-register ? 
 profilutilisateur.supprimer.erreur.formatactivite: "Activities format use this profile : <br>%formats%"
 profilutilisateur.supprimer.erreur.montants: Rates are assigned to this profile
+profilutilisateur.supprimer.erreur.profils: "Profiles have this profile as a parent : <br>%profils%"
 profilutilisateur.supprimer.erreur.utilisateurs: "Users use this profile :  : <br>%utilisateurs%"
 profilutilisateur.supprimer.erreur: Cannot delete profile
 profilutilisateur.supprimer.succes: User profile successfully deleted
 referentiel.bouton.maj: Update the repository
 referentiel.libelle.maj: Select a file to update the repository
 referentiel.libelle: Referential
+refus.inscription: Registration refused
 registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
 registration.confirm.success: Your account has been activated
 registration.email.message: "Hello %username%!\n\nTo finish activating your account - please visit %confirmationUrl%\n\nThis link can only be used once to validate your account.\n"
@@ -762,6 +779,8 @@ ressource.list.subTitle: Resource List
 ressource.list.title: Resource Management
 ressource.longitude: Longitude
 ressource.modifier.succes: Resource modified
+ressource.profils.utilisateur.capacite: Number of places
+ressource.profils.utilisateur: Authorized users profiles
 ressource.quantite: Quantity
 ressource.referentiel.success: The real estate repository has been successfully updated
 ressource.superficie: Surface area

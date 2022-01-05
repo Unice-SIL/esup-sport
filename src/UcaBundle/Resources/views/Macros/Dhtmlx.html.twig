@@ -98,12 +98,20 @@
 		<button id="btn-extend-back" class="btn btn-primary btn-back">{{"scheduler.message.annuler"|trans}}</button>
 	</div>
 {% endmacro %}
-{% macro initCalendarJs(item = null) %}
-	{% if item.capacite is defined %}
-	<script type='text/javascript'>
+{% macro initCalendarJs(item = null, format = null) %}
+	{% set capacite = null %}
+	{% if format == 'Materiel' %}
+		{% set capacite = item.quantiteDisponible %}
+	{% elseif format == 'Lieu' %}
+		{% set capacite = item.capaciteAccueil %}
+	{% elseif item.capacite is defined %}
+		{% set capacite = item.capacite %}
+	{% endif %}
+	{% if capacite is not null %}
+		<script type='text/javascript'>
 			'use_strict';
-			var CAPACITE = {{ item.capacite }};
-	</script>
+			var CAPACITE = {{ capacite }};
+		</script>
 	{% endif %}
 	{% if item.dateFinEffective is defined %}
 	<script type='text/javascript'>

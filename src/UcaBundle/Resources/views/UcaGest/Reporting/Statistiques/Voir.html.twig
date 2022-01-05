@@ -255,7 +255,7 @@
         })
         .done(function(data){
             if(data != null){
-                _chart.createVertictalBarChart("{{ 'statistique.graph.title.detailuser'|trans|escape('js') }}", data, 'canvasNbUtilisateursDetails');
+                _chart.createVertictalBarChart("{{ 'statistique.graph.title.detailuser'|trans|escape('js') }}", data['data'], 'canvasNbUtilisateursDetails', data['profils']);
             }
         })
         .fail(_uca.ajax.fail);
@@ -281,7 +281,7 @@
         })
         .done(function(data){
             if(data != null){                    
-                _chart.createVertictalBarChart("{{ 'statistique.graph.title.detailstudylevel'|trans|escape('js') }}", data[0], 'canvasEtudiantParNiveau');
+                _chart.createVertictalBarChart("{{ 'statistique.graph.title.detailstudylevel'|trans|escape('js') }}", data['data'], 'canvasEtudiantParNiveau', data['niveau']);
             }
         })
         .fail(_uca.ajax.fail);

@@ -281,7 +281,7 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
     public function getNbreInscriptionByClasseActiviteForStatut($statut)
     {
         $qb = $this->createQueryBuilder('i')
-            ->select('classeAct.libelle, count(i)')
+            ->select('classeAct.libelle, count(i) AS nbr')
             ->innerJoin('i.formatActivite', 'formAct')
             ->innerJoin('formAct.activite', 'act')
             ->innerJoin('act.classeActivite', 'classeAct')
@@ -289,6 +289,7 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
             ->andWhere('i.creneau IS NOT NULL')
             ->setParameter('statut', $statut)
             ->groupBy('classeAct.libelle')
+            ->orderBy('count(i)')
         ;
 
         return $qb->getQuery()->getResult();
@@ -297,13 +298,14 @@ class InscriptionRepository extends \Doctrine\ORM\EntityRepository
     public function getNbreInscriptionByActiviteForStatut($statut)
     {
         $qb = $this->createQueryBuilder('i')
-            ->select('act.libelle, count(i)')
+            ->select('act.libelle, count(i) AS nbr')
             ->innerJoin('i.formatActivite', 'formAct')
             ->innerJoin('formAct.activite', 'act')
             ->andWhere('i.statut = :statut')
             ->andWhere('i.creneau IS NOT NULL')
             ->setParameter('statut', $statut)
             ->groupBy('act.libelle')
+            ->orderBy('count(i)')
         ;
 
         return $qb->getQuery()->getResult();

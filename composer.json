@@ -37,7 +37,7 @@
         "phpoffice/phpspreadsheet": "^1.9",
         "sensio/distribution-bundle": "^5.0.19",
         "sensio/framework-extra-bundle": "^5.0.0",
-        "sg/datatablesbundle": "^1.1",
+        "sg/datatablesbundle": "1.2.2",
         "spipu/html2pdf": "^5.2",
         "stfalcon/tinymce-bundle": "2.3",
         "stof/doctrine-extensions-bundle": "^1.3",

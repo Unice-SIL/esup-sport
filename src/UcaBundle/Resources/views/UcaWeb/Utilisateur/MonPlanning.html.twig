@@ -25,11 +25,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     <script type='text/javascript'>
 		'use_strict';
         var typeA = "user";
         var role = "user";
         var PATH_SEE_MORE = "{{ path("UcaWeb_PlanningMore_NoId") }}"
+        const MONPLANNING = true;
     </script>
     {{ dhtmlxCalendar.initSchedulerData(item) }}
     {{ dhtmlxCalendar.initCalendarJs(item) }}

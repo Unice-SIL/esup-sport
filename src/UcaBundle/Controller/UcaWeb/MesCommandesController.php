@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Spipu\Html2Pdf\Html2Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Datatables\DetailsCommandeDatatable;
 use UcaBundle\Datatables\MesCommandesDatatable;
@@ -140,6 +141,8 @@ class MesCommandesController extends Controller
         } catch (HTML2PDF_exception $e) {
             die($e);
         }
+
+        return new Response();
     }
 
     /**
@@ -165,5 +168,7 @@ class MesCommandesController extends Controller
         } catch (HTML2PDF_exception $e) {
             die($e);
         }
+
+        return new Response();
     }
 }

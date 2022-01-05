@@ -8,12 +8,15 @@
 
 namespace UcaBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use UcaBundle\Entity\ProfilUtilisateur;
 
 class ProfilUtilisateurType extends AbstractType
 {
@@ -25,6 +28,20 @@ class ProfilUtilisateurType extends AbstractType
             ])
             ->add('nbMaxInscriptions', TextType::class, [
                 'label_format' => 'profilutilisateur.nbmaxinscriptions.libelle',
+            ])
+            ->add('parent', EntityType::class, [
+                'label' => 'profilutilisateur.parent',
+                'class' => ProfilUtilisateur::class,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->andWhere('p.parent is null')
+                        ->orderBy('p.libelle', 'ASC')
+                    ;
+                },
+                'choice_label' => 'libelle',
+                'multiple' => false,
+                'expanded' => false,
+                'required' => false
             ])
             ->add('preinscription', ChoiceType::class, [
                 'label_format' => 'profilutilisateur.preinscription',

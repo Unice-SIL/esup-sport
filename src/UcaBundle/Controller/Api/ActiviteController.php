@@ -21,6 +21,7 @@ use UcaBundle\Entity\Etablissement;
 use UcaBundle\Entity\FormatAvecCreneau;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Utilisateur;
+use UcaBundle\Service\Service\CalendrierService;
 
 class ActiviteController extends Controller
 {
@@ -29,171 +30,7 @@ class ActiviteController extends Controller
      */
     public function DataAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $parametreData = $request->get('data');
-
-        if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
-            $item = $em->getRepository(FormatAvecCreneau::class)->findOneById($parametreData['itemId']);
-        } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $item = $em->getRepository(FormatAvecReservation::class)->findOneById($parametreData['itemId']);
-        }
-
-        $twigConfig['itemId'] = $item->getId();
-        $twigConfig['typeVisualisation'] = $parametreData['typeVisualisation'];
-        $currentDate = \DateTime::createFromFormat('d/m/Y', $parametreData['currentDate'])->setTime(0, 0);
-        $twigConfig['currentDate'] = $currentDate;
-        $twigConfig['typeFormat'] = $parametreData['typeFormat'];
-        $twigConfig['idRessource'] = $parametreData['idRessource'];
-        $twigConfig['widthWindow'] = $parametreData['widthWindow'];
-        $twigConfig['formatActivite'] = $item;
-
-        if ('mois' == $parametreData['typeVisualisation'] && $parametreData['widthWindow'] < 1350 && $parametreData['widthWindow'] >= 580) {
-            $parametreData['typeVisualisation'] = 'semaine';
-        } elseif (('mois' == $parametreData['typeVisualisation'] || 'semaine' == $parametreData['typeVisualisation']) && $parametreData['widthWindow'] < 580) {
-            $parametreData['typeVisualisation'] = 'jour';
-        }
-
-        $nbJour = 0;
-        if ($parametreData['widthWindow'] > 1425) {
-            $nbJour = 7;
-        } elseif ($parametreData['widthWindow'] <= 1425 && $parametreData['widthWindow'] > 1250) {
-            $nbJour = 6;
-        } elseif ($parametreData['widthWindow'] <= 1250 && $parametreData['widthWindow'] > 1100) {
-            $nbJour = 5;
-        } elseif ($parametreData['widthWindow'] <= 1100 && $parametreData['widthWindow'] > 910) {
-            $nbJour = 4;
-        } elseif ($parametreData['widthWindow'] <= 910 && $parametreData['widthWindow'] > 750) {
-            $nbJour = 3;
-        } elseif ($parametreData['widthWindow'] <= 750 && $parametreData['widthWindow'] > 580) {
-            $nbJour = 2;
-        } elseif ($parametreData['widthWindow'] <= 580) {
-            $nbJour = 1;
-        }
-        $twigConfig['nbJour'] = $nbJour;
-
-        $dates = [];
-        $dateDebut = null;
-        $datefin = null;
-        if ('semaine' == $parametreData['typeVisualisation'] || 'mois' == $parametreData['typeVisualisation']) {
-            if (7 == $nbJour) {
-                for ($d = 1; $d <= 7; ++$d) {
-                    $dt = clone $currentDate;
-                    $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
-                    $dates[] = $dt;
-                }
-            } else {
-                for ($d = 0; $d < $nbJour; ++$d) {
-                    $dt = clone $currentDate;
-                    date_add($dt, date_interval_create_from_date_string($d.' days'));
-                    $dates[] = $dt;
-                }
-            }
-
-            if ('semaine' == $parametreData['typeVisualisation']) {
-                $dateDebut = $dates[array_key_first($dates)];
-                $datefin = $dates[array_key_last($dates)];
-            } elseif ('mois' == $parametreData['typeVisualisation']) {
-                $dt = clone $currentDate;
-                $dateDebut = $dt->modify('first day of this month');
-                $dt = clone $currentDate->modify('last day of this month');
-                $datefin = $dt;
-            }
-        }
-        if ('jour' == $parametreData['typeVisualisation']) {
-            $dates[] = $currentDate;
-            $dateDebut = $currentDate;
-            $datefin = $currentDate;
-        }
-        $datefin = (clone $datefin)->setTime(23, 59);
-        $twigConfig['listeJours'] = $dates;
-
-        $listeCampus = [];
-        $dataCalendrier = [];
-
-        if ('mois' == $parametreData['typeVisualisation']) {
-            if (01 == $dateDebut->format('m')) {
-                $dataCalendrier = array_fill(0, (intval($datefin->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
-            } elseif (12 == $dateDebut->format('m')) {
-                $dataCalendrier = array_fill(0, (53 - intval($dateDebut->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
-            } else {
-                $dataCalendrier = array_fill(0, (intval($datefin->format('W')) - intval($dateDebut->format('W')) + 1), array_fill(0, count($twigConfig['listeJours']), null));
-            }
-
-            $dt = clone $dateDebut;
-            $dt = $dt->modify('monday this week');
-
-            foreach ($dataCalendrier as $ndexWeek => $ligne) {
-                foreach ($ligne as $indexInWeek => $oneData) {
-                    $dataCalendrier[$ndexWeek][$indexInWeek]['day'] = $dt->format('d');
-                    $dataCalendrier[$ndexWeek][$indexInWeek]['actif'] = $dt->format('m') === $currentDate->format('m');
-                    $dataCalendrier[$ndexWeek][$indexInWeek]['data'] = [];
-                    $dt = $dt->modify('+1 day');
-                }
-            }
-        }
-
-        if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
-            $listeEvenements = $em->getRepository(DhtmlxEvenement::class)->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $datefin);
-        } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $listeEvenements = $em->getRepository(DhtmlxEvenement::class)->findEvenementChaqueSerieDuFormatBetwennDatesByRessource($parametreData['idRessource'], $dateDebut, $datefin);
-        }
-
-        foreach ($listeEvenements as $evenement) {
-            if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
-                if ($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()) {
-                    $campus = $em->getRepository(Etablissement::class)->findOneById($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()->getId());
-                } else {
-                    $translator = $this->get('translator');
-                    $c = [];
-                    $c['libelle'] = $translator->trans('etablissement.exterieur');
-                    $campus = $c;
-                }
-            } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-                $campus = 'Ressource';
-            }
-
-            $indexColonneCorrespondantDate = null;
-            $indexLigneCorrespondantCampus = null;
-            $eventDateDebut = (clone $evenement->getDateDebut())->setTime(0, 0);
-            if ('semaine' == $parametreData['typeVisualisation'] || 'jour' == $parametreData['typeVisualisation']) {
-                if (0 == count($listeCampus) || !in_array($campus, $listeCampus)) {
-                    $listeCampus[] = $campus;
-                    $dataCalendrier[] = array_fill(0, count($dates), null);
-                    $indexLigneCorrespondantCampus = count($listeCampus) - 1;
-                } else {
-                    $indexLigneCorrespondantCampus = array_search($campus, $listeCampus);
-                }
-                $indexColonneCorrespondantDate = array_search($eventDateDebut, $dates);
-            } elseif ('mois' == $parametreData['typeVisualisation']) {
-                if (0 == $eventDateDebut->format('w')) {
-                    $indexColonneCorrespondantDate = 6;
-                } else {
-                    $indexColonneCorrespondantDate = $eventDateDebut->format('w') - 1;
-                }
-                if (53 == $dateDebut->format('W') && 01 == $dateDebut->format('m')) {
-                    if (53 == $eventDateDebut->format('W')) {
-                        $indexLigneCorrespondantCampus = 0;
-                    } else {
-                        $indexLigneCorrespondantCampus = intval($eventDateDebut->format('W'));
-                    }
-                } else {
-                    $indexLigneCorrespondantCampus = intval($eventDateDebut->format('W')) - intval($dateDebut->format('W'));
-                }
-            }
-
-            if (null == $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]) {
-                $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]['data'] = [];
-            }
-            $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]['data'][] = $evenement;
-        }
-
-        $twigConfig['listeCampus'] = $listeCampus;
-        $twigConfig['dataCalendrier'] = $dataCalendrier;
-
-        $res['content'] = $this->render('@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig', $twigConfig)->getContent();
-
-        return new JsonResponse($res);
+        return $this->get('uca.calendrier')->createPlanning($request->get('data'));
     }
 
     /**
@@ -230,6 +67,7 @@ class ActiviteController extends Controller
     public function refreshActivities(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+
         $idTypeActivite = $request->get('type_activite');
         $idClasseActivite = $request->get('classe_activite');
         $idActivite = $request->get('activite');

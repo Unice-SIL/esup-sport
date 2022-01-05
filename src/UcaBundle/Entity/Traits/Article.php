@@ -11,6 +11,7 @@ namespace UcaBundle\Entity\Traits;
 
 use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\FormatActivite;
+use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Reservabilite;
 use UcaBundle\Repository\EntityRepository;
@@ -62,15 +63,25 @@ trait Article
         $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']]]);
 
         foreach ($this->getInscriptions()->matching($criterias) as $inscription) {
-            if ($inscription->getUtilisateur()->getProfil() === $usr->getProfil()) {
+            $profilInscription = $inscription->getUtilisateur()->getProfil();
+            $profilUtilisateur = $usr->getProfil();
+            $profilParentInscription = $profilInscription->getParent() ?? null;
+            $profilParentUtilisateur = $profilUtilisateur->getParent() ?? null;
+
+            if (
+                ($profilParentInscription !== null && $profilParentUtilisateur !== null && $profilParentInscription === $profilParentUtilisateur)
+                || ($profilParentInscription !== null && $profilParentUtilisateur === null && $profilParentInscription === $profilUtilisateur)
+                || ($profilParentInscription === null && $profilParentUtilisateur !== null && $profilInscription === $profilParentUtilisateur)
+                || ($profilInscription === $profilUtilisateur)
+            ) {
                 ++$totalInscrits;
             }
         }
-        if ($format) {
-            return !empty($format->getCapaciteProfil($usr->getProfil())) && $totalInscrits < $format->getCapaciteProfil($usr->getProfil());
+        if ($format && !$format instanceof FormatAvecReservation) {
+            return !empty($format->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil())) && $totalInscrits < $format->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil());
         }
 
-        return !empty($this->getCapaciteProfil($usr->getProfil())) && $totalInscrits < $this->getCapaciteProfil($usr->getProfil());
+        return !empty($this->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil())) && $totalInscrits < $this->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil());        
     }
 
     public function isFull($usr, $format)
@@ -85,16 +96,20 @@ trait Article
 
     public function autoriseProfil($profilUtilisateur)
     {
-        foreach ($this->profilsUtilisateurs as $formatProfil) {
-            if ($profilUtilisateur == $formatProfil->getProfilUtilisateur()) {
-                $profil = $formatProfil;
+        if (!$this instanceof FormatAvecReservation) {
+            foreach ($this->profilsUtilisateurs as $formatProfil) {
+                if ($profilUtilisateur == $formatProfil->getProfilUtilisateur() || $formatProfil->getProfilUtilisateur()->getEnfants()->contains($profilUtilisateur)) {
+                    $profil = $formatProfil;
+                }
             }
+            
+            return isset($profil) && !in_array($profil->getCapaciteProfil(), [null, 0]);
         }
 
-        return isset($profil) && !in_array($profil->getCapaciteProfil(), [null, 0]);
+        return true;
     }
 
-    public function getInscriptionInformations($utilisateur, $format = null, int $maxCreneau = null)
+    public function getInscriptionInformations($utilisateur, $format = null, int $maxCreneau = null, $event = null)
     {
         $resultat['montant'] = ['article' => -1, 'total' => -1];
         $estResa = $this instanceof Reservabilite;
@@ -109,7 +124,7 @@ trait Article
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || (!$estResa && !$this->autoriseProfil($utilisateur->getProfil()))) {
+        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || (!$estResa && !$this->autoriseProfil($utilisateur->getProfil())) || ($estResa && !$this->autoriseProfil($utilisateur->getProfil()))) {
             $resultat['statut'] = 'profilinvalide';
         } elseif (!$utilisateur->getCgvAcceptees()) {
             $resultat['statut'] = 'cgvnonacceptees';
@@ -119,7 +134,6 @@ trait Article
                 [Inscription::getItemColumn($this), 'eq', $this],
                 ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
             ]);
-
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';
             } elseif (!$inscriptions->isEmpty()) {
@@ -136,7 +150,7 @@ trait Article
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($formatReference->inscriptionsAVenir()) {
                 $resultat['statut'] = 'inscriptionsavenir';
-            } elseif ($estResa && $this->dateReservationPasse()) {
+            } elseif ($estResa && $event !== null && $this->dateReservationPasse($event)) {
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';

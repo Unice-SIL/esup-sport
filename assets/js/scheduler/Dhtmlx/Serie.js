@@ -1,18 +1,17 @@
-import {Evenement} from "./Evenement";
-import {transformDate} from "./handleEvent";
-import {dateToStr} from "./Date";
-import {Load} from "./Load";
-import {loadData} from "./Config";
-import {changeColor} from "./Events";
+import { Evenement } from "./Evenement";
+import { transformDate } from "./handleEvent";
+import { dateToStr } from "./Date";
+import { Load } from "./Load";
+import { loadData } from "./Config";
+import { changeColor } from "./Events";
 
 
 var Serie = {
- 
+
     type: "Serie",
 
     // save the data of this object and dependant childrens
-    saveBd: function()
-    {
+    saveBd: function() {
         Load.start();
         var me = this;
         $.ajax({
@@ -22,18 +21,17 @@ var Serie = {
                 evenement: this.serialize(),
                 id: scheduler.data.item.id
             }
-        }).done(function (data) {
+        }).done(function(data) {
             me.saveCallback(data);
         }).fail(_uca.ajax.fail);
     },
 
-    load: function(data)
-    {
+    load: function(data) {
         this.extend(this, data);
         this.type = "Serie";
         this.evenementType = scheduler.data.item.type;
 
-        if(typeof data.creneau != "undefined" && data.creneau != null){
+        if (typeof data.creneau != "undefined" && data.creneau != null) {
             this.tarif_id = data.creneau.tarif.id;
         }
 
@@ -45,17 +43,15 @@ var Serie = {
 
         this.event_pid = null;
     },
-    
-    getParent: function()
-    {
+
+    getParent: function() {
         return false;
     },
 
-    getDependantChildren: function()
-    {
+    getDependantChildren: function() {
         var obj = this
-        return Object.values(scheduler._events).reduce(function (filtered, ev) {
-            if(ev.getParent != null){
+        return Object.values(scheduler._events).reduce(function(filtered, ev) {
+            if (ev.getParent != null) {
                 if (ev.getParent().id == obj.id && ev.hasSerie) {
                     filtered.push(ev);
                 }
@@ -64,14 +60,12 @@ var Serie = {
         }, []);
     },
 
-    setChildrens: function(childs)
-    {
+    setChildrens: function(childs) {
         this.enfants = childs;
     },
 
     //update and save the serie and all Evenement
-    updateSerie: function(data, action)
-    {   
+    updateSerie: function(data, action) {
         let start_date = new Date(data.start_date.getTime() - data.serieOffset);
         let end_date = new Date(data.end_date.getTime() - data.serieOffset);
         this.action = action;
@@ -82,58 +76,62 @@ var Serie = {
         this.start_date = start_date;
         this.end_date = end_date;
 
+        if (typeof data.capacite != 'undefined') {
+            this.capacite = data.capacite;
+        }
+
         var obj = this;
         obj.tarif_id = parseInt(data.tarif_id);
         obj.lieu_id = parseInt(data.lieu_id);
         this.enfants = [];
-        
+
         obj.encadrant_ids = data.encadrant_ids;
         obj.profil_ids = data.profil_ids;
-        obj.profil_ids.split(",").forEach(function(profil){
+        obj.profil_ids.split(",").forEach(function(profil) {
             let keyStr = 'capaciteProfil_' + profil;
             obj[keyStr] = data[keyStr];
         });
         obj.niveau_sportif_ids = data.niveau_sportif_ids;
 
-        this.getDependantChildren().forEach(function(ev)  {
-            if(data.id != ev.id){
-                if(ev.dependanceSerie && data.dependanceSerie){
+        this.getDependantChildren().forEach(function(ev) {
+            if (data.id != ev.id) {
+                if (ev.dependanceSerie && data.dependanceSerie) {
                     ev.start_date = new Date(ev.start_date.getTime() - move_delay_start);
-                    ev.end_date = new Date(ev.start_date.getTime() - move_delay_end );
+                    ev.end_date = new Date(ev.start_date.getTime() - move_delay_end);
 
                     ev.profil_ids = data.profil_ids;
-                    ev.profil_ids.split(",").forEach(function(profil){
+                    ev.profil_ids.split(",").forEach(function(profil) {
                         let keyStr = 'capaciteProfil_' + profil;
                         ev[keyStr] = data[keyStr];
                     });
                     ev.capacite = data.capacite;
                     ev.text = data.text;
+                    ev.infos = data.infos;
                     ev.eligible_bonus = data.eligible_bonus;
 
                     ev.niveau_sportif_ids = data.niveau_sportif_ids;
 
-                    if(typeof data.encadrant_ids !== "undefined"){
+                    if (typeof data.encadrant_ids !== "undefined") {
                         ev.encadrant_ids = data.encadrant_ids;
                     }
-                    if(typeof data.resources_ids !== "undefined"){
+                    if (typeof data.resources_ids !== "undefined") {
                         ev.resources_ids = data.resources_ids;
                     }
 
                     ev.tarif_id = parseInt(data.tarif_id);
                     ev.lieu_id = parseInt(data.lieu_id);
-                    
+
                     ev.dateDebut = dateToStr(ev.start_date);
                     ev.dateFin = dateToStr(ev.end_date);
 
                     obj.capacite = ev.capacite;
                     ev.evenementType = data.evenementType;
-                    
+
                     obj.resources_ids = ev.resources_ids;
                     scheduler.updateEvent(ev.id);
                 }
-            
-            }
-            else{
+
+            } else {
                 ev.tarif_id = parseInt(data.tarif_id);
                 ev.lieu_id = parseInt(data.lieu_id);
 
@@ -149,32 +147,30 @@ var Serie = {
 
         });
         this.saveBd();
-        
+
     },
 
     //take an object and add another 
-    extend: function(obj, src) 
-    {
+    extend: function(obj, src) {
         Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
         return obj;
     },
 
     /*
-    * remove proto function 
-    * prevent jquery to callback them
-    * if we don't delete them, jquery call saveBd 2 times
-    */
-    clean: function(obj){
+     * remove proto function 
+     * prevent jquery to callback them
+     * if we don't delete them, jquery call saveBd 2 times
+     */
+    clean: function(obj) {
         var me = obj;
-        if(Array.isArray(obj)){
+        if (Array.isArray(obj)) {
             for (let i = 0; i < obj.length; i++) {
                 const element = obj[i];
-                if(typeof element.__proto__ !== "undefined"){
-                    element.__proto__ = {}; 
+                if (typeof element.__proto__ !== "undefined") {
+                    element.__proto__ = {};
                 }
             }
-        }
-        else if (typeof obj != "undefined" && obj != null){
+        } else if (typeof obj != "undefined" && obj != null) {
             obj.__proto__ = {};
 
         }
@@ -183,60 +179,58 @@ var Serie = {
     },
 
     //search in schedulers events all object with the id series 
-    getChildren: function () 
-    {
-            var me = this;
-            return Object.values(scheduler._events).reduce(function (filtered, ev) {
-                    if (ev.serie.id == me.id) {
-                    filtered.push(ev);
-                }
+    getChildren: function() {
+        var me = this;
+        return Object.values(scheduler._events).reduce(function(filtered, ev) {
+            if (ev.serie.id == me.id) {
+                filtered.push(ev);
+            }
 
-                return filtered;
-            }, []);
+            return filtered;
+        }, []);
     },
 
     //call after saveDb return 
-    saveCallback: function(data)
-    {
-            loadData(data);
-            Load.stop();
-            changeColor(data.enfants[0].id);
-            scheduler.updateView();
+    saveCallback: function(data) {
+        loadData(data);
+        Load.stop();
+        changeColor(data.enfants[0].id);
+        scheduler.updateView();
     },
 
-    getCopie: function(){
+    getCopie: function() {
 
         let serie = Object.create(Serie);
         serie.load(this);
 
         serie.id = serie.start_date.getTime();
-        
-        this.getDependantChildren().forEach(function(item){
+
+        this.getDependantChildren().forEach(function(item) {
             let ev = Object.create(Evenement);
             let c = item.getCopie();
             c.evenement.serie = {}
-            c.evenement.serie.id= serie.id;
-            c.id = c.id+"_copy";
+            c.evenement.serie.id = serie.id;
+            c.id = c.id + "_copy";
             scheduler._events[c.id] = c;
         })
         scheduler._series[serie.id] = serie;
         return serie;
     },
 
-    color: function(){
-        this.getDependantChildren().forEach(function(item){
+    color: function() {
+        this.getDependantChildren().forEach(function(item) {
             item.color = scheduler.config.activeColor;
         });
     },
 
-    defaultColor: function(){
-        this.getDependantChildren().forEach(function(item){
+    defaultColor: function() {
+        this.getDependantChildren().forEach(function(item) {
             item.color = scheduler.config.defaultColor;
         });
     },
 
     //delete element we don't want to send
-    serialize: function(){
+    serialize: function() {
         var obj = {};
         this.extend(obj, this);
         obj.enfants = this.clean(obj.enfants);
@@ -254,6 +248,6 @@ var Serie = {
         return obj;
     },
 
-} 
+}
 
-export {Serie}
+export { Serie }

@@ -17,5 +17,6 @@ class RessourceListener
     {
         $ressource->updateTarifLibelle();
         $ressource->updateEtablissementLibelle();
+        $ressource->updateListeProfils();
     }
 }

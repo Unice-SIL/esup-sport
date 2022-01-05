@@ -60,5 +60,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {{ sg_datatables_render_js(datatable) }}
 {% endblock %}

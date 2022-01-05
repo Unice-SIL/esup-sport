@@ -24,6 +24,9 @@ class AccueilController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $twigConfig['item_format_activite'] = $em->getRepository('UcaBundle:FormatSimple')->findByPromouvoir();
+        $twigConfig['item_format_avec_creaneau'] = $em->getRepository('UcaBundle:FormatAvecCreneau')->findByPromouvoir();
+        $twigConfig['item_format_avec_ressource'] = $em->getRepository('UcaBundle:FormatAvecReservation')->findByPromouvoir();
+        $twigConfig['item_format_avec_carte'] = $em->getRepository('UcaBundle:FormatAchatCarte')->findByPromouvoir();
 
         $twigConfig['item_class_activite'] = $em->getRepository('UcaBundle:ClasseActivite')->findAll();
         $twigConfig['item_actualite'] = $em->getRepository('UcaBundle:Actualite')->findBy(

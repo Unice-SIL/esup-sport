@@ -32,8 +32,10 @@ class FormatActiviteRepository extends \Doctrine\ORM\EntityRepository
             $qb
                 ->leftJoin('f.profilsUtilisateurs', 'fp')
                 ->leftJoin('fp.profilUtilisateur', 'p')
+                ->leftJoin('p.enfants', 'e')
                 ->leftJoin('p.utilisateur', 'u')
-                ->andWhere('u.id = :idUtilisateur')
+                ->leftJoin('e.utilisateur', 'ue')
+                ->andWhere('u.id = :idUtilisateur or ue.id = :idUtilisateur')
                 ->setParameter('idUtilisateur', $user->getId())
             ;
         }
@@ -49,6 +51,40 @@ class FormatActiviteRepository extends \Doctrine\ORM\EntityRepository
         }
 
         return $qb->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function previsualisation($qb, $alias)
+    {
+        $now = new \DateTime();
+
+        if (!Previsualisation::$IS_ACTIVE) {
+            $qb
+                ->andWhere($alias.'.dateDebutPublication < :date')
+                ->andWhere($alias.'.dateFinPublication > :date')
+                ->andWhere($alias.'.statut = 1')
+                ->setParameter('date', $now->format('Y-m-d H:i:s'))
+            ;
+        } else {
+            $this->enCoursPublication($qb, $alias);
+        }
+
+        return $qb;
+    }
+
+    public function findByPromouvoir()
+    {
+        $qb = $this
+            ->createQueryBuilder('f')
+            ->andWhere('f.promouvoir = true')
+            ->orderBy('f.dateDebutEffective', 'ASC')
+        ;
+
+        $this->previsualisation($qb, 'f');
+
+        return $qb
+            ->getQuery()
             ->getResult()
         ;
     }

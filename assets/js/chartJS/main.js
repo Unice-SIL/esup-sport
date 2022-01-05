@@ -124,33 +124,11 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
     let dataColors = [];
     let dataLabels = [];
 
-    // Tri des donnees pour un affichage par ordre croissant
-    datas.sort(function(itemA, itemB) {
-        var valueA = 0;
-        var valueB = 0;
-        if (itemA instanceof Object) {
-            for (const [key, value] of Object.entries(itemA)) {
-                valueA = value;
-            }
-        }
-        if (itemB instanceof Object) {
-            for (const [key, value] of Object.entries(itemB)) {
-                valueB = value;
-            }
-        }
-
-        if (valueA > valueB) return 1;
-        if (valueB > valueA) return -1;
-        return 0;
-    });
-
     datas.forEach(function(item) {
         if (item instanceof Object) {
-            for (const [key, value] of Object.entries(item)) {
-                dataValues.push(value);
-                dataLabels.push(key);
-                dataColors.push(_chart.getColor());
-            }
+            dataValues.push(item['nbr']);
+            dataLabels.push(item['libelle']);
+            dataColors.push(_chart.getColor());
         }
     });
 
@@ -190,6 +168,13 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
                     },
                 }
             },
+            // Parametrage de plugins
+	        plugins: {
+		        // Parametrage des labels contenu dans le graphique
+				datalabels: {
+                    display: false
+				}
+			}
         }
     };
 
@@ -202,7 +187,7 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
     _chart.usedColors = [];
 };
 
-_chart.createVertictalBarChart = function(title, datas, idCanvas) {
+_chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
     let Chart = require('chart.js');
     let datasets = [];
     let yAxesType = 'linear';
@@ -211,40 +196,52 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas) {
         for (const [key, value] of Object.entries(item)) {
             if (value > 100) {
                 // Echelle scientifique
-                //yAxesType = 'logarithmic';
                 yAxesType = 'linear';
             }
-            // let color = '#'+Math.floor(Math.random()*16777215).toString(16);
             let color = _chart.getColor();
+            let values = [value];
+            if(Array.isArray(value)){
+                values = value;
+            }
             datasets.push({
                 label: key,
                 backgroundColor: color,
                 borderColor: color,
                 borderWidth: 1,
-                data: [
-                    value,
-                ]
+                data: values,
+                datalabels: {
+                    align: 'end',
+                    anchor: 'end'
+                }
             });
         }
     });
 
     var barChartData = {
-        labels: [''],
+        labels: labels != null && labels.length >= 1 ? labels : [''],
         datasets: datasets,
     };
+
+    let configLegend = {
+        position: 'bottom',
+        labels: {
+            fontSize: 10,
+        },
+        padding: 0
+    };
+    if(labels.length != null){
+        configLegend = {
+            display: false
+        };
+    }
 
     let config = {
         type: 'bar',
         data: barChartData,
+        // plugins: [ChartDataLabels],
         options: {
             responsive: true,
-            legend: {
-                position: 'bottom',
-                labels: {
-                    fontSize: 10,
-                },
-                padding: 0
-            },
+            legend: configLegend,
             title: {
                 display: true,
                 text: title,
@@ -273,6 +270,24 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas) {
                     },
                 }
             },
+            // Parametrage de plugins
+	        plugins: {
+		        // Parametrage des labels contenu dans le graphique
+				datalabels: {
+                    // Gestion de la couleur du label
+                    color: function(context) {
+						return '#1a1a1a';
+					},
+					// Gestion du contenu du label
+					formatter: function(value, context) {
+                        return value;
+                    },
+                    // Gestion de la police
+                    font: {
+						weight: 'bold'
+					}
+				}
+			}
         }
     };
 
@@ -315,6 +330,10 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
                     borderColor: color,
                     borderWidth: 1,
                     data: defaultData,
+                    datalabels: {
+                        align: 'end',
+                        anchor: 'end'
+                    }
                 };
             }
             datasetsWithKey[key].data[index] = value;
@@ -372,6 +391,29 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
                     },
                 }
             },
+            // Parametrage de plugins
+	        plugins: {
+		        // Parametrage des labels contenu dans le graphique
+				datalabels: {
+                    // Gestion de la couleur du label
+                    color: function(context) {
+						return '#1a1a1a';
+					},
+					// Gestion du contenu du label
+					formatter: function(value, context) {
+                        return value;
+                    },
+                    // Gestion de l'affichage du label
+					display: function(context) {
+						// Si la donnee est nulle, alors elle est masquee
+						return context.chart.isDatasetVisible(context.datasetIndex);
+					},
+                    // Gestion de la police
+                    font: {
+						weight: 'bold'
+					}
+				}
+			},
         }
     };
 
@@ -485,7 +527,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
                 var chartInstance = this.chart;
                 var ctx = chartInstance.ctx;
                 ctx.textAlign = "left";
-                ctx.font = "9px Open Sans";
+                ctx.font = "0px Open Sans";
                 ctx.fillStyle = "#fff";
 
                 Chart.helpers.each(this.data.datasets.forEach(function(dataset, i) {
@@ -503,6 +545,13 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
         },
         pointLabelFontFamily: "Quadon Extra Bold",
         scaleFontFamily: "Quadon Extra Bold",
+        // Parametrage de plugins
+        plugins: {
+            // Parametrage des labels contenu dans le graphique
+            datalabels: {
+                display: false
+            }
+        },
     };
 
     var ctx = document.getElementById(idCanvas);
@@ -568,7 +617,14 @@ _chart.createLineChart = function(title, label, datas, idCanvas) {
                 yAxes: [{
                     display: true,
                 }]
-            }
+            },
+            // Parametrage de plugins
+	        plugins: {
+		        // Parametrage des labels contenu dans le graphique
+				datalabels: {
+                    display: false
+				}
+			},
         }
     };
 

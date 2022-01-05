@@ -9,8 +9,10 @@
 namespace UcaBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 use UcaBundle\Service\Common\Fn;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\ReservabiliteRepository")
@@ -35,8 +37,22 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     /** @ORM\ManyToOne(targetEntity="Ressource", inversedBy="reservabilites") */
     private $ressource;
 
+    /** @ORM\OneToOne(targetEntity="DhtmlxSerie", mappedBy="reservabilite") */
+    private $serie;
+
     /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite") */
     private $evenement;
+
+    /** @ORM\OneToMany(targetEntity="ReservabiliteProfilUtilisateur", mappedBy="reservabilite", cascade={"persist", "remove"})
+     * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank") */
+    private $profilsUtilisateurs;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="complement.capacite.notblank")
+     */
+    private $capacite;
 
     private $formatActivite;
 
@@ -48,6 +64,7 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     public function __construct()
     {
         $this->inscriptions = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->profilsUtilisateurs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     //endregion
@@ -56,7 +73,7 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
 
     public function jsonSerializeProperties()
     {
-        return [];
+        return ['capacite', 'profilsUtilisateurs', 'ressource'];
     }
 
     public function getTarif()
@@ -73,27 +90,22 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
 
     public function getArticleDescription()
     {
-        return Fn::strTruncate($this->getFormatActivite()->getLibelle(), 97);
+        return Fn::strTruncate($this->getEvenement() !== null ? $this->getEvenement()->getDescription() : $this->getSerie()->getEvenements()->first()->getDescription(), 97);
     }
 
     public function getArticleDateDebut()
     {
-        return $this->getEvenement()->getDateDebut();
+        return $this->getEvenement() !== null ? $this->getEvenement()->getDateDebut(): $this->getSerie()->getDateDebut();
     }
 
     public function getArticleDateFin()
     {
-        return $this->getEvenement()->getDateFin();
+        return $this->getEvenement() !== null ? $this->getEvenement()->getDateFin(): $this->getSerie()->getDateFin();
     }
 
     public function getAutorisations()
     {
         return $this->getFormatActivite()->getAutorisations();
-    }
-
-    public function getCapacite()
-    {
-        return $this->ressource->getCapacite();
     }
 
     public function getEncadrants()
@@ -111,9 +123,9 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
         $this->formatActivite = $formatActivite;
     }
 
-    public function dateReservationPasse()
+    public function dateReservationPasse(DhtmlxEvenement $event)
     {
-        return new \DateTime() > $this->getEvenement()->getDateDebut();
+        return new \DateTime() > $event->getDateDebut();
     }
 
     public function getArticleMontant($utilisateur)
@@ -156,27 +168,27 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     }
 
     /**
-     * Set evenement.
+     * Set serie.
      *
-     * @param null|\UcaBundle\Entity\DhtmlxEvenement $evenement
+     * @param null|\UcaBundle\Entity\DhtmlxSerie $serie
      *
      * @return Reservabilite
      */
-    public function setEvenement(DhtmlxEvenement $evenement = null)
+    public function setSerie(DhtmlxSerie $serie = null)
     {
-        $this->evenement = $evenement;
+        $this->serie = $serie;
 
         return $this;
     }
 
     /**
-     * Get evenement.
+     * Get serie.
      *
-     * @return \UcaBundle\Entity\DhtmlxEvenement|null
+     * @return \UcaBundle\Entity\DhtmlxSerie|null
      */
-    public function getEvenement()
+    public function getSerie()
     {
-        return $this->evenement;
+        return $this->serie;
     }
 
     /**
@@ -213,5 +225,97 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     public function getInscriptions()
     {
         return $this->inscriptions;
+    }
+
+    /**
+     * Add profilsUtilisateur.
+     *
+     * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
+     *
+     * @return Creneau
+     */
+    public function addProfilsUtilisateur(ReservabiliteProfilUtilisateur $profilsUtilisateur)
+    {
+        $this->profilsUtilisateurs[] = $profilsUtilisateur;
+
+        return $this;
+    }
+
+    /**
+     * Remove profilsUtilisateur.
+     *
+     * @param \UcaBundle\Entity\ProfilUtilisateur $profilsUtilisateur
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeProfilsUtilisateur(ReservabiliteProfilUtilisateur $profilsUtilisateur)
+    {
+        return $this->profilsUtilisateurs->removeElement($profilsUtilisateur);
+    }
+
+    /**
+     * Get profilsUtilisateurs.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getProfilsUtilisateurs()
+    {
+        return $this->profilsUtilisateurs;
+    }
+
+    /**
+     * Set capacite.
+     *
+     * @param int $capacite
+     *
+     * @return Creneau
+     */
+    public function setCapacite($capacite)
+    {
+        $this->capacite = $capacite;
+
+        return $this;
+    }
+
+    /**
+     * Get capacite.
+     *
+     * @return int
+     */
+    public function getCapacite()
+    {
+        return $this->capacite;
+    }
+
+    public function getCapaciteProfil($profilUtilisateur)
+    {
+        $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profilUtilisateur', $profilUtilisateur));
+        $result = $this->getProfilsUtilisateurs()->matching($criteria);
+
+        return !$result->isEmpty() ? $result->first()->getCapaciteProfil() : false;
+    }
+
+    /**
+     * Set evenement.
+     *
+     * @param null|\UcaBundle\Entity\DhtmlxEvenement $evenement
+     *
+     * @return Reservabilite
+     */
+    public function setEvenement(DhtmlxEvenement $evenement = null)
+    {
+        $this->evenement = $evenement;
+
+        return $this;
+    }
+
+    /**
+     * Get evenement.
+     *
+     * @return \UcaBundle\Entity\DhtmlxEvenement|null
+     */
+    public function getEvenement()
+    {
+        return $this->evenement;
     }
 }

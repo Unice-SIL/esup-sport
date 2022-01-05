@@ -107,7 +107,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     public function jsonSerializeProperties()
     {
-        return ['capacite', 'tarif', 'profilsUtilisateurs', 'encadrants', 'niveauxSportifs', 'lieu'];
+        return ['capacite', 'tarif', 'profilsUtilisateurs', 'encadrants', 'niveauxSportifs', 'lieu', 'formatActivite'];
     }
 
     public function getSerieEvenements()

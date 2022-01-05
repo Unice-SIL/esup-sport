@@ -11,6 +11,9 @@ accueil.connexion: "Se connecter"
 accueil.cotisations.infos: "En savoir plus sur les cotisations"
 accueil.demander.inscription: "Faire une demande de création de compte"
 accueil.inscription.title: "Inscription"
+accueil.miseavantcarte.title: Achat de carte mis en avant
+accueil.miseavantcours.title: Cours mis en avant
+accueil.miseavantreservation.title: Pratique libre
 accueil.prochainement.title: "Prochainement"
 accueil.ucagest.title: Bienvenue sur UCA Sport
 activite.ajouter.succes: "Activité ajoutée avec succès"
@@ -32,6 +35,8 @@ activite.libelle: Activité
 activite.list.title: Activités
 activite.modifier.succes: "Activité modifiée avec succès"
 activite.modifier.title: Modifier une activite
+activite.recherche.option.lieu:  Choisissez un campus
+activite.recherche.option.typeactivite:  Choisissez une activité
 activite.reservation.ajouter: "Ajouter Activité avec Réservation"
 activite.simple.ajouter: "Ajouter Activité Simple"
 activite.supprimer.erreur: Impossible de supprimer cette activité, des formats d'activités y sont affectés
@@ -75,8 +80,8 @@ bouton.debloquer: Débloquer
 bouton.descendre: Descendre
 bouton.deselectionner.tout: Désélectionner tout
 bouton.desinscrire.inscription: Désinscrire
-bouton.desinscrire: Désinscrire
 bouton.desinscrire.tout: Désinscrire tout le monde
+bouton.desinscrire: Désinscrire
 bouton.enregistrer: Enregistrer
 bouton.exportallfacture.pdf: Exporter les factures
 bouton.exportpdf: Export
@@ -107,8 +112,10 @@ bouton.selectionner.tout: Sélectionner tout
 bouton.supprimer: Supprimer
 bouton.tout.supprimer: Tout supprimer
 bouton.voir: Voir
+calendrier.etablissements: "Activité dispensée sur %nbCampus% campus :"
 cgv.acceptees: Merci d'avoir accepté les conditions générales de vente
 cgv.information: Veuillez prendre connaissance des conditions générales de vente
+cgv.modal.titre: Conditions générales de vente
 cgv.refusees: Vous devez cocher la case afin d'accepter les conditions générales de vente
 cgv.validation: J’ai pris connaissance et j’accepte les conditions générales de vente
 classeActivite.list.title: "Liste des classes d'Activité"
@@ -183,6 +190,7 @@ common.avoir: Avoir
 common.capacite.totale: Capacité totale
 common.capacite: Capacité
 common.carte.acheter: Carte à acheter
+common.carte.retrait: Carte retirée
 common.carte: Carte
 common.cb: Carte Bancaire
 common.chargement: Chargement...
@@ -220,6 +228,7 @@ common.eligible: Éligible au bonus
 common.email: Email
 common.emplacement: Emplacement
 common.encadrant: Encadrant
+common.encadrant.s: Encadrant(s)
 common.encadrants.aucun: aucun encadrant
 common.encadrants: Encadrants
 common.espece: Espèce
@@ -238,6 +247,7 @@ common.horaires.ouverture: "Horaires d'ouverture"
 common.horaires: Horaires
 common.ht: Hors taxe
 common.indisponible: Indisponible
+common.infos: Informations
 common.infospersonnelles: "Informations Personnelles"
 common.infossupplementaires: Informations supplémentaires
 common.inscription.details: Détail des inscriptions
@@ -324,6 +334,7 @@ common.texte: Texte
 common.thursday: Jeudi
 common.titre: Titre
 common.total: Total
+common.toutescartes: Toutes les cartes
 common.toutescommandes: Toutes les commandes
 common.ttc: TTC
 common.tuesday: Mardi
@@ -336,8 +347,10 @@ common.username: Login
 common.utilisateur: Utilisateur
 common.valide: Validée
 common.wednesday: Mercredi
+common.weekfrom: "Semaine du %start% au %end%"
 confirmation.action.message: Etes-vous certain(e) ?
 confirmation.action.titre: Fenêtre de confirmation
+confirmation.inscription: Inscription confirmée
 contact.compteactif.remplir: Remplissez le formulaire de demande en cliquant sur ce lien
 contact.compteactif: Vous disposez d'un compte unice actif
 contact.compteinactif.remplir: Veuillez formuler votre demande par le formulaire de contact ci-dessous
@@ -387,6 +400,8 @@ erreur.formulaire.champ.incorrect: "Un ou plusieurs champs est (sont) incorrect(
 erreur.generale.icon: "fas fa-question-circle"
 erreur.generale.message: "Une erreur s'est produite. Si cela se reproduit, veuillez nous contacter."
 erreur.generale: "Erreur"
+erreur.info: "Pour plus d'informations, vous pouvez nous contacter à partir du formulaire de contact : "
+erreur.info.contact: "nous contacter"
 etablissement.ajouter.succes: "Campus ajouté avec succès"
 etablissement.ajouter.title: Ajouter un Campus
 etablissement.code: Code du campus (référentiel immobilier)
@@ -482,6 +497,7 @@ formatactivite.simple.modifier.title: Modifier un évènement
 formatactivite.title: "Inscription et réservation"
 formataveccreneau.ajouter.succes: "Format avec créneau ajouté avec succès"
 formataveccreneau.modifier.succes: "Format avec créneau modifié avec succès"
+formataveccreneau.panier.info: L'inscription au créneau est valable pour tout le semestre
 formataveccreneau.supprimer.erreur: Impossible de supprimer ce format. Il y a encore des inscriptions ou des créneaux associés à supprimer
 formataveccreneau.supprimer.succes: "Format avec créneau supprimé avec succès"
 formataveccreneau.title: "Réservation de créneaux"
@@ -715,7 +731,7 @@ paybox.error.00040: "Opération sans authentification 3-DSecure, bloquée par le
 paybox.error.001xx: "Paiement refusé par le centre d’autorisation"
 paybox.error.99999: "Opération en attente de validation par l’émetteur du moyen de paiement."
 preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais.
-preinscription.confirmation.titre: Demande d'incription confirmée
+preinscription.confirmation.titre: Demande d'inscription confirmée
 preinscription.demande.validation.message: Une demande de pré-inscription a été faite par l'utilisateur suivant
 profilutilisateur.ajouter.succes: "Profil d'utilisateur ajouté avec succès"
 profilutilisateur.ajouter.title: Ajouter un profil d'utilisateur
@@ -725,15 +741,18 @@ profilutilisateur.list.title: "Gestion des profils d'utilisateur"
 profilutilisateur.modifier.succes: "Profil d'utilisateur modifié avec succès"
 profilutilisateur.modifier.title: Modifier un profil d'utilisateur
 profilutilisateur.nbmaxinscriptions.libelle: "Nombre de créneaux maximum"
+profilutilisateur.parent: Profil parent
 profilutilisateur.preinscription: Ce profil peut-il se pré-inscrire
 profilutilisateur.supprimer.erreur.formatactivite: "Des formats d'activités utilisent ce profil : <br>%formats%"
 profilutilisateur.supprimer.erreur.montants: Des tarifs sont associés à ce profil
+profilutilisateur.supprimer.erreur.profils: "Des profils ont ce profil comme parent : <br>%profils%"
 profilutilisateur.supprimer.erreur.utilisateurs: "Des utilisateurs utilisent ce profil : <br>%utilisateurs%"
 profilutilisateur.supprimer.erreur: Impossible de supprimer le profil
 profilutilisateur.supprimer.succes: "Profil d'utilisateur supprimé avec succès"
 referentiel.bouton.maj: Mettre à jour le référentiel
 referentiel.libelle.maj: Sélectionnez un fichier pour mettre à jour le référentiel
 referentiel.libelle: Referentiel
+refus.inscription: Inscription refusée
 registration.check_email: "Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte."
 registration.confirm.success: Votre compte a bien été activé
 registration.email.message: "Bonjour %username% !\n\nPour valider votre compte utilisateur, merci de vous rendre sur %confirmationUrl%\n\nCe lien ne peut \u00eatre utilis\u00e9 qu'une seule fois pour valider votre compte.\n"
@@ -762,6 +781,8 @@ ressource.list.subTitle: Liste des ressources
 ressource.list.title: "Gestion des ressources"
 ressource.longitude: Longitude
 ressource.modifier.succes: "Ressource modifée"
+ressource.profils.utilisateur.capacite: Nombre de places
+ressource.profils.utilisateur: Profils d'utilisateurs autorisés
 ressource.quantite: Quantite
 ressource.referentiel.success: "Le référentiel immobilier a été mis à jour avec succès"
 ressource.superficie: Superficie

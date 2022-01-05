@@ -1,0 +1,6 @@
+-- Initialisation de la colonne pour les cas null
+UPDATE format_activite SET promouvoir=0 where promouvoir is null;
+-- Ajout de l'image de fond
+INSERT INTO image_fond (id, emplacement, titre, image, updated_at) VALUES (NULL, 'Accueil - Cours', 'Cours mis en avant', '', NULL);
+INSERT INTO image_fond (id, emplacement, titre, image, updated_at) VALUES (NULL, 'Accueil - Reservation', 'Réservations mis en avant', '', NULL);
+INSERT INTO image_fond (id, emplacement, titre, image, updated_at) VALUES (NULL, 'Accueil - Carte', 'Achat de cartes mis en avant', '', NULL);

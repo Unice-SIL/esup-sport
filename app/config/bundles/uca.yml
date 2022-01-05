@@ -44,6 +44,9 @@ services:
         class: UcaBundle\Service\Common\MailService
         arguments: ['@mailer', '%mailer_sender%', '@templating']
     UcaBundle\Service\Common\MailService: '@mailService'
+    uca.calendrier:
+        class: UcaBundle\Service\Service\CalendrierService
+        arguments: ['@doctrine.orm.entity_manager', '@templating', '@translator']
 
     # SERVICES - LISTENERS
     # Entity Listeners
@@ -137,6 +140,10 @@ services:
     UcaBundle\Service\Service\SelectionProfil: '@uca.selection.profil'
     uca.form.profilUtilisateur:
         class: UcaBundle\Form\FormatActiviteProfilUtilisateurType
+        arguments: ['@doctrine.orm.entity_manager']
+        tags: [form.type]
+    uca.form.ressourceprofilUtilisateur:
+        class: UcaBundle\Form\RessourceProfilUtilisateurType
         arguments: ['@doctrine.orm.entity_manager']
         tags: [form.type]
     UcaBundle\Service\Listener\Securite\Utilisateur\LoginListener:

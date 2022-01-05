@@ -10,14 +10,16 @@
 namespace UcaBundle\Form;
 
 use Doctrine\ORM\EntityManager;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Doctrine\ORM\EntityRepository;
+use UcaBundle\Entity\ProfilUtilisateur;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use UcaBundle\Form\DataMappers\FormatActiviteProfilUtilisateurDataMapper;
 
 class FormatActiviteProfilUtilisateurType extends AbstractType
@@ -33,7 +35,13 @@ class FormatActiviteProfilUtilisateurType extends AbstractType
     {
         $builder
             ->add('profilUtilisateur', EntityType::class, [
-                'class' => 'UcaBundle:ProfilUtilisateur',
+                'class' => ProfilUtilisateur::class,
+                'query_builder' => function(EntityRepository $er) {
+                    return $er->createQueryBuilder('p')
+                        ->andWhere('p.parent is null')
+                        ->orderBy('p.libelle', 'asc')
+                    ;
+                },
                 'choice_label' => 'libelle',
                 'label_format' => 'format.profils.utilisateur',
                 'multiple' => true,

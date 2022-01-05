@@ -1,4 +1,3 @@
-
 _uca = {};
 
 /**
@@ -6,15 +5,15 @@ _uca = {};
  * Prévisualisation des iamges dans le formulaire
  * @param: event 
  */
-_uca.imgPreview = function (event) {
+_uca.imgPreview = function(event) {
     let elemId = $(this).attr('id');
     let fileUrl = URL.createObjectURL(event.target.files[0]);
     $('#' + elemId + '_preview img:first').attr('src', fileUrl);
     $('#' + elemId + '_preview').removeClass('d-none');
 };
 
-_uca.toggleFormDisplay = function (ReferenceValues) {
-    return function (event) {
+_uca.toggleFormDisplay = function(ReferenceValues) {
+    return function(event) {
         if ($(this).is(':checked')) {
             let val = $(this).val();
             let code = ReferenceValues[val];
@@ -34,10 +33,10 @@ _uca.showTarifs = _uca.toggleFormDisplay({ '0': 'nonPayant', '1': 'payant' });
  * Redirige vers la bonne page de connexion
  * @param: id 
  */
-_uca.redirectionProfil = function (id, bouton) {
+_uca.redirectionProfil = function(id, bouton) {
     let select = document.getElementById(id);
     $(select).select2({ placeholder: $(this).attr('placeholder') });
-    $(select).on('change ', function (e) {
+    $(select).on('change ', function(e) {
         let listOptions = select.querySelectorAll('option');
         for (let i = 0; i < listOptions.length; i++) {
             if (listOptions[i].selected) {
@@ -51,7 +50,7 @@ _uca.redirectionProfil = function (id, bouton) {
  * Function: changeVisibilityInputDependingCheckedBoxTva()
  * Modifie l'affichage de la TVA
  */
-_uca.changeVisibilityInputDependingCheckedBoxTva = function () {
+_uca.changeVisibilityInputDependingCheckedBoxTva = function() {
     if ($("#tarif_tva").is(':checked')) {
         $('#pourcentageTVA_tarif_hide').hide();
         $('#tvaNonApplicable_tarif_hide').show();
@@ -71,22 +70,20 @@ _uca.calendrier = {};
  * Function: changePeridoe()
  * Modifie la période de calendrier
  * @param: forNextPeriode, nbDays
-*/
-_uca.calendrier.changePeriode = function (forNextPeriode, nbDays) {
+ */
+_uca.calendrier.changePeriode = function(forNextPeriode, nbDays) {
     var date = new Date(currentDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"));
     var facteur = forNextPeriode ? 1 : -1;
 
     if (typeVisualisation == "semaine") {
         date.setDate(date.getDate() + nbDays * facteur);
-    } else if (typeVisualisation == "jour") {
-        date.setDate(date.getDate() + 1 * facteur);
-    } else if (typeVisualisation == "mois") {
+    } else if (typeVisualisation == "mois" || typeVisualisation == 'jour') {
         let oldMonth = date.getMonth();
         date.setMonth(date.getMonth() + 1 * facteur);
-        if(oldMonth == 0 && forNextPeriode == false){
+        if (oldMonth == 0 && forNextPeriode == false) {
             oldMonth = 12;
-        } else if (oldMonth == 11 && forNextPeriode == true){
-            oldMonth = -1; 
+        } else if (oldMonth == 11 && forNextPeriode == true) {
+            oldMonth = -1;
         }
         while (date.getMonth() != oldMonth + 1 * facteur) {
             date.setDate(date.getDate() - 1 * facteur * (date.getMonth() - oldMonth + 1 * facteur));
@@ -101,8 +98,8 @@ _uca.calendrier.changePeriode = function (forNextPeriode, nbDays) {
 /**
  * Function: loadData()
  * Charge les donnée du calendrier
-*/
-_uca.calendrier.loadData = function () {
+ */
+_uca.calendrier.loadData = function() {
     let api_url = Routing.generate('api_activite_creneau');
     let valueHeightDiv = [];
     let widthWindow = $(window).width();
@@ -116,35 +113,40 @@ _uca.calendrier.loadData = function () {
             idRessource: idRessource,
             widthWindow: widthWindow,
         }
-    }, function (data) {
+    }, function(data) {
         $("#sectionCalendrier").text('');
         $("#sectionCalendrier").append(data.content);
         _uca.ajax.hideLoader();
 
         $('.js-inscription').each(_uca.inscription.addButtonEvent);
         _uca.bootstrap.tooltip.display();
-        $(".data-div").each(function () {
+        $(".data-div").each(function() {
             valueHeightDiv.push($(this).height());
         })
         $('.cell-col-center').height(Math.max.apply(Math, valueHeightDiv));
-        _uca.openlayersmap.createMap();
+        // _uca.openlayersmap.createMap();
+        $('.toggle').on('click', function() {
+            const currentElement = $(this);
+            $($('h4.show').data('target')).toggleClass('show');
+            $('h4.show').toggleClass('show');
+            $(`${ currentElement.prop('tagName').toLowerCase() }.toggle.show`).each(function(index, element) {
+                if (currentElement.data('target') != $(element).data('target')) {
+                    $(element).toggleClass('show');
+                    $($(element).data('target')).toggleClass('show');
+                }
+            });
+            currentElement.toggleClass('show');
+            $(currentElement.data('target')).toggleClass('show');
+        });
+
     }).fail(_uca.ajax.fail);
 };
 
 /** function changeTypeVisualisation()
  * Change l'affichage du calendrier
  * @param: type
-*/
-_uca.calendrier.changeTypeVisualisation = function (newTypeVisualisation) {
+ */
+_uca.calendrier.changeTypeVisualisation = function(newTypeVisualisation) {
     typeVisualisation = newTypeVisualisation;
     _uca.calendrier.loadData();
 };
-
-
-
-
-
-
-
-
-

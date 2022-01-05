@@ -25,9 +25,24 @@
         </div>
     {% endif %}
     {% include('@Uca/Common/Main/Debug.HistoriqueNavigation.html.twig') %}
+    {# Modal CGV si connecté et non accepté #}
+    {% if app.user and app.user.cgvAcceptees is same as(false) and 'CGV' not in app.request.pathInfo %}
+        {% include "@Uca/Common/Modal/Modal.CGV.html.twig" %}
+    {% endif %}
     {% block main %}{% endblock %}
 {% endblock %}
 
 {% block footer %}
     {% include '@Uca/Common/Main/footer.html.twig' %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if app.user and app.user.cgvAcceptees is same as(false) and 'CGV' not in app.request.pathInfo %}
+        <script>
+            $(function() {
+                $('#modalCGV').modal('show');
+            });
+        </script>
+    {% endif %}
 {% endblock %}

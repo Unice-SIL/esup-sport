@@ -8,11 +8,20 @@
 
 namespace UcaBundle\Service\Common;
 
-use Twig\Extension\AbstractExtension;
+use Twig\TwigTest;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\Lieu;
+use UcaBundle\Entity\Commande;
+use UcaBundle\Entity\FormatSimple;
+use UcaBundle\Entity\Etablissement;
 use UcaBundle\Entity\Reservabilite;
+use UcaBundle\Entity\CommandeDetail;
+use UcaBundle\Entity\FormatActivite;
+use Twig\Extension\AbstractExtension;
+use UcaBundle\Entity\FormatAchatCarte;
+use UcaBundle\Entity\FormatAvecCreneau;
+use UcaBundle\Entity\FormatAvecReservation;
 
 class TwigExtensions extends AbstractExtension
 {
@@ -34,7 +43,10 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('isValideAutorisation', [$this, 'getValiditeAutorisation']),
             new TwigFunction('isCarte', [$this, 'isCarte']),
             new TwigFunction('getInformationCarte', [$this, 'getInformationCarte']),
-            new TwigFunction('var_dump', [$this, 'varDump'])
+            new TwigFunction('var_dump', [$this, 'varDump']),
+            new TwigFunction('getInformationCarteByCommandeId', [$this, 'getInformationCarteByCommandeId']),
+            new TwigFunction('getAdresseComplete', [$this, 'getAdresseComplete']),
+            new TwigFunction('instanceOf', [$this, 'instanceOf'])
         ];
     }
 
@@ -43,6 +55,13 @@ class TwigExtensions extends AbstractExtension
         return [
             new TwigFilter('dateFormat', [$this, 'dateFormat']),
             new TwigFilter('telephone', [$this, 'telephoneFilter']),
+        ];
+    }
+
+    public function getTests()
+    {
+        return [
+            new TwigTest('formatType', [$this, 'isFormatType'])
         ];
     }
 
@@ -246,5 +265,67 @@ class TwigExtensions extends AbstractExtension
     public function varDump($value): void
     {
         var_dump($value);
+    }
+
+
+    /**
+     * Fonction qui permet de savoir si une commande avait une carte et si elle a été retirée
+     *
+     * @param integer $idCommande
+     * @return string
+     */
+    public function getInformationCarteByCommandeId(int $idCommande): string {
+        $commande = $this->em->getReference(Commande::class, $idCommande);
+        $retour = '';
+        foreach($commande->getCommandeDetails() as $commandeDetail) {
+            if ($commandeDetail->getTypeAutorisation() && $commandeDetail->getTypeAutorisation()->getComportement() && $commandeDetail->getTypeAutorisation()->getComportement()->getId() == 4) {
+                if ($commandeDetail->getEtablissementRetraitCarte()) {
+                    return 'common.oui';
+                } else {
+                    $retour = 'common.non';
+                }
+            }
+        }
+
+        return $retour;
+    }
+
+    /**
+     * Fonction qui permet de récupérer l'adresse complète d'un Lieu ou un Etablissement
+     *
+     * @param [type] $object
+     * @return string
+     */
+    public function getAdresseComplete($object): string {
+        if ($object instanceof Etablissement) {
+            return $object->getAdresse().' '.$object->getCodePostal().' - '.$object->getVille();
+        } elseif ($object instanceof Lieu && $object->getAdresse()) {
+            return $object->getAdresse().' '.$object->getCodePostal().' - '.$object->getVille();
+        } elseif ($object instanceof Lieu && ($etablissement = $object->getEtablissement()) !== null) {
+            return $etablissement->getAdresse().' '.$etablissement->getCodePostal().' - '.$etablissement->getVille();
+        }
+
+        return '';
+    }
+
+    /**
+     * Fonction twig qui étend le test instanceof de php
+     *
+     * @param [type] $object
+     * @param string $instanceName
+     * @return boolean
+     */
+    public function isFormatType(FormatActivite $formatActivite, string $type): bool {
+        if ($type == 'FormatAvecCreneau') {
+            return $formatActivite instanceof FormatAvecCreneau;
+        } elseif ($type == 'FormatAvecReservation') {
+            return $formatActivite instanceof FormatAvecReservation;
+        } elseif ($type == 'FormatAchatCarte') {
+            return $formatActivite instanceof FormatAchatCarte;
+        } elseif ($type == 'FormatSimple') {
+            return $formatActivite instanceof FormatSimple;
+        }
+
+        return false;
     }
 }

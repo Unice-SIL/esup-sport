@@ -2,7 +2,7 @@ scheduler.showLightboxBase = scheduler.showLightbox_rec;
 scheduler.showLightboxRecurring = scheduler.showLightbox;
 if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
     scheduler.config.lightbox.get = {
-        description: function () {
+        description: function() {
             return {
                 name: Translator.trans("common.description"),
                 type: "textarea",
@@ -11,7 +11,16 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        tarif: function () {
+        informations: function() {
+            return {
+                name: Translator.trans("common.infossupplementaires"),
+                type: "textarea",
+                map_to: "infos",
+                height: 30,
+                dependanceSerie: true,
+            };
+        },
+        tarif: function() {
             return {
                 name: Translator.trans("common.tarif"),
                 height: 21,
@@ -29,7 +38,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        profils: function () {
+        profils: function() {
             return {
                 name: Translator.trans("common.profils"),
                 type: "multiselect",
@@ -42,7 +51,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        niveauSportif: function () {
+        niveauSportif: function() {
             return {
                 name: Translator.trans("common.niveauSportif"),
                 type: "multiselect",
@@ -55,7 +64,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        resources: function () {
+        resources: function() {
             return {
                 name: Translator.trans("common.ressources"),
                 type: "multiselect",
@@ -68,7 +77,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        capacite: function () {
+        capacite: function() {
             return {
                 name: Translator.trans("ressource.capacite"),
                 type: "textarea",
@@ -81,7 +90,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        encadrant: function () {
+        encadrant: function() {
             return {
                 name: Translator.trans("common.encadrants"),
                 type: "multiselect",
@@ -98,7 +107,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
 
             };
         },
-        lieu: function () {
+        lieu: function() {
             return {
                 name: Translator.trans("common.lieu"),
                 type: "select",
@@ -116,50 +125,49 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 dependanceSerie: true,
             };
         },
-        recurring: function () {
-            return { name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring", form: "myForm" , dependanceSerie: false};
+        recurring: function() {
+            return { name: "recurring", type: "recurring", map_to: "rec_type", button: "recurring", form: "myForm", dependanceSerie: false };
         },
-        eligibilite: function () {
-            return { name: Translator.trans("common.eligible"), type: "checkbox", map_to: "eligible_bonus", dependanceSerie: false}
+        eligibilite: function() {
+            return { name: Translator.trans("common.eligible"), type: "checkbox", map_to: "eligible_bonus", dependanceSerie: false }
         },
-        time: function () {
+        time: function() {
             return { name: "time", height: 72, type: "calendar_time", map_to: "auto", dependanceSerie: false };
         }
 
     };
 
-    if(typeof scheduler.data.item.profilsUtilisateurs !== "undefined")
-    {
-        scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
+    if (typeof scheduler.data.item.profilsUtilisateurs !== "undefined") {
+        scheduler.data.item.profilsUtilisateurs.forEach(function(formatProfil) {
             let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
-            scheduler.config.lightbox.get[keyStr] = function () {
+            scheduler.config.lightbox.get[keyStr] = function() {
                 return {
                     name: formatProfil.profilUtilisateur.libelle,
                     type: 'textarea',
                     map_to: 'capaciteProfil_' + formatProfil.profilUtilisateur.id,
-                    dependanceSerie: true,  
+                    dependanceSerie: true,
                     controls: {
-                        type:'capacite',
+                        type: 'capacite',
                     }
                 };
             }
         });
     }
-    
 
-    scheduler.config.lightbox.init = function (params, eventId) {
+
+    scheduler.config.lightbox.init = function(params, eventId) {
         scheduler.config.lightbox.sections = [];
         scheduler.resetLightbox();
         sections = scheduler.config.lightbox.get;
         if (eventId !== null && !scheduler._events[eventId].dependanceSerie) {
             sections = new Object();
-            Object.keys(scheduler.config.lightbox.get).forEach(function(sectionId){
+            Object.keys(scheduler.config.lightbox.get).forEach(function(sectionId) {
                 if (!scheduler.config.lightbox.get[sectionId]().dependanceSerie) {
                     sections[sectionId] = scheduler.config.lightbox.get[sectionId];
                 }
             });
         }
-        params.forEach(function (element) {
+        params.forEach(function(element) {
             if ('undefined' !== typeof sections[element]) {
                 scheduler.config.lightbox.sections.push(sections[element]());
             }
@@ -182,11 +190,10 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
     //check if the input are correct
 
 
-    scheduler.config.lightbox.control = function (params, isNew) {
+    scheduler.config.lightbox.control = function(params, isNew) {
         // let totalCapacites = 0;
-        if(typeof DATEFINEFFECTIVEVERIFICATION !== "undefined" && typeof DATEFINEFFECTIVE !== "undefined")
-        {
-            if(params['_end_date'] > DATEFINEFFECTIVEVERIFICATION || params['end_date'] > DATEFINEFFECTIVEVERIFICATION){
+        if (typeof DATEFINEFFECTIVEVERIFICATION !== "undefined" && typeof DATEFINEFFECTIVE !== "undefined") {
+            if (params['_end_date'] > DATEFINEFFECTIVEVERIFICATION || params['end_date'] > DATEFINEFFECTIVEVERIFICATION) {
                 displayErrorMessage(Translator.trans("scheduler.error.date.invalid") + DATEFINEFFECTIVE);
                 return false;
             }
@@ -220,9 +227,9 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                         return false;
                     }
 
-                    if(element.name == "Capacité") {
-                        if(params['capacite'] > CAPACITE) {
-                            displayErrorMessage(Translator.trans("scheduler.error.capacite.format") + " : " + CAPACITE );
+                    if (element.name == "Capacité") {
+                        if (params['capacite'] > CAPACITE) {
+                            displayErrorMessage(Translator.trans("scheduler.error.capacite.format") + " : " + CAPACITE);
                             return false;
                         }
                     }
@@ -230,41 +237,41 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                 if (element.controls.type == "capacite") {
                     let capaciteTotale = params['capacite'];
                     let reg = new RegExp('^[0-9]+$');
-                    let currentProfil = "";            
+                    let currentProfil = "";
                     if (!reg.test(params[element.map_to]) || '' === params[element.map_to]) {
                         displayErrorMessage(Translator.trans("scheduler.error.field") + " " + element.name + " " + Translator.trans("scheduler.error.type"));
                         return false;
-                    } 
+                    }
                     // totalCapacites += parseInt(params[element.map_to]);
-                    if(parseInt(params[element.map_to]) > parseInt(capaciteTotale)) {
-                        displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capaciteTotale );
+                    if (parseInt(params[element.map_to]) > parseInt(capaciteTotale)) {
+                        displayErrorMessage(Translator.trans("scheduler.error.capacite.somme") + " : " + capaciteTotale);
                         return false;
                     }
-                    scheduler.data.item.profilsUtilisateurs.forEach(function(profil){
-                        if(profil.profilUtilisateur.libelle == element.name) {
+                    scheduler.data.item.profilsUtilisateurs.forEach(function(profil) {
+                        if (profil.profilUtilisateur.libelle == element.name) {
                             currentProfil = profil;
                         }
                     })
-                    if(params[element.map_to] > currentProfil.capaciteProfil) {
-                        displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " +element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + currentProfil.capaciteProfil );
+                    if (params[element.map_to] > currentProfil.capaciteProfil) {
+                        displayErrorMessage(Translator.trans("scheduler.error.capacite.profil.debut") + " " + element.name + " " + Translator.trans("scheduler.error.capacite.profil.fin") + " " + currentProfil.capaciteProfil);
                         return false;
-                    }            
+                    }
                 }
-            } 
+            }
         }
 
 
         return true;
     }
 
-    var isNormalInteger = function (str) {
+    var isNormalInteger = function(str) {
         return /^\+?(0|[1-9]\d*)$/.test(str);
     }
 
 
 
 
-    displayErrorMessage = function (message) {
+    displayErrorMessage = function(message) {
         dhtmlx.modalbox({
             text: message,
             width: "500px",
@@ -277,43 +284,43 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
 
     /**  
      * Gestion des capacité par profils
-    */
-    scheduler.attachEvent("onLightbox", function (id) {
+     */
+    scheduler.attachEvent("onLightbox", function(id) {
         // Initialisation lightbox
         let ev = scheduler._events[id];
         if (ev.dependanceSerie) {
             let hiddenElemIds = new Array();
             let shownElemIds = new Array();
-            if(typeof scheduler.data.item.profilsUtilisateurs !== "undefined"){
-                scheduler.data.item.profilsUtilisateurs.forEach(function (formatProfil) {
+            if (typeof scheduler.data.item.profilsUtilisateurs !== "undefined") {
+                scheduler.data.item.profilsUtilisateurs.forEach(function(formatProfil) {
                     let keyStr = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;
                     let section = scheduler.config.lightbox.sections.find(elem => elem.map_to == keyStr);
-                    if (ev.hasOwnProperty(keyStr) || ev.hasOwnProperty("generatedId") ) {
+                    if (ev.hasOwnProperty(keyStr) || ev.hasOwnProperty("generatedId")) {
                         shownElemIds.push(section);
-                    } else { 
+                    } else {
                         hiddenElemIds.push(section);
                     }
                 });
                 show_hide(shownElemIds, hiddenElemIds);
                 scheduler.setLightboxSize();
-                        
+
                 // Modifications des classes
                 let divProfils = document.querySelector(".dhx_multi_select_control");
-                let listCheckboxes = Array.apply(null,divProfils.querySelectorAll('input'));
-                listCheckboxes.forEach(function(checkbox,index) {
+                let listCheckboxes = Array.apply(null, divProfils.querySelectorAll('input'));
+                listCheckboxes.forEach(function(checkbox, index) {
                     let keyStr = 'capaciteProfil_' + checkbox.value;
-                // console.log(scheduler.config.lightbox.sections);
+                    // console.log(scheduler.config.lightbox.sections);
                     let targetId = scheduler.config.lightbox.sections.find(input => input.map_to == keyStr).id;
-                    if('' === checkbox.id) {
-                        checkbox.id = 'checkbox_profil_'+index;
+                    if ('' === checkbox.id) {
+                        checkbox.id = 'checkbox_profil_' + index;
                     }
-                    checkbox.setAttribute('onchange','_uca.common.afficherMasquer('+ checkbox.id + ',' + targetId+');');
+                    checkbox.setAttribute('onchange', '_uca.common.afficherMasquer(' + checkbox.id + ',' + targetId + ');');
                 });
             }
         }
     });
 
-    function show_hide(shownElems, hiddenElems) { 
+    function show_hide(shownElems, hiddenElems) {
         if (Array.isArray(shownElems) && shownElems.length) {
             shownElems.forEach(function(shownElem) {
                 let section = document.getElementById(shownElem.id).parentElement;
@@ -324,7 +331,7 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
             hiddenElems.forEach(function(hiddenElem) {
                 let section = document.getElementById(hiddenElem.id).parentElement;
                 section.style.display = "none";
-        });
+            });
         }
     }
 }

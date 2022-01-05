@@ -20,9 +20,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
-    protected $reservabilite;
-
     /** @ORM\OneToOne(targetEntity="FormatSimple", inversedBy="evenement") */
     protected $formatSimple;
 
@@ -41,6 +38,12 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     /** @ORM\Column(type="boolean", options={"default" : false}) */
     private $eligibleBonus;
+    
+    /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
+    protected $reservabilite;
+
+    /** @ORM\Column(type="text", nullable=true) */
+    protected $informations;
 
     /**
      * Constructor.
@@ -56,7 +59,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'dependanceSerie', 'reservabilite', 'formatSimple', 'description', 'oldId', 'action', 'serie', 'eligibleBonus'];
+        return ['dateDebut', 'dateFin', 'dependanceSerie', 'formatSimple', 'description', 'oldId', 'action', 'serie', 'eligibleBonus', 'reservabilite', 'informations'];
     }
 
     //endregion
@@ -133,29 +136,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
         return $this->serie;
     }
 
-    /**
-     * Set reservabilite.
-     *
-     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
-     *
-     * @return DhtmlxEvenement
-     */
-    public function setReservabilite(Reservabilite $reservabilite = null)
-    {
-        $this->reservabilite = $reservabilite;
-
-        return $this;
-    }
-
-    /**
-     * Get reservabilite.
-     *
-     * @return null|\UcaBundle\Entity\Reservabilite
-     */
-    public function getReservabilite()
-    {
-        return $this->reservabilite;
-    }
 
     /**
      * Set formatSimple.
@@ -253,5 +233,68 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     public function getEligibleBonus()
     {
         return $this->eligibleBonus;
+    }
+
+    /**
+     * Set reservabilite.
+     *
+     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
+     *
+     * @return DhtmlxSerie
+     */
+    public function setReservabilite(Reservabilite $reservabilite = null)
+    {
+        $this->reservabilite = $reservabilite;
+
+        return $this;
+    }
+
+    /**
+     * Get reservabilite.
+     *
+     * @return null|\UcaBundle\Entity\Reservabilite
+     */
+    public function getReservabilite()
+    {
+        return $this->reservabilite;
+    }
+
+    /**
+     * Set informations.
+     *
+     * @param string $informations
+     *
+     * @return DhtmlxEvenement
+     */
+    public function setInformations($informations)
+    {
+        $this->informations = $informations;
+
+        return $this;
+    }
+
+    /**
+     * Get informations.
+     *
+     * @return string
+     */
+    public function getInformations()
+    {
+        return $this->informations;
+    }
+
+    /**
+     * Get etablissement libelle if exist
+     */
+    public function getEtablissementLibelle(): string {
+        if ($this->formatSimple) {
+            return $this->formatSimple->getLieu()->first()->getEtablissement() ? $this->formatSimple->getLieu()->first()->getEtablissement()->getLibelle() : $this->formatSimple->getLieu()->first()->getLibelle();
+        } elseif ($this->reservabilite) {
+            return $this->reservabilite->getRessource()->getEtablissementLibelle();
+        } elseif ($this->serie) {
+            return $this->serie->getEtablissementLibelle();
+        }
+
+        return '';
     }
 }

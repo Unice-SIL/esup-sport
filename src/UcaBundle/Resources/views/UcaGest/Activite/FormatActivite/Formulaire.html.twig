@@ -87,10 +87,9 @@
 		</div>
 		<div class='row'>
 			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.promouvoir) }}
 				{% if FormatClassName == 'UcaBundle\\Entity\\FormatAchatCarte' %}
 					{{ form_row(form.carte) }}
-				{% elseif FormatClassName == 'UcaBundle\\Entity\\FormatSimple' %}
-					{{ form_row(form.promouvoir) }}
 				{% elseif FormatClassName == 'UcaBundle\\Entity\\FormatAvecReservation' %}
 					{{ form_row(form.ressource) }}
 				{% endif %}
@@ -123,7 +122,7 @@
 			<div id="divProfilsUtilisateurs" class='col-sm-4'>
 				{{ form_row(form.formatActivite.profils.profilUtilisateur) }}
 			</div>
-			<div id="divCapaciteProfil" class='col-sm-4'>
+			<div id="divCapaciteProfil" class='{{ CodeFormat == 'reservation' ? 'd-none' : 'col-sm-4' }}'>
 				{{ form_label(form.formatActivite.profils.capaciteProfil) }}
 				{% for formatProfil in form.formatActivite.profils.capaciteProfil %}
 					{% if profilsExistants is defined %}

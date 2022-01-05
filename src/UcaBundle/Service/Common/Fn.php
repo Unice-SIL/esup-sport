@@ -24,7 +24,7 @@ class Fn
 
     public static function strTruncate($str, $length)
     {
-        return strlen($str) > $length ? substr($str, 0, $length).'...' : $str;
+        return strlen($str) > $length ? mb_substr($str, 0, $length).'...' : $str;
     }
 
     public static function intlDateFormat($date, $format)

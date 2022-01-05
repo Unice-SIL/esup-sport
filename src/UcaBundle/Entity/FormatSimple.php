@@ -21,10 +21,6 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
 {
     //region Propriétés
 
-    /** @Gedmo\Versioned
-     * @ORM\Column(type="boolean", nullable=false) */
-    private $promouvoir = false;
-
     /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", cascade={"persist", "remove"}, mappedBy="formatSimple") */
     private $evenement;
 
@@ -74,30 +70,6 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
     }
 
     //endregion
-
-    /**
-     * Set promouvoir.
-     *
-     * @param bool $promouvoir
-     *
-     * @return FormatSimple
-     */
-    public function setPromouvoir($promouvoir)
-    {
-        $this->promouvoir = $promouvoir;
-
-        return $this;
-    }
-
-    /**
-     * Get promouvoir.
-     *
-     * @return bool
-     */
-    public function getPromouvoir()
-    {
-        return $this->promouvoir;
-    }
 
     /**
      * Set evenement.

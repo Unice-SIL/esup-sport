@@ -7,9 +7,10 @@
 
 namespace UcaBundle\Service\Common;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Spipu\Html2Pdf\Html2Pdf;
 use UcaBundle\Entity\Parametrage;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class CreationPdf
 {
@@ -42,6 +43,8 @@ class CreationPdf
         } catch (HTML2PDF_exception $e) {
             exit($e);
         }
+        
+        return new Response();
     }
 
     public function createMultipleView($content, array $viewParams)
@@ -63,5 +66,7 @@ class CreationPdf
         // } catch (HTML2PDF_exception $e) {
         //     die($e);
         // }
+        
+        return new Response();
     }
 }

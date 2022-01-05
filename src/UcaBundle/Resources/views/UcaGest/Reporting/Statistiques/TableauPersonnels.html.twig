@@ -1,19 +1,18 @@
-
-{% set percent_nombre_personnel_inscrit_annee_n = nombre_personnel_annee_n == 0 ? 0 : nombre_personnel_inscrit_annee_n * 100 / nombre_personnel_annee_n %}
-{% set percent_nombre_personnel_inscrit_annee_n_1 = nombre_personnel_annee_n_1 == 0 ? 0 : nombre_personnel_inscrit_annee_n_1 * 100 / nombre_personnel_annee_n_1 %}
+{% set percent_nombre_personnel_inscrit_annee_n = kpi_annee_n.nbPersonnels == 0 ? 0 : kpi_annee_n.nbInscrits * 100 / kpi_annee_n.nbPersonnels %}
+{% set percent_nombre_personnel_inscrit_annee_n_1 = kpi_annee_n_1.nbPersonnels == 0 ? 0 : kpi_annee_n_1.nbInscrits * 100 / kpi_annee_n_1.nbPersonnels %}
 
 <div class="container">
   <div class="row">
     <div class="col-12 table-bordered">
-        {{ 'statistique.KPI.personnels.tableau.nbre_annee_n'|trans }} {{ annee_n }} : <b>{{ nombre_personnel_annee_n }}</b>
+        {{ 'statistique.KPI.personnels.tableau.nbre_annee_n'|trans }} {{ kpi_annee_n.anneeUniversitaire }} : <b>{{ kpi_annee_n.nbPersonnels }}</b>
         <br/>
-        {{ 'statistique.KPI.personnels.tableau.nbre_annee_n_1'|trans }} {{ annee_n_1 }} : <b>{{ nombre_personnel_annee_n_1 }}</b>
+        {{ 'statistique.KPI.personnels.tableau.nbre_annee_n_1'|trans }} {{ kpi_annee_n_1.anneeUniversitaire }} : <b>{{ kpi_annee_n_1.nbPersonnels }}</b>
     </div>
   </div>
 
   <div class="row" style="background-color: rgba(0,0,0,.05);">
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.personnels.tableau.nbre_inscrits'|trans }} : <b>{{ nombre_personnel_inscrit_annee_n }}</b>
+        {{ 'statistique.KPI.personnels.tableau.nbre_inscrits'|trans }} : <b>{{ kpi_annee_n.nbInscrits }}</b>
     </div>
     <div class="col-4 table-bordered">
         {{ 'statistique.KPI.personnels.tableau.percent_inscrit'|trans }} : <b>{{ percent_nombre_personnel_inscrit_annee_n|number_format(2, '.', ' ') }}%</b>
@@ -28,14 +27,14 @@
         {{ 'statistique.KPI.personnels.tableau.nbr_par_categorie'|trans }}:
     </div>
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.personnels.tableau.cat_A'|trans }} : <b>{{ nombre_personnel_inscrit_cat_A_annee_n }}</b>
-        {{ 'statistique.KPI.personnels.tableau.cat_B'|trans }} : <b>{{ nombre_personnel_inscrit_cat_B_annee_n }}</b>
-        {{ 'statistique.KPI.personnels.tableau.cat_C'|trans }} : <b>{{ nombre_personnel_inscrit_cat_C_annee_n }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_A'|trans }} : <b>{{ kpi_annee_n.getNbCatA() }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_B'|trans }} : <b>{{ kpi_annee_n.getNbCatB() }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_C'|trans }} : <b>{{ kpi_annee_n.getNbCatC() }}</b>
     </div>
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.personnels.tableau.cat_A'|trans }} : <b>{{ nombre_personnel_inscrit_cat_A_annee_n_1 }}</b>
-        {{ 'statistique.KPI.personnels.tableau.cat_B'|trans }} : <b>{{ nombre_personnel_inscrit_cat_B_annee_n_1 }}</b>
-        {{ 'statistique.KPI.personnels.tableau.cat_C'|trans }} : <b>{{ nombre_personnel_inscrit_cat_C_annee_n_1 }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_A'|trans }} : <b>{{ kpi_annee_n_1.getNbCatA() }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_B'|trans }} : <b>{{ kpi_annee_n_1.getNbCatB() }}</b>
+        {{ 'statistique.KPI.personnels.tableau.cat_C'|trans }} : <b>{{ kpi_annee_n_1.getNbCatC() }}</b>
     </div>
   </div>
 

@@ -100,6 +100,15 @@ class FormatActiviteType extends AbstractType
                 'label_format' => 'format.image.libelle',
                 'translation_domain' => 'messages',
             ])
+            ->add('promouvoir', ChoiceType::class, [
+                'choices' => [
+                    'Oui' => true,
+                    'Non' => false,
+                ],
+                'label_format' => 'format.promouvoir',
+                'expanded' => true,
+                'multiple' => false,
+                'required' => true, ])
             ->add(
                 $builder->create('profils', FormatActiviteProfilUtilisateurType::class, [
                     'constraints' => new Assert\Valid(),

@@ -98,12 +98,17 @@ class DhtmlxController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ev = $request->request->get('evenement');
+        if (isset($ev['evenementType']) && $ev['evenementType'] == 'ressource' && !isset($ev['enfants'])) {
+            $ev['hasSerie'] = 'false';
+            $ev['dependanceSerie'] = 'true';
+        }
+        
         $c = new DhtmlxCommand($em, $ev);
         if ('delete' == $ev['action']) {
             $item = $c->getItem();
             if ($item instanceof DhtmlxEvenement) {
                 //si on veut supprimer le dernier événement d'une série, on supprime aussi la série pour éviter les problèmes de suppression de format
-                if (sizeof($item->getSerie()->getEvenements()) <= 1) {
+                if ($item->getSerie() !== null && sizeof($item->getSerie()->getEvenements()) <= 1) {
                     $em->remove($item->getSerie());
                 }
             }

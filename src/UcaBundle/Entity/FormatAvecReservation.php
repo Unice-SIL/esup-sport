@@ -14,7 +14,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatAvecReservationRepository")
  * @Gedmo\Loggable
  * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\FormatAvecReservationListener"})
  */
@@ -89,7 +89,7 @@ class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\
      *
      * @param \UcaBundle\Entity\Ressource $ressource
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeRessource(Ressource $ressource)
     {

@@ -10,19 +10,20 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Spipu\Html2Pdf\Html2Pdf;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use UcaBundle\Entity\Appel;
+use Spipu\Html2Pdf\Html2Pdf;
 use UcaBundle\Entity\DhtmlxDate;
-use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\EvenementType;
 use UcaBundle\Form\PlanningMailType;
+use UcaBundle\Entity\DhtmlxEvenement;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("UcaWeb/MonPlanning")
@@ -188,9 +189,19 @@ class MonPlanningController extends Controller
             } catch (HTML2PDF_exception $e) {
                 exit($e);
             }
+
+            return new Response();
         } else {
             return $this->redirectToRoute('UcaWeb_MonPlanning');
         }
+    }
+
+    /**
+     * @Route("/ListeExcel/{id}", name="UcaWeb_PlanningMore_listeExcel")
+     */
+    public function listExcel(Request $request, DhtmlxEvenement $dhtmlxEvenement)
+    {
+        return $this->get('uca.extraction.excel')->getExtractionListeInscription($dhtmlxEvenement);        
     }
 
     /**

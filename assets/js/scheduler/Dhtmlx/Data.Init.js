@@ -22,9 +22,9 @@ $.post(DATAAPI, {
         },
     }
 
-}, function (data) {
+}, function(data) {
     scheduler.data.lists = data;
-    
+
     scheduler.data.lists.profils = [];
     scheduler.data.lists.capaciteProfil = []
     scheduler.data.lists.niveauxSportifs = [];
@@ -43,10 +43,10 @@ $.post(DATAAPI, {
         scheduler.data.lists.lieu = ITEM.lieu;
     }
 
-    
+
     if (scheduler.data.item.type == "creneau") {
-        var nouveauCreneau = ['description', 'tarif', 'profils'];
-        var creneauExistant = ['description', 'tarif', 'capacite', 'profils'];
+        var nouveauCreneau = ['description', 'informations', 'tarif', 'profils'];
+        var creneauExistant = ['description', 'informations', 'tarif', 'capacite', 'profils'];
         scheduler.data.lists.profils.forEach(function(formatProfil) {
             let labelCapacite = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;;
             nouveauCreneau.push(labelCapacite);
@@ -54,27 +54,31 @@ $.post(DATAAPI, {
         });
         scheduler.config.lightbox.toDisplay = {
             new: nouveauCreneau.concat(['capacite', 'niveauSportif', 'encadrant', 'lieu', 'recurring', 'eligibilite', 'time']),
-            update:  creneauExistant.concat(['niveauSportif', 'encadrant', 'lieu', 'eligibilite', 'time'])
+            update: creneauExistant.concat(['niveauSportif', 'encadrant', 'lieu', 'eligibilite', 'time'])
         };
-    }
-
-    else if (scheduler.data.item.type == "reservation") {
+    } else if (scheduler.data.item.type == "reservation") {
         scheduler.config.lightbox.toDisplay = {
             new: ['description', 'resources', 'recurring', 'time'],
             update: ['description', 'resources', 'time']
         };
-    }
-    else if (scheduler.data.item.type == "ressource") {
+    } else if (scheduler.data.item.type == "ressource") {
+        let nouvelleRessource = ['description', 'recurring', 'time', 'capacite', 'profils'];
+        let ressourceExistante = ['description', 'time', 'capacite', 'profils'];
+        scheduler.data.lists.profils.forEach(function(formatProfil) {
+            let labelCapacite = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;;
+            nouvelleRessource.push(labelCapacite);
+            ressourceExistante.push(labelCapacite);
+        });
         scheduler.config.lightbox.toDisplay = {
-            new: ['description', 'recurring', 'time'],
-            update: ['description', 'time']
+            new: nouvelleRessource,
+            update: ressourceExistante
         };
     }
 
 
     //not display element if  they not exist
     for (var i in scheduler.config.lightbox.toDisplay) {
-        scheduler.config.lightbox.toDisplay[i].filter(function (value, index, arr) {
+        scheduler.config.lightbox.toDisplay[i].filter(function(value, index, arr) {
             if (value == "encadrant" && !scheduler.data.item.estEncadre) {
                 delete arr[index];
             }
@@ -87,7 +91,7 @@ $.post(DATAAPI, {
         });
     }
 
-    if (typeof (ITEM.dateFinEffective) !== "undefined") {
+    if (typeof(ITEM.dateFinEffective) !== "undefined") {
         var date = new Date(ITEM.dateFinEffective);
         var day = date.getDate();
         var month = date.getMonth() + 1;
@@ -104,7 +108,7 @@ $.post(DATAAPI, {
 }).fail(_uca.ajax.fail);
 
 scheduler.data.fn = {};
-scheduler.data.fn.toOptions = function (list) {
+scheduler.data.fn.toOptions = function(list) {
     if (list.data == null) {
         return;
     }
@@ -119,7 +123,7 @@ scheduler.data.fn.toOptions = function (list) {
     }
 
     return listeOptions.concat(
-        list.data.map(function (item) {
+        list.data.map(function(item) {
             var label = "";
             for (let i = 0; i < list['libelle'].length; i++) {
                 const element = list['libelle'][i];
@@ -127,7 +131,7 @@ scheduler.data.fn.toOptions = function (list) {
                     label += list.libelleSeparateur;
                 }
 
-                if (item.objectClass == 'UcaBundle\\Entity\\FormatActiviteProfilUtilisateur') {
+                if (item.objectClass == 'UcaBundle\\Entity\\FormatActiviteProfilUtilisateur' || item.objectClass == 'UcaBundle\\Entity\\RessourceProfilUtilisateur') {
                     item = item.profilUtilisateur;
                 }
                 label += item[element];

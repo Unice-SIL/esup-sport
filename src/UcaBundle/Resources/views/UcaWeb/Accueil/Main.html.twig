@@ -45,6 +45,75 @@
             </div>
         </div>
     </section>
+    
+    {# Section pour la mise en avant des formats d'activité avec creneau #}
+    {% if item_format_avec_creaneau|length > 0 %}
+        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Cours') }}') no-repeat center center;background-size: cover;">
+            <div class="container">
+                <div class="row d-block">
+                    <h2 class="text-center h2-light">{{ "accueil.miseavantcours.title"|trans }}</h2>
+                </div>
+                <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                    {% for item in item_format_avec_creaneau %}
+                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ item.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <div class="align-self-center text-center w-100 mb-0">
+                                <i class="fas fa-calendar-alt text-white mb-2"></i>
+                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ item.libelle }}</p>
+                            </div>
+                            {% set ctaButtonFormat = item.format~'.button' %}
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path('UcaWeb_FormatActiviteDetail', {idCa: item.activite.classeActivite.id, idA: item.activite.id} | merge( {id: item.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {# Section pour la mise en avant des formats d'activité avec reservation #}
+    {% if item_format_avec_ressource|length > 0 %}
+        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Reservation') }}') no-repeat center center;background-size: cover;">
+            <div class="container">
+                <div class="row d-block">
+                    <h2 class="text-center h2-light">{{ "accueil.miseavantreservation.title"|trans }}</h2>
+                </div>
+                <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                    {% for item in item_format_avec_ressource %}
+                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ item.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <div class="align-self-center text-center w-100 mb-0">
+                                <i class="fas fa-table-tennis text-white mb-2"></i>
+                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ item.libelle }}</p>
+                            </div>
+                            {% set ctaButtonFormat = item.format~'.button' %}
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path('UcaWeb_FormatActiviteDetail', {idCa: item.activite.classeActivite.id, idA: item.activite.id} | merge( {id: item.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+    {# Section pour la mise en avant des formats d'activité avec carte #}
+    {% if item_format_avec_carte|length > 0 %}
+        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Carte') }}') no-repeat center center;background-size: cover;">
+            <div class="container">
+                <div class="row d-block">
+                    <h2 class="text-center h2-light">{{ "accueil.miseavantcarte.title"|trans }}</h2>
+                </div>
+                <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                    {% for item in item_format_avec_carte %}
+                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ item.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <div class="align-self-center text-center w-100 mb-0">
+                                <i class="fas fa-credit-card text-white mb-2"></i>
+                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ item.libelle }}</p>
+                            </div>
+                            {% set ctaButtonFormat = item.format~'.button' %}
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path('UcaWeb_FormatActiviteDetail', {idCa: item.activite.classeActivite.id, idA: item.activite.id} | merge( {id: item.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
 
     <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
         <div class="container">
@@ -103,6 +172,7 @@
     {% endif %}
 {% endblock %}
 {% block javascripts %}
+    {{ parent() }}
 <script type="text/javascript">
     $('.carousel').carousel({interval: false})
 

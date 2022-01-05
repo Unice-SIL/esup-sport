@@ -30,6 +30,7 @@ scheduler.attachEvent("onEventPasted", function(isCopy, pasted_ev, original_ev) 
         pasted_ev.dateDebut = dateToStr(pasted_ev.start_date);
         pasted_ev.dateFin = dateToStr(pasted_ev.end_date);
         pasted_ev.description = pasted_ev.text;
+        pasted_ev.informations = pasted_ev.infos;
         let copie = original_ev.getCopie();
         copie.load(pasted_ev);
         copie.id = pasted_ev.id + "_copy";
@@ -90,12 +91,14 @@ function addEl(evenement, item, serie, isSerie) {
         }
 
         eventC.load(evenement);
+        eventC = extend(eventC, evenement);
         eventC.hasSerie = true;
         eventC.dateDebut = dateToStr(item.start_date);
         eventC.dateFin = dateToStr(item.end_date);
         eventC.end_date = dateToStr(item.end_date);
         eventC.start_date = dateToStr(item.start_date);
         eventC.text = evenement.text;
+        eventC.infos = evenement.infos;
         eventC.dependanceSerie = true;
         eventC.action = "insert";
         scheduler._events[eventC.id] = eventC;
@@ -111,6 +114,11 @@ function addEl(evenement, item, serie, isSerie) {
 
         return event;
     }
+}
+
+var extend = function(obj, src) {
+    Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
+    return obj;
 }
 
 var addSerie = function(evenement) {
@@ -165,6 +173,7 @@ scheduler.attachEvent("onEventSave", function(id, ev, is_new) {
 
             eventDhtmlx.load(ev);
             eventDhtmlx.text = ev.text
+            eventDhtmlx.infos = ev.infos
             _uca.ajax.showLoader();
             isOccurrenceDependance(ev.serie, function(result) {
                 _uca.ajax.hideLoader();
@@ -185,6 +194,7 @@ scheduler.attachEvent("onEventSave", function(id, ev, is_new) {
 
             eventDhtmlx.load(ev);
             eventDhtmlx.text = ev.text
+            eventDhtmlx.infos = ev.infos
             eventDhtmlx.dependanceSerie = false;
             eventDhtmlx.save('update');
         }
@@ -261,6 +271,7 @@ scheduler.attachEvent("onBeforeLightbox", function(id) {
     if (scheduler.isNewEvent(id)) {
 
         scheduler._events[id].text = scheduler.data.item.description;
+        scheduler._events[id].infos = scheduler.data.item.informations;
         scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.new, id);
     } else {
         scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.update, id);

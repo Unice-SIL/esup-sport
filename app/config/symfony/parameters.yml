@@ -15,4 +15,6 @@ parameters:
     mailer_auth_mode: login
     mailer_name: 'Uca Sport'
     secret: 98e78e48892642ddbe22ca2cdb74ac607130daa8
-    mailer_exception: ['laura.paumier@acatus.fr', 'valentin.gimonnet@acatus.fr']
+    mailer_exception:
+        - laura.paumier@acatus.fr
+        - valentin.gimonnet@acatus.fr

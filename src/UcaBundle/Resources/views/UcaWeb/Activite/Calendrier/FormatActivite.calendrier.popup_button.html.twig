@@ -2,12 +2,12 @@
   {% set creneau = event.serie.creneau %}
   {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
 {% elseif typeFormat == 'FormatAvecReservation' %}
-  {% set creneau = event.reservabilite %}
-  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user, formatActivite) %}  
+  {% set creneau = event.reservabilite is not null ? event.reservabilite : event.serie.reservabilite %}
+  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user, formatActivite, null, event) %}  
 {% endif %}
 <!-- {{ inscriptionInformations.statut }} -->
 {% if inscriptionInformations.statut in ['previsualisation'] %}
-  <button class="btn btn-success disabled">{{ 'common.inscrire' | trans }}</button>
+  <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans }}</button>
 {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
   <p class="m-0 fs-14 fw-500 color-blue">
     <i class="fas fa-check-circle"></i>
@@ -23,9 +23,9 @@
   {% set isValideAutorisation = isValideAutorisation(creneau, app.user) %}
   {% if isValideAutorisation.valid %}
       {% if typeFormat == "FormatAvecCreneau"%}
-      <button class="btn btn-success js-inscription" data-type="UcaBundle:Creneau" data-dismiss="modal" data-id="{{ creneau.id }}">{{ "creneau.list.reserver"|trans }}</button>  
+      <button class="btn btn-primary js-inscription" data-type="UcaBundle:Creneau" data-dismiss="modal" data-id="{{ creneau.id }}">{{ "creneau.list.reserver"|trans }}</button>  
     {% elseif typeFormat == 'FormatAvecReservation' %}
-      <button class="btn btn-success js-inscription" data-type="UcaBundle:Reservabilite" data-dismiss="modal" data-id="{{ creneau.id }}" data-id-format="{{ formatActivite.id }}">{{ "creneau.list.reserver"|trans }}</button>
+      <button class="btn btn-primary js-inscription" data-type="UcaBundle:Reservabilite" data-dismiss="modal" data-id="{{ creneau.id }}" data-id-format="{{ formatActivite.id }}">{{ "creneau.list.reserver"|trans }}</button>
     {% endif %}
   {% else %}
     <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">

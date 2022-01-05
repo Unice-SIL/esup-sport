@@ -13,6 +13,7 @@ use Sg\DatatablesBundle\Datatable\Column\Column;
 use UcaBundle\Datatables\Button\LogButton;
 use UcaBundle\Datatables\Button\ModifierButton;
 use UcaBundle\Datatables\Button\SupprimerButton;
+use UcaBundle\Datatables\Column\TwigVirtualColumn;
 
 class ProfilUtilisateurDatatable extends AbstractTranslatedDatatable
 {
@@ -20,13 +21,20 @@ class ProfilUtilisateurDatatable extends AbstractTranslatedDatatable
     {
         $this->setUcaDefault();
 
+        $this->addInvisibleColumns([
+            'id',
+            'parent.libelle'
+        ]);
+
         $this->columnBuilder
-            ->add('id', Column::class, [
-                'title' => 'Id',
-                'visible' => false,
-            ])
             ->add('libelle', Column::class, [
                 'title' => $this->translator->trans('common.libelle'),
+            ])
+            ->add('parent', TwigVirtualColumn::class, [
+                'title' => $this->translator->trans('profilutilisateur.parent'),
+                'twigTemplate' => 'ProfilParent',
+                'orderable' => true,
+                'order_column' => 'parent.libelle'
             ])
             ->add('nbMaxInscriptions', Column::class, [
                 'title' => $this->translator->trans('profilutilisateur.nbmaxinscriptions.libelle'),

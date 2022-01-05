@@ -1,14 +1,13 @@
-import {transformDate} from "./handleEvent";
-import {Load} from "./Load";
+import { transformDate } from "./handleEvent";
+import { Load } from "./Load";
 
 var Evenement = {
 
 
     // save the data of this object
     // use when the we need to update only one occurence         
-    save: function(data, url)
-    {
-        if(typeof url == "undefined"){
+    save: function(data, url) {
+        if (typeof url == "undefined") {
             url = DHTMLXAPI
         }
 
@@ -22,21 +21,19 @@ var Evenement = {
                 evenement: obj,
                 id: scheduler.data.item.id
             }
-        }).done(function (data) {
-            if(data.oldId !== null){
+        }).done(function(data) {
+            if (data.oldId !== null) {
                 scheduler._events[data.oldId].saveCallback(data);
-            }
-            else{
+            } else {
                 scheduler._events[data.id].saveCallback(data);
             }
-        }).fail(_uca.ajax.fail);            
+        }).fail(_uca.ajax.fail);
     },
 
     //use to instanciate the object
-    load: function(data)
-    {
+    load: function(data) {
         this.extend(this, data);
-        if(data.evenement != null){
+        if (data.evenement != null) {
             this.serie = data.evenement.serie;
         }
         this.evenement = null;
@@ -45,31 +42,36 @@ var Evenement = {
         this.dateDebut = data.dateDebut;
         this.end_date = transformDate(data.dateFin);
         this.dateFin = data.dateFin;
-        if(data.eligibleBonus != undefined){
+        if (data.eligibleBonus != undefined) {
             this.eligible_bonus = data.eligibleBonus;
-        }else{
+        } else {
             this.eligible_bonus = data.eligibleBonus = data.eligible_bonus;
         }
         this.event_pid = null;
-        if(data.description != null){
+        if (data.description != null) {
             this.text = data.description;
-        }
-        else if(data.text != null){
+        } else if (data.text != null) {
             this.text = data.text;
+        }
+
+        if (data.informations != null) {
+            this.infos = data.informations;
+        } else if (data.infos != null) {
+            this.infos = data.infos;
+        } else {
+            this.infos = null;
         }
     },
 
     //search in scheduler series the parent
-    getParent: function()
-    {
-        if(this.serie == null){
+    getParent: function() {
+        if (this.serie == null) {
             return "undefined";
         }
         return scheduler._series[this.serie.id];
     },
 
-    send: function(evenement)
-    {
+    send: function(evenement) {
         $.ajax({
             method: "POST",
             url: DHTMLXAPI,
@@ -77,7 +79,7 @@ var Evenement = {
                 evenement: evenement,
                 id: scheduler.data.item.id
             }
-        }).done(function (item) {
+        }).done(function(item) {
             if (item.oldId in scheduler._series || item.oldId in scheduler._events) {
 
                 //scheduler.getEvent(item.oldId).saveCallback(item);
@@ -86,44 +88,40 @@ var Evenement = {
     },
 
 
-    extend: function(obj, src) 
-    {
+    extend: function(obj, src) {
         Object.keys(src).forEach(function(key) { obj[key] = src[key]; });
         return obj;
     },
 
     //call after saveDb return 
-    saveCallback: function(data)
-    {
-        scheduler.updateEvent(data.id);            
+    saveCallback: function(data) {
+        scheduler.updateEvent(data.id);
     },
-    
+
     /*
-    * remove proto function 
-    * prevent jquery to callback them
-    * if we don't delete them, jquery call saveBd 2 times
-    */
-    clean: function(obj){
-        if(Array.isArray(obj)){
+     * remove proto function 
+     * prevent jquery to callback them
+     * if we don't delete them, jquery call saveBd 2 times
+     */
+    clean: function(obj) {
+        if (Array.isArray(obj)) {
             for (let i = 0; i < obj.length; i++) {
                 const element = obj[i];
-                if(typeof element.__proto__ !== "undefined"){
-                    element.__proto__ = {}; 
+                if (typeof element.__proto__ !== "undefined") {
+                    element.__proto__ = {};
                 }
             }
-        }
-        else if (typeof obj != "undefined" && obj != null){
+        } else if (typeof obj != "undefined" && obj != null) {
             obj.__proto__ = {};
         }
         return obj;
 
     },
-    
-    isSerie: function () {
-        if(this.rec_type != null && this.rec_type !== '' && this.rec_type !== 'none' || typeof this.objectClass !== "undefined" && this.objectClass.indexOf("UcaBundle\\Entity\\DhtmlxSerie" == -1)){
+
+    isSerie: function() {
+        if (this.rec_type != null && this.rec_type !== '' && this.rec_type !== 'none' || typeof this.objectClass !== "undefined" && this.objectClass.indexOf("UcaBundle\\Entity\\DhtmlxSerie" == -1) && this.serie != null) {
             return true;
-        }
-        else if(this.getParent() != "undefined"){
+        } else if (this.getParent() != "undefined") {
             return true;
         }
         return false;
@@ -131,4 +129,4 @@ var Evenement = {
 
 };
 
-export {Evenement}
+export { Evenement }

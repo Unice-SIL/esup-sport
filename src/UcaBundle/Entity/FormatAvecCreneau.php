@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="UcaBundle\Repository\FormatAvecCreneauRepository")
  * @Gedmo\Loggable
  */
 class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
@@ -66,7 +66,7 @@ class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Inte
      *
      * @param \UcaBundle\Entity\Creneau $creneaux
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeCreneaux(Creneau $creneaux)
     {

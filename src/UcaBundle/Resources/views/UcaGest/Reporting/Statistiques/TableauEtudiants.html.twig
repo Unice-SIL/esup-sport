@@ -1,23 +1,23 @@
 
-{% set percent_nombre_etu_inscrit_activite_annee_n = nombre_etu_annee_n == 0 ? 0 : nombre_etu_inscrit_activite_annee_n * 100 / nombre_etu_annee_n %}
-{% set percent_nombre_etu_inscrit_activite_annee_n_1 = nombre_etu_annee_n_1 == 0 ? 0 : nombre_etu_inscrit_activite_annee_n_1 * 100 / nombre_etu_annee_n_1 %}
-{% set percent_nombre_etu_inscrit_boursier_annee_n = nombre_etu_annee_n == 0 ? 0 : nombre_etu_inscrit_boursier_annee_n * 100 / nombre_etu_annee_n %}
-{% set percent_nombre_etu_inscrit_boursier_annee_n_1 = nombre_etu_annee_n_1 == 0 ? 0 : nombre_etu_inscrit_boursier_annee_n_1 * 100 / nombre_etu_annee_n_1 %}
-{% set percent_nombre_etu_inscrit_shnu_annee_n = nombre_etu_annee_n == 0 ? 0 : nombre_etu_inscrit_shnu_annee_n * 100 / nombre_etu_annee_n %}
-{% set percent_nombre_etu_inscrit_shnu_annee_n_1 = nombre_etu_annee_n_1 == 0 ? 0 : nombre_etu_inscrit_shnu_annee_n_1 * 100 / nombre_etu_annee_n_1 %}
+{% set percent_nombre_etu_inscrit_activite_annee_n = kpi_annee_n.nbEtudiants == 0 ? 0 : kpi_annee_n.nbInscrits * 100 / kpi_annee_n.nbEtudiants %}
+{% set percent_nombre_etu_inscrit_activite_annee_n_1 = kpi_annee_n_1.nbEtudiants == 0 ? 0 : kpi_annee_n_1.nbInscrits * 100 / kpi_annee_n_1.nbEtudiants %}
+{% set percent_nombre_etu_inscrit_boursier_annee_n = kpi_annee_n.nbEtudiants == 0 ? 0 : kpi_annee_n.nbBoursier * 100 / kpi_annee_n.nbEtudiants %}
+{% set percent_nombre_etu_inscrit_boursier_annee_n_1 = kpi_annee_n_1.nbEtudiants == 0 ? 0 : kpi_annee_n_1.nbBoursier * 100 / kpi_annee_n_1.nbEtudiants %}
+{% set percent_nombre_etu_inscrit_shnu_annee_n = kpi_annee_n.nbEtudiants == 0 ? 0 : kpi_annee_n.nbShnu * 100 / kpi_annee_n.nbEtudiants %}
+{% set percent_nombre_etu_inscrit_shnu_annee_n_1 = kpi_annee_n_1.nbEtudiants == 0 ? 0 : kpi_annee_n_1.nbShnu * 100 / kpi_annee_n_1.nbEtudiants %}
 
 <div class="container">
   <div class="row">
     <div class="col-12 table-bordered">
-        {{ 'statistique.KPI.etudiants.tableau.nbre_annee_n'|trans }} {{ annee_n }} : <b>{{ nombre_etu_annee_n }}</b>
+        {{ 'statistique.KPI.etudiants.tableau.nbre_annee_n'|trans }} {{ kpi_annee_n.anneeUniversitaire }} : <b>{{ kpi_annee_n.nbEtudiants }}</b>
         <br/>
-        {{ 'statistique.KPI.etudiants.tableau.nbre_annee_n_1'|trans }} {{ annee_n_1 }} : <b>{{ nombre_etu_annee_n_1 }}</b>
+        {{ 'statistique.KPI.etudiants.tableau.nbre_annee_n_1'|trans }} {{ kpi_annee_n_1.anneeUniversitaire }} : <b>{{ kpi_annee_n_1.nbEtudiants }}</b>
     </div>
   </div>
 
   <div class="row" style="background-color: rgba(0,0,0,.05);">
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.etudiants.tableau.nbre_inscrits'|trans }} : <b>{{ nombre_etu_inscrit_annee_n }}</b>
+        {{ 'statistique.KPI.etudiants.tableau.nbre_inscrits'|trans }} : <b>{{ kpi_annee_n.nbInscrits }}</b>
     </div>
     <div class="col-4 table-bordered">
         {{ 'statistique.KPI.etudiants.tableau.percent_inscrit_activite'|trans }} : <b>{{ percent_nombre_etu_inscrit_activite_annee_n|number_format(2, '.', ' ') }}%</b>
@@ -29,7 +29,7 @@
 
   <div class="row">
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.etudiants.tableau.nbre_boursier'|trans }} : <b>{{ nombre_etu_inscrit_boursier_annee_n }}</b>
+        {{ 'statistique.KPI.etudiants.tableau.nbre_boursier'|trans }} : <b>{{ kpi_annee_n.nbBoursier }}</b>
     </div>
     <div class="col-4 table-bordered">
         {{ 'statistique.KPI.etudiants.tableau.percent_boursier'|trans }} : <b>{{ percent_nombre_etu_inscrit_boursier_annee_n|number_format(2, '.', ' ') }}%</b>
@@ -41,7 +41,7 @@
 
   <div class="row" style="background-color: rgba(0,0,0,.05);">
     <div class="col-4 table-bordered">
-        {{ 'statistique.KPI.etudiants.tableau.nbre_shnu'|trans }} : <b>{{ nombre_etu_inscrit_shnu_annee_n }}</b>
+        {{ 'statistique.KPI.etudiants.tableau.nbre_shnu'|trans }} : <b>{{ kpi_annee_n.nbShnu }}</b>
     </div>
     <div class="col-4 table-bordered">
         {{ 'statistique.KPI.etudiants.tableau.percent_shnu'|trans }} : <b>{{ percent_nombre_etu_inscrit_shnu_annee_n|number_format(2, '.', ' ') }}%</b>

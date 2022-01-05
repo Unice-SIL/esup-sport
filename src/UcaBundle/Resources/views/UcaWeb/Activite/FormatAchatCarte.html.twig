@@ -97,6 +97,7 @@
 {% endblock %}
 
 {% block javascripts %}
+  {{ parent() }}
   {{ Inscription.Js }}
   <script type="text/javascript">
     'use_strict';

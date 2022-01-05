@@ -27,8 +27,10 @@ class ActiviteRepository extends \Doctrine\ORM\EntityRepository
             $qb
                 ->leftJoin('f.profilsUtilisateurs', 'fp')
                 ->leftJoin('fp.profilUtilisateur', 'p')
+                ->leftJoin('p.enfants', 'e')
                 ->leftJoin('p.utilisateur', 'u')
-                ->andWhere('u.id = :idUtilisateur')
+                ->leftJoin('e.utilisateur', 'ue')
+                ->andWhere('u.id = :idUtilisateur or ue.id = :idUtilisateur')
                 ->setParameter('idUtilisateur', $user->getId())
             ;
         }
@@ -106,5 +108,25 @@ class ActiviteRepository extends \Doctrine\ORM\EntityRepository
         $qb = $this->createQueryBuilder('activite')->select('MAX(activite.ordre)');
 
         return $result = $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function findRecherche($idActivite = null, $idEtablissement = null) {        
+        $qb = $this->createQueryBuilder('a');
+
+        if ($idActivite !== null && $idActivite !== '' && $idActivite !== '0' && $idActivite !== 0) {
+            $qb->andWhere('a.id = :idActivite')
+                ->setParameter('idActivite', $idActivite)
+            ;
+        }
+
+        if ($idEtablissement !== null && $idEtablissement !== '' && $idEtablissement !== '0' && $idEtablissement !== 0) {
+            $qb->leftJoin('a.formatsActivite', 'fa')
+                ->leftJoin('fa.lieu', 'l')
+                ->andWhere('l.etablissement = :idEtablissement')
+                ->setParameter('idEtablissement', $idEtablissement)
+            ;
+        }
+
+        return $qb->orderBy('a.libelle', 'asc')->getQuery()->getResult();
     }
 }

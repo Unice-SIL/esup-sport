@@ -22,6 +22,9 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
 
     /** @ORM\OneToOne(targetEntity="Creneau", cascade={"persist", "remove"}, inversedBy="serie") */
     protected $creneau;
+
+    /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="serie") */
+    protected $reservabilite;
     //region Propriétés
 
     /** @ORM\OneToMany(targetEntity="DhtmlxEvenement", mappedBy="serie", cascade={"persist", "remove"})) */
@@ -44,7 +47,7 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'evenements', 'recurrence', 'dateFinSerie', 'creneau', 'oldId', 'action'];
+        return ['dateDebut', 'dateFin', 'evenements', 'recurrence', 'dateFinSerie', 'creneau', 'oldId', 'action', 'reservabilite'];
     }
 
     //endregion
@@ -213,5 +216,39 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
     public function getCreneau()
     {
         return $this->creneau;
+    }
+
+    /**
+     * Set reservabilite.
+     *
+     * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
+     *
+     * @return DhtmlxSerie
+     */
+    public function setReservabilite(Reservabilite $reservabilite = null)
+    {
+        $this->reservabilite = $reservabilite;
+
+        return $this;
+    }
+
+    /**
+     * Get reservabilite.
+     *
+     * @return null|\UcaBundle\Entity\Reservabilite
+     */
+    public function getReservabilite()
+    {
+        return $this->reservabilite;
+    }
+
+    public function getEtablissementLibelle(): string {
+        if ($this->creneau) {
+            return $this->creneau->getLieu()->getEtablissement() ? $this->creneau->getLieu()->getEtablissement()->getLibelle() : $this->creneau->getLieu()->getLibelle();
+        } elseif ($this->reservabilite) {
+            return $this->reservabilite->getRessource()->getEtablissementLibelle();
+        }
+
+        return '';
     }
 }
