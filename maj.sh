@@ -3,8 +3,8 @@
 ### Execution des commandes de mise à jour des dépendances
 # echo composer update
 # composer update
-echo yarn upgrade
-yarn upgrade
+# echo yarn upgrade
+# yarn upgrade
 echo yarn install
 yarn install
 echo php bin/console assets:install --symlink assets
