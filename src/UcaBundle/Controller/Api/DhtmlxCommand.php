@@ -37,9 +37,11 @@ class DhtmlxCommand
         $this->em = $em;
         $this->data = $data;
         $this->commands = [];
-        if (in_array($data['action'], ['insert', 'update', 'delete', 'extend'])) {
+        if (isset($data['action']) && in_array($data['action'], ['insert', 'update', 'delete', 'extend'])) {
             $this->action = $data['action'];
-        } else {
+        } elseif (!isset($data['action']) && $parent) {
+            $this->action = $parent->action;
+        }else {
             throw new \Exception("L'action ".$data['action']." n'est pas valide !");
         }
         $this->initItemAndCommands($parent);
@@ -59,7 +61,7 @@ class DhtmlxCommand
             $this->item->setDateFin(new \DateTime($this->data['dateFin']));
             if ('UcaBundle\Entity\DhtmlxEvenement' == get_class($this->item)) {
                 $this->item->setDependanceSerie(isset($this->data['dependanceSerie']) && 'true' == $this->data['dependanceSerie']);
-                $this->item->setInformations($this->data['infos']);
+                $this->item->setInformations(isset($this->data['infos']) ? $this->data['infos'] : null);
                 if ($this->item->getDependanceSerie()) {
                     $this->item->setDescription($this->data['text']);
                 }
@@ -76,7 +78,7 @@ class DhtmlxCommand
                 }
                 $this->dateFinSerie = new \DateTime($this->data['dateFinSerie']);
             }
-            if (($this->isCreneauEvent() || $this->isRessourceEvent()) && isset($this->data['capacite'])) {
+            if (($this->isCreneauEvent() || $this->isRessourceEvent()) && isset($this->data['capacite']) && $this->getReferenceItem()) {
                 $this->getReferenceItem()->setCapacite($this->data['capacite']);
             }
 
@@ -135,8 +137,8 @@ class DhtmlxCommand
                 array_push($this->commands, new DhtmlxCommand($this->em, $enfant, $this));
             }
         }
-        $this->item->oldId = $this->data['id'];
-        $this->item->action = $this->data['action'];
+        $this->item->oldId = isset($this->data['id']) ? $this->data['id'] : null;
+        $this->item->action = isset($this->data['action']) ? $this->data['action'] : $parent->action;
     }
 
     private function isCreneauEvent()
@@ -176,7 +178,7 @@ class DhtmlxCommand
             $c = new Creneau();
             $c->setFormatActivite($this->em->getReference(FormatActivite::class, $this->data['reference_id']));
             $this->item->setCreneau($c);
-        } elseif ($this->isRessourceEvent()) {
+        } elseif ($this->isRessourceEvent() && isset($this->data['reference_id'])) {
             $r = new Reservabilite();
             $r->setCapacite($this->data['capacite'] ?? 0);
             $r->setRessource($this->em->getReference(Ressource::class, $this->data['reference_id']));

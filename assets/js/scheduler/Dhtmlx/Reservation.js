@@ -37,7 +37,7 @@ var Reservation = {
         }
 
         // if data has id, retrieve profil
-        if (typeof this.evenement.serie != "undefined" && this.evenement.serie != null) {
+        if (typeof this.evenement.serie != "undefined" && this.evenement.serie != null && typeof this.getParent().reservabilite != "undefined" && this.getParent().reservabilite != null) {
             //this.text = this.getParent().creneau.formatActivite.description;
             this.serieOffset = this.start_date.getTime() - (transformDate(this.getParent().dateDebut)).getTime();
             this.capacite = this.getParent().reservabilite.capacite;

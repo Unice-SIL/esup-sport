@@ -189,4 +189,19 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
 
         return $retour;
     }
+
+    public function findEventByRessourceAndDate($ressourceId, $dateDebut, $dateFin) {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.reservabilite', 're')
+            ->leftJoin('re.ressource', 'r')
+            ->where('r.id = :id')
+            ->andWhere('e.dateDebut <= :dateFin')
+            ->andWhere('e.dateFin >= :dateDebut')
+            ->setParameter('id', $ressourceId)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

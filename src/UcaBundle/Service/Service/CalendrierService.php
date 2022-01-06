@@ -76,6 +76,8 @@ class CalendrierService
 
         if ($parametreData['typeVisualisation'] == 'jour') {
             $res['content'] = $this->createMobilePlanning($item, $parametreData, $twigConfig);
+        } elseif ($parametreData['typeVisualisation'] == 'semaine') {
+            $res['content'] = $this->createWeekPlanning($item, $parametreData, $twigConfig);
         } else {
             $res['content'] = $this->createDesktopPlanning($item, $parametreData, $twigConfig);
         }
@@ -94,7 +96,7 @@ class CalendrierService
      */
     public function createDesktopPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string
     {
-        $currentDate = $twigConfig['currentDate'];        
+        $currentDate = clone $twigConfig['currentDate'];        
 
         $nbJour = 0;
         if ($parametreData['widthWindow'] > 1425) {
@@ -178,7 +180,7 @@ class CalendrierService
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $listeEvenements = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $datefin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $listeEvenements = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDatesByRessource($parametreData['idRessource'], $dateDebut, $datefin);
+            $listeEvenements = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin);
         }
 
         foreach ($listeEvenements as $evenement) {
@@ -239,6 +241,97 @@ class CalendrierService
         return $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig', $twigConfig);
     }
 
+    public function createWeekPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string {
+        $currentDate = clone $twigConfig['currentDate'];        
+
+        $nbJour = 0;
+        if ($parametreData['widthWindow'] > 1425) {
+            $nbJour = 7;
+        } elseif ($parametreData['widthWindow'] <= 1425 && $parametreData['widthWindow'] > 1250) {
+            $nbJour = 6;
+        } elseif ($parametreData['widthWindow'] <= 1250 && $parametreData['widthWindow'] > 1100) {
+            $nbJour = 5;
+        } elseif ($parametreData['widthWindow'] <= 1100 && $parametreData['widthWindow'] > 910) {
+            $nbJour = 4;
+        } elseif ($parametreData['widthWindow'] <= 910 && $parametreData['widthWindow'] > 750) {
+            $nbJour = 3;
+        } elseif ($parametreData['widthWindow'] <= 750 && $parametreData['widthWindow'] > 580) {
+            $nbJour = 2;
+        } elseif ($parametreData['widthWindow'] <= 580) {
+            $nbJour = 1;
+        }
+        $twigConfig['nbJour'] = $nbJour;
+
+        $dates = [];
+        $dateDebut = null;
+        $datefin = null;
+        if (7 == $nbJour) {
+            for ($d = 1; $d <= 7; ++$d) {
+                $dt = clone $currentDate;
+                $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
+                $dates[] = $dt;
+            }
+        } else {
+            for ($d = 0; $d < $nbJour; ++$d) {
+                $dt = clone $currentDate;
+                date_add($dt, date_interval_create_from_date_string($d.' days'));
+                $dates[] = $dt;
+            }
+        }
+        $dateDebut = $dates[array_key_first($dates)];
+        $datefin = $dates[array_key_last($dates)];
+
+        $datefin = (clone $datefin)->setTime(23, 59);
+        $twigConfig['listeJours'] = $dates;
+
+        $listeCampus = [];
+        $dataCalendrier = [];
+
+        if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
+            $listeEvenements = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $datefin);
+        } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
+            $listeEvenements = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin);
+        }
+
+        foreach ($listeEvenements as $evenement) {
+            if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
+                if ($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()) {
+                    $campus = $this->etablissementRepository->findOneById($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()->getId());
+                } else {
+                    $c = [];
+                    $c['libelle'] = $this->translator->trans('etablissement.exterieur');
+                    $campus = $c;
+                }
+            } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
+                $campus = 'Ressource';
+            }
+
+            $indexColonneCorrespondantDate = null;
+            $indexLigneCorrespondantCampus = null;
+            $eventDateDebut = (clone $evenement->getDateDebut())->setTime(0, 0);
+
+            if (0 == count($listeCampus) || !in_array($campus, $listeCampus)) {
+                $listeCampus[] = $campus;
+                $dataCalendrier[] = array_fill(0, count($dates), null);
+                $indexLigneCorrespondantCampus = count($listeCampus) - 1;
+            } else {
+                $indexLigneCorrespondantCampus = array_search($campus, $listeCampus);
+            }
+            $indexColonneCorrespondantDate = array_search($eventDateDebut, $dates);
+
+            if (!array_key_exists($indexLigneCorrespondantCampus, $dataCalendrier) || !array_key_exists($indexColonneCorrespondantDate, $dataCalendrier[$indexLigneCorrespondantCampus])) {
+                $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]['data'] = [];
+            } else {
+                $dataCalendrier[$indexLigneCorrespondantCampus][$indexColonneCorrespondantDate]['data'][] = $evenement;
+            }
+        }
+
+        $twigConfig['listeCampus'] = $listeCampus;
+        $twigConfig['dataCalendrier'] = $dataCalendrier;
+
+        return $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig', $twigConfig);
+    }
+
     /**
      * Fonction qui permet de créer le planning en version mobile et tablette
      *
@@ -249,14 +342,14 @@ class CalendrierService
      */
     public function createMobilePlanning(FormatActivite $item, array $parametreData, array $twigConfig): string
     {
-        $currentDate = $twigConfig['currentDate'];
+        $currentDate = clone $twigConfig['currentDate'];
         $dateDebut = clone $currentDate->modify('first day of this month');
         $dateFin = clone $currentDate->modify('last day of this month');
         
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $events = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $dateFin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $events = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDatesByRessource($parametreData['idRessource'], $dateDebut, $dateFin);
+            $events = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin);
         }
 
         $sortedEvents = [];

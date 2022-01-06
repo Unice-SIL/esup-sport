@@ -32,6 +32,22 @@ class DhtmlxSerieRepository extends \Doctrine\ORM\EntityRepository
         return $query->getQuery()->getResult();
     }
 
+    public function findDhtmlxDateByReferenceOld($type, $id)
+    {
+        $query = $this->createQueryBuilder('d');
+        if ('ressource' == $type) {
+            $query->join('d.evenements', 'e')
+                ->join('e.reservabilite', 're')
+                ->join('re.ressource', 'r')
+                ->where('r.id = :id')
+                ->addSelect('e, re')
+                ->setParameter('id', $id)
+            ;
+        }
+
+        return $query->getQuery()->getResult();
+    }
+
     public function findDhtmlxCreneauByUser($user)
     {
         return $this->createQueryBuilder('d')
