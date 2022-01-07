@@ -180,7 +180,7 @@ class CalendrierService
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $listeEvenements = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $datefin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $listeEvenements = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin);
+            $listeEvenements = array_merge($this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin), $this->dhtmlxEvenementRepository->findEventOfSerieByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin));
         }
 
         foreach ($listeEvenements as $evenement) {
@@ -290,7 +290,7 @@ class CalendrierService
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $listeEvenements = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $datefin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $listeEvenements = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin);
+            $listeEvenements = array_merge($this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin), $this->dhtmlxEvenementRepository->findEventOfSerieByRessourceAndDate($parametreData['idRessource'], $dateDebut, $datefin));
         }
 
         foreach ($listeEvenements as $evenement) {
@@ -349,7 +349,7 @@ class CalendrierService
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $events = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $dateFin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
-            $events = $this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin);
+            $events = array_merge($this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin), $this->dhtmlxEvenementRepository->findEventOfSerieByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin));
         }
 
         $sortedEvents = [];

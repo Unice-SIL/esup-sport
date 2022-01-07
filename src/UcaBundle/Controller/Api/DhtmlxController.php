@@ -36,7 +36,7 @@ class DhtmlxController extends Controller
         $series = [];
         if ('ressource' == $type || 'FormatActivite' == $type) {
             $events = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxDateByReference($type, $id);
-            $series = array_merge($em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReference($type, $id), $em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReferenceOld($type, $id));
+            $series = $em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReference($type, $id);
         } elseif ('encadrant' == $type || 'user' == $type) {
             $user = $this->getUser();
             if (null == $user) {
