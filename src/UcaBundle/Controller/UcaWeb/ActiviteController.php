@@ -79,19 +79,19 @@ class ActiviteController extends Controller
         $formats = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($twigConfig['item'], $this->getUser());
         //On check les formats du type FormatAvecReservation pour voir si les ressources à réserver ont des créneaux
         //Si elles n'en ont pas on ne les affiches pas
-        foreach ($formats as $key => $format) {
-            if ($format instanceof FormatAvecReservation) {
-                $nbRessourceValid = 0;
-                foreach ($format->getRessource() as $ressource) {
-                    if (sizeof($ressource->getReservabilites()) > 0) {
-                        ++$nbRessourceValid;
-                    }
-                }
-                if (0 == $nbRessourceValid) {
-                    unset($formats[$key]);
-                }
-            }
-        }
+        // foreach ($formats as $key => $format) {
+        //     if ($format instanceof FormatAvecReservation) {
+        //         $nbRessourceValid = 0;
+        //         foreach ($format->getRessource() as $ressource) {
+        //             if (sizeof($ressource->getReservabilites()) > 0) {
+        //                 ++$nbRessourceValid;
+        //             }
+        //         }
+        //         if (0 == $nbRessourceValid) {
+        //             unset($formats[$key]);
+        //         }
+        //     }
+        // }
         $twigConfig['data'] = $formats;
         $twigConfig['etablissements'] = $em->getRepository('UcaBundle:Etablissement')->findEtablissementByActivite($id);
 
