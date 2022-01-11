@@ -138,11 +138,11 @@ class ActiviteController extends Controller
     public function formatAvecReservationVoirRessource($item, $twigConfig)
     {
         $ressources = $item->getRessource();
-        foreach ($ressources as $key => $ressource) {
-            if (0 == sizeof($ressource->getReservabilites())) {
-                unset($ressources[$key]);
-            }
-        }
+        // foreach ($ressources as $key => $ressource) {
+        //     if (0 == sizeof($ressource->getReservabilites())) {
+        //         unset($ressources[$key]);
+        //     }
+        // }
         $twigConfig['data'] = $ressources;
 
         return $this->render('@Uca/UcaWeb/Activite/ListerRessource.html.twig', $twigConfig);
@@ -150,29 +150,29 @@ class ActiviteController extends Controller
 
     public function FormatActiviteAvecCreneau($item, $day, $twigConfig)
     {
-        $em = $this->getDoctrine()->getManager();
+        // $em = $this->getDoctrine()->getManager();
         $twigConfig = array_merge($twigConfig, [
             'entite' => 'FormatActiviteDetail',
             'item' => $item,
             'itemId' => $item->getId(),
             'typeVisualisation' => 'mois',
-            'listeCampus' => $em->getRepository(Etablissement::class)->findAll(),
+            // 'listeCampus' => $em->getRepository(Etablissement::class)->findAll(),
             'currentDate' => new \DateTime(),
             'typeFormat' => 'FormatAvecCreneau',
-            'widthWindow' => '1350',
-            'nbJour' => '7',
+            // 'widthWindow' => '1350',
+            // 'nbJour' => '7',
             'idRessource' => 0,
         ]);
 
-        $dates = [];
-        for ($d = 1; $d <= 7; ++$d) {
-            $dt = new \DateTime();
-            $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
-            $dates[] = $dt;
-        }
-        $twigConfig['listeJours'] = $dates;
+        // $dates = [];
+        // for ($d = 1; $d <= 7; ++$d) {
+        //     $dt = new \DateTime();
+        //     $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
+        //     $dates[] = $dt;
+        // }
+        // $twigConfig['listeJours'] = $dates;
 
-        $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
+        // $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
 
         return $this->render('@Uca/UcaWeb/Activite/FormatActivite.html.twig', $twigConfig);
     }
@@ -196,7 +196,7 @@ class ActiviteController extends Controller
         $twigConfig['entite'] = 'FormatActiviteDetail';
         $twigConfig['idCa'] = $idCa;
         $twigConfig['idA'] = $idA;
-        $twigConfig['item'] = $item;
+        // $twigConfig['item'] = $item;
         $twigConfig['id'] = $item->getId();
         $twigConfig['idRessource'] = $idRessource;
         $twigConfig['libelleRessource'] = $ressource->getLibelle();
@@ -207,21 +207,21 @@ class ActiviteController extends Controller
 
         $twigConfig['itemId'] = $id;
         $twigConfig['typeVisualisation'] = 'mois';
-        $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
+        // $twigConfig['listeCampus'] = $em->getRepository(Etablissement::class)->findAll();
         $twigConfig['currentDate'] = new \DateTime();
         $twigConfig['typeFormat'] = 'FormatAvecReservation';
-        $twigConfig['widthWindow'] = '1350';
-        $twigConfig['nbJour'] = '7';
+        // $twigConfig['widthWindow'] = '1350';
+        // $twigConfig['nbJour'] = '7';
 
-        $dates = [];
-        for ($d = 1; $d <= 7; ++$d) {
-            $dt = new \DateTime();
-            $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
-            $dates[] = $dt;
-        }
-        $twigConfig['listeJours'] = $dates;
+        // $dates = [];
+        // for ($d = 1; $d <= 7; ++$d) {
+        //     $dt = new \DateTime();
+        //     $dt->setISODate($dt->format('o'), $dt->format('W'), $d);
+        //     $dates[] = $dt;
+        // }
+        // $twigConfig['listeJours'] = $dates;
 
-        $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
+        // $twigConfig['dataCalendrier'] = array_fill(0, count($twigConfig['listeCampus']), array_fill(0, count($twigConfig['listeJours']), null));
 
         return $this->render('@Uca/UcaWeb/Activite/FormatActivite.html.twig', $twigConfig);
     }

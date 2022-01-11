@@ -24,7 +24,7 @@
   
   {# TODO : revoir style #}
   <section id="sectionCalendrier">
-    {% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig' %}
+    {% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig' with { init: true } %}
   </section>
   
   {{ Inscription.HtmlModal }}

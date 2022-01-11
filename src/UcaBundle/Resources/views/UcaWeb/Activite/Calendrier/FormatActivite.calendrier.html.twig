@@ -2,126 +2,128 @@
 	<div id="load">
 		<img src="{{ asset('images/load.gif') }}" id="load-img">
 	</div>
-	<div class="row d-flex">
-		<div class="col-2 d-flex">
-			<a class="cursor-pointer color-blanc" onclick="_uca.calendrier.changePeriode(false, {{ nbJour }})">
-				<i class="fas fa-caret-square-left"></i>
-			</a>
-			<a class="cursor-pointer color-blanc ml-1" onclick="_uca.calendrier.changePeriode(true, {{ nbJour }})">
-				<i class="fas fa-caret-square-right"></i>
-			</a>
-		</div>
-
-		<h3 class="col-8 text-center color-blanc">{{ ("common."~currentDate|date('F'))|lower|trans }}
-			{{ currentDate|date('Y') }}</h3>
-
-		<div class="col-2">
-			{% if widthWindow >= 1350 %}
-				<a class="text-uppercase cursor-pointer mr-2 font-weight-bold {{ typeVisualisation == 'mois' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('mois')">Mois</a>
-			{% endif %}
-			{% if widthWindow >= 580 %}
-				<a class="text-uppercase cursor-pointer mr-2 font-weight-bold {{ typeVisualisation == 'semaine' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('semaine')">Semaine</a>
-			{% endif %}
-			<a class="text-uppercase cursor-pointer font-weight-bold {{ typeVisualisation == 'jour' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('jour')">Jour</a>
-		</div>
-	</div>
-
-	<div class="row">
-		{% if typeVisualisation != 'mois' %}
-			<div class="col-sm bg-dark-gray"></div>
-		{% endif %}
-
-		{% for day in listeJours %}
-			<div class="col-sm bg-dark-gray font-weight-bold calendar-entete {{ day|date('m/d/Y') == " now"|date('m/d/Y') and typeVisualisation != 'mois' ? 'today' }}">
-				{% set valueDay = ("common."~day|date('l'))|lower|trans %}
-				{{ valueDay|upper }}<br/>
-				{% if typeVisualisation != 'mois' %}
-					<span>{{ day|date('d') }}</span>
-				{% endif %}
+	{% if init is not defined or init is same as(false) %}
+		<div class="row d-flex">
+			<div class="col-2 d-flex">
+				<a class="cursor-pointer color-blanc" onclick="_uca.calendrier.changePeriode(false, {{ nbJour }})">
+					<i class="fas fa-caret-square-left"></i>
+				</a>
+				<a class="cursor-pointer color-blanc ml-1" onclick="_uca.calendrier.changePeriode(true, {{ nbJour }})">
+					<i class="fas fa-caret-square-right"></i>
+				</a>
 			</div>
-		{% endfor %}
-	</div>
 
-	<div class='row'>
-		{% for ligneData in dataCalendrier %}
-			<div class="w-100"></div> 
+			<h3 class="col-8 text-center color-blanc">{{ ("common."~currentDate|date('F'))|lower|trans }}
+				{{ currentDate|date('Y') }}</h3>
+
+			<div class="col-2">
+				{% if widthWindow >= 1350 %}
+					<a class="text-uppercase cursor-pointer mr-2 font-weight-bold {{ typeVisualisation == 'mois' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('mois')">Mois</a>
+				{% endif %}
+				{% if widthWindow >= 580 %}
+					<a class="text-uppercase cursor-pointer mr-2 font-weight-bold {{ typeVisualisation == 'semaine' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('semaine')">Semaine</a>
+				{% endif %}
+				<a class="text-uppercase cursor-pointer font-weight-bold {{ typeVisualisation == 'jour' ? 'curentSelectionTypeVisualisation' : 'color-blanc' }}" onclick="_uca.calendrier.changeTypeVisualisation('jour')">Jour</a>
+			</div>
+		</div>
+
+		<div class="row">
 			{% if typeVisualisation != 'mois' %}
-				<div class="col-sm bg-dark-color-blue font-weight-bold fs-24">
-					{# Refaire la requête pour n'avoir que les libéllés #}
-					{% if listeCampus[0] == 'Ressource' %}
-						<span class="cell-title-center text-break">{{ 'common.ressources' | trans | upper}}</span>
-					{% else %}
-						<span class="cell-title-center text-break">{{ listeCampus[loop.index0].libelle|upper }}</span>
-					{% endif %}
-				</div>
+				<div class="col-sm bg-dark-gray"></div>
 			{% endif %}
-      
-			{% for oneCaseData in ligneData %}
-				<div class="col-sm {{ typeVisualisation == 'mois' and oneCaseData[" actif"] is defined and not onecasedata[" actif"] ? 'othermonth' }} data-div">
-					{% if oneCaseData != null %}
-						{% if typeVisualisation == 'mois' and oneCaseData["day"] is defined %}
-							<span class="font-weight-bold">{{ oneCaseData["day"] }}</span>
-						{% endif %}
 
-						{% for event in oneCaseData["data"] %}
-							{% if typeFormat == 'FormatAvecCreneau' %}
-								{% if event.serie.creneau.lieu.longitude is defined and event.serie.creneau.lieu.latitude is defined %}
-									<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.creneau.lieu.longitude }}" data-latitude="{{ event.serie.creneau.lieu.latitude }}">
-								{% else %}
-									<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
-								{% endif %}
-							{% elseif typeFormat == 'FormatAvecReservation' %}
-								{% if event.reservabilite is not null and event.reservabilite.ressource.longitude is defined and event.reservabilite.ressource.latitude is defined  %}
-									<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.reservabilite.ressource.longitude }}" data-latitude="{{ event.reservabilite.ressource.latitude }}">
-								{% elseif event.serie.reservabilite.ressource.longitude is defined and event.serie.reservabilite.ressource.latitude is defined %}
-									<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.reservabilite.ressource.longitude }}" data-latitude="{{ event.serie.reservabilite.ressource.latitude }}">
-								{% else %}
-									<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
-								{% endif %}
-							{% endif %}
-							<div class="bg-white mb-1 mt-1 p-1" style="border-radius: 5px;">
-								<span class="color-dark-gray">
-									{{ event.dateDebut|date('H:i') }}
-									-
-									{{ event.dateFin|date('H:i') }}
-								</span>
-								<i class="fas fa-info-circle float-right mt-1"></i>
-							</div>
-							</a>
-							<div class="modal fade" id="content_popover_{{ event.id }}" tabindex="-1" role="dialog" aria-hidden="true">
-								<div class="modal-dialog" role="document">
-									<div class="modal-content">
-										<div class="modal-header">
-											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-												<div class="image-presentation image-remove" aria-hidden="true"></div>
-											</button>
-										</div>
-										{# Amélioration : le modal n'a pas besoin d'être généréré autautn de fois#}
-										<div class="modal-body">
-											<div class="info-container">
-    											<div class="image-presentation-container">
-													<div class="image-presentation image-clock"></div>
-												</div>
-												<div class="d-grid font-tall">
-													<span>{{ event.dateDebut|date('d/m/Y') }}</span>
-													<span>{{ event.dateDebut|date('H:i') }} - {{ event.dateFin|date('H:i') }}</span>
-												</div>
-											</div>
-											{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_details.html.twig' %}
-										</div>
-										<div class="modal-footer">
-											<button type="button" class="btn back" data-dismiss="modal">{{ 'bouton.retour'|trans }}</button>
-											{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_button.html.twig' %}
-										</div>
-									</div>
-								</div>
-							</div>
-						{% endfor %}
+			{% for day in listeJours %}
+				<div class="col-sm bg-dark-gray font-weight-bold calendar-entete {{ day|date('m/d/Y') == " now"|date('m/d/Y') and typeVisualisation != 'mois' ? 'today' }}">
+					{% set valueDay = ("common."~day|date('l'))|lower|trans %}
+					{{ valueDay|upper }}<br/>
+					{% if typeVisualisation != 'mois' %}
+						<span>{{ day|date('d') }}</span>
 					{% endif %}
 				</div>
 			{% endfor %}
-		{% endfor %}
-	</div>
+		</div>
+
+		<div class='row'>
+			{% for ligneData in dataCalendrier %}
+				<div class="w-100"></div> 
+				{% if typeVisualisation != 'mois' %}
+					<div class="col-sm bg-dark-color-blue font-weight-bold fs-24">
+						{# Refaire la requête pour n'avoir que les libéllés #}
+						{% if listeCampus[0] == 'Ressource' %}
+							<span class="cell-title-center text-break">{{ 'common.ressources' | trans | upper}}</span>
+						{% else %}
+							<span class="cell-title-center text-break">{{ listeCampus[loop.index0].libelle|upper }}</span>
+						{% endif %}
+					</div>
+				{% endif %}
+		
+				{% for oneCaseData in ligneData %}
+					<div class="col-sm {{ typeVisualisation == 'mois' and oneCaseData[" actif"] is defined and not onecasedata[" actif"] ? 'othermonth' }} data-div">
+						{% if oneCaseData != null %}
+							{% if typeVisualisation == 'mois' and oneCaseData["day"] is defined %}
+								<span class="font-weight-bold">{{ oneCaseData["day"] }}</span>
+							{% endif %}
+
+							{% for event in oneCaseData["data"] %}
+								{% if typeFormat == 'FormatAvecCreneau' %}
+									{% if event.serie.creneau.lieu.longitude is defined and event.serie.creneau.lieu.latitude is defined %}
+										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.creneau.lieu.longitude }}" data-latitude="{{ event.serie.creneau.lieu.latitude }}">
+									{% else %}
+										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
+									{% endif %}
+								{% elseif typeFormat == 'FormatAvecReservation' %}
+									{% if event.reservabilite is not null and event.reservabilite.ressource.longitude is defined and event.reservabilite.ressource.latitude is defined  %}
+										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.reservabilite.ressource.longitude }}" data-latitude="{{ event.reservabilite.ressource.latitude }}">
+									{% elseif event.serie.reservabilite.ressource.longitude is defined and event.serie.reservabilite.ressource.latitude is defined %}
+										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.reservabilite.ressource.longitude }}" data-latitude="{{ event.serie.reservabilite.ressource.latitude }}">
+									{% else %}
+										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
+									{% endif %}
+								{% endif %}
+								<div class="bg-white mb-1 mt-1 p-1" style="border-radius: 5px;">
+									<span class="color-dark-gray">
+										{{ event.dateDebut|date('H:i') }}
+										-
+										{{ event.dateFin|date('H:i') }}
+									</span>
+									<i class="fas fa-info-circle float-right mt-1"></i>
+								</div>
+								</a>
+								<div class="modal fade" id="content_popover_{{ event.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<div class="image-presentation image-remove" aria-hidden="true"></div>
+												</button>
+											</div>
+											{# Amélioration : le modal n'a pas besoin d'être généréré autautn de fois#}
+											<div class="modal-body">
+												<div class="info-container">
+													<div class="image-presentation-container">
+														<div class="image-presentation image-clock"></div>
+													</div>
+													<div class="d-grid font-tall">
+														<span>{{ event.dateDebut|date('d/m/Y') }}</span>
+														<span>{{ event.dateDebut|date('H:i') }} - {{ event.dateFin|date('H:i') }}</span>
+													</div>
+												</div>
+												{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_details.html.twig' %}
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn back" data-dismiss="modal">{{ 'bouton.retour'|trans }}</button>
+												{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_button.html.twig' %}
+											</div>
+										</div>
+									</div>
+								</div>
+							{% endfor %}
+						{% endif %}
+					</div>
+				{% endfor %}
+			{% endfor %}
+		</div>
+	{% endif %}
 </div>
 <script type='text/javascript'>
 	'use_strict';
