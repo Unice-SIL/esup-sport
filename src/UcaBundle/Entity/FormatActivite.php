@@ -78,7 +78,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Activite", inversedBy="formatsActivite", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Activite", inversedBy="formatsActivite", fetch="LAZY")
      */
     private $activite;
 
@@ -156,7 +156,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     /** @ORM\Column(type="datetime",nullable=true) */
     private $updatedAt;
 
-    /** @ORM\ManyToMany(targetEntity="Lieu", inversedBy="formatsActivite")
+    /** @ORM\ManyToMany(targetEntity="Lieu", inversedBy="formatsActivite", fetch="LAZY")
      * @Assert\NotNull(message="formatactivite.lieu.notnull")
      * @Assert\Count(min = 1, minMessage = "formatactivite.lieu.notnull")
      */
@@ -165,10 +165,10 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
 
     //region Propriétés communes Creneaux
 
-    /** @ORM\ManyToMany(targetEntity="TypeAutorisation", inversedBy="formatsActivite") */
+    /** @ORM\ManyToMany(targetEntity="TypeAutorisation", inversedBy="formatsActivite", fetch="LAZY") */
     private $autorisations;
 
-    /** @ORM\ManyToMany(targetEntity="NiveauSportif")
+    /** @ORM\ManyToMany(targetEntity="NiveauSportif", fetch="LAZY")
      * @Assert\NotBlank(message="complement.niveauxsportifs.notblank")
      * @Assert\Count(min = 1, minMessage = "complement.niveauxsportifs.notblank")
      */
@@ -185,7 +185,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $estPayant;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="formatsActivite", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="Tarif", inversedBy="formatsActivite", fetch="LAZY")
      * @Assert\Expression("!this.getEstPayant() || this.getTarif()", message="complement.tarif.notblank")
      */
     private $tarif;
@@ -195,7 +195,7 @@ abstract class FormatActivite implements \UcaBundle\Entity\Interfaces\JsonSerial
     private $estEncadre;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="formatsActivite")
+     * @ORM\ManyToMany(targetEntity="Utilisateur", inversedBy="formatsActivite", fetch="LAZY")
      * @Assert\Expression("!this.getEstEncadre() || !this.getEncadrants().isEmpty()", message="complement.encadrant.notblank")
      */
     private $encadrants;

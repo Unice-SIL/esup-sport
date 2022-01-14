@@ -167,8 +167,8 @@ BEGIN
     INNER JOIN uca.utilisateur ON utilisateur.matricule = data_utilisateur.codEtu
         AND utilisateur.enabled = 1
     LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id
-        AND year(log_connexion.date_connexion) = 2020
-    WHERE annee_universitaire = 2020
+        AND year(log_connexion.date_connexion) = annee_universitaire_parametre
+    WHERE annee_universitaire = annee_universitaire_parametre
     GROUP BY age
         ,horaire
     ORDER BY hour(log_connexion.date_connexion);
@@ -451,5 +451,7 @@ call sp_calcul_nb_user_connexion_by_horaire_and_genre();
 call sp_calcul_nb_user_by_age_and_genre();
 call update_kpi_generaux_etudiant(2019);
 call update_kpi_generaux_etudiant(2020);
+call update_kpi_generaux_etudiant(2021);
 call update_kpi_generaux_personnels(2019);
 call update_kpi_generaux_personnels(2020);
+call update_kpi_generaux_personnels(2021);

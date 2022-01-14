@@ -185,7 +185,9 @@ class ExtractionExcelService
                 }
                 $data[] = $cmd;
             }
-            $this->setWorksheet($worksheet, $data, ['J', 'K', 'L', 'M', 'N']);
+            if (!empty($data)) {
+                $this->setWorksheet($worksheet, $data, ['J', 'K', 'L', 'M', 'N']);
+            }
         }
     }
 

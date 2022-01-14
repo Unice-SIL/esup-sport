@@ -1,4 +1,4 @@
-{% if etablissements|length > 0 and idRessource is not defined %}
+{% if etablissements|length > 0 and (idRessource is not defined or idRessource == 0) %}
 	<div id="planning-mobile-campus">
 		<p>
 			{{ 'calendrier.etablissements'|trans({ '%nbCampus%': etablissements|length }) }}

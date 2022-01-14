@@ -25,7 +25,7 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="tarif", cascade={"persist", "remove"}, fetch="EAGER")
+    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="tarif", cascade={"persist", "remove"}, fetch="LAZY")
      * @Assert\Valid()
      */
     protected $montants;
@@ -51,16 +51,16 @@ class Tarif implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $libelle;
 
-    /** @ORM\OneToMany(targetEntity="TypeAutorisation", mappedBy="tarif") */
+    /** @ORM\OneToMany(targetEntity="TypeAutorisation", mappedBy="tarif", fetch="LAZY") */
     private $typesAutorisation;
 
-    /** @ORM\OneToMany(targetEntity="FormatActivite", mappedBy="tarif") */
+    /** @ORM\OneToMany(targetEntity="FormatActivite", mappedBy="tarif", fetch="LAZY") */
     private $formatsActivite;
 
-    /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="tarif") */
+    /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="tarif", fetch="LAZY") */
     private $creneaux;
 
-    /** @ORM\OneToMany(targetEntity="Ressource",mappedBy="tarif") */
+    /** @ORM\OneToMany(targetEntity="Ressource",mappedBy="tarif", fetch="LAZY") */
     private $ressources;
 
     /**

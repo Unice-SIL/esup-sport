@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 class FormatAvecCreneau extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
     //region Propriétés
-    /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="formatActivite") */
+    /** @ORM\OneToMany(targetEntity="Creneau", mappedBy="formatActivite", fetch="LAZY") */
     private $creneaux;
 
     //endregion

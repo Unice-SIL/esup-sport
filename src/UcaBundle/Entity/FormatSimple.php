@@ -21,7 +21,7 @@ class FormatSimple extends FormatActivite implements \UcaBundle\Entity\Interface
 {
     //region Propriétés
 
-    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", cascade={"persist", "remove"}, mappedBy="formatSimple") */
+    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", cascade={"persist", "remove"}, mappedBy="formatSimple", fetch="LAZY") */
     private $evenement;
 
     //endregion

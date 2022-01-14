@@ -103,6 +103,18 @@
 {% elseif typeFormat == "FormatAvecReservation" %}
   {% set ressource = event.reservabilite is not null ? event.reservabilite.ressource : event.serie.reservabilite.ressource %}
 
+  {# Lieu #}
+  {% if ressource.etablissement is not null %}
+    <div class="info-container">
+      <div class="image-presentation-container">
+        <div class="image-presentation image-localization"></div>
+      </div>
+      <span class="font-tall">
+        {{ ressource.etablissement.libelle ~ ' - ' ~ ressource.libelle }}
+      </span>
+    </div>
+  {% endif %}
+
   {# Infos ressource #}
   <div class="info-container">
     <div class="image-presentation-container">

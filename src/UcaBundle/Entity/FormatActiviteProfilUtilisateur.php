@@ -30,12 +30,12 @@ class FormatActiviteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Js
      */
     protected $id;
     /**
-     * @ORM\ManyToOne(targetEntity="FormatActivite" , inversedBy="profilsUtilisateurs")
+     * @ORM\ManyToOne(targetEntity="FormatActivite" , inversedBy="profilsUtilisateurs", fetch="EAGER")
      */
     protected $formatActivite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="formatsActivite")
+     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="formatsActivite", fetch="EAGER")
      */
     protected $profilUtilisateur;
 

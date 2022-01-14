@@ -55,11 +55,11 @@ class Activite implements \UcaBundle\Entity\Interfaces\JsonSerializable
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ClasseActivite" , inversedBy="activites")
+     * @ORM\ManyToOne(targetEntity="ClasseActivite" , inversedBy="activites", fetch="LAZY")
      * @Assert\NotNull(message="activite.classeactivite.notnull") */
     private $classeActivite;
 
-    /** @ORM\OneToMany(targetEntity="FormatActivite", mappedBy="activite")  */
+    /** @ORM\OneToMany(targetEntity="FormatActivite", mappedBy="activite", fetch="LAZY")  */
     private $formatsActivite;
 
     /** @ORM\Column(type="string", length=255) */

@@ -23,7 +23,7 @@ class FormatAchatCarte extends FormatActivite implements \UcaBundle\Entity\Inter
     //region Propriétés
 
     /**
-     * @ORM\ManyToOne(targetEntity="TypeAutorisation", inversedBy="formatsAchatCarte")
+     * @ORM\ManyToOne(targetEntity="TypeAutorisation", inversedBy="formatsAchatCarte", fetch="LAZY")
      * @Assert\Expression("this.getCarte()", message="formatactivite.achatcarte.carte.notnull") */
     private $carte;
 

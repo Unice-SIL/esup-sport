@@ -21,7 +21,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class FormatAvecReservation extends FormatActivite implements \UcaBundle\Entity\Interfaces\Article
 {
     //region Propriétés
-    /** @ORM\ManyToMany(targetEntity="Ressource", inversedBy="formatResa")
+    /** @ORM\ManyToMany(targetEntity="Ressource", inversedBy="formatResa", fetch="LAZY")
      * @Assert\Expression("!this.getRessource().isEmpty()", message="formatactivite.reservation.ressource.notnull")
      */
     private $ressource;
