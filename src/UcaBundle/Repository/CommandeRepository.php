@@ -254,4 +254,13 @@ class CommandeRepository extends \Doctrine\ORM\EntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    public function findByIds($ids) {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id in (:ids)')
+            ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }

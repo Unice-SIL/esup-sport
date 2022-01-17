@@ -13,6 +13,7 @@ use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Inscription;
+use UcaBundle\Entity\ProfilUtilisateur;
 use UcaBundle\Entity\Reservabilite;
 use UcaBundle\Repository\EntityRepository;
 use UcaBundle\Service\Common\Fn;
@@ -98,7 +99,8 @@ trait Article
     {
         if (!$this instanceof FormatAvecReservation) {
             foreach ($this->profilsUtilisateurs as $formatProfil) {
-                if ($profilUtilisateur == $formatProfil->getProfilUtilisateur() || $formatProfil->getProfilUtilisateur()->getEnfants()->contains($profilUtilisateur)) {
+                $formatProfilUtilisateur = $formatProfil->getProfilUtilisateur();
+                if ($profilUtilisateur == $formatProfilUtilisateur || ($formatProfilUtilisateur->getEnfants() && $formatProfilUtilisateur->getEnfants()->contains($profilUtilisateur))) {
                     $profil = $formatProfil;
                 }
             }
@@ -124,7 +126,7 @@ trait Article
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || (!$estResa && !$this->autoriseProfil($utilisateur->getProfil())) || ($estResa && !$this->autoriseProfil($utilisateur->getProfil()))) {
+        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || !$this->autoriseProfil($utilisateur->getProfil())) {
             $resultat['statut'] = 'profilinvalide';
         } elseif (!$utilisateur->getCgvAcceptees()) {
             $resultat['statut'] = 'cgvnonacceptees';
@@ -158,32 +160,6 @@ trait Article
                 $resultat['statut'] = 'disponible';
             }
         }
-        /*
-        if (Previsualisation::$IS_ACTIVE) {
-            $resultat['statut'] = 'previsualisation';
-        } elseif (!$inscriptions->isEmpty() && 'valide' == $inscriptions->first()->getStatut()) {
-            $resultat['statut'] = 'inscrit';
-        } elseif (!$inscriptions->isEmpty() && 'valide' != $inscriptions->first()->getStatut()) {
-            $resultat['statut'] = 'preinscrit';
-        } elseif ($this->isFull($utilisateur, $format)) {
-            $resultat['statut'] = 'complet';
-        } elseif (is_a($this, Creneau::class) && $utilisateur->nbCreneauMaximumAtteint()) {
-            $resultat['statut'] = 'nbcreneaumaxatteint';
-        } elseif ($formatReference->inscriptionsTerminees()) {
-            $resultat['statut'] = 'inscriptionsterminees';
-        } elseif ($formatReference->inscriptionsAVenir()) {
-            $resultat['statut'] = 'inscriptionsavenir';
-        } elseif ($this instanceof Reservabilite && $this->dateReservationPasse()) {
-            $resultat['statut'] = 'inscriptionsterminees';
-        } elseif ($resultat['montant']['total'] < 0) {
-            $resultat['statut'] = 'montantincorrect';
-        } elseif (!($this instanceof Reservabilite) && sizeof($this->getAllInscriptions()) >= $this->getCapacite()) {
-            $resultat['statut'] = 'complet';
-        } else {
-            $resultat['statut'] = 'disponible';
-        }*/
-        //dump($resultat);
-        //die;
 
         return $resultat;
     }

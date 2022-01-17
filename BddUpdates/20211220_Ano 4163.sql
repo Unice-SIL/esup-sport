@@ -101,7 +101,8 @@ BEGIN
     INNER JOIN uca.utilisateur ON utilisateur.matricule = data_utilisateur.codEtu
         AND utilisateur.enabled = 1
 	INNER JOIN uca.profil_utilisateur ON utilisateur.profil_id = profil_utilisateur.id
-    LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id AND year(log_connexion.date_connexion) = annee_universitaire_parametre
+    LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id 
+        AND year(log_connexion.date_connexion) >= annee_universitaire_parametre
     WHERE annee_universitaire = annee_universitaire_parametre
     GROUP BY profil_utilisateur.libelle
         ,horaire
@@ -167,7 +168,7 @@ BEGIN
     INNER JOIN uca.utilisateur ON utilisateur.matricule = data_utilisateur.codEtu
         AND utilisateur.enabled = 1
     LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id
-        AND year(log_connexion.date_connexion) = annee_universitaire_parametre
+        AND year(log_connexion.date_connexion) >= annee_universitaire_parametre
     WHERE annee_universitaire = annee_universitaire_parametre
     GROUP BY age
         ,horaire
@@ -220,7 +221,8 @@ BEGIN
     FROM data_utilisateur
     INNER JOIN uca.utilisateur ON utilisateur.matricule = data_utilisateur.codEtu
         AND utilisateur.enabled = 1
-    LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id AND year(log_connexion.date_connexion) = annee_universitaire_parametre
+    LEFT JOIN uca.log_connexion ON utilisateur.id = log_connexion.utilisateur_id 
+        AND year(log_connexion.date_connexion) >= annee_universitaire_parametre
     WHERE annee_universitaire = annee_universitaire_parametre
     GROUP BY data_utilisateur.sexe
         ,horaire

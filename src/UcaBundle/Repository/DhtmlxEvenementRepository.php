@@ -30,17 +30,28 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
 
     public function findDhtmlxReservabiliteByUser($user)
     {
-        return  $this->createQueryBuilder('d')
-            ->join('d.serie', 's')
-            ->join('s.reservabilite', 'r')
-            ->join('r.inscriptions', 'i')
-            ->where('i.utilisateur = :user')
-            ->setParameter('user', $user)
-            ->andWhere('i.statut = :statut')
-            ->setParameter('statut', 'valide')
-            ->getQuery()
-            ->getResult()
-        ;
+        return array_merge(
+            $this->createQueryBuilder('d')
+                ->join('d.serie', 's')
+                ->join('s.reservabilite', 'r')
+                ->join('r.inscriptions', 'i')
+                ->where('i.utilisateur = :user')
+                ->setParameter('user', $user)
+                ->andWhere('i.statut = :statut')
+                ->setParameter('statut', 'valide')
+                ->getQuery()
+                ->getResult()
+            ,
+            $this->createQueryBuilder('d')
+                ->join('d.reservabilite', 'r')
+                ->join('r.inscriptions', 'i')
+                ->where('i.utilisateur = :user')
+                ->setParameter('user', $user)
+                ->andWhere('i.statut = :statut and d.serie is null')
+                ->setParameter('statut', 'valide')
+                ->getQuery()
+                ->getResult()
+        );
     }
 
     public function findDhtmlxFormatSimpleByUser($user)

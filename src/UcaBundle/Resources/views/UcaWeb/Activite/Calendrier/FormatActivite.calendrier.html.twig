@@ -65,58 +65,16 @@
 							{% endif %}
 
 							{% for event in oneCaseData["data"] %}
-								{% if typeFormat == 'FormatAvecCreneau' %}
-									{% if event.serie.creneau.lieu.longitude is defined and event.serie.creneau.lieu.latitude is defined %}
-										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.creneau.lieu.longitude }}" data-latitude="{{ event.serie.creneau.lieu.latitude }}">
-									{% else %}
-										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
-									{% endif %}
-								{% elseif typeFormat == 'FormatAvecReservation' %}
-									{% if event.reservabilite is not null and event.reservabilite.ressource.longitude is defined and event.reservabilite.ressource.latitude is defined  %}
-										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.reservabilite.ressource.longitude }}" data-latitude="{{ event.reservabilite.ressource.latitude }}">
-									{% elseif event.serie.reservabilite.ressource.longitude is defined and event.serie.reservabilite.ressource.latitude is defined %}
-										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-longitude="{{ event.serie.reservabilite.ressource.longitude }}" data-latitude="{{ event.serie.reservabilite.ressource.latitude }}">
-									{% else %}
-										<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}">
-									{% endif %}
-								{% endif %}
-								<div class="bg-white mb-1 mt-1 p-1" style="border-radius: 5px;">
-									<span class="color-dark-gray">
-										{{ event.dateDebut|date('H:i') }}
-										-
-										{{ event.dateFin|date('H:i') }}
-									</span>
-									<i class="fas fa-info-circle float-right mt-1"></i>
-								</div>
-								</a>
-								<div class="modal fade" id="content_popover_{{ event.id }}" tabindex="-1" role="dialog" aria-hidden="true">
-									<div class="modal-dialog" role="document">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-													<div class="image-presentation image-remove" aria-hidden="true"></div>
-												</button>
-											</div>
-											{# Amélioration : le modal n'a pas besoin d'être généréré autautn de fois#}
-											<div class="modal-body">
-												<div class="info-container">
-													<div class="image-presentation-container">
-														<div class="image-presentation image-clock"></div>
-													</div>
-													<div class="d-grid font-tall">
-														<span>{{ event.dateDebut|date('d/m/Y') }}</span>
-														<span>{{ event.dateDebut|date('H:i') }} - {{ event.dateFin|date('H:i') }}</span>
-													</div>
-												</div>
-												{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_details.html.twig' %}
-											</div>
-											<div class="modal-footer">
-												<button type="button" class="btn back" data-dismiss="modal">{{ 'bouton.retour'|trans }}</button>
-												{% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_button.html.twig' %}
-											</div>
-										</div>
+								<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-format="{{ typeFormat }}" data-idformat="{{ formatActivite ? formatActivite.id : null }}">
+									<div class="bg-white mb-1 mt-1 p-1" style="border-radius: 5px;">
+										<span class="color-dark-gray">
+											{{ event.dateDebut|date('H:i') }}
+											-
+											{{ event.dateFin|date('H:i') }}
+										</span>
+										<i class="fas fa-info-circle float-right mt-1"></i>
 									</div>
-								</div>
+								</a>
 							{% endfor %}
 						{% endif %}
 					</div>
@@ -132,4 +90,7 @@
   var currentDate = "{{ currentDate|date('d/m/Y') }}";
   var typeFormat = "{{ typeFormat }}";
   var idRessource = "{{ idRessource }}";
+  $(function(){
+	  _uca.calendrier.listenClickBtnGetModalDetailCreneau()
+  });
 </script>

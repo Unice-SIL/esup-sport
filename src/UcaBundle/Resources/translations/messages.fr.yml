@@ -227,8 +227,8 @@ common.desinscrit: Désinscrit
 common.eligible: Éligible au bonus
 common.email: Email
 common.emplacement: Emplacement
-common.encadrant: Encadrant
 common.encadrant.s: Encadrant(s)
+common.encadrant: Encadrant
 common.encadrants.aucun: aucun encadrant
 common.encadrants: Encadrants
 common.espece: Espèce
@@ -400,8 +400,8 @@ erreur.formulaire.champ.incorrect: "Un ou plusieurs champs est (sont) incorrect(
 erreur.generale.icon: "fas fa-question-circle"
 erreur.generale.message: "Une erreur s'est produite. Si cela se reproduit, veuillez nous contacter."
 erreur.generale: "Erreur"
-erreur.info: "Pour plus d'informations, vous pouvez nous contacter à partir du formulaire de contact : "
 erreur.info.contact: "nous contacter"
+erreur.info: "Pour plus d'informations, vous pouvez nous contacter à partir du formulaire de contact : "
 etablissement.ajouter.succes: "Campus ajouté avec succès"
 etablissement.ajouter.title: Ajouter un Campus
 etablissement.code: Code du campus (référentiel immobilier)
@@ -796,6 +796,7 @@ scheduler.action.title.save: l'enregistrement
 scheduler.action.title.update: la mise à jour
 scheduler.action.update: Mettre à jour
 scheduler.error.capacite.format: Vous ne pouvez pas dépasser la capacité totale du format 
+scheduler.error.capacite.format.unknow: La capacité totale n'a pas été définie
 scheduler.error.capacite.profil.debut: La capacité maximale du profil 
 scheduler.error.capacite.profil.fin: est de 
 scheduler.error.capacite.somme: Vous ne pouvez pas dépasser la capacité totale renseignée
@@ -1026,6 +1027,7 @@ statistique.KPI.personnels.tableau.percent_inscrit: "% de personnels inscrits"
 statistique.KPI.personnels.tableau.rendement: Rendement/evol vs n-1
 statistique.KPI.personnels.title: KPI généraux sur le personnel
 statistique.KPI.title: KPI
+statistique.aucune_connexion: Aucune connexion
 statistique.customgraph: Graphique personnalisé
 statistique.graph.title.categories: Détail des membres du personnel par catégories
 statistique.graph.title.connexion.age: Détail du nombre de connexion par horaire et age

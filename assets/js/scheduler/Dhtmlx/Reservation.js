@@ -32,12 +32,12 @@ var Reservation = {
         if (data.profil_ids != "") {
             this.profil_ids = data.profil_ids;
         }
-        if (this.evenement.serie != null) {
+        if (this.evenement.serie != null && typeof this.evenement.getParent() != 'undefined') {
             this.serieOffset = this.start_date.getTime() - (transformDate(this.evenement.getParent().dateDebut)).getTime();
         }
 
         // if data has id, retrieve profil
-        if (typeof this.evenement.serie != "undefined" && this.evenement.serie != null && typeof this.getParent().reservabilite != "undefined" && this.getParent().reservabilite != null) {
+        if (typeof this.evenement.serie != "undefined" && this.evenement.serie != null && typeof this.getParent() != 'undefined' && typeof this.getParent().reservabilite != "undefined" && this.getParent().reservabilite != null) {
             //this.text = this.getParent().creneau.formatActivite.description;
             this.serieOffset = this.start_date.getTime() - (transformDate(this.getParent().dateDebut)).getTime();
             this.capacite = this.getParent().reservabilite.capacite;

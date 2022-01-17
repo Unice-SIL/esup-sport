@@ -161,7 +161,7 @@ var loadObjects = function(item) {
     let event;
 
     if (item.serie != null) {
-        if (scheduler._series[item.serie.id].creneau != null) {
+        if (typeof scheduler._series[item.serie.id] != 'undefined' && scheduler._series[item.serie.id].creneau != null) {
             event = Object.create(Creneau);
         } else {
             event = Object.create(Reservation);

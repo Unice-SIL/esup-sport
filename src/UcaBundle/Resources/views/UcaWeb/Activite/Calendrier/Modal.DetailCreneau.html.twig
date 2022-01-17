@@ -1,0 +1,35 @@
+{% if typeFormat == 'FormatAvecCreneau' %}
+    {% set creneau = event.serie.creneau %}
+    {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
+{% elseif typeFormat == 'FormatAvecReservation' %}
+  {% set creneau = event.reservabilite is not null ? event.reservabilite : event.serie.reservabilite %}
+  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user, formatActivite, null, event) %}
+{% endif %}
+
+<div class="modal fade" id="content_popover_{{ event.id }}" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <div class="image-presentation image-remove" aria-hidden="true"></div>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="info-container">
+                    <div class="image-presentation-container">
+                        <div class="image-presentation image-clock"></div>
+                    </div>
+                    <div class="d-grid font-tall">
+                        <span>{{ event.dateDebut|date('d/m/Y') }}</span>
+                        <span>{{ event.dateDebut|date('H:i') }} - {{ event.dateFin|date('H:i') }}</span>
+                    </div>
+                </div>
+                {% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_details.html.twig' %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn back" data-dismiss="modal">{{ 'bouton.retour'|trans }}</button>
+                {% include '@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.popup_button.html.twig' %}
+            </div>
+        </div>
+    </div>
+</div>

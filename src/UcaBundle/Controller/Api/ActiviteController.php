@@ -34,6 +34,14 @@ class ActiviteController extends Controller
     }
 
     /**
+     * @Route("/Api/Activite/GetModalDetailCreneau/{id}/{typeFormat}/{idFormat}", methods={"GET"}, name="api_detail_creneau", options={"expose"=true})
+     */
+    public function DetailCreneau(Request $request, DhtmlxEvenement $dhtmlxEvenement, string $typeFormat, string $idFormat)
+    {
+        return $this->get('uca.calendrier')->getModalDetailCreneau($dhtmlxEvenement, $typeFormat, $idFormat);
+    }
+
+    /**
      * @Route("/Api/Mail/Encadrant", methods={"POST"}, name="api_mailencadrant", options={"expose"=true})
      */
     public function sendMailAction(Request $request)

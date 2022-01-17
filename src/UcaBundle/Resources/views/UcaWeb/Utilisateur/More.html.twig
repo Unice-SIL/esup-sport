@@ -37,19 +37,38 @@
                 <span class="fw-700">{{ "monPlanning.more.datefin"|trans }}
                   :</span>
                 {{ evenement.dateFin|date('d/m/Y H:i:s') }}</p>
-                {% if evenement.serie.creneau and evenement.serie.creneau.lieu %}
+                {% if evenement.serie is not null and evenement.serie.creneau is not null and evenement.serie.creneau.lieu is not null %}
+                  {% set lieu = evenement.serie.creneau.lieu %}
                   <p>
                     <span class="fw-700">
                       {{ "common.lieu"|trans }} :
                     </span>
-                    {{ evenement.serie.creneau.lieu.etablissementLibelle ? evenement.serie.creneau.lieu.etablissementLibelle ~ ' - ' : '' }}
-                    {{ evenement.serie.creneau.lieu.libelle }}
+                    {{ lieu.etablissementLibelle ? lieu.etablissementLibelle ~ ' - ' : '' }}
+                    {{ lieu.libelle }}
                   </p>
                   <p>
                     <span class="fw-700">
                       {{ "common.coordonnees.adresse"|trans }} :
                     </span>
-                    {{ getAdresseComplete(evenement.serie.creneau.lieu) }}
+                    {{ getAdresseComplete(lieu) }}
+                  </p>
+                {% elseif evenement.serie is not null and evenement.serie.reservabilite is not null and evenement.serie.reservabilite.ressource is not null and evenement.serie.reservabilite.ressource.etablissement is not null %}
+                  {% set etablissement = evenement.serie.reservabilite.ressource.etablissement %}
+                {% elseif evenement.reservabilite is not null and evenement.reservabilite.ressource is not null and evenement.reservabilite.ressource.etablissement is not null %}
+                  {% set etablissement = evenement.reservabilite.ressource.etablissement %}
+                {% endif %}
+                {% if etablissement is defined and etablissement is not null %}
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.lieu"|trans }} :
+                    </span>
+                    {{ etablissement.libelle }}
+                  </p>
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.coordonnees.adresse"|trans }} :
+                    </span>
+                    {{ getAdresseComplete(etablissement) }}
                   </p>
                 {% endif %}
             </div>

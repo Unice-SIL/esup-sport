@@ -158,6 +158,7 @@ class StatistiqueController extends Controller
         $em_statistiques = $this->getDoctrine()->getManager('statistique');
         $translator = $this->get('translator');
         $horaireLibelle = $translator->trans('statistique.utilisateur.heure');
+        $noConnexionLibelle = $translator->trans('statistique.aucune_connexion');
         $ageLibelle = $translator->trans('statistique.utilisateur.age');
         // $na = $translator->trans('statistique.nonrenseigne');
 
@@ -165,21 +166,33 @@ class StatistiqueController extends Controller
         $profilUtilisateurs = $em_statistiques->getRepository(NbUserByHoraireAndElement::class)->findByType(1);
         $dataProfil = [];
         foreach ($profilUtilisateurs as $profilUtilisateur) {
-            $dataProfil[$profilUtilisateur->getHoraire().' '.$horaireLibelle][$profilUtilisateur->getLibelle()] = $profilUtilisateur->getNombreUser();
+            if (null != $profilUtilisateur->getHoraire()) {
+                $dataProfil[$profilUtilisateur->getHoraire().' '.$horaireLibelle][$profilUtilisateur->getLibelle()] = $profilUtilisateur->getNombreUser();
+            } else {
+                $dataProfil[$noConnexionLibelle][$profilUtilisateur->getLibelle()] = $profilUtilisateur->getNombreUser();
+            }
         }
 
         // Horaire et age
         $ageUtilisateurs = $em_statistiques->getRepository(NbUserByHoraireAndElement::class)->findByType(2);
         $dataAge = [];
         foreach ($ageUtilisateurs as $ageUtilisateur) {
-            $dataAge[$ageUtilisateur->getHoraire().' '.$horaireLibelle][$ageUtilisateur->getLibelle().' '.$ageLibelle] = $ageUtilisateur->getNombreUser();
+            if (null != $profilUtilisateur->getHoraire()) {
+                $dataAge[$ageUtilisateur->getHoraire().' '.$horaireLibelle][$ageUtilisateur->getLibelle().' '.$ageLibelle] = $ageUtilisateur->getNombreUser();
+            } else {
+                $dataAge[$noConnexionLibelle][$ageUtilisateur->getLibelle().' '.$ageLibelle] = $ageUtilisateur->getNombreUser();
+            }
         }
 
         // Horaire et genre
         $genreUtilisateurs = $em_statistiques->getRepository(NbUserByHoraireAndElement::class)->findByType(3);
         $dataGenre = [];
         foreach ($genreUtilisateurs as $genreUtilisateur) {
-            $dataGenre[$genreUtilisateur->getHoraire().' '.$horaireLibelle][$genreUtilisateur->getLibelle()] = $genreUtilisateur->getNombreUser();
+            if (null != $profilUtilisateur->getHoraire()) {
+                $dataGenre[$genreUtilisateur->getHoraire().' '.$horaireLibelle][$genreUtilisateur->getLibelle()] = $genreUtilisateur->getNombreUser();
+            } else {
+                $dataGenre[$noConnexionLibelle][$genreUtilisateur->getLibelle()] = $genreUtilisateur->getNombreUser();
+            }
         }
 
         return new JsonResponse([

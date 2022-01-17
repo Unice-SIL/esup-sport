@@ -228,6 +228,10 @@ if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
                     }
 
                     if (element.name == "Capacité") {
+                        if (typeof CAPACITE == 'undefined' || CAPACITE == null) {
+                            displayErrorMessage(Translator.trans("scheduler.error.capacite.format.unknow"));
+                            return false;
+                        }
                         if (params['capacite'] > CAPACITE) {
                             displayErrorMessage(Translator.trans("scheduler.error.capacite.format") + " : " + CAPACITE);
                             return false;

@@ -225,8 +225,8 @@ common.desinscrit: Unsubscribed
 common.eligible: Eligible for bonus
 common.email: Email
 common.emplacement: Location
-common.encadrant: Supervisor
 common.encadrant.s: Supervisor(s)
+common.encadrant: Supervisor
 common.encadrants.aucun: no supervisor
 common.encadrants: Supervisors
 common.espece: Cash
@@ -398,8 +398,8 @@ erreur.formulaire.champ.incorrect: One or more fields are incorrects
 erreur.generale.icon: "fas fa-question-circle"
 erreur.generale.message: An error occured. Please contact us if it happens again.
 erreur.generale: Error
-erreur.info: "For more information, you can contact us from the contact form: "
 erreur.info.contact: "contact us"
+erreur.info: "For more information, you can contact us from the contact form: "
 etablissement.ajouter.succes: Campus successfully added 
 etablissement.ajouter.title: Add a Campus
 etablissement.code: Campus code
@@ -738,8 +738,8 @@ profilutilisateur.libelle: User profile
 profilutilisateur.list.title: User profile management
 profilutilisateur.modifier.succes: User profile successfully modified
 profilutilisateur.modifier.title: Modify a user profile
-profilutilisateur.parent: Parent profile
 profilutilisateur.nbmaxinscriptions.libelle: Maximum time slots subscriptions
+profilutilisateur.parent: Parent profile
 profilutilisateur.preinscription: Can this profiles pre-register ? 
 profilutilisateur.supprimer.erreur.formatactivite: "Activities format use this profile : <br>%formats%"
 profilutilisateur.supprimer.erreur.montants: Rates are assigned to this profile
@@ -794,6 +794,7 @@ scheduler.action.title.save: save
 scheduler.action.title.update: update
 scheduler.action.update: Update
 scheduler.error.capacite.format: You cannot exceed the total capacity of the format
+scheduler.error.capacite.format.unknow: The total capacity is unknown
 scheduler.error.capacite.profil.debut: The maximum capacity of the profil
 scheduler.error.capacite.profil.fin: is 
 scheduler.error.capacite.somme: You cannot exceed the total capacity indicated
@@ -1024,6 +1025,7 @@ statistique.KPI.personnels.tableau.percent_inscrit: "% of registered staff"
 statistique.KPI.personnels.tableau.rendement: Performance vs. n-1
 statistique.KPI.personnels.title: General personnel KPIs
 statistique.KPI.title: Key performance indicators
+statistique.aucune_connexion: No connection
 statistique.customgraph: Custom graph
 statistique.graph.title.categories: Detail of the number of staff's members by categories
 statistique.graph.title.connexion.age: Detail of the number of connections by schedule and age

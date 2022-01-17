@@ -78,6 +78,11 @@ class MonPlanningController extends Controller
             $eventName = $dhtmlxEvenement->getFormatSimple()->getActivite()->getLibelle();
         }
 
+        if (null !== ($reservabilite = $dhtmlxEvenement->getReservabilite()) || (null !== $dhtmlxEvenement->getSerie() && null !== ($reservabilite = $dhtmlxEvenement->getSerie()->getReservabilite()))) {
+            $eventName = $reservabilite->getRessource()->getLibelle();
+            $inscriptions = $reservabilite->getInscriptions();
+        }
+
         $destinataires = [];
         $existingAppel = $em->getRepository(Utilisateur::class)->findUtilisateurByEvenement($dhtmlxEvenement->getId());
         foreach ($inscriptions as $key => $inscription) {

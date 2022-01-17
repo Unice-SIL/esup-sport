@@ -150,3 +150,24 @@ _uca.calendrier.changeTypeVisualisation = function(newTypeVisualisation) {
     typeVisualisation = newTypeVisualisation;
     _uca.calendrier.loadData();
 };
+
+
+_uca.calendrier.listenClickBtnGetModalDetailCreneau = function() {
+    $('a.detail_creneau').on('click', function() {
+        $('#modal_container').empty('');
+        const id = $(this).data('id');
+        const typeFormat = $(this).data('format');
+        const idFormat = $(this).data('idformat');
+        const target = $(this).data('target');
+        _uca.ajax.showLoader();
+        $.ajax({
+            url: Routing.generate('api_detail_creneau', { id, typeFormat, idFormat }),
+            type: "GET"
+        }).done(function(data) {
+            _uca.ajax.hideLoader();
+            $('#modal_container').append(data.html);
+            $(target).modal('show');
+            $('.js-inscription').each(_uca.inscription.addButtonEvent);
+        }).fail(_uca.ajax.fail);
+    });
+}

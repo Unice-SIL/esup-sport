@@ -83,7 +83,6 @@ class CalendrierService
             $res['content'] = $this->createMonthPlanning($item, $parametreData, $twigConfig);
         }
 
-
         return new JsonResponse($res);
     }
 
@@ -318,6 +317,24 @@ class CalendrierService
         $twigConfig['events'] = $datas;
 
         return $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.mobile.html.twig', $twigConfig);
+    }
+
+    /**
+     * Fonction qui permet de créer la modal de détail d'un DhtmlxEvenement
+     *
+     * @param DhtmlxEvenement $event
+     * @param string $typeFormat
+     * @return JsonResponse
+     */
+    public function getModalDetailCreneau(DhtmlxEvenement $event, string $typeFormat, string $idFormat): JsonResponse {
+        if ($typeFormat == 'FormatAvecReservation') {
+            $formatActivite = $this->formatAvecReservationRepository->find($idFormat);
+        } else {
+            $formatActivite = null;
+        }
+        return new JsonResponse([
+            'html' => $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/Modal.DetailCreneau.html.twig', ['event' => $event, 'typeFormat' => $typeFormat, 'formatActivite' => $formatActivite])
+        ]);
     }
 
     /**

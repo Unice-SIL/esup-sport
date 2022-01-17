@@ -51,7 +51,7 @@ var Serie = {
     getDependantChildren: function() {
         var obj = this
         return Object.values(scheduler._events).reduce(function(filtered, ev) {
-            if (ev.getParent != null) {
+            if (typeof ev.getParent() != 'undefined' && ev.getParent != null && obj != null) {
                 if (ev.getParent().id == obj.id && ev.hasSerie) {
                     filtered.push(ev);
                 }

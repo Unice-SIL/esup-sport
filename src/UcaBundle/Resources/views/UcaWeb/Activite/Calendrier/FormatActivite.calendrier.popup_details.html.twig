@@ -1,6 +1,4 @@
 {% if typeFormat == "FormatAvecCreneau" %}
-  {% set creneau = event.serie.creneau %}
-  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
 
   {# Eligibilité bonus #}
   {% if event.eligibleBonus == true %}
@@ -67,7 +65,6 @@
                   <textarea class="form-control" id="text{{ id }}" rows="5"></textarea>
                 </div>
                 <div class="d-flex justify-content-end">
-                  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
                   {% if inscriptionInformations.statut in ['nonconnecte'] %}                
                     <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
                       {{ 'common.indisponible' | trans | upper }}
@@ -87,7 +84,7 @@
   {% endif %}
   
   {# Infos supplémentaires #}  
-  {% if event.informations is defined and event.informations is not null %}
+  {% if event.informations is defined and event.informations is not null and event.informations != '0' %}
     <div class="info-container">
       <div class="image-presentation-container">
         <div class="image-presentation image-infos"></div>

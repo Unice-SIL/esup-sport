@@ -1,10 +1,3 @@
-{% if typeFormat == "FormatAvecCreneau"%}
-  {% set creneau = event.serie.creneau %}
-  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user) %}
-{% elseif typeFormat == 'FormatAvecReservation' %}
-  {% set creneau = event.reservabilite is not null ? event.reservabilite : event.serie.reservabilite %}
-  {% set inscriptionInformations = creneau.getInscriptionInformations(app.user, formatActivite, null, event) %}  
-{% endif %}
 <!-- {{ inscriptionInformations.statut }} -->
 {% if inscriptionInformations.statut in ['previsualisation'] %}
   <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans }}</button>
