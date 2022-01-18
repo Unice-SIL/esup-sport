@@ -45,7 +45,8 @@ class CorrectPayboxTimeoutCommand extends ContainerAwareCommand
                         $inscription->setStatut('valide');
                         $inscription->setMotifAnnulation(null);
                     }
-                    if ($typeAutorisation = $commandeDetail->getTypeAutorisation()) {
+                    $typeAutorisation = $commandeDetail->getTypeAutorisation();
+                    if ($typeAutorisation && !$user->getAutorisations()->contains($typeAutorisation)) {
                         $user->addAutorisation($typeAutorisation);
                     }
                 }                
