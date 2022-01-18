@@ -26,7 +26,7 @@ class CorrectPayboxTimeoutCommand extends ContainerAwareCommand
     {
         $em = $this->getContainer()->get('doctrine')->getManager();
         $commandeRepository = $em->getRepository(Commande::class);
-        $commandes = $commandeRepository->findByIds([18292, 18290, 18281, 18196, 18182, 18172, 18114]);
+        $commandes = $commandeRepository->findByNumerosCommandes([18292, 18290, 18281, 18196, 18182, 18172, 18114]);
 
         foreach ($commandes as $commande) {
             $user = $commande->getUtilisateur();

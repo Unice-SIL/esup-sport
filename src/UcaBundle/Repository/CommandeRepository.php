@@ -263,4 +263,13 @@ class CommandeRepository extends \Doctrine\ORM\EntityRepository
             ->getResult()
         ;
     }
+
+    public function findByNumerosCommandes($numeros) {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.numeroCommande in (:numeros)')
+            ->setParameter('numeros', $numeros)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
