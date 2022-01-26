@@ -42,7 +42,7 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     protected $nbMaxInscriptions;
 
-    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="profil", cascade={"persist", "remove"}) */
+    /** @ORM\OneToMany(targetEntity="MontantTarifProfilUtilisateur", mappedBy="profil", cascade={"persist", "remove"}, fetch="LAZY") */
     protected $montants;
 
     /**
@@ -57,13 +57,13 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     protected $ressources;
 
-    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="EAGER", orphanRemoval=true) */
+    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="LAZY", orphanRemoval=true) */
     protected $creneaux;
 
-    /** @ORM\OneToMany(targetEntity="ReservabiliteProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="EAGER", orphanRemoval=true) */
+    /** @ORM\OneToMany(targetEntity="ReservabiliteProfilUtilisateur", mappedBy="profilUtilisateur", cascade={"persist", "remove"}, fetch="LAZY", orphanRemoval=true) */
     protected $reservabilites;
 
-    /** @ORM\OneToMany(targetEntity="Utilisateur", mappedBy="profil") */
+    /** @ORM\OneToMany(targetEntity="Utilisateur", mappedBy="profil", fetch="LAZY") */
     protected $utilisateur;
 
     /**
@@ -81,12 +81,12 @@ class ProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     
     /**
-     * @ORM\OneToMany(targetEntity="ProfilUtilisateur", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="ProfilUtilisateur", mappedBy="parent", fetch="LAZY")
      */
     protected $enfants;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="enfants")
+     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur", inversedBy="enfants", fetch="LAZY")
      */
     protected $parent;
 

@@ -30,12 +30,12 @@ class FormatActiviteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Js
      */
     protected $id;
     /**
-     * @ORM\ManyToOne(targetEntity="FormatActivite" , inversedBy="profilsUtilisateurs", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="FormatActivite" , inversedBy="profilsUtilisateurs", fetch="LAZY")
      */
     protected $formatActivite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="formatsActivite", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="formatsActivite", fetch="LAZY")
      */
     protected $profilUtilisateur;
 
@@ -43,6 +43,9 @@ class FormatActiviteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Js
      * @ORM\Column(type="integer", nullable=true, options={"default":0})
      */
     protected $capaciteProfil;
+
+    /** @ORM\Column(type="integer", nullable=true, options={"default":0})*/
+    protected $nbInscrits;
 
     // endregion
 
@@ -52,6 +55,7 @@ class FormatActiviteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Js
         $this->capaciteProfil = $capacite ? $capacite : 0;
         $this->profilUtilisateur = $profil;
         $this->formatActivite = $format;
+        $this->nbInscrits = 0;
     }
 
     public function jsonSerializeProperties()
@@ -146,5 +150,29 @@ class FormatActiviteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Js
     public function getProfilUtilisateur()
     {
         return $this->profilUtilisateur;
+    }
+
+    /**
+     * Set nbInscrits.
+     *
+     * @param null|mixed $nbInscrits
+     *
+     * @return CreneauProfilUtilisateur
+     */
+    public function setNbInscrits($nbInscrits = null)
+    {
+        $this->nbInscrits = $nbInscrits;
+
+        return $this;
+    }
+
+    /**
+     * Get nbInscrits.
+     *
+     * @return null|int
+     */
+    public function getNbInscrits()
+    {
+        return $this->nbInscrits;
     }
 }

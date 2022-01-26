@@ -88,10 +88,10 @@ class MesInscriptionsController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         if ($inscription->getUtilisateur() == $this->getUser() && !($request->getScheme().'://'.$request->getHttpHost().$this->generateUrl('UcaGest_GestionInscription') == $request->headers->get('referer'))) {
-            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationutilisateur']);
+            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationutilisateur'])->updateNbInscrits(false);
             $redirect = $this->redirectToRoute('UcaWeb_MesInscriptions');
         } elseif ($this->isGranted('ROLE_GESTION_INSCRIPTION')) {
-            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationgestionnaire']);
+            $inscription->setStatut('annule', ['motifAnnulation' => 'annulationgestionnaire'])->updateNbInscrits(false);
             $redirect = $this->redirectToRoute('UcaGest_GestionInscription');
         } else {
             $redirect = $this->redirectToRoute('UcaWeb_MesInscriptions');
@@ -282,11 +282,13 @@ class MesInscriptionsController extends Controller
             if ($compteurFiltre > 0 and !empty($inscriptions)) {
                 foreach ($inscriptions as $inscription) {
                     if (null != $inscription) {
-                        $inscription->setStatut('desinscriptionadministrative');
-                        $inscription->setDateDesinscription(new \DateTime());
-                        $inscription->setUtilisateurDesinscription($this->getUser());
-                        $inscription->setNomDesinscription($this->getUser()->getNom());
-                        $inscription->setPrenomDesinscription($this->getUser()->getPrenom());
+                        $inscription->setStatut('desinscriptionadministrative')
+                            ->setDateDesinscription(new \DateTime())
+                            ->setUtilisateurDesinscription($this->getUser())
+                            ->setNomDesinscription($this->getUser()->getNom())
+                            ->setPrenomDesinscription($this->getUser()->getPrenom())
+                            ->updatenbInscrits(false)
+                        ;
                     }
                 }
                 $em->flush();

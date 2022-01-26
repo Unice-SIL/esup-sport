@@ -41,7 +41,7 @@ class TimeoutService
     {
         $inscriptions = $this->em->getRepository(Inscription::class)->aNettoyer();
         $inscriptions->map(function ($inscription) {
-            $inscription->setStatut('annule', ['motifAnnulation' => 'timeout', 'commentaireAnnulation' => null]);
+            $inscription->setStatut('annule', ['motifAnnulation' => 'timeout', 'commentaireAnnulation' => null])->updateNbInscrits(false);
             $this->em->persist($inscription);
         });
     }

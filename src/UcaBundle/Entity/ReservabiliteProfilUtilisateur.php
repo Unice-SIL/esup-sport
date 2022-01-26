@@ -23,19 +23,22 @@ class ReservabiliteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Jso
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Reservabilite" , inversedBy="profilsUtilisateurs")
+     * @ORM\ManyToOne(targetEntity="Reservabilite" , inversedBy="profilsUtilisateurs", fetch="LAZY")
      * @Assert\NotBlank(message="reservabilite.notblank")
      */
     protected $reservabilite;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="reservabilites")
+     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="reservabilites", fetch="LAZY")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
      */
     protected $profilUtilisateur;
 
     /** @ORM\Column(type="integer", nullable=true, options={"default":0})*/
     protected $capaciteProfil;
+
+    /** @ORM\Column(type="integer", nullable=true, options={"default":0})*/
+    protected $nbInscrits;
     // region propriétés
 
     /**
@@ -55,6 +58,7 @@ class ReservabiliteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Jso
         $this->capaciteProfil = $capacite ? $capacite : 0;
         $this->profilUtilisateur = $profil;
         $this->reservabilite = $reservabilite;
+        $this->nbInscrits = 0;
     }
 
     public function jsonSerializeProperties()
@@ -149,5 +153,29 @@ class ReservabiliteProfilUtilisateur implements \UcaBundle\Entity\Interfaces\Jso
     public function getCapaciteProfil()
     {
         return $this->capaciteProfil;
+    }
+
+    /**
+     * Set nbInscrits.
+     *
+     * @param null|mixed $nbInscrits
+     *
+     * @return ReservabiliteProfilUtilisateur
+     */
+    public function setNbInscrits($nbInscrits = null)
+    {
+        $this->nbInscrits = $nbInscrits;
+
+        return $this;
+    }
+
+    /**
+     * Get nbInscrits.
+     *
+     * @return null|int
+     */
+    public function getNbInscrits()
+    {
+        return $this->nbInscrits;
     }
 }

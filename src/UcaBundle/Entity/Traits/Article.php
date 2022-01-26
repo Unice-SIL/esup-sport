@@ -10,6 +10,7 @@
 namespace UcaBundle\Entity\Traits;
 
 use UcaBundle\Entity\Creneau;
+use UcaBundle\Entity\CreneauProfilUtilisateur;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Inscription;
@@ -60,29 +61,21 @@ trait Article
 
     public function isNotFull($usr, $format = null)
     {
-        $totalInscrits = 0;
-        $criterias = EntityRepository::criteriaBy([['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']]]);
+        if ($format && !$format instanceof FormatAvecReservation) {
+            $item = $format;   
+        } else {
+            $item = $this;
+        }
 
-        foreach ($this->getInscriptions()->matching($criterias) as $inscription) {
-            $profilInscription = $inscription->getUtilisateur()->getProfil();
-            $profilUtilisateur = $usr->getProfil();
-            $profilParentInscription = $profilInscription->getParent() ?? null;
-            $profilParentUtilisateur = $profilUtilisateur->getParent() ?? null;
-
-            if (
-                ($profilParentInscription !== null && $profilParentUtilisateur !== null && $profilParentInscription === $profilParentUtilisateur)
-                || ($profilParentInscription !== null && $profilParentUtilisateur === null && $profilParentInscription === $profilUtilisateur)
-                || ($profilParentInscription === null && $profilParentUtilisateur !== null && $profilInscription === $profilParentUtilisateur)
-                || ($profilInscription === $profilUtilisateur)
-            ) {
-                ++$totalInscrits;
+        $profilUtilisateur = $usr->getProfil();
+        foreach ($item->profilsUtilisateurs as $itemProfilUtilisateur) {
+            $profil = $itemProfilUtilisateur->getProfilUtilisateur();
+            if (($profil == $profilUtilisateur || $profil == $profilUtilisateur->getParent()) && ($capaciteProfil = $itemProfilUtilisateur->getCapaciteProfil()) > 0) {
+                return !empty($capaciteProfil) && ($itemProfilUtilisateur->getNbInscrits() < $capaciteProfil);
             }
         }
-        if ($format && !$format instanceof FormatAvecReservation) {
-            return !empty($format->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil())) && $totalInscrits < $format->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil());
-        }
 
-        return !empty($this->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil())) && $totalInscrits < $this->getCapaciteProfil($usr->getProfil()->getParent() ? $usr->getProfil()->getParent() : $usr->getProfil());        
+        return false;
     }
 
     public function isFull($usr, $format)
@@ -97,18 +90,14 @@ trait Article
 
     public function autoriseProfil($profilUtilisateur)
     {
-        if (!$this instanceof FormatAvecReservation) {
-            foreach ($this->profilsUtilisateurs as $formatProfil) {
-                $formatProfilUtilisateur = $formatProfil->getProfilUtilisateur();
-                if ($profilUtilisateur == $formatProfilUtilisateur || ($formatProfilUtilisateur->getEnfants() && $formatProfilUtilisateur->getEnfants()->contains($profilUtilisateur))) {
-                    $profil = $formatProfil;
-                }
+        foreach ($this->profilsUtilisateurs as $formatProfilUtilisateur) {
+            $profil = $formatProfilUtilisateur->getProfilUtilisateur();
+            if (($profil == $profilUtilisateur || $profil == $profilUtilisateur->getParent()) && $formatProfilUtilisateur->getCapaciteProfil() > 0) {
+                return true;
             }
-            
-            return isset($profil) && !in_array($profil->getCapaciteProfil(), [null, 0]);
         }
 
-        return true;
+        return false;
     }
 
     public function getInscriptionInformations($utilisateur, $format = null, int $maxCreneau = null, $event = null)
@@ -126,7 +115,7 @@ trait Article
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (($estResa && !$formatReference->autoriseProfil($utilisateur->getProfil())) || !$this->autoriseProfil($utilisateur->getProfil())) {
+        } elseif (!$this->autoriseProfil($utilisateur->getProfil())) {
             $resultat['statut'] = 'profilinvalide';
         } elseif (!$utilisateur->getCgvAcceptees()) {
             $resultat['statut'] = 'cgvnonacceptees';

@@ -183,6 +183,7 @@ class DhtmlxController extends Controller
             foreach ($listeCommandeDetail as $commandeDetail) {
                 $em->remove($commandeDetail);
             }
+            $inscription->updateNbInscrits(false);
             $inscription->setCreneau(null);
             $inscription->setStatut('annule', ['motifAnnulation' => 'suppressionserie']);
         }

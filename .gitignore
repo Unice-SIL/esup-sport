@@ -1,7 +1,5 @@
-*.lock
 *~
 ~*
-*.dist
 .vscode
 assets/bundles
 node_modules

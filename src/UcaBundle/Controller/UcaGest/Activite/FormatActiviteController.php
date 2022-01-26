@@ -214,6 +214,7 @@ class FormatActiviteController extends Controller
 
                     return $this->redirectToRoute('UcaGest_ActiviteVoir', ['id' => $idActivite]);
                 }
+                $inscription->updateNbInscrits(false);
                 $inscription->setStatut('ancienneinscription');
                 $formatActivite->removeInscription($inscription);
                 $inscription->setFormatActivite(null);

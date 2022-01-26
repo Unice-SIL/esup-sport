@@ -56,7 +56,7 @@ class Creneau implements \UcaBundle\Entity\Interfaces\JsonSerializable, \UcaBund
 
     //region Propriétés communes FormatActivite
 
-    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="creneau", cascade={"persist", "remove"},fetch="EAGER")
+    /** @ORM\OneToMany(targetEntity="CreneauProfilUtilisateur", mappedBy="creneau", cascade={"persist", "remove"}, fetch="LAZY")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank") */
     private $profilsUtilisateurs;
 

@@ -253,8 +253,8 @@ class ExtractionExcelService
             foreach ($inscriptions as $inscription) {
                 $utilisateur = $inscription->getUtilisateur();
                 $dataLine = [
-                    $utilisateur->getPrenom(),
                     $utilisateur->getNom(),
+                    $utilisateur->getPrenom(),
                     $utilisateur->getTelephone() ?? '',
                     $inscription->getStatut() == 'valide' ? $this->translator->trans('formatSimple.list.inscrit') : $this->translator->trans('creneau.list.preinscrit')
                 ];

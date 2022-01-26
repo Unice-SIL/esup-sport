@@ -184,7 +184,7 @@ class ReportingController extends Controller
                     $cmdDetails->getCommande()->getUtilisateur()->removeAutorisation($cmdDetails->getTypeAutorisation());
                     foreach ($cmdDetails->getCommande()->getCommandeDetails() as $cd) {
                         if ($cd->getInscription()) {
-                            $cd->getInscription()->setStatut('ancienneinscription');
+                            $cd->getInscription()->setStatut('ancienneinscription')->updateNbInscrits(false);
                         }
                     }
                     $em->flush();

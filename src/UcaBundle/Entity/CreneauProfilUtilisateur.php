@@ -23,19 +23,22 @@ class CreneauProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSeria
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Creneau" , inversedBy="profilsUtilisateurs")
+     * @ORM\ManyToOne(targetEntity="Creneau" , inversedBy="profilsUtilisateurs", fetch="LAZY")
      * @Assert\NotBlank(message="creneau.notblank")
      */
     protected $creneau;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="creneaux")
+     * @ORM\ManyToOne(targetEntity="ProfilUtilisateur" , inversedBy="creneaux", fetch="LAZY")
      * @Assert\NotBlank(message="complement.profilsutilisateurs.notblank")
      */
     protected $profilUtilisateur;
 
     /** @ORM\Column(type="integer", nullable=true, options={"default":0})*/
     protected $capaciteProfil;
+
+    /** @ORM\Column(type="integer", nullable=true, options={"default":0})*/
+    protected $nbInscrits;
     // region propriétés
 
     /**
@@ -55,6 +58,7 @@ class CreneauProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSeria
         $this->capaciteProfil = $capacite ? $capacite : 0;
         $this->profilUtilisateur = $profil;
         $this->creneau = $creneau;
+        $this->nbInscrits = 0;
     }
 
     public function jsonSerializeProperties()
@@ -149,5 +153,29 @@ class CreneauProfilUtilisateur implements \UcaBundle\Entity\Interfaces\JsonSeria
     public function getCapaciteProfil()
     {
         return $this->capaciteProfil;
+    }
+
+    /**
+     * Set nbInscrits.
+     *
+     * @param null|mixed $nbInscrits
+     *
+     * @return CreneauProfilUtilisateur
+     */
+    public function setNbInscrits($nbInscrits = null)
+    {
+        $this->nbInscrits = $nbInscrits;
+
+        return $this;
+    }
+
+    /**
+     * Get nbInscrits.
+     *
+     * @return null|int
+     */
+    public function getNbInscrits()
+    {
+        return $this->nbInscrits;
     }
 }

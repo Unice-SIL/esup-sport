@@ -61,6 +61,10 @@ services:
         tags:
             - { name: doctrine.orm.entity_listener, event: postPersist, entity: App\Entity\Groupe, method: postPersist }
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Groupe, method: preFlush }
+    uca.doctrine.inscription.listener:
+        class: UcaBundle\Service\Listener\Entity\InscriptionListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: prePersist, entity: App\Entity\Inscription, method: prePersist }
     uca.doctrine.classe_activite.listener:
         class: UcaBundle\Service\Listener\Entity\ClasseActiviteListener
         tags:

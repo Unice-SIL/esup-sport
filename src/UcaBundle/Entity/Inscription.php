@@ -10,13 +10,15 @@
 
 namespace UcaBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\InscriptionRepository")
  * @Gedmo\Loggable
+ * @ORM\EntityListeners({"UcaBundle\Service\Listener\Entity\InscriptionListener"})
  */
 class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
@@ -225,6 +227,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     public function seDesinscrire(Utilisateur $utilisateur, $avoir = false)
     {
+        $this->updateNbInscrits(false);
         if (!$avoir) {
             $date = new \DateTime();
             $this->setStatut('desinscrit');
@@ -837,6 +840,39 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             $this->setFormatActivite($format);
         } elseif (is_a($item, FormatActivite::class)) {
             $this->setFormatActivite($item);
+        }
+    }
+
+    /**
+     * Fonction qui permet de mettre à jour le champs nbInscrits dans les tables de quota par profil
+     *
+     * @param Inscription $inscription
+     * @param boolean $add
+     * @return void
+     */
+    public function updateNbInscrits(bool $add = true): void {
+        if ($this->getReservabilite()) {
+            $item = $this->getReservabilite();
+        } elseif ($this->getCreneau()) {
+            $item = $this->getCreneau();
+        } elseif ($this->getFormatActivite()) {
+            $item = $this->getFormatActivite();
+        } else {
+            $item = null;
+        }
+
+        if (null !== $item) {
+            $profilUtilisateur = $this->getUtilisateur()->getProfil()->getParent() ?? $this->getUtilisateur()->getProfil();
+            $criteria = Criteria::create()->andWhere(Criteria::expr()->eq('profilUtilisateur', $profilUtilisateur));
+            $itemProfils = $item->getProfilsUtilisateurs()->matching($criteria);
+            if (sizeof($itemProfils) > 0) {
+                $itemProfil = $itemProfils->first();
+                if ($add) {
+                    $itemProfil->setNbInscrits($itemProfil->getNbInscrits() + 1);
+                } else {
+                    $itemProfil->setNbInscrits($itemProfil->getNbInscrits() - 1);
+                }
+            }
         }
     }
 }

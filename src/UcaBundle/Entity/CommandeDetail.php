@@ -217,9 +217,9 @@ class CommandeDetail
     public function traitementPostAnnulation($options)
     {
         if ('inscription' == $this->type) {
-            $this->inscription->setStatut('annule', $options);
+            $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
         } elseif ('format' == $this->type) {
-            $this->inscription->setStatut('annule', $options);
+            $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
         } elseif ('autorisation' == $this->type) {
             // NA
         }
@@ -253,7 +253,7 @@ class CommandeDetail
             if (!$this->getLigneCommandeReferences()->isEmpty()) {
                 return false;
             }
-            $this->getInscription()->setStatut('annule', $options);
+            $this->getInscription()->setStatut('annule', $options)->updateNbInscrits(false);
             $this->remove();
 
             return true;
@@ -265,7 +265,7 @@ class CommandeDetail
                     $this->removeLigneCommandeLiee($commandeDetail);
                 }
             }
-            $this->getInscription()->setStatut('annule', $options);
+            $this->getInscription()->setStatut('annule', $options)->updateNbInscrits(false);
             $this->remove();
 
             return true;

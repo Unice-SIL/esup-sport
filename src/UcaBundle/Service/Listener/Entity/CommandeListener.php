@@ -39,8 +39,8 @@ class CommandeListener
                 }
             }
             if ('annule' == $event->getOldValue('statut') && 'termine' == $event->getNewValue('statut')) {
-                $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
-                $commande->setNumeroCommande($numero);
+                $numero = $em->getRepository(Commande::class)->max('numeroRecu') + 1;
+                $commande->setNumeroRecu($numero);
             } elseif ('termine' != $event->getOldValue('statut') && 'termine' == $event->getNewValue('statut')) {
                 // condition supplémentaire pour les avoirs ?
                 if ($event->hasChangedField('montantTotal') && 0 != $event->getNewValue('montantTotal')) {
