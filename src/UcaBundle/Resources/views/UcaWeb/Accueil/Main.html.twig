@@ -51,7 +51,7 @@
         <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Cours') }}') no-repeat center center;background-size: cover;">
             <div class="container">
                 <div class="row d-block">
-                    <h2 class="text-center h2-light">{{ "accueil.miseavantcours.title"|trans }}</h2>
+                    <h2 class="text-center h2-light">{{ emplacementImageFond('Accueil - Cours').titre }}</h2>
                 </div>
                 <div class="row mb-5 d-flex flex-wrap justify-content-around">
                     {% for item in item_format_avec_creaneau %}
@@ -74,7 +74,7 @@
         <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Reservation') }}') no-repeat center center;background-size: cover;">
             <div class="container">
                 <div class="row d-block">
-                    <h2 class="text-center h2-light">{{ "accueil.miseavantreservation.title"|trans }}</h2>
+                    <h2 class="text-center h2-light">{{ emplacementImageFond('Accueil - Reservation').titre }}</h2>
                 </div>
                 <div class="row mb-5 d-flex flex-wrap justify-content-around">
                     {% for item in item_format_avec_ressource %}
@@ -97,7 +97,7 @@
         <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Carte') }}') no-repeat center center;background-size: cover;">
             <div class="container">
                 <div class="row d-block">
-                    <h2 class="text-center h2-light">{{ "accueil.miseavantcarte.title"|trans }}</h2>
+                    <h2 class="text-center h2-light">{{ emplacementImageFond('Accueil - Carte').titre }}</h2>
                 </div>
                 <div class="row mb-5 d-flex flex-wrap justify-content-around">
                     {% for item in item_format_avec_carte %}
@@ -131,7 +131,7 @@
     </section>
 
     {% if app.user is null %}
-        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), path('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center;background-size: cover;">
+        <section class="section-home py-5" style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center;background-size: cover;">
             <div class="container mb-5">
                 <div class="row d-block">
                     <h2 class="text-center h2-light">{{ "accueil.inscription.title"|trans }}</h2>

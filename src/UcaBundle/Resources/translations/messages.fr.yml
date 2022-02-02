@@ -35,6 +35,7 @@ activite.libelle: Activité
 activite.list.title: Activités
 activite.modifier.succes: "Activité modifiée avec succès"
 activite.modifier.title: Modifier une activite
+activite.not.found: Cette activité n'existe pas
 activite.recherche.option.lieu:  Choisissez un campus
 activite.recherche.option.typeactivite:  Choisissez une activité
 activite.reservation.ajouter: "Ajouter Activité avec Réservation"
@@ -112,6 +113,7 @@ bouton.selectionner.tout: Sélectionner tout
 bouton.supprimer: Supprimer
 bouton.tout.supprimer: Tout supprimer
 bouton.voir: Voir
+button.voir.plus: Afficher plus d'informations
 calendrier.etablissements: "Activité dispensée sur %nbCampus% campus :"
 cgv.acceptees: Merci d'avoir accepté les conditions générales de vente
 cgv.information: Veuillez prendre connaissance des conditions générales de vente
@@ -151,6 +153,7 @@ commande.avoirdetails.referenceavoir: Référence de l'avoir
 commande.avoirdetails.titre: Eléments de l'avoir
 commande.datepaiement: Date de paiement
 commande.details.avoir.message: Cet élement fait l'objet d'un avoir
+commande.evenement.libelle: Détails de l'évènement
 commande.informations: Informations de la commande
 commande.libelle: Commande
 commande.numero.cheque: Numéro de chèque
@@ -489,6 +492,7 @@ formatactivite.fraiscomplementaires.titre: "Frais complémentaires"
 formatactivite.horaires: Horaires
 formatactivite.libelle: "Format d'activité"
 formatactivite.lieu.aucun: Aucun lieu défini
+formatactivite.not.found: Ce format d'activité n'existe pas
 formatactivite.profil.utilisateur.aucun: Aucun profil autorisé
 formatactivite.reservation.ajouter.title: Ajouter un format avec réservation de ressource
 formatactivite.reservation.modifier.title: Modifier un format avec réservation de ressource
@@ -795,8 +799,8 @@ scheduler.action.title.delete: la suppresion
 scheduler.action.title.save: l'enregistrement
 scheduler.action.title.update: la mise à jour
 scheduler.action.update: Mettre à jour
-scheduler.error.capacite.format: Vous ne pouvez pas dépasser la capacité totale du format 
 scheduler.error.capacite.format.unknow: La capacité totale n'a pas été définie
+scheduler.error.capacite.format: Vous ne pouvez pas dépasser la capacité totale du format 
 scheduler.error.capacite.profil.debut: La capacité maximale du profil 
 scheduler.error.capacite.profil.fin: est de 
 scheduler.error.capacite.somme: Vous ne pouvez pas dépasser la capacité totale renseignée

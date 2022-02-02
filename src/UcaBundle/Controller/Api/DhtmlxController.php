@@ -34,6 +34,7 @@ class DhtmlxController extends Controller
         //this return serie and event of the serie
 
         $series = [];
+        $events = [];
         if ('ressource' == $type || 'FormatActivite' == $type) {
             $events = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxDateByReference($type, $id);
             $series = $em->getRepository(DhtmlxSerie::class)->findDhtmlxDateByReference($type, $id);

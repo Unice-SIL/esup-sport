@@ -171,3 +171,13 @@ _uca.calendrier.listenClickBtnGetModalDetailCreneau = function() {
         }).fail(_uca.ajax.fail);
     });
 }
+
+_uca.evenement = {};
+_uca.evenement.limitChar = function(){
+    $('.text_evenement_too_long').each(function( index ) {
+        if (this.offsetHeight < this.scrollHeight ||
+            this.offsetWidth < this.scrollWidth) {
+                $(this).parent().find('button[data-toggle="modal"]').show();
+        }
+    });
+}

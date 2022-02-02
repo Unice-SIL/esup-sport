@@ -285,7 +285,17 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
                     // Gestion de la police
                     font: {
 						weight: 'bold'
-					}
+					},
+                    offset: function(context) {
+                        var max = context.chart.scales["y-axis-0"].max;
+                        var index = context.dataIndex;
+                        var value = context.dataset.data[index];
+                        var percent = value*100/max;
+                        if(percent >= 95){
+                            return -30;
+                        }
+						return 0;
+					},
 				}
 			}
         }
@@ -366,6 +376,7 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
                 },
                 padding: 0
             },
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: title,
@@ -408,10 +419,22 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
 						// Si la donnee est nulle, alors elle est masquee
 						return context.chart.isDatasetVisible(context.datasetIndex);
 					},
+                    offset: function(context) {
+                        var max = context.chart.scales["y-axis-0"].max;
+                        var index = context.dataIndex;
+                        var value = context.dataset.data[index];
+                        var percent = value*100/max;
+                        if(percent >= 85){
+                            return -30;
+                        }
+						return 0;
+					},
                     // Gestion de la police
                     font: {
-						weight: 'bold'
-					}
+						weight: 'bold',
+                        // size: 14
+					},
+                    rotation: -90,
 				}
 			},
         }

@@ -45,9 +45,11 @@
 							<p class="w-50 m-0 p-0 py-3 text-right fw-500 color-blue">
 								{{ article.montant ~ ' €' }}
 								&nbsp;
-								<a class='btn btn-outline.disabled' tabindex="0" type="button" href="{{ path('UcaGest_ReportingCommandeDetails',{'id':article.commande.id}) }}" data-toggle="tooltip" data-placement="top" title="{{ 'detailscommande.list.title' | trans }}">
-									<span class='fa fa-info-circle' alt='' aria-label="{{ 'detailscommande.list.title' | trans }}"></span>
-								</a>
+								{% if is_granted('ROLE_GESTION_COMMANDES') %}
+									<a class='btn btn-outline.disabled' tabindex="0" type="button" href="{{ path('UcaGest_ReportingCommandeDetails',{'id':article.commande.id}) }}" data-toggle="tooltip" data-placement="top" title="{{ 'detailscommande.list.title' | trans }}">
+										<span class='fa fa-info-circle' alt='' aria-label="{{ 'detailscommande.list.title' | trans }}"></span>
+									</a>
+								{% endif %}
 							</p>
 						{% else %}
 							<p class="w-50 m-0 p-0 py-3 text-right fw-500 color-blue">

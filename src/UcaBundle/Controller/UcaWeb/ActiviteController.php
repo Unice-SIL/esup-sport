@@ -57,11 +57,17 @@ class ActiviteController extends Controller
     public function ActiviteListerAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-        $twigConfig['entite'] = 'Activite';
-        $twigConfig['item'] = $em->getRepository('UcaBundle:ClasseActivite')->findOneBy(['id' => $id]);
-        $twigConfig['data'] = $em->getRepository('UcaBundle:Activite')->findByClassActivite($id, $this->getUser());
+        
+        if ($item = $em->getRepository('UcaBundle:ClasseActivite')->findOneBy(['id' => $id])) {
+            $twigConfig['entite'] = 'Activite';
+            $twigConfig['item'] = $item;
+            $twigConfig['data'] = $em->getRepository('UcaBundle:Activite')->findByClassActivite($id, $this->getUser());
+            
+            return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
+        }
+        $this->addFlash('danger', 'activite.not.found');
 
-        return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
+        return $this->redirectToRoute('UcaWeb_ClasseActiviteLister');
     }
 
     /**
@@ -73,29 +79,35 @@ class ActiviteController extends Controller
     public function FormatActiviteListerAction($idCa, $id)
     {
         $em = $this->getDoctrine()->getManager();
-        $twigConfig['idCa'] = $idCa;
-        $twigConfig['entite'] = 'FormatActivite';
-        $twigConfig['item'] = $em->getRepository('UcaBundle:Activite')->findOneBy(['id' => $id]);
-        $formats = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($twigConfig['item'], $this->getUser());
-        //On check les formats du type FormatAvecReservation pour voir si les ressources à réserver ont des créneaux
-        //Si elles n'en ont pas on ne les affiches pas
-        // foreach ($formats as $key => $format) {
-        //     if ($format instanceof FormatAvecReservation) {
-        //         $nbRessourceValid = 0;
-        //         foreach ($format->getRessource() as $ressource) {
-        //             if (sizeof($ressource->getReservabilites()) > 0) {
-        //                 ++$nbRessourceValid;
-        //             }
-        //         }
-        //         if (0 == $nbRessourceValid) {
-        //             unset($formats[$key]);
-        //         }
-        //     }
-        // }
-        $twigConfig['data'] = $formats;
-        $twigConfig['etablissements'] = $em->getRepository('UcaBundle:Etablissement')->findEtablissementByActivite($id);
+        if ($item = $em->getRepository('UcaBundle:Activite')->findOneBy(['id' => $id])) {
+            $twigConfig['idCa'] = $idCa;
+            $twigConfig['entite'] = 'FormatActivite';
+            $twigConfig['item'] = $item;
+            $formats = $em->getRepository('UcaBundle:FormatActivite')->findFormatPublie($item, $this->getUser());
+            //On check les formats du type FormatAvecReservation pour voir si les ressources à réserver ont des créneaux
+            //Si elles n'en ont pas on ne les affiches pas
+            // foreach ($formats as $key => $format) {
+            //     if ($format instanceof FormatAvecReservation) {
+            //         $nbRessourceValid = 0;
+            //         foreach ($format->getRessource() as $ressource) {
+            //             if (sizeof($ressource->getReservabilites()) > 0) {
+            //                 ++$nbRessourceValid;
+            //             }
+            //         }
+            //         if (0 == $nbRessourceValid) {
+            //             unset($formats[$key]);
+            //         }
+            //     }
+            // }
+            $twigConfig['data'] = $formats;
+            $twigConfig['etablissements'] = $em->getRepository('UcaBundle:Etablissement')->findEtablissementByActivite($id);
 
-        return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
+            return $this->render('@Uca/UcaWeb/Activite/Lister.html.twig', $twigConfig);
+        }
+        $this->addFlash('danger', 'formatactivite.not.found');
+
+        return $this->redirectToRoute('UcaWeb_ClasseActiviteLister');
+        
     }
 
     /**

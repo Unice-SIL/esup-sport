@@ -133,7 +133,11 @@ class PaiementController extends Controller
             $em->flush();
             $twigConfig['status'] = 'success';
         } elseif ('termine' == $commande->getStatut()) {
-            return $this->redirectToRoute('UcaGest_ReportingCommandeDetails', ['id' => $commande->getId()]);
+            if ($this->isGranted('ROLE_GESTION_COMMANDES')) {
+                return $this->redirectToRoute('UcaGest_ReportingCommandeDetails', ['id' => $commande->getId()]);
+            } else {
+                return $this->redirectToRoute('UcaWeb_MesCommandesVoir', ['id' => $commande->getId()]);
+            }
         } else {
             $twigConfig['status'] = 'canceled';
         }

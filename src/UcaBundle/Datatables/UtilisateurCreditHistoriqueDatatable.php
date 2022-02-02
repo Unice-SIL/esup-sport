@@ -75,7 +75,7 @@ class UtilisateurCreditHistoriqueDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
                     (new VoirCreditButton($this, 'UcaGest_AvoirDetails', ['id' => 'commandeAssociee', 'refAvoir' => 'avoir'], 'ROLE_GESTION_UTILISATEUR_LECTURE'))->getConfig(),
-                    (new VoirCommandeButton($this, 'UcaGest_ReportingCommandeDetails', ['id' => 'commandeAssociee'], 'ROLE_GESTION_COMMANDE'))->getConfig(),
+                    (new VoirCommandeButton($this, 'UcaGest_ReportingCommandeDetails', ['id' => 'commandeAssociee'], 'ROLE_GESTION_COMMANDES'))->getConfig(),
                     (new CommandeExportPaiementButton($this, 'UcaWeb_MesCommandesExport', ['id' => 'commandeAssociee']))->getConfig(),
                     (new CreditAjouterExportButton($this, 'UcaWeb_MesCreditsExport', ['id' => 'id']))->getConfig(),
                     (new CommandeExportAvoirButton($this, 'UcaWeb_MesAvoirsExport', ['id' => 'commandeAssociee', 'refAvoir' => 'avoir']))->getConfig(),

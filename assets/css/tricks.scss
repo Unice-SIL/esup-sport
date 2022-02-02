@@ -667,3 +667,11 @@ nav#nav-infosPratiques {
 }
 
 //
+
+.text_evenement_too_long{
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    /* truncate to 4 lines */
+    -webkit-line-clamp: 5;
+}

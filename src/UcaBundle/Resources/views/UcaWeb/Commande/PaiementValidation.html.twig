@@ -33,9 +33,11 @@
 					<p>
 						{{ 'commandedetail.informationscarte.message.bds' | trans}}
 					</p>
-					<a href="{{ path('UcaGest_ReportingCommandeDetails', {'id': commande.id}) }}" class="btn btn-primary" aria-label="{{ 'common.oui'|trans }}">
-						{{ 'common.oui' | trans }}
-					</a>
+					{% if is_granted('ROLE_GESTION_COMMANDES') %}
+						<a href="{{ path('UcaGest_ReportingCommandeDetails', {'id': commande.id}) }}" class="btn btn-primary" aria-label="{{ 'common.oui'|trans }}">
+							{{ 'common.oui' | trans }}
+						</a>
+					{% endif %}
 				</div>
 			</div>
 		{% endif %}

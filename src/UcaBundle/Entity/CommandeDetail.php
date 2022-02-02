@@ -149,7 +149,7 @@ class CommandeDetail
     public function affichageDetailCommande()
     {
         $format = $this->formatActivite;
-        if ('format' === $this->type && ('FormatAvecCreneau' === $this->typeArticle || $format instanceof FormatAvecCreneau)) {
+        if (null !== $format && 'format' === $this->type && ('FormatAvecCreneau' === $this->typeArticle || $format instanceof FormatAvecCreneau)) {
             //return $format->getEstPayant() xor 0 == $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur())
             return $format->getEstPayant() && ($format->getEstPayant() && 0 != $format->getTarif()->getMontantUtilisateur($this->commande->getUtilisateur()));
         }

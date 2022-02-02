@@ -29,7 +29,7 @@ class CommandeListener
                 $numero = $em->getRepository(Commande::class)->max('numeroCommande') + 1;
                 $commande->setNumeroCommande($numero);
 
-                if ('BDS' != $event->getOldValue('typePaiement') && 'BDS' == $event->getNewValue('typePaiement') && $commande->getUtilisateur()->getEmail()) {
+                if ($event->hasChangedField('typePaiement') && 'BDS' != $event->getOldValue('typePaiement') && 'BDS' == $event->getNewValue('typePaiement') && $commande->getUtilisateur()->getEmail()) {
                     $this->mailer->sendMailWithTemplate(
                         'Commande à régler au bureau des sports',
                         $commande->getUtilisateur()->getEmail(),

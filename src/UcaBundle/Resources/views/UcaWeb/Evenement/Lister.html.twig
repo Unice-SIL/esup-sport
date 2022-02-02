@@ -30,4 +30,8 @@
 {% block javascripts %}
     {{ parent() }}
     {{ Inscription.Js }}
+    <script type='text/javascript'>
+        'use_strict';
+        _uca.evenement.limitChar();
+    </script>
 {% endblock %}

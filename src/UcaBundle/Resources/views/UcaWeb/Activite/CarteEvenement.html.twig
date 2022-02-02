@@ -15,10 +15,15 @@
   <div class="m-0 p-0 pl-4 pl-md-0 col-12 col-sm-8 event-info">
     
     <!-- EN-TETE --> 
-    <div class="row">
+    <div class="row mb-4">
       <h2 class="m-0 mb-2 p-0 pl-2 pl-md-5 col-12 text-dark text-uppercase">{{ item.libelle }}</h2>
       <p class="d-block d-sm-none m-0 mb-2 p-0 pl-2 pl-md-5 col-12 font-italic fs-14 color-taupe-gray"> Le {{ item.dateDebutEffective | dateFormat('dd/mm/Y') }}</p>
-      <p class="m-0 mb-4 p-0 pl-2 pl-md-5 col-12">{{ item.description | nl2br }}</p>
+      <p class="m-0 p-0 pl-2 pl-md-5 col-12 text_evenement_too_long" style="">{{ item.description | nl2br }}</p>
+
+      <button type="button" class="ml-2 ml-md-5 btn btn-primary" data-toggle="modal" data-target="#modal_details_event_{{item.id}}" style="display: none">
+        {{ 'button.voir.plus' | trans }}
+      </button>
+      {% include "@Uca/UcaWeb/Activite/Modal.EvenementDetails.html.twig" with {'idModalDetailsEvent' : 'modal_details_event_'~item.id, 'details' : item.description} %}
     </div>
     <div class="row d-flex flex-wrap">
       <!-- col. LIEU --> 

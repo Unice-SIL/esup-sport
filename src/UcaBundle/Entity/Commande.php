@@ -124,6 +124,10 @@ class Commande
             $this->montantTotal += $cd->getMontant();
             $this->tva += $cd->getTva();
         }
+
+        if (null === $this->tva) {
+            $this->tva = 0.00;
+        }
     }
 
     public function sauvegardeInformations()

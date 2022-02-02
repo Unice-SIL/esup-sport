@@ -35,6 +35,7 @@ activite.libelle: Activity
 activite.list.title: Activities
 activite.modifier.succes: Activity successfully modified 
 activite.modifier.title: Edit an activity
+activite.not.found: This activity does not exists
 activite.reservation.ajouter: Add activity with reservation
 activite.simple.ajouter: Add simple activity
 activite.supprimer.erreur: 'Cannot delete activity, activities format are assigned'
@@ -110,6 +111,7 @@ bouton.selectionner.tout: Select all
 bouton.supprimer: Delete
 bouton.tout.supprimer: Delete all
 bouton.voir: See
+button.voir.plus: See more information
 calendrier.etablissements: "Activity offred on %nbCampus% campus :"
 cgv.acceptees: Thank you for accepting the general terms and conditions of sale 
 cgv.information: Please accept the general terms and conditions of sale 
@@ -149,6 +151,7 @@ commande.avoirdetails.referenceavoir: Credit note's reference
 commande.avoirdetails.titre: Credit note's elements
 commande.datepaiement: Buying date
 commande.details.avoir.message: This element belongs to a credit note
+commande.evenement.libelle: Event's details
 commande.informations: Order's informations
 commande.libelle: Order
 commande.numero.cheque: Cheque's number
@@ -487,6 +490,7 @@ formatactivite.fraiscomplementaires.titre: "Additional expenses"
 formatactivite.horaires: Schedules
 formatactivite.libelle: Activity format
 formatactivite.lieu.aucun: No place defined
+formatactivite.not.found: This format does not exists
 formatactivite.profil.utilisateur.aucun: No authorized profile
 formatactivite.reservation.ajouter.title: Add a format with resource reservation
 formatactivite.reservation.modifier.title: Edit a format with resource reservation
@@ -793,8 +797,8 @@ scheduler.action.title.delete: delete
 scheduler.action.title.save: save
 scheduler.action.title.update: update
 scheduler.action.update: Update
-scheduler.error.capacite.format: You cannot exceed the total capacity of the format
 scheduler.error.capacite.format.unknow: The total capacity is unknown
+scheduler.error.capacite.format: You cannot exceed the total capacity of the format
 scheduler.error.capacite.profil.debut: The maximum capacity of the profil
 scheduler.error.capacite.profil.fin: is 
 scheduler.error.capacite.somme: You cannot exceed the total capacity indicated

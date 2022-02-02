@@ -1,5 +1,6 @@
 {% extends "@Uca/Common/Main/Structure.UcaWeb.html.twig" %}
 {% import '@Uca/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
 
 {% if app.request.attributes.get('_route') == 'UcaWeb_ClasseActiviteLister' %}
     {% set home = true %}
@@ -42,6 +43,8 @@
     <div class="container">
         {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
     </div>
+
+    {{ flashBag.showAll }}
 
     {% if pageActivity and data is not empty %}
         <h1 class="h1-light">{{ title }}</h1>
