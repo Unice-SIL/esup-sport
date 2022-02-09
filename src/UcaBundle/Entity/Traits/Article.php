@@ -68,14 +68,18 @@ trait Article
         }
 
         $profilUtilisateur = $usr->getProfil();
+        $nbTotalInscrits = 0;
         foreach ($item->profilsUtilisateurs as $itemProfilUtilisateur) {
             $profil = $itemProfilUtilisateur->getProfilUtilisateur();
-            if (($profil == $profilUtilisateur || $profil == $profilUtilisateur->getParent()) && ($capaciteProfil = $itemProfilUtilisateur->getCapaciteProfil()) > 0) {
-                return !empty($capaciteProfil) && ($itemProfilUtilisateur->getNbInscrits() < $capaciteProfil);
+            $capaciteProfil = $itemProfilUtilisateur->getCapaciteProfil();
+            $nbInscritsProfil = $itemProfilUtilisateur->getNbInscrits();
+            $nbTotalInscrits += $nbInscritsProfil;
+            if (($profil == $profilUtilisateur || $profil == $profilUtilisateur->getParent()) && $capaciteProfil > 0 && $nbInscritsProfil >= $capaciteProfil) {
+                return false;
             }
         }
 
-        return false;
+        return $nbTotalInscrits < $item->getCapacite();
     }
 
     public function isFull($usr, $format)

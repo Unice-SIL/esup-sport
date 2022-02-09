@@ -251,4 +251,14 @@ class DhtmlxSerie extends DhtmlxDate implements \UcaBundle\Entity\Interfaces\Jso
 
         return '';
     }
+
+    public function getFormatActiviteLibelle(): string {
+        if ($this->creneau) {
+            return $this->creneau->getFormatActivite()->getLibelle();
+        } elseif ($this->reservabilite) {
+            return $this->reservabilite->getRessource()->getLibelle();
+        }
+
+        return '';
+    }
 }

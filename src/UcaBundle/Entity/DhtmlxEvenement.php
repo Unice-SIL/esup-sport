@@ -297,4 +297,21 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
         return '';
     }
+
+    /**
+     * Get libellé format d'activité
+     *
+     * @return string
+     */
+    public function getFormatActiviteLibelle(): string {
+        if ($this->formatSimple) {
+            return $this->formatSimple->getLibelle();
+        } elseif ($this->reservabilite) {
+            return $this->reservabilite->getRessource()->getLibelle();
+        } elseif ($this->serie) {
+            return $this->serie->getFormatActiviteLibelle();
+        }
+
+        return '';
+    }
 }

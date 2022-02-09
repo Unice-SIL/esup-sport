@@ -52,7 +52,7 @@ class ActiviteController extends Controller
             $encadrant = $em->getRepository(Utilisateur::class)->find($request->get('encadrant'));
             $event = $em->getRepository(DhtmlxEvenement::class)->find($request->get('event'));
 
-            $objet = $event->getDescription().' : '.date_format($event->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($event->getDateFin(), 'Y/m/d H:i:s');
+            $objet = $event->getFormatActiviteLibelle().' : '.date_format($event->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($event->getDateFin(), 'Y/m/d H:i:s');
 
             $mailer = $this->container->get('mailService');
             $mailer->sendMailWithTemplate(
