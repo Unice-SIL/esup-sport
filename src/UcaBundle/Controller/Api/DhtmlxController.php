@@ -81,9 +81,11 @@ class DhtmlxController extends Controller
             $emailToSend[] = $i->getUtilisateur()->getEmail();
         }
 
+        $objet = $ev->getFormatActiviteLibelle().' : '.date_format($ev->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($ev->getDateFin(), 'Y/m/d H:i:s');
+
         $mailer = $this->container->get('mailService');
         $mailer->sendMailWithTemplate(
-            '',// Préciser dans le sujet, le titre de l'inscription
+            $objet,// Préciser dans le sujet, le titre de l'inscription
             $emailToSend,
             '@Uca/Email/PreInscription/MailPourTousLesInscripts.html.twig',// Préciser dans le contenu, le titre de l'inscription
             ['message' => $text]
@@ -99,17 +101,17 @@ class DhtmlxController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $ev = $request->request->get('evenement');
-        if (isset($ev['evenementType']) && $ev['evenementType'] == 'ressource' && !isset($ev['enfants'])) {
+        if (isset($ev['evenementType']) && 'ressource' == $ev['evenementType'] && !isset($ev['enfants'])) {
             $ev['hasSerie'] = 'false';
             $ev['dependanceSerie'] = 'true';
         }
-        
+
         $c = new DhtmlxCommand($em, $ev);
         if ('delete' == $ev['action']) {
             $item = $c->getItem();
             if ($item instanceof DhtmlxEvenement) {
                 //si on veut supprimer le dernier événement d'une série, on supprime aussi la série pour éviter les problèmes de suppression de format
-                if ($item->getSerie() !== null && sizeof($item->getSerie()->getEvenements()) <= 1) {
+                if (null !== $item->getSerie() && sizeof($item->getSerie()->getEvenements()) <= 1) {
                     $em->remove($item->getSerie());
                 }
             }
@@ -159,7 +161,7 @@ class DhtmlxController extends Controller
         return new JsonResponse($em->getRepository(Inscription::class)->inscriptionParCreneauStatut($serie->getCreneau(), $request->request->get('statut')));
     }
 
-     /**
+    /**
      * @Route("/DhtmlxNbOccurrenceDependance", methods={"POST"}, name="DhtmlxNbOccurrenceDependance", options={"expose"=true})
      */
     public function isSeuleOccurrenceDependance(Request $request)

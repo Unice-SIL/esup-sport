@@ -9,6 +9,7 @@
 namespace UcaBundle\Service\Listener;
 
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use UcaBundle\Exception\ShibbolethException;
 
 class ExceptionListener
@@ -36,7 +37,7 @@ class ExceptionListener
         if ($exception instanceof ShibbolethException) {
             $this->flashbag->addMessageFlashBag($exception->getMessage(), 'danger');
             $event->setResponse(new RedirectResponse($this->router->generate('fos_user_security_login')));
-        } else {
+        } elseif (!$exception instanceof NotFoundHttpException) {
             // On clear les objets qui sont éventuellement persistés dans l'entité manager (pour éviter de les sauvegarder avec les logs)
             $this->em->clear();
 

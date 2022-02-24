@@ -10,20 +10,19 @@
 
 namespace UcaBundle\Controller\UcaWeb;
 
-use UcaBundle\Entity\Appel;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Spipu\Html2Pdf\Html2Pdf;
-use UcaBundle\Entity\DhtmlxDate;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use UcaBundle\Entity\Appel;
+use UcaBundle\Entity\DhtmlxEvenement;
 use UcaBundle\Entity\Inscription;
 use UcaBundle\Entity\Utilisateur;
 use UcaBundle\Form\EvenementType;
 use UcaBundle\Form\PlanningMailType;
-use UcaBundle\Entity\DhtmlxEvenement;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 /**
  * @Route("UcaWeb/MonPlanning")
@@ -137,7 +136,8 @@ class MonPlanningController extends Controller
         $validation = $formMail->isValid();
         if ($request->isMethod('POST') && $validation) {
             $message = $formMail->getData()['mail'];
-            $objet = $formMail->getData()['objet'];
+            $objet = $dhtmlxEvenement->getFormatActiviteLibelle().' : '.date_format($dhtmlxEvenement->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($dhtmlxEvenement->getDateFin(), 'Y/m/d H:i:s');
+            $objet .= ' '.$formMail->getData()['objet'];
             $setTo = $formMail->getData()['destinataires'];
             $copie = $this->getUser()->getEmail();
 
@@ -196,9 +196,9 @@ class MonPlanningController extends Controller
             }
 
             return new Response();
-        } else {
-            return $this->redirectToRoute('UcaWeb_MonPlanning');
         }
+
+        return $this->redirectToRoute('UcaWeb_MonPlanning');
     }
 
     /**
@@ -206,7 +206,7 @@ class MonPlanningController extends Controller
      */
     public function listExcel(Request $request, DhtmlxEvenement $dhtmlxEvenement)
     {
-        return $this->get('uca.extraction.excel')->getExtractionListeInscription($dhtmlxEvenement);        
+        return $this->get('uca.extraction.excel')->getExtractionListeInscription($dhtmlxEvenement);
     }
 
     /**
@@ -270,7 +270,7 @@ class MonPlanningController extends Controller
                 $inscriptionService = $this->get('uca.inscription');
                 $inscriptionService->setInscription($inscription);
                 $inscriptionService->mailDesinscription($inscription);
-                $inscription->seDesinscrire($this->getUser());                
+                $inscription->seDesinscrire($this->getUser());
             }
         }
 
@@ -282,7 +282,6 @@ class MonPlanningController extends Controller
         $em->flush();
 
         $this->addFlash('success', 'message.desinscription.success');
-
 
         return $this->redirectToRoute('UcaWeb_PlanningMore', ['id' => $event->getId()]);
     }

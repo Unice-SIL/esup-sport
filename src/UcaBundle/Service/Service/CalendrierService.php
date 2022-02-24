@@ -2,28 +2,21 @@
 
 namespace UcaBundle\Service\Service;
 
-use DateTime;
-use DatePeriod;
 use DateInterval;
-use UcaBundle\Entity\Etablissement;
-use UcaBundle\Entity\FormatActivite;
-use UcaBundle\Entity\DhtmlxEvenement;
-use UcaBundle\Entity\FormatAvecCreneau;
+use DatePeriod;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use UcaBundle\Entity\FormatAvecReservation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Translation\TranslatorInterface;
+use UcaBundle\Entity\DhtmlxEvenement;
+use UcaBundle\Entity\Etablissement;
+use UcaBundle\Entity\FormatActivite;
+use UcaBundle\Entity\FormatAvecCreneau;
+use UcaBundle\Entity\FormatAvecReservation;
 
-class CalendrierService 
+class CalendrierService
 {
-    private $formatAvecCreneauRepository;
-    private $formatAvecReservationRepository;
-    private $dhtmlxEvenementRepository;
-    private $etablissementRepository;
-    private $twig;
-    private $translator;
-
     public const DAYS = [
         1 => 'common.monday',
         2 => 'common.tuesday',
@@ -31,8 +24,14 @@ class CalendrierService
         4 => 'common.thursday',
         5 => 'common.friday',
         6 => 'common.saturday',
-        7 => 'common.sunday'
+        7 => 'common.sunday',
     ];
+    private $formatAvecCreneauRepository;
+    private $formatAvecReservationRepository;
+    private $dhtmlxEvenementRepository;
+    private $etablissementRepository;
+    private $twig;
+    private $translator;
 
     public function __construct(
         EntityManagerInterface $em,
@@ -48,12 +47,9 @@ class CalendrierService
     }
 
     /**
-     * Fonction qui retourne le planning
-     *
-     * @param array $parametreData
-     * @return JsonResponse
+     * Fonction qui retourne le planning.
      */
-    public function createPlanning(array $parametreData): JsonResponse 
+    public function createPlanning(array $parametreData): JsonResponse
     {
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $item = $this->formatAvecCreneauRepository->findOneById($parametreData['itemId']);
@@ -75,9 +71,9 @@ class CalendrierService
             $parametreData['typeVisualisation'] = 'jour';
         }
 
-        if ($parametreData['typeVisualisation'] == 'jour') {
+        if ('jour' == $parametreData['typeVisualisation']) {
             $res['content'] = $this->createDayPlanning($item, $parametreData, $twigConfig);
-        } elseif ($parametreData['typeVisualisation'] == 'semaine') {
+        } elseif ('semaine' == $parametreData['typeVisualisation']) {
             $res['content'] = $this->createWeekPlanning($item, $parametreData, $twigConfig);
         } else {
             $res['content'] = $this->createMonthPlanning($item, $parametreData, $twigConfig);
@@ -87,12 +83,7 @@ class CalendrierService
     }
 
     /**
-     * Fonction qui permet de créer le planning pour la visulaisation par mois
-     *
-     * @param FormatActivite $item
-     * @param array $parametreData
-     * @param array $twigConfig
-     * @return string
+     * Fonction qui permet de créer le planning pour la visulaisation par mois.
      */
     public function createMonthPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string
     {
@@ -111,7 +102,7 @@ class CalendrierService
         $dt = clone $currentDate;
         $dateDebut = $dt->modify('first day of this month');
         $dt = clone $currentDate->modify('last day of this month');
-        $datefin = $dt;        
+        $datefin = $dt;
         $datefin = (clone $datefin)->setTime(23, 59);
         $twigConfig['listeJours'] = $dates;
 
@@ -176,15 +167,11 @@ class CalendrierService
     }
 
     /**
-     * Fonction qui permet de créer le planning pour la visualisation par semaine
-     *
-     * @param FormatActivite $item
-     * @param array $parametreData
-     * @param array $twigConfig
-     * @return string
+     * Fonction qui permet de créer le planning pour la visualisation par semaine.
      */
-    public function createWeekPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string {
-        $currentDate = clone $twigConfig['currentDate'];        
+    public function createWeekPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string
+    {
+        $currentDate = clone $twigConfig['currentDate'];
 
         $nbJour = 0;
         if ($parametreData['widthWindow'] > 1425) {
@@ -277,19 +264,14 @@ class CalendrierService
     }
 
     /**
-     * Fonction qui permet de créer le planning pour la visualisation par jour
-     *
-     * @param FormatActivite $item
-     * @param array $parametreData
-     * @param array $twigConfig
-     * @return string
+     * Fonction qui permet de créer le planning pour la visualisation par jour.
      */
     public function createDayPlanning(FormatActivite $item, array $parametreData, array $twigConfig): string
     {
         $currentDate = clone $twigConfig['currentDate'];
         $dateDebut = clone $currentDate->modify('first day of this month');
-        $dateFin = clone $currentDate->modify('last day of this month');
-        
+        $dateFin = (clone $currentDate->modify('last day of this month'))->setTime(23, 59, 59);
+
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $events = $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $dateFin);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
@@ -300,9 +282,11 @@ class CalendrierService
         $datas = [];
         $keysWeek = [];
 
-        $weekPeriod = new DatePeriod($dateDebut, DateInterval::createFromDateString('1 week'), $dateFin);
+        $weekPeriod = new DatePeriod($dateDebut, DateInterval::createFromDateString('1 day'), $dateFin);
         foreach ($weekPeriod as $week) {
-            $keysWeek[$week->format('W')] = $this->translator->trans('common.weekfrom', ['%start%' => (clone $week->modify('Monday this week'))->format('d/m'), '%end%' => (clone $week->modify('Sunday this week'))->format('d/m')]);
+            if (!isset($keysWeek[$week->format('W')])) {
+                $keysWeek[$week->format('W')] = $this->translator->trans('common.weekfrom', ['%start%' => (clone $week->modify('Monday this week'))->format('d/m'), '%end%' => (clone $week->modify('Sunday this week'))->format('d/m')]);
+            }
         }
 
         foreach ($events as $event) {
@@ -320,36 +304,30 @@ class CalendrierService
     }
 
     /**
-     * Fonction qui permet de créer la modal de détail d'un DhtmlxEvenement
-     *
-     * @param DhtmlxEvenement $event
-     * @param string $typeFormat
-     * @return JsonResponse
+     * Fonction qui permet de créer la modal de détail d'un DhtmlxEvenement.
      */
-    public function getModalDetailCreneau(DhtmlxEvenement $event, string $typeFormat, string $idFormat): JsonResponse {
-        if ($typeFormat == 'FormatAvecReservation') {
+    public function getModalDetailCreneau(DhtmlxEvenement $event, string $typeFormat, string $idFormat): JsonResponse
+    {
+        if ('FormatAvecReservation' == $typeFormat) {
             $formatActivite = $this->formatAvecReservationRepository->find($idFormat);
         } else {
             $formatActivite = null;
         }
+
         return new JsonResponse([
-            'html' => $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/Modal.DetailCreneau.html.twig', ['event' => $event, 'typeFormat' => $typeFormat, 'formatActivite' => $formatActivite])
+            'html' => $this->twig->render('@Uca/UcaWeb/Activite/Calendrier/Modal.DetailCreneau.html.twig', ['event' => $event, 'typeFormat' => $typeFormat, 'formatActivite' => $formatActivite]),
         ]);
     }
 
     /**
-     * Fonction qui permet de retourner les événements par date et activité
-     *
-     * @param array $parametreData
-     * @param DateTime $dateDebut
-     * @param DateTime $dateFin
-     * @param FormatActivite $item
-     * @return array
+     * Fonction qui permet de retourner les événements par date et activité.
      */
-    private function getEvents(array $parametreData, DateTime $dateDebut, DateTime $dateFin, FormatActivite $item): array {
+    private function getEvents(array $parametreData, DateTime $dateDebut, DateTime $dateFin, FormatActivite $item): array
+    {
         if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             return $this->dhtmlxEvenementRepository->findEvenementChaqueSerieDuFormatBetwennDates($item->getId(), $dateDebut, $dateFin);
-        } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
+        }
+        if ('FormatAvecReservation' == $parametreData['typeFormat']) {
             return array_merge($this->dhtmlxEvenementRepository->findEventByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin), $this->dhtmlxEvenementRepository->findEventOfSerieByRessourceAndDate($parametreData['idRessource'], $dateDebut, $dateFin));
         }
     }
