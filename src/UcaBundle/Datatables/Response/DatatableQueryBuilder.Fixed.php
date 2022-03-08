@@ -11,43 +11,39 @@
 
 namespace Sg\DatatablesBundle\Response;
 
-use Doctrine\DBAL\DBALException;
-use Sg\DatatablesBundle\Datatable\Column\ColumnInterface;
-use Sg\DatatablesBundle\Datatable\Filter\AbstractFilter;
-use Sg\DatatablesBundle\Datatable\Filter\FilterInterface;
-use Sg\DatatablesBundle\Datatable\DatatableInterface;
-use Sg\DatatablesBundle\Datatable\Options;
-use Sg\DatatablesBundle\Datatable\Features;
-use Sg\DatatablesBundle\Datatable\Ajax;
-
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\MappingException;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\Expr\Orx;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
+use Sg\DatatablesBundle\Datatable\Ajax;
+use Sg\DatatablesBundle\Datatable\Column\ColumnInterface;
+use Sg\DatatablesBundle\Datatable\DatatableInterface;
+use Sg\DatatablesBundle\Datatable\Features;
+use Sg\DatatablesBundle\Datatable\Filter\AbstractFilter;
+use Sg\DatatablesBundle\Datatable\Filter\FilterInterface;
+use Sg\DatatablesBundle\Datatable\Options;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
-use Exception;
 
 /**
- * Class DatatableQueryBuilder
+ * Class DatatableQueryBuilder.
  *
  * @todo: remove phpcs warnings
- *
- * @package Sg\DatatablesBundle\Response
  */
 class DatatableQueryBuilder
 {
     /**
      * @internal
      */
-    const DISABLE_PAGINATION = -1;
+    public const DISABLE_PAGINATION = -1;
 
     /**
      * @internal
      */
-    const INIT_PARAMETER_COUNTER = 100;
+    public const INIT_PARAMETER_COUNTER = 100;
 
     /**
      * $_GET or $_POST parameters.
@@ -164,25 +160,29 @@ class DatatableQueryBuilder
 
     /**
      * Flag indicating state of query cache for records retrieval. This value is passed to Query object when it is
-     * prepared. Default value is false
+     * prepared. Default value is false.
+     *
      * @var bool
      */
     private $useQueryCache = false;
     /**
      * Flag indicating state of query cache for records counting. This value is passed to Query object when it is
-     * created. Default value is false
+     * created. Default value is false.
+     *
      * @var bool
      */
     private $useCountQueryCache = false;
     /**
      * Arguments to pass when configuring result cache on query for records retrieval. Those arguments are used when
      * calling useResultCache method on Query object when one is created.
+     *
      * @var array
      */
     private $useResultCacheArgs = [false];
     /**
      * Arguments to pass when configuring result cache on query for counting records. Those arguments are used when
      * calling useResultCache method on Query object when one is created.
+     *
      * @var array
      */
     private $useCountResultCacheArgs = [false];
@@ -195,9 +195,6 @@ class DatatableQueryBuilder
 
     /**
      * DatatableQuery constructor.
-     *
-     * @param array              $requestParams
-     * @param DatatableInterface $datatable
      *
      * @throws Exception
      */
@@ -218,16 +215,179 @@ class DatatableQueryBuilder
 
         $this->columns = $datatable->getColumnBuilder()->getColumns();
 
-        $this->selectColumns = array();
-        $this->searchColumns = array();
-        $this->orderColumns = array();
-        $this->joins = array();
+        $this->selectColumns = [];
+        $this->searchColumns = [];
+        $this->orderColumns = [];
+        $this->joins = [];
 
         $this->options = $datatable->getOptions();
         $this->features = $datatable->getFeatures();
         $this->ajax = $datatable->getAjax();
 
         $this->initColumnArrays();
+    }
+
+    //-------------------------------------------------
+    // Public
+    //-------------------------------------------------
+
+    /**
+     * Build query.
+     *
+     * @deprecated no longer used by internal code
+     *
+     * @return $this
+     */
+    public function buildQuery()
+    {
+        return $this;
+    }
+
+    /**
+     * Get qb.
+     *
+     * @return QueryBuilder
+     */
+    public function getQb()
+    {
+        return $this->qb;
+    }
+
+    /**
+     * Set qb.
+     *
+     * @param QueryBuilder $qb
+     *
+     * @return $this
+     */
+    public function setQb($qb)
+    {
+        $this->qb = $qb;
+
+        return $this;
+    }
+
+    /**
+     * Get the built qb.
+     *
+     * @return QueryBuilder
+     */
+    public function getBuiltQb()
+    {
+        $qb = clone $this->qb;
+
+        $this->setSelectFrom($qb);
+        $this->setJoins($qb);
+        $this->setWhere($qb);
+        $this->setOrderBy($qb);
+        $this->setLimit($qb);
+
+        return $qb;
+    }
+
+    /**
+     * Constructs a Query instance.
+     *
+     * @return Query
+     */
+    public function execute()
+    {
+        $qb = $this->getBuiltQb();
+
+        $query = $qb->getQuery();
+        if (method_exists($this->userDatatable, 'customizeQuery')) {
+            $this->userDatatable->customizeQuery($query);
+        }
+        $query->setHydrationMode(Query::HYDRATE_ARRAY)->useQueryCache($this->useQueryCache);
+        call_user_func_array([$query, 'useResultCache'], $this->useResultCacheArgs);
+
+        return $query;
+    }
+
+    /**
+     * Query results before filtering.
+     *
+     * @return int
+     */
+    public function getCountAllResults()
+    {
+        $qb = clone $this->qb;
+        $qb->select('count(distinct '.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
+        if (isset($this->userDatatable->distinct_count) && !$this->userDatatable->distinct_count) {
+            $qb->select('count('.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
+        }
+        $qb->resetDQLPart('orderBy');
+        $this->setJoins($qb);
+
+        $query = $qb->getQuery();
+        $query->useQueryCache($this->useCountQueryCache);
+        call_user_func_array([$query, 'useResultCache'], $this->useCountResultCacheArgs);
+
+        return !$qb->getDQLPart('groupBy')
+            ? (int) $query->getSingleScalarResult()
+            : count($query->getResult());
+    }
+
+    /**
+     * Defines whether query used for records retrieval should use query cache if available.
+     *
+     * @param bool $bool
+     *
+     * @return $this
+     */
+    public function useQueryCache($bool)
+    {
+        $this->useQueryCache = $bool;
+
+        return $this;
+    }
+
+    /**
+     * Defines whether query used for counting records should use query cache if available.
+     *
+     * @param bool $bool
+     *
+     * @return $this
+     */
+    public function useCountQueryCache($bool)
+    {
+        $this->useCountQueryCache = $bool;
+
+        return $this;
+    }
+
+    /**
+     * Set wheter or not to cache result of records retrieval query and if so, for how long and under which ID. Method is
+     * consistent with {@see \Doctrine\ORM\AbstractQuery::useResultCache} method.
+     *
+     * @param bool        $bool          flag defining whether use caching or not
+     * @param null|int    $lifetime      lifetime of cache in seconds
+     * @param null|string $resultCacheId string identifier for result cache if left empty ID will be generated by Doctrine
+     *
+     * @return $this
+     */
+    public function useResultCache($bool, $lifetime = null, $resultCacheId = null)
+    {
+        $this->useResultCacheArgs = func_get_args();
+
+        return $this;
+    }
+
+    /**
+     * Set wheter or not to cache result of records counting query and if so, for how long and under which ID. Method is
+     * consistent with {@see \Doctrine\ORM\AbstractQuery::useResultCache} method.
+     *
+     * @param bool        $bool          flag defining whether use caching or not
+     * @param null|int    $lifetime      lifetime of cache in seconds
+     * @param null|string $resultCacheId string identifier for result cache if left empty ID will be generated by Doctrine
+     *
+     * @return $this
+     */
+    public function useCountResultCache($bool, $lifetime = null, $resultCacheId = null)
+    {
+        $this->useCountResultCacheArgs = func_get_args();
+
+        return $this;
     }
 
     /**
@@ -307,71 +467,11 @@ class DatatableQueryBuilder
     }
 
     //-------------------------------------------------
-    // Public
-    //-------------------------------------------------
-
-    /**
-     * Build query.
-     *
-     * @deprecated No longer used by internal code.
-     *
-     * @return $this
-     */
-    public function buildQuery()
-    {
-        return $this;
-    }
-
-    /**
-     * Get qb.
-     *
-     * @return QueryBuilder
-     */
-    public function getQb()
-    {
-        return $this->qb;
-    }
-
-    /**
-     * Set qb.
-     *
-     * @param QueryBuilder $qb
-     *
-     * @return $this
-     */
-    public function setQb($qb)
-    {
-        $this->qb = $qb;
-
-        return $this;
-    }
-
-    /**
-     * Get the built qb.
-     *
-     * @return QueryBuilder
-     */
-    public function getBuiltQb()
-    {
-        $qb = clone $this->qb;
-
-        $this->setSelectFrom($qb);
-        $this->setJoins($qb);
-        $this->setWhere($qb);
-        $this->setOrderBy($qb);
-        $this->setLimit($qb);
-
-        return $qb;
-    }
-
-    //-------------------------------------------------
     // Private/Public - Setup query
     //-------------------------------------------------
 
     /**
      * Set select from.
-     *
-     * @param QueryBuilder $qb
      *
      * @return $this
      */
@@ -391,8 +491,6 @@ class DatatableQueryBuilder
     /**
      * Set joins.
      *
-     * @param QueryBuilder $qb
-     *
      * @return $this
      */
     private function setJoins(QueryBuilder $qb)
@@ -408,15 +506,12 @@ class DatatableQueryBuilder
      * Searching / Filtering.
      * Construct the WHERE clause for server-side processing SQL query.
      *
-     * @param QueryBuilder $qb
-     *
      * @return $this
      */
     private function setWhere(QueryBuilder $qb)
     {
         // global filtering
         if (isset($this->requestParams['search']) && '' != $this->requestParams['search']['value']) {
-
             $orExpr = $qb->expr()->orX();
 
             $globalSearch = $this->requestParams['search']['value'];
@@ -456,7 +551,7 @@ class DatatableQueryBuilder
                     if ('' != $searchValue && 'null' != $searchValue) {
                         /** @var FilterInterface $filter */
                         $filter = $this->accessor->getValue($column, 'filter');
-                        $searchField = $this->searchColumns[$key];
+                        $searchField = [$this->searchColumns[$key]];
                         $searchTypeOfField = $column->getTypeOfField();
                         $andExpr = $filter->addAndExpression($andExpr, $qb, $searchField, $searchValue, $searchTypeOfField, $parameterCounter);
                     }
@@ -475,8 +570,6 @@ class DatatableQueryBuilder
      * Ordering.
      * Construct the ORDER BY clause for server-side processing SQL query.
      *
-     * @param QueryBuilder $qb
-     *
      * @return $this
      */
     private function setOrderBy(QueryBuilder $qb)
@@ -484,7 +577,7 @@ class DatatableQueryBuilder
         if (isset($this->requestParams['order']) && count($this->requestParams['order'])) {
             $counter = count($this->requestParams['order']);
 
-            for ($i = 0; $i < $counter; $i++) {
+            for ($i = 0; $i < $counter; ++$i) {
                 $columnIdx = (int) $this->requestParams['order'][$i]['column'];
                 $requestColumn = $this->requestParams['columns'][$columnIdx];
 
@@ -504,10 +597,9 @@ class DatatableQueryBuilder
      * Paging.
      * Construct the LIMIT clause for server-side processing SQL query.
      *
-     * @param QueryBuilder $qb
+     * @throws Exception
      *
      * @return $this
-     * @throws Exception
      */
     private function setLimit(QueryBuilder $qb)
     {
@@ -522,111 +614,6 @@ class DatatableQueryBuilder
         return $this;
     }
 
-    /**
-     * Constructs a Query instance.
-     *
-     * @return Query
-     */
-    public function execute()
-    {
-        $qb = $this->getBuiltQb();
-
-        $query = $qb->getQuery();
-        if(method_exists($this->userDatatable, 'customizeQuery')) {
-            $this->userDatatable->customizeQuery($query);
-        }
-        $query->setHydrationMode(Query::HYDRATE_ARRAY)->useQueryCache($this->useQueryCache);
-        call_user_func_array([$query, 'useResultCache'], $this->useResultCacheArgs);
-
-        return $query;
-    }
-
-    /**
-     * Query results before filtering.
-     *
-     * @return int
-     */
-    public function getCountAllResults()
-    {
-        $qb = clone $this->qb;
-        $qb->select('count(distinct '.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
-        if(isset($this->userDatatable->distinct_count) && !$this->userDatatable->distinct_count) {
-            $qb->select('count('.$this->entityShortName.'.'.$this->rootEntityIdentifier.')');
-        }
-        $qb->resetDQLPart('orderBy');
-        $this->setJoins($qb);
-
-        $query = $qb->getQuery();
-        $query->useQueryCache($this->useCountQueryCache);
-        call_user_func_array([$query, 'useResultCache'], $this->useCountResultCacheArgs);
-
-        return !$qb->getDQLPart('groupBy')
-            ? (int) $query->getSingleScalarResult()
-            : count($query->getResult());
-    }
-
-    /**
-     * Defines whether query used for records retrieval should use query cache if available.
-     *
-     * @param bool $bool
-     *
-     * @return $this
-     */
-    public function useQueryCache($bool)
-    {
-        $this->useQueryCache = $bool;
-
-        return $this;
-    }
-
-    /**
-     * Defines whether query used for counting records should use query cache if available.
-     *
-     * @param bool $bool
-     *
-     * @return $this
-     */
-    public function useCountQueryCache($bool)
-    {
-        $this->useCountQueryCache = $bool;
-
-        return $this;
-    }
-
-    /**
-     * Set wheter or not to cache result of records retrieval query and if so, for how long and under which ID. Method is
-     * consistent with {@see \Doctrine\ORM\AbstractQuery::useResultCache} method.
-     *
-     * @param bool        $bool          flag defining whether use caching or not
-     * @param int|null    $lifetime      lifetime of cache in seconds
-     * @param string|null $resultCacheId string identifier for result cache if left empty ID will be generated by Doctrine
-     *
-     * @return $this
-     */
-    public function useResultCache($bool, $lifetime = null, $resultCacheId = null)
-    {
-        $this->useResultCacheArgs = func_get_args();
-
-        return $this;
-    }
-
-    /**
-     * Set wheter or not to cache result of records counting query and if so, for how long and under which ID. Method is
-     * consistent with {@see \Doctrine\ORM\AbstractQuery::useResultCache} method.
-     *
-     * @param boolean     $bool          flag defining whether use caching or not
-     * @param int|null    $lifetime      lifetime of cache in seconds
-     * @param string|null $resultCacheId string identifier for result cache if left empty ID will be generated by Doctrine
-     *
-     * @return $this
-     */
-    public function useCountResultCache($bool, $lifetime = null, $resultCacheId = null)
-    {
-        $this->useCountResultCacheArgs = func_get_args();
-
-        return $this;
-    }
-
     //-------------------------------------------------
     // Private - Helper
     //-------------------------------------------------
@@ -636,12 +623,13 @@ class DatatableQueryBuilder
      *
      * @author Gaultier Boniface <https://github.com/wysow>
      *
-     * @param string|array       $association
+     * @param array|string       $association
      * @param string             $key
-     * @param ClassMetadata|null $metadata
+     * @param null|ClassMetadata $metadata
+     *
+     * @throws Exception
      *
      * @return ClassMetadata
-     * @throws Exception
      */
     private function setIdentifierFromAssociation($association, $key, $metadata = null)
     {
@@ -737,10 +725,10 @@ class DatatableQueryBuilder
      */
     private function addJoin($columnTableName, $alias, $type)
     {
-        $this->joins[$columnTableName] = array(
+        $this->joins[$columnTableName] = [
             'alias' => $alias,
             'type' => $type,
-        );
+        ];
 
         return $this;
     }
@@ -750,8 +738,9 @@ class DatatableQueryBuilder
      *
      * @param string $entityName
      *
-     * @return ClassMetadata
      * @throws Exception
+     *
+     * @return ClassMetadata
      */
     private function getMetadata($entityName)
     {
@@ -767,14 +756,12 @@ class DatatableQueryBuilder
     /**
      * Get entity short name.
      *
-     * @param ClassMetadata $metadata
-     * @param EntityManagerInterface $entityManager
-     *
      * @return string
      */
     private function getEntityShortName(ClassMetadata $metadata, EntityManagerInterface $entityManager)
     {
         $entityShortName = strtolower($metadata->getReflectionClass()->getShortName());
+
         try {
             $reservedKeywordsList = $entityManager->getConnection()->getDatabasePlatform()->getReservedKeywordsList();
             $isReservedKeyword = $reservedKeywordsList->isKeyword($entityShortName);
@@ -788,8 +775,6 @@ class DatatableQueryBuilder
     /**
      * Get identifier.
      *
-     * @param ClassMetadata $metadata
-     *
      * @return mixed
      */
     private function getIdentifier(ClassMetadata $metadata)
@@ -801,8 +786,6 @@ class DatatableQueryBuilder
 
     /**
      * Is searchable column.
-     *
-     * @param ColumnInterface $column
      *
      * @return bool
      */

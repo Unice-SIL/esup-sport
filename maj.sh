@@ -2,8 +2,8 @@
 
 # echo composer install
 # composer install
-# echo php bin/console uca:datatables:fixLang
-# php bin/console uca:datatables:fixLang
+echo php bin/console uca:datatables:fixLang
+php bin/console uca:datatables:fixLang
 
 # echo yarn upgrade
 # yarn upgrade
@@ -19,8 +19,8 @@
 # php bin/console bazinga:js-translation:dump assets/bundles/bazingajstranslation --merge-domains --format=js
 # echo asset .json
 # php bin/console fos:js-routing:dump --format=json --target=assets/bundles/fosjsrouting/fos_routes.json
-# echo yarn encore
-# yarn encore prod --ucaEnv=prod
+echo yarn encore
+yarn encore prod --ucaEnv=prod
 echo cache clear
 php bin/console cache:clear --env=prod
 

@@ -675,3 +675,20 @@ nav#nav-infosPratiques {
     /* truncate to 4 lines */
     -webkit-line-clamp: 5;
 }
+
+.menu_responsive {
+    border-bottom: 4px solid #46aed8;
+}
+
+.display_responsive{
+    display: none;
+    @media (max-width: 1200px){
+        display: block;
+    }
+}
+.display_desktop{
+    display: block;
+    @media (max-width: 1200px){
+        display: none;
+    }
+}
