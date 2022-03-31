@@ -1,6 +1,7 @@
 *~
 ~*
 .vscode
+app/config/symfony/parameters.yml
 assets/bundles
 assets/libs/dhtmlxScheduler-5.1.6/*
 node_modules
