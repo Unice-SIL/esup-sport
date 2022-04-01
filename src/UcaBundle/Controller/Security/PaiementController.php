@@ -35,8 +35,8 @@ class PaiementController extends Controller
             $moyenPaiement = 'credit';
             $typePaiement = 'credit';
             $usr = $commande->getUtilisateur();
-            $commande->setCreditUtilise($commande->getMontantTotal());
-            $creditHistorique = new UtilisateurCreditHistorique($usr, $commande->getMontantTotal(), null, 'debit', "Règlement d'une commande");
+            $commande->setCreditUtilise(min($usr->getCreditTotal(), $commande->getMontantTotal()));
+            $creditHistorique = new UtilisateurCreditHistorique($usr, min($usr->getCreditTotal(), $commande->getMontantTotal()), null, 'debit', "Règlement d'une commande");
             $creditHistorique->setCommandeAssociee($commande->getId());
             $usr->addCredit($creditHistorique);
             $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
@@ -97,7 +97,7 @@ class PaiementController extends Controller
                 || 'panier' == $commande->getStatut() & 0 == $commande->getMontantTotal() && in_array($source, ['monpanier', 'mescommandes'])
                 || 'panier' == $commande->getStatut() & $commande->getUtilisateur()->getCreditTotal() > 0 && in_array($source, ['monpanier', 'mescommandes']))
         ) {
-            if ($ancienCredit = $commande->getUtilisateur()->getCreditTotal() > 0) {
+            if (($ancienCredit = $commande->getUtilisateur()->getCreditTotal()) > 0) {
                 $montant = ($ancienCredit < $commande->getMontantTotal()) ? $ancienCredit : $commande->getMontantTotal();
                 $usr = $commande->getUtilisateur();
                 $commande->setCreditUtilise($montant);

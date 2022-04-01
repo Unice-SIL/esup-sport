@@ -24,6 +24,8 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
+    const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
+
     //region Propriétés
     /**
      * @ORM\Id
@@ -876,3 +878,13 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         }
     }
 }
+
+
+    public function getFirstCommande() : ?Commande 
+    {
+        if ($this->commandeDetails && $this->commandeDetails->first() && $this->commandeDetails->first()->getCommande()) {
+            return $this->commandeDetails->first()->getCommande();
+        }
+
+        return null;
+    }

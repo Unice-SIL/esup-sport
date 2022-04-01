@@ -37,10 +37,10 @@ class Reservabilite implements \UcaBundle\Entity\Interfaces\JsonSerializable, \U
     /** @ORM\ManyToOne(targetEntity="Ressource", inversedBy="reservabilites") */
     private $ressource;
 
-    /** @ORM\OneToOne(targetEntity="DhtmlxSerie", mappedBy="reservabilite") */
+    /** @ORM\OneToOne(targetEntity="DhtmlxSerie", mappedBy="reservabilite", cascade={"remove"}) */
     private $serie;
 
-    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite") */
+    /** @ORM\OneToOne(targetEntity="DhtmlxEvenement", mappedBy="reservabilite", cascade={"remove"}) */
     private $evenement;
 
     /** @ORM\OneToMany(targetEntity="ReservabiliteProfilUtilisateur", mappedBy="reservabilite", cascade={"persist", "remove"})

@@ -587,6 +587,8 @@ logopartenaire.nom: Name
 logopartenaire.supprimer.erreur: Cannot delete this partner
 logopartenaire.supprimer.succes: "Partner successfully deleted"
 mail.error: Failed to send email.
+mail.empty: One of the mail addresses is empty. Mail was not sent.
+mail.not_found: "%user%'s mail cannot be found."
 mail.success: Email sent successfully.
 materiel.ajouter.succes: Equipment successfully added
 materiel.ajouter.title: Add a material

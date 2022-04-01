@@ -589,6 +589,8 @@ logopartenaire.nom: Nom
 logopartenaire.supprimer.erreur: Impossible de supprimer le logo
 logopartenaire.supprimer.succes: "Le partenaire supprimé avec succès"
 mail.error: Échec lors de l'envoi du mail.
+mail.empty: Une des adresses emails est vide. Le mail n'a pas été envoyé.
+mail.not_found: L'adresse email de %user% est introuvable.
 mail.success: Mail envoyé avec succès.
 materiel.ajouter.succes: "Matériel ajouté avec succès"
 materiel.ajouter.title: Ajouter un matériel

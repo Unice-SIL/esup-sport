@@ -125,10 +125,15 @@ class MonPlanningController extends Controller
             $inscriptions = $dhtmlxEvenement->getFormatSimple()->getAllInscriptions();
         }
         $destinataires = [];
+        $translator = $this->get('translator');
         foreach ($inscriptions as $key => $inscription) {
             $user = $inscription->getUtilisateur();
-            $key = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
-            $destinataires[$key] = $user->getEmail();
+            if ($user->getEmail()) {
+                $key = ucfirst($user->getPrenom()).' '.ucfirst($user->getNom());
+                $destinataires[$key] = $user->getEmail();
+            } else {
+                $this->addFlash('error', $translator->trans('mail.not_found', ['%user%' => $user->getPrenom().' '.$user->getNom()]));
+            }
         }
 
         $formMail = $this->get('form.factory')->create(PlanningMailType::class, null, ['liste_destinataires' => $destinataires]);

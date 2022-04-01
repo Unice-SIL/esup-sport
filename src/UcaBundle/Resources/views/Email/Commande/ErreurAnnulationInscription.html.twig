@@ -1,0 +1,12 @@
+{% extends "@Uca/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            L'inscription portant l'id {{ inscription.id }} n'a pas pu être annulée par le timeout.
+            <br/>
+            Il semblerait que la commande à laquelle elle est associée soit valide et terminée.
+        </p>
+    </div>
+{% endblock %}

@@ -15,7 +15,7 @@ use UcaBundle\Entity\Parametrage as ParametrageEntity;
 class Parametrage
 {
     public $em;
-    public static $object = null;
+    public static $object;
 
     public function __construct(EntityManagerInterface $em)
     {
@@ -55,5 +55,10 @@ class Parametrage
     public static function getDateDebutPanierApresValidationLimite()
     {
         return self::timeoutToDateLimit(self::$object->getTimerPanierApresValidation() * 60);
+    }
+
+    public static function getMailContact()
+    {
+        return self::$object->getMailContact();
     }
 }

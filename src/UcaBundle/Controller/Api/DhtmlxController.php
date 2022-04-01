@@ -77,8 +77,14 @@ class DhtmlxController extends Controller
         $inscriptions = $c->getInscriptions();
 
         $emailToSend = [];
+        $translator = $this->get('translator');
         foreach ($inscriptions as $key => $i) {
-            $emailToSend[] = $i->getUtilisateur()->getEmail();
+            $user = $i->getUtilisateur();
+            if ($user->getEmail()) {
+                $emailToSend[] = $user->getEmail();
+            } else {
+                $this->addFlash('error', $translator->trans('mail.not_found', ['%user%' => $user->getPrenom().' '.$user->getNom()]));
+            }
         }
 
         $objet = $ev->getFormatActiviteLibelle().' : '.date_format($ev->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($ev->getDateFin(), 'Y/m/d H:i:s');
@@ -114,15 +120,30 @@ class DhtmlxController extends Controller
                 if (null !== $item->getSerie() && sizeof($item->getSerie()->getEvenements()) <= 1) {
                     $em->remove($item->getSerie());
                 }
+
+                if ($item->getReservabilite() && sizeof($events = $em->getRepository(DhtmlxEvenement::class)->findBy(['reservabilite' => $item->getReservabilite()->getId()]))) {
+                    foreach ($events as $event) {
+                        if ($event->getId() != $item->getId()) {
+                            $em->remove($event);
+                        }
+                    }
+                }
             }
             $res = $c->getResult();
             $c->execute();
             $em->flush();
         } elseif ('extend' == $ev['action']) {
             $newCreneau = [];
+            $modelCreneau = $em->getRepository(DhtmlxEvenement::class)->findOneById($ev['id']);
+            $modelReservabilite = $modelCreneau->getReservabilite();
             for ($i = 0; $i < $ev['nbRepetition']; ++$i) {
                 $creneau = new DhtmlxEvenement();
-                $creneau = clone $em->getRepository(DhtmlxEvenement::class)->findOneById($ev['id']);
+                $creneau = clone $modelCreneau;
+                if ($modelReservabilite) {
+                    $reservabilite = clone $modelReservabilite;
+                    $em->persist($reservabilite);
+                    $creneau->setReservabilite($reservabilite);
+                }
                 $numberWeek = 0;
                 $numberWeek = ($i > 0 ? $i : 0);
                 $dateRepetition = date('Y-m-d', strtotime('+'.$numberWeek.' week ', strtotime($ev['dateDebutRepetition'])));

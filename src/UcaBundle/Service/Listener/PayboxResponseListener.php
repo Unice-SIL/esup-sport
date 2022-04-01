@@ -11,16 +11,20 @@ namespace UcaBundle\Service\Listener;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\PayboxBundle\Event\PayboxResponseEvent;
 use Psr\Log\LoggerInterface;
+use UcaBundle\Service\Common\MailService;
+use UcaBundle\Service\Common\Parametrage;
 
 class PayboxResponseListener
 {
     private $em;
     private $logger;
+    private $mailer;
 
-    public function __construct(EntityManagerInterface $em, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $em, LoggerInterface $logger, MailService $mailer)
     {
         $this->em = $em;
         $this->logger = $logger;
+        $this->mailer = $mailer;
     }
 
     public function onPayboxIpnResponse(PayboxResponseEvent $event)
@@ -42,6 +46,15 @@ class PayboxResponseListener
                 $commande->changeStatut('termine', ['typePaiement' => 'PAYBOX', 'moyenPaiement' => 'cb']);
                 $this->em->persist($commande);
                 $this->em->flush();
+            } elseif ($commande = $this->em->getRepository('UcaBundle:Commande')->findOneBy(['id' => $idCommande])) {
+                $this->logger->error('PAYBOX -- commande trouvée mais le montant n\'est pas le bon ! ');
+
+                $this->mailer->sendMailWithTemplate(
+                    'Erreur retour paiement PAYBOX',
+                    Parametrage::getMailContact(),
+                    '@Uca/Email/Commande/ErreurMontantPaybox.html.twig',
+                    ['montantPaybox' => ($montant / 100), 'commande' => $commande]
+                );
             } else {
                 $this->logger->error('PAYBOX -- commande not found ! ');
             }

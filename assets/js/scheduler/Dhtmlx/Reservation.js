@@ -22,11 +22,18 @@ var Reservation = {
         //this.extend(this, data);
         this.copyId = null;
         this.id = data.id;
-        this.start_date = transformDate(data.dateDebut);
-        this.dateDebut = data.dateDebut;
-        this.end_date = transformDate(data.dateFin);
+        if (data.start_date && data.end_date) {
+            this.start_date = data.start_date;
+            this.end_date = data.end_date;
+            this.dateDebut = dateToStr(data.start_date);
+            this.dateFin = dateToStr(data.end_date);
+        } else {
+            this.start_date = transformDate(data.dateDebut);
+            this.end_date = transformDate(data.dateFin);
+            this.dateDebut = data.dateDebut;
+            this.dateFin = data.dateFin;
+        }
 
-        this.dateFin = data.dateFin;
         this.event_pid = null;
         this.text = this.evenement.text;
         if (data.profil_ids != "") {

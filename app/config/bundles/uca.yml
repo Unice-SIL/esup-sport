@@ -42,7 +42,7 @@ services:
         arguments: ['@translator']
     mailService:
         class: UcaBundle\Service\Common\MailService
-        arguments: ['@mailer', '%mailer_sender%', '@templating']
+        arguments: ['@mailer', '%mailer_sender%', '@templating', '@uca.flashbag']
     UcaBundle\Service\Common\MailService: '@mailService'
     uca.calendrier:
         class: UcaBundle\Service\Service\CalendrierService

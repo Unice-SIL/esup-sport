@@ -35,5 +35,11 @@ class SgDatatableLangFixCommand extends ContainerAwareCommand
         $fs->copy($fixedFile, $dstFile, true);
         $output->writeln('Fichier DatatableQueryBuilder.php corrigé dans SgDatatablesBundle !');
         // $output->writeln('Problème lors de la correction du fichier DatatableQueryBuilder.php !');
+
+        $fixedFileFilter = $this->getContainer()->get('kernel')->getRootDir().'/../src/UcaBundle/Datatables/Filter/AbstractFilter.Fixed.php';
+        $dstFileFilter = $this->getContainer()->get('kernel')->getRootDir().'/../vendor/sg/datatablesbundle/Datatable/Filter/AbstractFilter.php';
+
+        $fs->copy($fixedFileFilter, $dstFileFilter, true);
+        $output->writeln('Fichier AbstractFilter.php corrigé dans SgDatatablesBundle !');
     }
 }
