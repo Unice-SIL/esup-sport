@@ -10,10 +10,10 @@
 
 namespace UcaBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="UcaBundle\Repository\InscriptionRepository")
@@ -24,7 +24,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 {
     use \UcaBundle\Entity\Traits\JsonSerializable;
 
-    const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
+    public const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
 
     //region Propriétés
     /**
@@ -832,27 +832,13 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         return $this->nomInscrit;
     }
 
-    private function setItem($item, $format)
-    {
-        if (is_a($item, Creneau::class)) {
-            $this->setCreneau($item);
-            $this->setFormatActivite($item->getFormatActivite());
-        } elseif (is_a($item, Reservabilite::class)) {
-            $this->setReservabilite($item);
-            $this->setFormatActivite($format);
-        } elseif (is_a($item, FormatActivite::class)) {
-            $this->setFormatActivite($item);
-        }
-    }
-
     /**
-     * Fonction qui permet de mettre à jour le champs nbInscrits dans les tables de quota par profil
+     * Fonction qui permet de mettre à jour le champs nbInscrits dans les tables de quota par profil.
      *
      * @param Inscription $inscription
-     * @param boolean $add
-     * @return void
      */
-    public function updateNbInscrits(bool $add = true): void {
+    public function updateNbInscrits(bool $add = true): void
+    {
         if ($this->getReservabilite()) {
             $item = $this->getReservabilite();
         } elseif ($this->getCreneau()) {
@@ -877,10 +863,8 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             }
         }
     }
-}
 
-
-    public function getFirstCommande() : ?Commande 
+    public function getFirstCommande(): ?Commande
     {
         if ($this->commandeDetails && $this->commandeDetails->first() && $this->commandeDetails->first()->getCommande()) {
             return $this->commandeDetails->first()->getCommande();
@@ -888,3 +872,17 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
         return null;
     }
+
+    private function setItem($item, $format)
+    {
+        if (is_a($item, Creneau::class)) {
+            $this->setCreneau($item);
+            $this->setFormatActivite($item->getFormatActivite());
+        } elseif (is_a($item, Reservabilite::class)) {
+            $this->setReservabilite($item);
+            $this->setFormatActivite($format);
+        } elseif (is_a($item, FormatActivite::class)) {
+            $this->setFormatActivite($item);
+        }
+    }
+}
