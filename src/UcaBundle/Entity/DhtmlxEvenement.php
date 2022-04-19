@@ -28,6 +28,12 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     /** @ORM\OneToMany(targetEntity="Appel", mappedBy="dhtmlxEvenement", cascade={"persist"}, fetch="EAGER", orphanRemoval=true) */
     protected $appels;
+
+    /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
+    protected $reservabilite;
+
+    /** @ORM\Column(type="text", nullable=true) */
+    protected $informations;
     //region Propriétés
 
     /** @ORM\ManyToOne(targetEntity="DhtmlxSerie", inversedBy="evenements", fetch="EAGER") */
@@ -38,12 +44,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
 
     /** @ORM\Column(type="boolean", options={"default" : false}) */
     private $eligibleBonus;
-    
-    /** @ORM\OneToOne(targetEntity="Reservabilite", cascade={"persist", "remove"}, inversedBy="evenement") */
-    protected $reservabilite;
-
-    /** @ORM\Column(type="text", nullable=true) */
-    protected $informations;
 
     /**
      * Constructor.
@@ -136,7 +136,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
         return $this->serie;
     }
 
-
     /**
      * Set formatSimple.
      *
@@ -204,7 +203,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
      *
      * @param \UcaBundle\Entity\Appel $appel
      *
-     * @return bool TRUE if this collection contained the specified element, FALSE otherwise.
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      */
     public function removeAppel(Appel $appel)
     {
@@ -284,14 +283,17 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     }
 
     /**
-     * Get etablissement libelle if exist
+     * Get etablissement libelle if exist.
      */
-    public function getEtablissementLibelle(): string {
+    public function getEtablissementLibelle(): string
+    {
         if ($this->formatSimple) {
             return $this->formatSimple->getLieu()->first()->getEtablissement() ? $this->formatSimple->getLieu()->first()->getEtablissement()->getLibelle() : $this->formatSimple->getLieu()->first()->getLibelle();
-        } elseif ($this->reservabilite) {
+        }
+        if ($this->reservabilite) {
             return $this->reservabilite->getRessource()->getEtablissementLibelle();
-        } elseif ($this->serie) {
+        }
+        if ($this->serie) {
             return $this->serie->getEtablissementLibelle();
         }
 
@@ -299,19 +301,43 @@ class DhtmlxEvenement extends DhtmlxDate implements \UcaBundle\Entity\Interfaces
     }
 
     /**
-     * Get libellé format d'activité
-     *
-     * @return string
+     * Get libellé format d'activité.
      */
-    public function getFormatActiviteLibelle(): string {
+    public function getFormatActiviteLibelle(): string
+    {
         if ($this->formatSimple) {
             return $this->formatSimple->getLibelle();
-        } elseif ($this->reservabilite) {
+        }
+        if ($this->reservabilite) {
             return $this->reservabilite->getRessource()->getLibelle();
-        } elseif ($this->serie) {
+        }
+        if ($this->serie) {
             return $this->serie->getFormatActiviteLibelle();
         }
 
         return '';
+    }
+
+    /**
+     * Get libellé activité.
+     */
+    public function getActiviteLibelle(): string
+    {
+        if ($this->formatSimple) {
+            return $this->formatSimple->getActiviteLibelle();
+        }
+        if ($this->reservabilite) {
+            return $this->reservabilite->getRessource()->getLibelle();
+        }
+        if ($this->serie) {
+            return $this->serie->getActiviteLibelle();
+        }
+
+        return '';
+    }
+
+    public function getLibelle(): string
+    {
+        return $this->getFormatActiviteLibelle();
     }
 }

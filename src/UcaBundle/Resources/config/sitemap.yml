@@ -254,7 +254,12 @@
               - titre: "item.getLibelle()"
                 route: UcaGest_FormatActiviteVoir
 
-                params: { id: id }
+                params: { id: idFormat, idActivite: idActivite }
+                items:
+                  - titre: "trans('scheduler.message.voirplus')"
+                    route: UcaGest_PlanningMore
+
+                    params: { id: id }
               - titre: "trans('sitemap.format.ajouter')"
                 route: UcaGest_FormatActiviteAjouter
 
@@ -270,7 +275,12 @@
                 - titre: "item.getLibelle()"
                   route: UcaGest_FormatActiviteVoir
 
-                  params: { id: id }
+                  params: { id: idFormat, idActivite: idActivite }
+                  items:
+                    - titre: "trans('scheduler.message.voirplus')"
+                      route: UcaGest_PlanningMore
+
+                      params: { id: id }
 
     - titre: "trans('sitemap.outils.libelle')"
       route: null

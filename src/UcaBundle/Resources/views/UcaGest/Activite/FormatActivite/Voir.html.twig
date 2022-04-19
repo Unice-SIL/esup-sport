@@ -139,7 +139,7 @@
 			{% endif %}
 
 			{% if format == "FormatSimple" %}
-				<a class="btn btn-primary" href="{{ path('UcaWeb_PlanningMore', {id: item.evenement.id }) }}">
+				<a class="btn btn-primary" href="{{ path('UcaGest_PlanningMore', { idActivite: item.activite.id, idFormat: item.id, id: item.evenement.id }) }}">
 					{{'monPlanning.more.detail'|trans}}</a>
 			{% endif %}
 
@@ -170,7 +170,7 @@
           // scheduler.templates.event_text = function(start, end, event) {return '' + scheduler.data.item.id + ': ' + scheduler.data.item.description }</script>
           {{ dhtmlxCalendar.initSchedulerData(item) }}
           {{ dhtmlxCalendar.debugSchedulerEvents() }}
-          {{ dhtmlxCalendar.initCalendarJs(item) }}
+          {{ dhtmlxCalendar.initCalendarJs(item, null, { idActivite: item.activite.id, idFormat: item.id }, 'UcaGest_PlanningMore_NoId') }}
         </script>
     {% endif %}
 {% endblock %}

@@ -40,8 +40,7 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
                 ->andWhere('i.statut = :statut')
                 ->setParameter('statut', 'valide')
                 ->getQuery()
-                ->getResult()
-            ,
+                ->getResult(),
             $this->createQueryBuilder('d')
                 ->join('d.reservabilite', 'r')
                 ->join('r.inscriptions', 'i')
@@ -56,7 +55,7 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
 
     public function findDhtmlxFormatSimpleByUser($user)
     {
-        return  $this->createQueryBuilder('d')
+        return $this->createQueryBuilder('d')
             ->join('d.formatSimple', 'fs')
             ->join('fs.inscriptions', 'i')
             ->where('i.utilisateur = :user')
@@ -70,7 +69,7 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
 
     public function findDhtmlxFormatSimpleByEncadrant($user)
     {
-        return  $this->createQueryBuilder('d')
+        return $this->createQueryBuilder('d')
             ->join('d.formatSimple', 'fs')
             ->join('fs.encadrants', 'e')
             ->andWhere('e.id = :userid')
@@ -118,7 +117,7 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         $this->createQueryBuilder('e')
             ->where('e.id in (:ids)')
             ->setParameter('ids', $qb)
-               ->delete()
+            ->delete()
             ->getQuery()
             ->execute()
         ;
@@ -129,9 +128,11 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         return $this->createQueryBuilder('d')
             ->leftJoin('d.serie', 'serie')
             ->leftJoin('serie.creneau', 'c')
+            ->leftJoin('c.formatActivite', 'fa')
             ->where('c.formatActivite = :formatActivite')
             ->andWhere('d.dateDebut <= :dateFin')
             ->andWhere('d.dateFin >= :dateDebut')
+            ->andWhere('d.dateFin <= fa.dateFinEffective')
             ->setParameter('formatActivite', $formatActiviteId)
             ->setParameter('dateDebut', $dateDebut)
             ->setParameter('dateFin', $dateFin)
@@ -201,7 +202,8 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         return $retour;
     }
 
-    public function findEventByRessourceAndDate($ressourceId, $dateDebut, $dateFin) {
+    public function findEventByRessourceAndDate($ressourceId, $dateDebut, $dateFin)
+    {
         return $this->createQueryBuilder('e')
             ->leftJoin('e.reservabilite', 're')
             ->leftJoin('re.ressource', 'r')
@@ -216,7 +218,8 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
         ;
     }
 
-    public function findEventOfSerieByRessourceAndDate($ressourceId, $dateDebut, $dateFin) {
+    public function findEventOfSerieByRessourceAndDate($ressourceId, $dateDebut, $dateFin)
+    {
         return $this->createQueryBuilder('e')
             ->leftJoin('e.serie', 's')
             ->leftJoin('s.reservabilite', 're')
@@ -227,6 +230,23 @@ class DhtmlxEvenementRepository extends \Doctrine\ORM\EntityRepository
             ->setParameter('id', $ressourceId)
             ->setParameter('dateDebut', $dateDebut)
             ->setParameter('dateFin', $dateFin)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findDhtmlxCreneauByUser($user)
+    {
+        return $this->createQueryBuilder('d')
+            ->join('d.serie', 's')
+            ->join('s.creneau', 'c')
+            ->join('c.inscriptions', 'i')
+            ->join('i.formatActivite', 'fa')
+            ->andWhere('i.utilisateur = :user')
+            ->setParameter('user', $user)
+            ->andWhere('i.statut = :statut')
+            ->setParameter('statut', 'valide')
+            ->andWhere('d.dateFin <= fa.dateFinEffective')
             ->getQuery()
             ->getResult()
         ;

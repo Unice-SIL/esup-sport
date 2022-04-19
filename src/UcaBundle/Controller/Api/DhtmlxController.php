@@ -46,15 +46,15 @@ class DhtmlxController extends Controller
 
             $id = $user->getId();
 
-            $InscriptionsCreneaux = $em->getRepository(DhtmlxSerie::class)->findDhtmlxCreneauByUser($user);
+            $InscriptionsCreneaux = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxCreneauByUser($user);
             $EncadrementsCreneaux = $em->getRepository(DhtmlxSerie::class)->findDhtmlxCreneauByEncadrant($user);
             $InscriptionsReservabilite = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxReservabiliteByUser($user);
             $InscriptionsformatSimple = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxFormatSimpleByUser($user);
             $EncadrementsformatSimple = $em->getRepository(DhtmlxEvenement::class)->findDhtmlxFormatSimpleByEncadrant($user);
             //$events = array_merge($creneaux, $reservabilites);
 
-            $events = array_merge($InscriptionsReservabilite, $InscriptionsformatSimple, $EncadrementsformatSimple);
-            $series = array_merge($InscriptionsCreneaux, $EncadrementsCreneaux);
+            $events = array_merge($InscriptionsCreneaux, $InscriptionsReservabilite, $InscriptionsformatSimple, $EncadrementsformatSimple);
+            $series = array_merge($EncadrementsCreneaux);
         }
 
         return new JsonResponse(['evenements' => $events, 'series' => $series]);

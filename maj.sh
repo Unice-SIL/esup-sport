@@ -2,8 +2,6 @@
 
 # echo composer install
 # composer install
-echo php bin/console uca:datatables:fixLang
-php bin/console uca:datatables:fixLang
 
 # echo yarn upgrade
 # yarn upgrade

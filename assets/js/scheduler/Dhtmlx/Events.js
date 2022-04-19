@@ -349,8 +349,7 @@ var checkEvents = function(el) {
         scheduler.config.icons_select.splice(more, 1);
     }
 
-
-    if (el.evenement.evenementType == "creneau") {
+    if (['creneau', 'ressource'].includes(el.evenement.evenementType)) {
         /*             scheduler.config.icons_select.splice(2,0,"icon_email")
                     scheduler.config.icons_select.splice(3,0,"icon_register") */
         scheduler.config.icons_select.splice(1, 0, "icon_more");

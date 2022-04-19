@@ -98,7 +98,7 @@
 		<button id="btn-extend-back" class="btn btn-primary btn-back">{{"scheduler.message.annuler"|trans}}</button>
 	</div>
 {% endmacro %}
-{% macro initCalendarJs(item = null, format = null) %}
+{% macro initCalendarJs(item = null, format = null, routeParams = {}, routeName = 'UcaWeb_PlanningMore_NoId') %}
 	{% set capacite = null %}
 	{% if format == 'Materiel' %}
 		{% set capacite = item.quantiteDisponible %}
@@ -122,13 +122,14 @@
 			var DATEFINEFFECTIVEVERIFICATION = new Date("{{ item.dateFinEffective|date_modify('+1 day')|date('Y/m/d') }}"); 
 	</script>
 	{% endif %}
+	{% set route = path(routeName, routeParams) %}
 	<script type='text/javascript'>
 		'use_strict';
 		var ITEM = {{ item |json_encode() | raw }};
     var DHTMLXAPI = "{{ path('DhtmlxApi') }}";
     var DATAAPI = "{{ path('DataApi') }}";
     var USERID = "{{ app.user.id }}";
-    var PATH_SEE_MORE = "{{ path("UcaWeb_PlanningMore_NoId") }}"
+	var PATH_SEE_MORE = "{{ route }}"
 	</script>
 	{{ encore_entry_script_tags('scheduler') }}
 

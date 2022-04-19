@@ -4,6 +4,7 @@ import { dateToStr } from "./Date";
 import { loadData } from "./Config";
 import { changeColor } from "./Events";
 import { Load } from "./Load";
+import { More } from "./More";
 
 var Reservation = {
     evenementType: 'ressource',
@@ -137,6 +138,8 @@ var Reservation = {
 
     loadEvent: function() {
         this.callBackBeforeLigthBox();
+
+        More.init();
     },
 
     //search in scheduler series the parent
