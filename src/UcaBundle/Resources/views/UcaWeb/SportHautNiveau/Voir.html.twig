@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block main %}
-  {% set urlImageAccompagnement = emplacementImageFond('SHN - Accompagnement').image %}
+  {# {% set urlImageAccompagnement = emplacementImageFond('SHN - Accompagnement').image %} #}
   {% set urlImageCandidater = emplacementImageFond('SHN - Candidater').image %}
   {% set urlImageHighlights = emplacementImageFond('SHN - Highlights').image %}
   {% set urlImageRepresenter = emplacementImageFond('SHN - Representer').image %} 
@@ -16,11 +16,11 @@
 
   <section class="container">
 	<div class="row mb-5 d-flex flex-wrap justify-content-around">
-	  <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="padding: 0 20px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageAccompagnement) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+	  {# <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="padding: 0 20px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageAccompagnement) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
 		<a href="{{ path('UcaWeb_Accompagnements') }}" class="align-self-center text-center">
 		  {{ 'sportdehautniveau.accompagnements'|trans|upper }}
 		</a>
-	  </div>
+	  </div> #}
 	  <div class="activity-type d-flex align-item-center justify-content-center mb-3" style="padding: 0 20px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ urlImageCandidater) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
 		<a href="https://shnu.univ-cotedazur.fr/" class="align-self-center text-center">
 		  {{ 'sportdehautniveau.candidater'|trans|upper }}
