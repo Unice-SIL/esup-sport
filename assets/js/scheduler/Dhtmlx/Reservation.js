@@ -152,10 +152,10 @@ var Reservation = {
         return obj;
     },
 
-    color: function() {
-        this.color = scheduler.config.activeColor;
-        return true;
-    },
+    // color: function() {
+    //     this.color = scheduler.config.activeColor;
+    //     return true;
+    // },
 
     defaultColor: function() {
         this.color = scheduler.config.defaultColor;

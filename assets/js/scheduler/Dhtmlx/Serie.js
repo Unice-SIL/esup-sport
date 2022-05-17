@@ -217,11 +217,11 @@ var Serie = {
         return serie;
     },
 
-    color: function() {
-        this.getDependantChildren().forEach(function(item) {
-            item.color = scheduler.config.activeColor;
-        });
-    },
+    // color: function() {
+    //     this.getDependantChildren().forEach(function(item) {
+    //         item.color = scheduler.config.activeColor;
+    //     });
+    // },
 
     defaultColor: function() {
         this.getDependantChildren().forEach(function(item) {

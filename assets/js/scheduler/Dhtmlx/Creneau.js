@@ -196,10 +196,10 @@ var Creneau = {
 
     },
 
-    color: function() {
-        this.color = scheduler.config.activeColor;
-        return true;
-    },
+    // color: function() {
+    //     this.color = scheduler.config.activeColor;
+    //     return true;
+    // },
 
     defaultColor: function() {
         if (this.encadrant_ids != null) {

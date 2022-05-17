@@ -127,7 +127,7 @@ function initLoadData(data) {
 var loadData = function(item) {
 
 
-    if (item.objectClass == "UcaBundle\\Entity\\DhtmlxSerie") {
+    if (item.objectClass.includes("Entity\\DhtmlxSerie")) {
         delete scheduler._series[item.oldId];
         let event = Object.create(Serie);
         event.load(item);
