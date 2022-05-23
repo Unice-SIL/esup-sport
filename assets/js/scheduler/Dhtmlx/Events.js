@@ -383,7 +383,8 @@ var changeColor = function(id) {
 
 
     if (typeof eventDhtmlx.getParent() != "undefined" && eventDhtmlx.getParent() != "undefined") {
-        eventDhtmlx.getParent().color();
+        // eventDhtmlx.getParent().color();
+        eventDhtmlx.color = scheduler.config.activeColor;
     } else {
         eventDhtmlx.color = scheduler.config.activeColor;
     }
