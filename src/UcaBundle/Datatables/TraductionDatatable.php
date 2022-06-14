@@ -12,6 +12,7 @@ use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use UcaBundle\Datatables\Button\ModifierButton;
 use UcaBundle\Datatables\Column\TwigVirtualColumn;
+use UcaBundle\Datatables\Filter\SelectInVirtualColumnFilter;
 
 class TraductionDatatable extends AbstractNotTranslatedDatatable
 {
