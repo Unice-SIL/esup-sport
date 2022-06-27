@@ -217,9 +217,13 @@ class CommandeDetail
     public function traitementPostAnnulation($options)
     {
         if ('inscription' == $this->type) {
-            $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
+            if($this->inscription->estAnnulable($this)){
+                $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
+            }
         } elseif ('format' == $this->type) {
-            $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
+            if($this->inscription->estAnnulable($this)){
+                $this->inscription->setStatut('annule', $options)->updateNbInscrits(false);
+            }
         } elseif ('autorisation' == $this->type) {
             // NA
         }

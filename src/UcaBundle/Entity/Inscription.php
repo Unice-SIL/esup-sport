@@ -318,6 +318,20 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         }
     }
 
+    public function estAnnulable(CommandeDetail $cmdDetailAnnule){
+        if($this->statut == 'valide'){
+            return false;
+        }
+        foreach ($this->getCommandeDetails() as $commandeDetail) {
+            if($commandeDetail->getId() != $cmdDetailAnnule->getId()){
+                if(in_array($commandeDetail->getCommande()->getStatut(), ['panier', 'apayer', 'termine'])){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     //endregion
 
     /**
