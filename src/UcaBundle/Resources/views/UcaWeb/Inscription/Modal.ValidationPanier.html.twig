@@ -13,7 +13,7 @@
                 %}
                     <p class="color-red fs-18 fw-700">{{ 'formataveccreneau.panier.info'|trans }}</p>
                 {% endif %}
-                <p>{{ article.getItem().getArticleDescription() }}</p>
+                <p>{{ article.getItem().getArticleDescription()|raw }}</p>
                 <p>{{ article.montant }}&nbsp;€</p>                
             </div>
         {% endif %}

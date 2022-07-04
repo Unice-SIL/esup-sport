@@ -8,10 +8,10 @@
 
 namespace UcaBundle\Form;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -49,11 +49,11 @@ class TypeAutorisationType extends AbstractType
                 'class' => 'defaultToHide cotisationToShow caseToHide justificatifToHide carteToShow validationencadrantToHide validationgestionnaireToHide',
             ],
         ]);
-        $builder->add('informationsComplementaires', TextAreaType::class, [
+        $builder->add('informationsComplementaires', CKEditorType::class, [
             'required' => false,
             'label_format' => 'typeautorisation.informations.complementaires',
             'attr' => [
-                'class' => 'defaultToHide cotisationToShow caseToShow justificatifToShow carteToShow validationencadrantToShow validationgestionnaireToShow',
+                'class' => 'ckeditor defaultToHide cotisationToShow caseToShow justificatifToShow carteToShow validationencadrantToShow validationgestionnaireToShow',
             ],
         ]);
         $builder->add('save', SubmitType::class, [

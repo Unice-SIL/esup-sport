@@ -39,7 +39,7 @@
             <div class="w-100 bg-pastel-gray p-3 m-0">
                 <p class="m-0">
                     <strong>{{ ('modalinscription.mention.information.importante') | trans }}</strong>
-                    <br>{{ typeAutorisation.informationsComplementaires }}</p>
+                    <br>{{ typeAutorisation.informationsComplementaires|raw }}</p>
             </div>
         {% else %}
             <p>{{ codeComportement }}</p>

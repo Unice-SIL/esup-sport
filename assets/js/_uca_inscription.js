@@ -110,8 +110,16 @@ _uca.inscription.addButtonEvent = function () {
                 $('#modalInscription .modal-dialog').html($(html_content).find('.modal-dialog').html());
                 $('#modalInscription').modal();
 
+
+                // Gestion de l'activation/desactivation du bouton d'ajout au panier pour le cas des partenaires
+                checkInputAutorisations();
+
                 $(".btn-confirmation").click(function() {
                     if(this.value == 'true'){
+                        if($('input[type="checkbox"][name="autorisation"]:not(:checked)').length > 0){
+                            return;
+                        }
+                        
                         $('#modalInscription .modal-dialog').html(_uca.inscription.htmlSpinner);
                         $('#modalInscription').modal();
                         $.ajax({
@@ -132,3 +140,18 @@ _uca.inscription.addButtonEvent = function () {
             .fail(_uca.ajax.fail);
     });
 };
+
+const checkInputAutorisations = function() {
+    var autorisationsInputs = $('input[type="checkbox"][name="autorisation"]');
+    if (autorisationsInputs.length > 0) {
+        autorisationsInputs.on('change', function() {
+            let disabled = $('input[type="checkbox"][name="autorisation"]:not(:checked)').length > 0;
+
+            if (disabled) {
+                $('#btn-confirmation').attr('disabled', true);
+            } else {
+                $('#btn-confirmation').removeAttr('disabled');
+            }
+        });
+    }
+}

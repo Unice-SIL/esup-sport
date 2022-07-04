@@ -86,13 +86,7 @@ class InscriptionController extends Controller
             if ('confirmation' == $request->get('statut')) {
                 $twigConfig['articles'] = $inscriptionService->ajoutPanier(true);
 
-                // temps d'éxécution sans cache : 6.1 s
-                // temps d'éxécution avec cache : 4.6 s
-                // temps d'execution dans le done() du JQuery : 10,5 s
-                // Erreur JSON : liée au parsing imposé par JQuery (le JSON.parse n'est plus utile en ES6)
-
-                //dump(new JsonResponse($this->get('twig')->render('@Uca/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig', $twigConfig)));
-                //die;
+                $twigConfig['autorisation_case'] = $inscription->getAutorisationsByComportement(['case']);
 
                 return new JsonResponse($this->get('twig')->render('@Uca/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig', $twigConfig));
             }

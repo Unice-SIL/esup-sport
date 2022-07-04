@@ -26,7 +26,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     public const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
 
-    //region Propriétés
+    // region Propriétés
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -101,9 +101,9 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
 
     /** @ORM\Column(type="string", nullable=true) */
     private $nomInscrit;
-    //endregion
+    // endregion
 
-    //region Méthodes
+    // region Méthodes
 
     public function __construct(Interfaces\Article $item, $user, $options)
     {
@@ -270,7 +270,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             $autorisation->updateStatut();
         }
         if ('annule' == $this->statut || 'valide' == $this->statut) {
-        } elseif ($this->hasCodeComportementByStatut(['case', 'justificatif'], 'invalide')) {
+        } elseif ($this->hasCodeComportementByStatut([/* 'case', */ 'justificatif'], 'invalide')) {
             $this->statut = 'initialise';
         } elseif ($this->hasCodeComportementByStatut(['validationencadrant'], 'invalide')) {
             $this->statut = 'attentevalidationencadrant';
@@ -318,21 +318,23 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
         }
     }
 
-    public function estAnnulable(CommandeDetail $cmdDetailAnnule){
-        if($this->statut == 'valide'){
+    public function estAnnulable(CommandeDetail $cmdDetailAnnule)
+    {
+        if ('valide' == $this->statut) {
             return false;
         }
         foreach ($this->getCommandeDetails() as $commandeDetail) {
-            if($commandeDetail->getId() != $cmdDetailAnnule->getId()){
-                if(in_array($commandeDetail->getCommande()->getStatut(), ['panier', 'apayer', 'termine'])){
+            if ($commandeDetail->getId() != $cmdDetailAnnule->getId()) {
+                if (in_array($commandeDetail->getCommande()->getStatut(), ['panier', 'apayer', 'termine'])) {
                     return false;
                 }
             }
         }
+
         return true;
     }
 
-    //endregion
+    // endregion
 
     /**
      * Get id.

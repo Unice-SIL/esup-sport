@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use UcaBundle\Annotations\CKEditor;
 use UcaBundle\Service\Common\Fn;
 
 /**
@@ -54,6 +55,7 @@ class TypeAutorisation implements \UcaBundle\Entity\Interfaces\JsonSerializable,
      * @Gedmo\Versioned
      * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
+     * @CKEditor
      */
     private $informationsComplementaires;
 
