@@ -1,0 +1,18 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Votre partenaire qui a initié l'inscription s'est désinscrit de l'activité suivante :
+            <span style="font-weight: bold;">
+                {% include "UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            Votre commande a donc été annulée.
+            <br/>
+            En cas de problème, merci de contacter le bureau des sports.
+        </p>
+    </div>
+{% endblock %}

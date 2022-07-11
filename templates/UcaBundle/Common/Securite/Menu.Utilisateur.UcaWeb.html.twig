@@ -1,0 +1,94 @@
+{% extends "UcaBundle/Common/Main/Structure.Menu.html.twig" %}
+
+{% block rightMenu %}
+
+    {{ parent() }}
+    {% if app.user  %}
+        {# On affiche le panier si l'utilisateur est connecté #}
+        <div>
+            <a aria-expanded="false" aria-haspopup="false" class="nav-link" href="{{ path('UcaWeb_Panier') }}" id="navbarlink" role="button">
+                <i class="fas fa-shopping-basket"></i>
+            </a>
+        </div>
+        <div
+            class="nav-menu-right">
+            {# Temporaire : cela pointera vers el profil UCaWeb #}
+            <a aria-expanded="false" aria-haspopup="false" class="nav-link itemprofile dropdown-toggle" data-toggle="dropdown" href="" id="navbarlink" role="button">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <div aria-expanded="false" class="dropdown-menu" role="menu">
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MonCompte') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-user-circle"></i>
+                    {{ app.user.prenom|lower|capitalize ~"  "~ app.user.nom|lower|capitalize }}
+                </a>
+
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MonPlanning') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ 'sitemap.monplanning.libelle' | trans }}
+                </a>
+
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MesInscriptions') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-clipboard-list"></i>
+                    {{ 'sitemap.mesinscriptions.libelle' | trans }}
+                </a>
+
+                {# Acces a l'historique des commandes de l'utilisateur connecte #}
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MesCommandes') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-receipt"></i>
+                    {{ 'sitemap.mescommandes.libelle' | trans }}
+                </a>    
+
+                {# Acces a l'historique des crédits de l'utilisateur connecte #}
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_MesCredits') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-euro-sign"></i>
+                    {{ 'sitemap.mescredits.libelle' | trans }}
+                </a>
+
+                {# Acces aux commandes des utilisateurs apayer #}
+                {% if is_granted('ROLE_GESTION_PAIEMENT_COMMANDE') %}
+                    <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_CommandeEnAttenteLister') }}" id="navbarlink" role="menuitem">
+                        <i class="fas fa-cash-register"></i>
+                        {{ 'sitemap.gestioncommande.libelle' | trans }}
+                    </a>
+                {% endif %}
+
+                {# Acces aux inscriptions a valider par un encadrant #}
+                {% if is_granted('ROLE_ENCADRANT') %}
+                    <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_InscriptionAValiderLister', {type: 'encadrant'}) }}" id="navbarlink" role="menuitem">
+                        <i class="fas fa-clipboard-check"></i>
+                        {{ 'sitemap.listeinscriptionavaliderencadrant.libelle' | trans }}
+                    </a>
+                {% endif %}
+
+                {# Acces aux inscriptions a valider par un gestionnaire #}
+                {% if is_granted('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION') %}
+                    <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_InscriptionAValiderLister', {type: 'gestionnaire'}) }}" id="navbarlink" role="menuitem">
+                        <i class="fas fa-clipboard-check"></i>
+                        {{ 'sitemap.listeinscriptionavalidergestionnaire.libelle' | trans }}
+                    </a>
+                {% endif %}
+
+                {# On affiche l'accès à UcaGestion si utilisateur a des groupes affectés #}
+                {% if app.user.groups is not empty %}
+                    <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaGest_Accueil') }}" id="navbarlink" role="menuitem">
+                        <i class="fas fa-cog"></i>
+                        {{ 'sitemap.ucagest.libelle'|trans }}
+                    </a>
+                {% endif %}
+                <a aria-expanded="false" aria-haspopup="false" class="dropdown-item itemprofile" href="{{ path('UcaWeb_AppLogout') }}" id="navbarlink" role="menuitem">
+                    <i class="fas fa-sign-out-alt"></i>
+                    {{ 'layout.logout'|trans }}
+                </a>
+            </div>
+        </div>
+    {% else %}
+        <div>
+            <a aria-expanded="false" aria-haspopup="false" class="nav-link connect" href="{{ path('UcaWeb_ConnexionSelectionProfil') }}" id="navbarlink" role="menuitem">
+                {{ 'security.login.submit'|trans }}
+            </a>
+        </div>
+    {% endif %}
+
+    {% include "UcaBundle/Common/Main/Lang.html.twig" %}
+
+{% endblock %}

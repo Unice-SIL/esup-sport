@@ -1,0 +1,41 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% block main %}
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    {% if (null == item.id) %}
+        <h1>{{'tarif.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'tarif.modifier.title'|trans}}</h1>
+    {% endif %}
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12">
+            {{ form_row(form.libelle)}}
+            {% for montant in form.montants %}
+                {{ form_label(montant, form.vars.data.montants[loop.index0].profil.libelle) }}
+                {{ form_widget(montant) }}
+            {% endfor %}
+
+            <div id="pourcentageTVA_tarif_hide">{{ form_row(form.pourcentageTVA)}}</div>
+            {{ form_row(form.tva)}}                    
+            <div id="tvaNonApplicable_tarif_hide">{{ form_row(form.tvaNonApplicable)}}</div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            _uca.changeVisibilityInputDependingCheckedBoxTva();
+            $("#tarif_tva").change(_uca.changeVisibilityInputDependingCheckedBoxTva);
+        });
+    </script>
+{% endblock %}
+
+

@@ -1,0 +1,29 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span><br/><br/></span>
+        <p>
+            L'utilisateur {{ inscription.utilisateur.prenom ~ ' ' ~ inscription.utilisateur.nom|upper }} vous à ajouté en tant que partenaire pour un entraînement !
+            <br/>
+            Vous devez confirmer votre présence au créneau de "{{ inscription.formatActivite.libelle }}" de {{ inscription.reservabilite.evenement.dateDebut|date("H:i") }} à {{ inscription.reservabilite.evenement.dateFin|date("H:i") }} au "{{ inscription.reservabilite.ressource.etablissement.libelle }}-{{ inscription.reservabilite.ressource.libelle }}" le {{ inscription.reservabilite.evenement.dateDebut|date("d/m/Y") }}.
+            <br />
+            <br />
+
+            {% if utilisateur is not null %}
+                Connectez-vous à votre compte UCA Sport, et cliquez sur le lien suivant : <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAvecPartenaire', {id: inscription.id}) }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAvecPartenaire', {id: inscription.id}) }}</a> pour vous permettre d’ajouter l’invitation à jouer à votre panier.
+            {% else %}
+                Cependant, vous n’avez pas encore de compte UCA Sport.
+                <br/>
+                Créez dès à présent votre compte <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_preInscription') }}">ici</a>.
+                <br/>
+                Une fois votre compte créé, connectez-vous, et cliquez sur le lien suivant : <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAvecPartenaire', {id: inscription.id}) }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAvecPartenaire', {id: inscription.id}) }}</a> pour vous permettre d’ajouter l’invitation à jouer à votre panier.
+            {% endif %}
+            <br/>
+            Validez votre panier pour confirmer votre inscription en tant que partenaire.
+            <br/>                        
+            <br/>
+            En cas de problème, merci de contacter le bureau des sports.
+        </p>
+    </div>
+{% endblock %}

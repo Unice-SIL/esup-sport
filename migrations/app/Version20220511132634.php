@@ -1,0 +1,292 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Migrations\Base;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20220511132634 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Création du schéma de base de données app';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE activite (id INT AUTO_INCREMENT NOT NULL, classe_activite_id INT DEFAULT NULL, ordre INT DEFAULT NULL, libelle VARCHAR(100) NOT NULL, description LONGTEXT NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, classe_activite_libelle LONGTEXT NOT NULL, INDEX IDX_B875551537164A10 (classe_activite_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE actualite (id INT AUTO_INCREMENT NOT NULL, ordre INT DEFAULT NULL, titre VARCHAR(255) NOT NULL, texte LONGTEXT NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE appel (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, dhtmlx_evenement_id INT DEFAULT NULL, present TINYINT(1) NOT NULL, INDEX IDX_130D3BDFB88E14F (utilisateur_id), INDEX IDX_130D3BDBC354C3 (dhtmlx_evenement_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE autorisation (id INT AUTO_INCREMENT NOT NULL, inscription_id INT DEFAULT NULL, type_autorisation_id INT DEFAULT NULL, utilisateur_id INT DEFAULT NULL, case_acocher TINYINT(1) DEFAULT NULL, valide_par_encadrant TINYINT(1) DEFAULT NULL, valide_par_gestionnaire TINYINT(1) DEFAULT NULL, justificatif VARCHAR(255) DEFAULT NULL, updated_at DATETIME DEFAULT NULL, montant NUMERIC(10, 2) NOT NULL, statut VARCHAR(255) NOT NULL, date DATETIME NOT NULL, INDEX IDX_9A431345DAC5993 (inscription_id), INDEX IDX_9A43134A5F17C42 (type_autorisation_id), INDEX IDX_9A43134FB88E14F (utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE classe_activite (id INT AUTO_INCREMENT NOT NULL, type_activite_id INT DEFAULT NULL, libelle VARCHAR(255) NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, type_activite_libelle LONGTEXT NOT NULL, INDEX IDX_82BB9DBBD0165F20 (type_activite_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE commande (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, utilisateur_encaisseur_id INT DEFAULT NULL, cgv_acceptees TINYINT(1) NOT NULL, numero_commande INT DEFAULT NULL, numero_recu INT DEFAULT NULL, credit_utilise NUMERIC(10, 0) DEFAULT \'0\' NOT NULL, date_panier DATETIME DEFAULT NULL, date_commande DATETIME DEFAULT NULL, date_paiement DATETIME DEFAULT NULL, date_annulation DATETIME DEFAULT NULL, hmac VARCHAR(255) DEFAULT NULL, statut VARCHAR(255) DEFAULT NULL, matricule VARCHAR(255) DEFAULT NULL, prenom VARCHAR(255) DEFAULT NULL, nom VARCHAR(255) DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, montant_total NUMERIC(10, 2) NOT NULL, tva NUMERIC(10, 2) NOT NULL, type_paiement VARCHAR(255) DEFAULT NULL, moyen_paiement VARCHAR(255) DEFAULT NULL, prenom_encaisseur VARCHAR(255) DEFAULT NULL, nom_encaisseur VARCHAR(255) DEFAULT NULL, numero_cheque VARCHAR(255) DEFAULT NULL, inscription_avec_partenaires TINYINT(1) DEFAULT NULL, montant_paybox NUMERIC(10, 2) DEFAULT NULL, INDEX IDX_6EEAA67DFB88E14F (utilisateur_id), INDEX IDX_6EEAA67D30A7B075 (utilisateur_encaisseur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE commande_detail (id INT AUTO_INCREMENT NOT NULL, commande_id INT DEFAULT NULL, avoir_id INT DEFAULT NULL, inscription_id INT DEFAULT NULL, format_activite_id INT DEFAULT NULL, creneau_id INT DEFAULT NULL, reservabilite_id INT DEFAULT NULL, type_autorisation_id INT DEFAULT NULL, etablissement_retrait_carte_id INT DEFAULT NULL, referenceAvoir INT DEFAULT NULL, date_avoir DATETIME DEFAULT NULL, type VARCHAR(255) DEFAULT NULL, hmac VARCHAR(255) DEFAULT NULL, date_ajout_panier DATETIME DEFAULT NULL, montant NUMERIC(10, 2) NOT NULL, tva NUMERIC(10, 2) NOT NULL, jour_creneau VARCHAR(255) DEFAULT NULL, horaire_creneau VARCHAR(255) DEFAULT NULL, libelle VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, date_debut DATETIME DEFAULT NULL, date_fin DATETIME DEFAULT NULL, type_article VARCHAR(255) DEFAULT NULL, numero_carte VARCHAR(255) DEFAULT NULL, date_carte_fin_validite DATETIME DEFAULT NULL, INDEX IDX_2C52844682EA2E54 (commande_id), INDEX IDX_2C528446C36D46DB (avoir_id), INDEX IDX_2C5284465DAC5993 (inscription_id), INDEX IDX_2C5284468C5FABB (format_activite_id), INDEX IDX_2C5284467D0729A9 (creneau_id), INDEX IDX_2C528446E7A306AC (reservabilite_id), INDEX IDX_2C528446A5F17C42 (type_autorisation_id), INDEX IDX_2C528446F48428F0 (etablissement_retrait_carte_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE commande_detail_commande_detail (commande_detail_source INT NOT NULL, commande_detail_target INT NOT NULL, INDEX IDX_73C9452AC740250 (commande_detail_source), INDEX IDX_73C9452B59152DF (commande_detail_target), PRIMARY KEY(commande_detail_source, commande_detail_target)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE comportement_autorisation (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, code_comportement VARCHAR(255) NOT NULL, description_comportement VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE creneau (id INT AUTO_INCREMENT NOT NULL, lieu_id INT DEFAULT NULL, format_activite_id INT DEFAULT NULL, tarif_id INT DEFAULT NULL, capacite INT NOT NULL, liste_encadrants LONGTEXT NOT NULL, INDEX IDX_F9668B5F6AB213CC (lieu_id), INDEX IDX_F9668B5F8C5FABB (format_activite_id), INDEX IDX_F9668B5F357C0A59 (tarif_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE creneau_niveau_sportif (creneau_id INT NOT NULL, niveau_sportif_id INT NOT NULL, INDEX IDX_F8981D27D0729A9 (creneau_id), INDEX IDX_F8981D2AB3B8EF6 (niveau_sportif_id), PRIMARY KEY(creneau_id, niveau_sportif_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE creneau_utilisateur (creneau_id INT NOT NULL, utilisateur_id INT NOT NULL, INDEX IDX_BF22A71D7D0729A9 (creneau_id), INDEX IDX_BF22A71DFB88E14F (utilisateur_id), PRIMARY KEY(creneau_id, utilisateur_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE creneau_profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, creneau_id INT DEFAULT NULL, profil_utilisateur_id INT DEFAULT NULL, capacite_profil INT DEFAULT 0, nb_inscrits INT DEFAULT 0, INDEX IDX_23BC590B7D0729A9 (creneau_id), INDEX IDX_23BC590BD173D866 (profil_utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE dhtmlx_date (id INT AUTO_INCREMENT NOT NULL, format_simple_id INT DEFAULT NULL, reservabilite_id INT DEFAULT NULL, serie_id INT DEFAULT NULL, creneau_id INT DEFAULT NULL, date_debut DATETIME NOT NULL, date_fin DATETIME NOT NULL, format VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, informations LONGTEXT DEFAULT NULL, dependance_serie TINYINT(1) DEFAULT 0, eligible_bonus TINYINT(1) DEFAULT 0, recurrence VARCHAR(255) DEFAULT NULL, date_fin_serie DATETIME DEFAULT NULL, INDEX IDX_35E52E2049E3DD68 (format_simple_id), INDEX IDX_35E52E20E7A306AC (reservabilite_id), INDEX IDX_35E52E20D94388BD (serie_id), INDEX IDX_35E52E207D0729A9 (creneau_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE etablissement (id INT AUTO_INCREMENT NOT NULL, code VARCHAR(255) NOT NULL, libelle VARCHAR(255) NOT NULL, adresse VARCHAR(255) NOT NULL, code_postal VARCHAR(5) NOT NULL, ville VARCHAR(255) NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, email VARCHAR(255) DEFAULT NULL, telephone VARCHAR(255) DEFAULT NULL, horaires_ouverture LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ext_annotation (id INT AUTO_INCREMENT NOT NULL, entity VARCHAR(255) NOT NULL, field VARCHAR(255) NOT NULL, annotation VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ext_log_entries (id INT AUTO_INCREMENT NOT NULL, action VARCHAR(8) NOT NULL, logged_at DATETIME NOT NULL, object_id VARCHAR(64) DEFAULT NULL, object_class VARCHAR(191) NOT NULL, version INT NOT NULL, data LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array)\', username VARCHAR(191) DEFAULT NULL, INDEX log_class_lookup_idx (object_class), INDEX log_date_lookup_idx (logged_at), INDEX log_user_lookup_idx (username), INDEX log_version_lookup_idx (object_id, object_class, version), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
+        $this->addSql('CREATE TABLE ext_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, object_class VARCHAR(191) NOT NULL, field VARCHAR(32) NOT NULL, foreign_key VARCHAR(64) NOT NULL, content LONGTEXT DEFAULT NULL, INDEX translations_lookup_idx (locale, object_class, foreign_key), INDEX general_translations_lookup_idx (object_class, foreign_key), UNIQUE INDEX lookup_unique_idx (locale, object_class, field, foreign_key), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
+        $this->addSql('CREATE TABLE fichier (id INT AUTO_INCREMENT NOT NULL, code VARCHAR(255) NOT NULL, image VARCHAR(255) NOT NULL, size INT NOT NULL, mime_type VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite (id INT AUTO_INCREMENT NOT NULL, activite_id INT DEFAULT NULL, tarif_id INT DEFAULT NULL, carte_id INT DEFAULT NULL, capacite INT NOT NULL, libelle VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, lien_html VARCHAR(255) DEFAULT NULL, lien_pdf VARCHAR(255) DEFAULT NULL, date_debut_publication DATETIME NOT NULL, date_fin_publication DATETIME NOT NULL, date_debut_inscription DATETIME NOT NULL, date_fin_inscription DATETIME NOT NULL, date_debut_effective DATETIME NOT NULL, date_fin_effective DATETIME NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, est_payant TINYINT(1) DEFAULT 0 NOT NULL, est_encadre TINYINT(1) DEFAULT 0 NOT NULL, statut INT NOT NULL, tarif_libelle LONGTEXT NOT NULL, liste_lieux LONGTEXT NOT NULL, liste_autorisations LONGTEXT NOT NULL, liste_niveaux_sportifs LONGTEXT NOT NULL, liste_profils LONGTEXT NOT NULL, liste_encadrants LONGTEXT NOT NULL, promouvoir TINYINT(1) NOT NULL, format VARCHAR(255) NOT NULL, liste_ressources LONGTEXT DEFAULT NULL, carte_libelle LONGTEXT DEFAULT NULL, INDEX IDX_1F4F65C19B0F88B1 (activite_id), INDEX IDX_1F4F65C1357C0A59 (tarif_id), INDEX IDX_1F4F65C1C9C7CEB6 (carte_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite_lieu (format_activite_id INT NOT NULL, lieu_id INT NOT NULL, INDEX IDX_1C630F7B8C5FABB (format_activite_id), INDEX IDX_1C630F7B6AB213CC (lieu_id), PRIMARY KEY(format_activite_id, lieu_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite_type_autorisation (format_activite_id INT NOT NULL, type_autorisation_id INT NOT NULL, INDEX IDX_8EC36B418C5FABB (format_activite_id), INDEX IDX_8EC36B41A5F17C42 (type_autorisation_id), PRIMARY KEY(format_activite_id, type_autorisation_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite_niveau_sportif (format_activite_id INT NOT NULL, niveau_sportif_id INT NOT NULL, INDEX IDX_BF69240D8C5FABB (format_activite_id), INDEX IDX_BF69240DAB3B8EF6 (niveau_sportif_id), PRIMARY KEY(format_activite_id, niveau_sportif_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite_utilisateur (format_activite_id INT NOT NULL, utilisateur_id INT NOT NULL, INDEX IDX_B5EBAEC58C5FABB (format_activite_id), INDEX IDX_B5EBAEC5FB88E14F (utilisateur_id), PRIMARY KEY(format_activite_id, utilisateur_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_avec_reservation_ressource (format_avec_reservation_id INT NOT NULL, ressource_id INT NOT NULL, INDEX IDX_5DDA9AE649CA0D66 (format_avec_reservation_id), INDEX IDX_5DDA9AE6FC6CD52A (ressource_id), PRIMARY KEY(format_avec_reservation_id, ressource_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE format_activite_profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, format_activite_id INT DEFAULT NULL, profil_utilisateur_id INT DEFAULT NULL, capacite_profil INT DEFAULT 0, nb_inscrits INT DEFAULT 0, INDEX IDX_17272F2F8C5FABB (format_activite_id), INDEX IDX_17272F2FD173D866 (profil_utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE groupe (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, libelle VARCHAR(255) NOT NULL, roles JSON NOT NULL, liste_roles LONGTEXT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE highlight (id INT AUTO_INCREMENT NOT NULL, ordre INT DEFAULT NULL, titre VARCHAR(255) DEFAULT NULL, texte LONGTEXT DEFAULT NULL, video VARCHAR(255) NOT NULL, miniature LONGTEXT DEFAULT NULL, updated_at DATETIME DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, lecteur_video VARCHAR(255) DEFAULT NULL, intervenant VARCHAR(255) DEFAULT NULL, height VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE image_fond (id INT AUTO_INCREMENT NOT NULL, emplacement VARCHAR(255) NOT NULL, titre VARCHAR(255) NOT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE image_supplementaire (id INT AUTO_INCREMENT NOT NULL, lieu_id INT DEFAULT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, INDEX IDX_383E14D16AB213CC (lieu_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE inscription (id INT AUTO_INCREMENT NOT NULL, format_activite_id INT DEFAULT NULL, creneau_id INT DEFAULT NULL, reservabilite_id INT DEFAULT NULL, utilisateur_id INT DEFAULT NULL, utilisateur_desinscription_id INT DEFAULT NULL, date DATETIME NOT NULL, date_validation DATETIME DEFAULT NULL, statut VARCHAR(255) NOT NULL, motif_annulation VARCHAR(255) DEFAULT NULL, commentaire_annulation VARCHAR(255) DEFAULT NULL, date_desinscription DATETIME DEFAULT NULL, prenom_desinscription VARCHAR(255) DEFAULT NULL, nom_desinscription VARCHAR(255) DEFAULT NULL, libelle VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, prenom_inscrit VARCHAR(255) DEFAULT NULL, nom_inscrit VARCHAR(255) DEFAULT NULL, liste_email_partenaires LONGTEXT DEFAULT NULL, est_partenaire INT DEFAULT NULL, INDEX IDX_5E90F6D68C5FABB (format_activite_id), INDEX IDX_5E90F6D67D0729A9 (creneau_id), INDEX IDX_5E90F6D6E7A306AC (reservabilite_id), INDEX IDX_5E90F6D6FB88E14F (utilisateur_id), INDEX IDX_5E90F6D6339724D8 (utilisateur_desinscription_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE inscription_utilisateur (inscription_id INT NOT NULL, utilisateur_id INT NOT NULL, INDEX IDX_EA6DFE635DAC5993 (inscription_id), INDEX IDX_EA6DFE63FB88E14F (utilisateur_id), PRIMARY KEY(inscription_id, utilisateur_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE log_connexion (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, date_connexion DATETIME DEFAULT NULL, INDEX IDX_85696512FB88E14F (utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE logo_partenaire (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(255) NOT NULL, image VARCHAR(255) NOT NULL, lien VARCHAR(255) DEFAULT NULL, description LONGTEXT DEFAULT NULL, ordre INT DEFAULT NULL, updated_at DATETIME DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE montant_tarif_profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, tarif_id INT DEFAULT NULL, profil_id INT DEFAULT NULL, montant NUMERIC(10, 2) DEFAULT \'-1\' NOT NULL, INDEX IDX_739402DB357C0A59 (tarif_id), INDEX IDX_739402DB275ED078 (profil_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE niveau_sportif (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE parametrage (id INT AUTO_INCREMENT NOT NULL, lien_facebook VARCHAR(255) NOT NULL, lien_instagram VARCHAR(255) NOT NULL, lien_youtube VARCHAR(255) NOT NULL, mail_contact VARCHAR(255) NOT NULL, timer_panier INT NOT NULL, timer_cb INT NOT NULL, timer_bds INT NOT NULL, timer_paybox INT NOT NULL, timer_panier_apres_validation INT NOT NULL, annee_universitaire INT NOT NULL, libelle_adresse VARCHAR(255) NOT NULL, adresse_facturation VARCHAR(255) NOT NULL, siret BIGINT NOT NULL, timer_partenaire INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, parent_id INT DEFAULT NULL, libelle VARCHAR(255) NOT NULL, nb_max_inscriptions INT NOT NULL, preinscription TINYINT(1) NOT NULL, nb_max_inscriptions_ressource INT DEFAULT 0 NOT NULL, INDEX IDX_47227AF3727ACA70 (parent_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE referentiel_immobilier (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, description VARCHAR(255) DEFAULT NULL, code_rus VARCHAR(255) DEFAULT NULL, nom_campus VARCHAR(255) DEFAULT NULL, superficie NUMERIC(10, 2) DEFAULT NULL, latitude VARCHAR(255) DEFAULT NULL, longitude VARCHAR(255) DEFAULT NULL, capacite INT DEFAULT NULL, visite_virtuelle VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE IF NOT EXISTS referentiel_statistiques (code varchar(50) NOT NULL, libelle varchar(100) NOT NULL, min int(11) NOT NULL, max int(11) NOT NULL, PRIMARY KEY (code,libelle,min,max)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB;');
+        $this->addSql('CREATE TABLE reservabilite (id INT AUTO_INCREMENT NOT NULL, ressource_id INT DEFAULT NULL, capacite INT NOT NULL, INDEX IDX_3DEB71DAFC6CD52A (ressource_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE reservabilite_profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, reservabilite_id INT DEFAULT NULL, profil_utilisateur_id INT DEFAULT NULL, capacite_profil INT DEFAULT 0, nb_inscrits INT DEFAULT 0, INDEX IDX_FC2184D4E7A306AC (reservabilite_id), INDEX IDX_FC2184D4D173D866 (profil_utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ressource (id INT AUTO_INCREMENT NOT NULL, etablissement_id INT DEFAULT NULL, tarif_id INT DEFAULT NULL, libelle VARCHAR(255) NOT NULL, description VARCHAR(255) DEFAULT NULL, source_referentiel TINYINT(1) DEFAULT NULL, image VARCHAR(255) NOT NULL, updated_at DATETIME DEFAULT NULL, tarif_libelle LONGTEXT NOT NULL, etablissement_libelle LONGTEXT NOT NULL, liste_profils LONGTEXT NOT NULL, nb_partenaires INT DEFAULT 0 NOT NULL, nb_partenaires_max INT DEFAULT 0 NOT NULL, format VARCHAR(255) NOT NULL, nomenclature_rus VARCHAR(255) DEFAULT NULL, superficie NUMERIC(10, 2) DEFAULT NULL, capacite_accueil INT DEFAULT NULL, latitude VARCHAR(255) DEFAULT NULL, longitude VARCHAR(255) DEFAULT NULL, adresse VARCHAR(255) DEFAULT NULL, code_postal VARCHAR(5) DEFAULT NULL, ville VARCHAR(255) DEFAULT NULL, acces_pmr TINYINT(1) DEFAULT NULL, visite_virtuelle VARCHAR(255) DEFAULT NULL, quantite_disponible INT DEFAULT NULL, INDEX IDX_939F4544FF631228 (etablissement_id), INDEX IDX_939F4544357C0A59 (tarif_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ressource_profil_utilisateur (id INT AUTO_INCREMENT NOT NULL, ressource_id INT DEFAULT NULL, profil_utilisateur_id INT DEFAULT NULL, capacite_profil INT DEFAULT 0, INDEX IDX_E5BECBA8FC6CD52A (ressource_id), INDEX IDX_E5BECBA8D173D866 (profil_utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE shnu_highlight (id INT AUTO_INCREMENT NOT NULL, ordre INT DEFAULT NULL, titre VARCHAR(255) DEFAULT NULL, texte LONGTEXT DEFAULT NULL, video LONGTEXT NOT NULL, miniature LONGTEXT DEFAULT NULL, updated_at DATETIME DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, lecteur_video VARCHAR(255) DEFAULT NULL, intervenant VARCHAR(255) DEFAULT NULL, height VARCHAR(255) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE statut_utilisateur (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tarif (id INT AUTO_INCREMENT NOT NULL, pourcentage_tva NUMERIC(3, 1) DEFAULT \'0\' NOT NULL, libelle VARCHAR(255) NOT NULL, modification_montants LONGTEXT NOT NULL, tva TINYINT(1) NOT NULL, tva_non_applicable LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE texte (id INT AUTO_INCREMENT NOT NULL, emplacement VARCHAR(255) NOT NULL, titre VARCHAR(255) NOT NULL, texte LONGTEXT DEFAULT NULL, mobile INT NOT NULL, texte_mobile LONGTEXT DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE type_activite (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE type_autorisation (id INT AUTO_INCREMENT NOT NULL, tarif_id INT DEFAULT NULL, comportement_id INT DEFAULT NULL, libelle VARCHAR(255) NOT NULL, informations_complementaires LONGTEXT DEFAULT NULL, tarif_libelle LONGTEXT DEFAULT NULL, comportement_libelle LONGTEXT NOT NULL, INDEX IDX_8EE78B31357C0A59 (tarif_id), INDEX IDX_8EE78B31DE9F7622 (comportement_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE utilisateur (id INT AUTO_INCREMENT NOT NULL, profil_id INT DEFAULT NULL, statut_id INT DEFAULT NULL, username VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, shibboleth TINYINT(1) DEFAULT 0 NOT NULL, cgv_acceptees TINYINT(1) NOT NULL, last_login DATETIME DEFAULT NULL, confirmation_token VARCHAR(255) DEFAULT NULL, password_requested_at DATETIME DEFAULT NULL, roles JSON NOT NULL, description LONGTEXT DEFAULT NULL, matricule VARCHAR(255) DEFAULT NULL, numero_nfc VARCHAR(255) DEFAULT NULL, prenom VARCHAR(255) DEFAULT NULL, nom VARCHAR(255) DEFAULT NULL, sexe VARCHAR(1) DEFAULT NULL, adresse VARCHAR(255) DEFAULT NULL, code_postal VARCHAR(5) DEFAULT NULL, ville VARCHAR(255) DEFAULT NULL, date_naissance DATE DEFAULT NULL, telephone VARCHAR(255) DEFAULT NULL, document VARCHAR(255) DEFAULT NULL, updated_at DATETIME DEFAULT NULL, enabled TINYINT(1) DEFAULT NULL, INDEX IDX_1D1C63B3275ED078 (profil_id), INDEX IDX_1D1C63B3F6203804 (statut_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE utilisateur_groupe (utilisateur_id INT NOT NULL, groupe_id INT NOT NULL, INDEX IDX_6514B6AAFB88E14F (utilisateur_id), INDEX IDX_6514B6AA7A45358C (groupe_id), PRIMARY KEY(utilisateur_id, groupe_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE utilisateur_type_autorisation (utilisateur_id INT NOT NULL, type_autorisation_id INT NOT NULL, INDEX IDX_AC5CEE85FB88E14F (utilisateur_id), INDEX IDX_AC5CEE85A5F17C42 (type_autorisation_id), PRIMARY KEY(utilisateur_id, type_autorisation_id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE utilisateur_credit_historique (id INT AUTO_INCREMENT NOT NULL, utilisateur_id INT DEFAULT NULL, date DATETIME NOT NULL, montant NUMERIC(10, 0) NOT NULL, avoir INT DEFAULT NULL, type_operation VARCHAR(255) NOT NULL, statut VARCHAR(255) NOT NULL, operation VARCHAR(255) NOT NULL, commande_associee VARCHAR(255) DEFAULT NULL, INDEX IDX_3C7C0BE6FB88E14F (utilisateur_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE `UTF8_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE activite ADD CONSTRAINT FK_B875551537164A10 FOREIGN KEY (classe_activite_id) REFERENCES classe_activite (id)');
+        $this->addSql('ALTER TABLE appel ADD CONSTRAINT FK_130D3BDFB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE appel ADD CONSTRAINT FK_130D3BDBC354C3 FOREIGN KEY (dhtmlx_evenement_id) REFERENCES dhtmlx_date (id)');
+        $this->addSql('ALTER TABLE autorisation ADD CONSTRAINT FK_9A431345DAC5993 FOREIGN KEY (inscription_id) REFERENCES inscription (id)');
+        $this->addSql('ALTER TABLE autorisation ADD CONSTRAINT FK_9A43134A5F17C42 FOREIGN KEY (type_autorisation_id) REFERENCES type_autorisation (id)');
+        $this->addSql('ALTER TABLE autorisation ADD CONSTRAINT FK_9A43134FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE classe_activite ADD CONSTRAINT FK_82BB9DBBD0165F20 FOREIGN KEY (type_activite_id) REFERENCES type_activite (id)');
+        $this->addSql('ALTER TABLE commande ADD CONSTRAINT FK_6EEAA67DFB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE commande ADD CONSTRAINT FK_6EEAA67D30A7B075 FOREIGN KEY (utilisateur_encaisseur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C52844682EA2E54 FOREIGN KEY (commande_id) REFERENCES commande (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C528446C36D46DB FOREIGN KEY (avoir_id) REFERENCES commande (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C5284465DAC5993 FOREIGN KEY (inscription_id) REFERENCES inscription (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C5284468C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C5284467D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C528446E7A306AC FOREIGN KEY (reservabilite_id) REFERENCES reservabilite (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C528446A5F17C42 FOREIGN KEY (type_autorisation_id) REFERENCES type_autorisation (id)');
+        $this->addSql('ALTER TABLE commande_detail ADD CONSTRAINT FK_2C528446F48428F0 FOREIGN KEY (etablissement_retrait_carte_id) REFERENCES etablissement (id)');
+        $this->addSql('ALTER TABLE commande_detail_commande_detail ADD CONSTRAINT FK_73C9452AC740250 FOREIGN KEY (commande_detail_source) REFERENCES commande_detail (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE commande_detail_commande_detail ADD CONSTRAINT FK_73C9452B59152DF FOREIGN KEY (commande_detail_target) REFERENCES commande_detail (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE creneau ADD CONSTRAINT FK_F9668B5F6AB213CC FOREIGN KEY (lieu_id) REFERENCES ressource (id)');
+        $this->addSql('ALTER TABLE creneau ADD CONSTRAINT FK_F9668B5F8C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id)');
+        $this->addSql('ALTER TABLE creneau ADD CONSTRAINT FK_F9668B5F357C0A59 FOREIGN KEY (tarif_id) REFERENCES tarif (id)');
+        $this->addSql('ALTER TABLE creneau_niveau_sportif ADD CONSTRAINT FK_F8981D27D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE creneau_niveau_sportif ADD CONSTRAINT FK_F8981D2AB3B8EF6 FOREIGN KEY (niveau_sportif_id) REFERENCES niveau_sportif (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE creneau_utilisateur ADD CONSTRAINT FK_BF22A71D7D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE creneau_utilisateur ADD CONSTRAINT FK_BF22A71DFB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE creneau_profil_utilisateur ADD CONSTRAINT FK_23BC590B7D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id)');
+        $this->addSql('ALTER TABLE creneau_profil_utilisateur ADD CONSTRAINT FK_23BC590BD173D866 FOREIGN KEY (profil_utilisateur_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE dhtmlx_date ADD CONSTRAINT FK_35E52E2049E3DD68 FOREIGN KEY (format_simple_id) REFERENCES format_activite (id)');
+        $this->addSql('ALTER TABLE dhtmlx_date ADD CONSTRAINT FK_35E52E20E7A306AC FOREIGN KEY (reservabilite_id) REFERENCES reservabilite (id)');
+        $this->addSql('ALTER TABLE dhtmlx_date ADD CONSTRAINT FK_35E52E20D94388BD FOREIGN KEY (serie_id) REFERENCES dhtmlx_date (id)');
+        $this->addSql('ALTER TABLE dhtmlx_date ADD CONSTRAINT FK_35E52E207D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id)');
+        $this->addSql('ALTER TABLE format_activite ADD CONSTRAINT FK_1F4F65C19B0F88B1 FOREIGN KEY (activite_id) REFERENCES activite (id)');
+        $this->addSql('ALTER TABLE format_activite ADD CONSTRAINT FK_1F4F65C1357C0A59 FOREIGN KEY (tarif_id) REFERENCES tarif (id)');
+        $this->addSql('ALTER TABLE format_activite ADD CONSTRAINT FK_1F4F65C1C9C7CEB6 FOREIGN KEY (carte_id) REFERENCES type_autorisation (id)');
+        $this->addSql('ALTER TABLE format_activite_lieu ADD CONSTRAINT FK_1C630F7B8C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_lieu ADD CONSTRAINT FK_1C630F7B6AB213CC FOREIGN KEY (lieu_id) REFERENCES ressource (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_type_autorisation ADD CONSTRAINT FK_8EC36B418C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_type_autorisation ADD CONSTRAINT FK_8EC36B41A5F17C42 FOREIGN KEY (type_autorisation_id) REFERENCES type_autorisation (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_niveau_sportif ADD CONSTRAINT FK_BF69240D8C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_niveau_sportif ADD CONSTRAINT FK_BF69240DAB3B8EF6 FOREIGN KEY (niveau_sportif_id) REFERENCES niveau_sportif (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_utilisateur ADD CONSTRAINT FK_B5EBAEC58C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_utilisateur ADD CONSTRAINT FK_B5EBAEC5FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_avec_reservation_ressource ADD CONSTRAINT FK_5DDA9AE649CA0D66 FOREIGN KEY (format_avec_reservation_id) REFERENCES format_activite (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_avec_reservation_ressource ADD CONSTRAINT FK_5DDA9AE6FC6CD52A FOREIGN KEY (ressource_id) REFERENCES ressource (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE format_activite_profil_utilisateur ADD CONSTRAINT FK_17272F2F8C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id)');
+        $this->addSql('ALTER TABLE format_activite_profil_utilisateur ADD CONSTRAINT FK_17272F2FD173D866 FOREIGN KEY (profil_utilisateur_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE image_supplementaire ADD CONSTRAINT FK_383E14D16AB213CC FOREIGN KEY (lieu_id) REFERENCES ressource (id)');
+        $this->addSql('ALTER TABLE inscription ADD CONSTRAINT FK_5E90F6D68C5FABB FOREIGN KEY (format_activite_id) REFERENCES format_activite (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE inscription ADD CONSTRAINT FK_5E90F6D67D0729A9 FOREIGN KEY (creneau_id) REFERENCES creneau (id) ON DELETE SET NULL');
+        $this->addSql('ALTER TABLE inscription ADD CONSTRAINT FK_5E90F6D6E7A306AC FOREIGN KEY (reservabilite_id) REFERENCES reservabilite (id)');
+        $this->addSql('ALTER TABLE inscription ADD CONSTRAINT FK_5E90F6D6FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE inscription ADD CONSTRAINT FK_5E90F6D6339724D8 FOREIGN KEY (utilisateur_desinscription_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE inscription_utilisateur ADD CONSTRAINT FK_EA6DFE635DAC5993 FOREIGN KEY (inscription_id) REFERENCES inscription (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE inscription_utilisateur ADD CONSTRAINT FK_EA6DFE63FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE log_connexion ADD CONSTRAINT FK_85696512FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+        $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur ADD CONSTRAINT FK_739402DB357C0A59 FOREIGN KEY (tarif_id) REFERENCES tarif (id)');
+        $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur ADD CONSTRAINT FK_739402DB275ED078 FOREIGN KEY (profil_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE profil_utilisateur ADD CONSTRAINT FK_47227AF3727ACA70 FOREIGN KEY (parent_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE reservabilite ADD CONSTRAINT FK_3DEB71DAFC6CD52A FOREIGN KEY (ressource_id) REFERENCES ressource (id)');
+        $this->addSql('ALTER TABLE reservabilite_profil_utilisateur ADD CONSTRAINT FK_FC2184D4E7A306AC FOREIGN KEY (reservabilite_id) REFERENCES reservabilite (id)');
+        $this->addSql('ALTER TABLE reservabilite_profil_utilisateur ADD CONSTRAINT FK_FC2184D4D173D866 FOREIGN KEY (profil_utilisateur_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE ressource ADD CONSTRAINT FK_939F4544FF631228 FOREIGN KEY (etablissement_id) REFERENCES etablissement (id)');
+        $this->addSql('ALTER TABLE ressource ADD CONSTRAINT FK_939F4544357C0A59 FOREIGN KEY (tarif_id) REFERENCES tarif (id)');
+        $this->addSql('ALTER TABLE ressource_profil_utilisateur ADD CONSTRAINT FK_E5BECBA8FC6CD52A FOREIGN KEY (ressource_id) REFERENCES ressource (id)');
+        $this->addSql('ALTER TABLE ressource_profil_utilisateur ADD CONSTRAINT FK_E5BECBA8D173D866 FOREIGN KEY (profil_utilisateur_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE type_autorisation ADD CONSTRAINT FK_8EE78B31357C0A59 FOREIGN KEY (tarif_id) REFERENCES tarif (id)');
+        $this->addSql('ALTER TABLE type_autorisation ADD CONSTRAINT FK_8EE78B31DE9F7622 FOREIGN KEY (comportement_id) REFERENCES comportement_autorisation (id)');
+        $this->addSql('ALTER TABLE utilisateur ADD CONSTRAINT FK_1D1C63B3275ED078 FOREIGN KEY (profil_id) REFERENCES profil_utilisateur (id)');
+        $this->addSql('ALTER TABLE utilisateur ADD CONSTRAINT FK_1D1C63B3F6203804 FOREIGN KEY (statut_id) REFERENCES statut_utilisateur (id)');
+        $this->addSql('ALTER TABLE utilisateur_groupe ADD CONSTRAINT FK_6514B6AAFB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE utilisateur_groupe ADD CONSTRAINT FK_6514B6AA7A45358C FOREIGN KEY (groupe_id) REFERENCES groupe (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE utilisateur_type_autorisation ADD CONSTRAINT FK_AC5CEE85FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE utilisateur_type_autorisation ADD CONSTRAINT FK_AC5CEE85A5F17C42 FOREIGN KEY (type_autorisation_id) REFERENCES type_autorisation (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE utilisateur_credit_historique ADD CONSTRAINT FK_3C7C0BE6FB88E14F FOREIGN KEY (utilisateur_id) REFERENCES utilisateur (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE format_activite DROP FOREIGN KEY FK_1F4F65C19B0F88B1');
+        $this->addSql('ALTER TABLE activite DROP FOREIGN KEY FK_B875551537164A10');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C52844682EA2E54');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C528446C36D46DB');
+        $this->addSql('ALTER TABLE commande_detail_commande_detail DROP FOREIGN KEY FK_73C9452AC740250');
+        $this->addSql('ALTER TABLE commande_detail_commande_detail DROP FOREIGN KEY FK_73C9452B59152DF');
+        $this->addSql('ALTER TABLE type_autorisation DROP FOREIGN KEY FK_8EE78B31DE9F7622');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C5284467D0729A9');
+        $this->addSql('ALTER TABLE creneau_niveau_sportif DROP FOREIGN KEY FK_F8981D27D0729A9');
+        $this->addSql('ALTER TABLE creneau_utilisateur DROP FOREIGN KEY FK_BF22A71D7D0729A9');
+        $this->addSql('ALTER TABLE creneau_profil_utilisateur DROP FOREIGN KEY FK_23BC590B7D0729A9');
+        $this->addSql('ALTER TABLE dhtmlx_date DROP FOREIGN KEY FK_35E52E207D0729A9');
+        $this->addSql('ALTER TABLE inscription DROP FOREIGN KEY FK_5E90F6D67D0729A9');
+        $this->addSql('ALTER TABLE appel DROP FOREIGN KEY FK_130D3BDBC354C3');
+        $this->addSql('ALTER TABLE dhtmlx_date DROP FOREIGN KEY FK_35E52E20D94388BD');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C528446F48428F0');
+        $this->addSql('ALTER TABLE ressource DROP FOREIGN KEY FK_939F4544FF631228');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C5284468C5FABB');
+        $this->addSql('ALTER TABLE creneau DROP FOREIGN KEY FK_F9668B5F8C5FABB');
+        $this->addSql('ALTER TABLE dhtmlx_date DROP FOREIGN KEY FK_35E52E2049E3DD68');
+        $this->addSql('ALTER TABLE format_activite_lieu DROP FOREIGN KEY FK_1C630F7B8C5FABB');
+        $this->addSql('ALTER TABLE format_activite_type_autorisation DROP FOREIGN KEY FK_8EC36B418C5FABB');
+        $this->addSql('ALTER TABLE format_activite_niveau_sportif DROP FOREIGN KEY FK_BF69240D8C5FABB');
+        $this->addSql('ALTER TABLE format_activite_utilisateur DROP FOREIGN KEY FK_B5EBAEC58C5FABB');
+        $this->addSql('ALTER TABLE format_avec_reservation_ressource DROP FOREIGN KEY FK_5DDA9AE649CA0D66');
+        $this->addSql('ALTER TABLE format_activite_profil_utilisateur DROP FOREIGN KEY FK_17272F2F8C5FABB');
+        $this->addSql('ALTER TABLE inscription DROP FOREIGN KEY FK_5E90F6D68C5FABB');
+        $this->addSql('ALTER TABLE utilisateur_groupe DROP FOREIGN KEY FK_6514B6AA7A45358C');
+        $this->addSql('ALTER TABLE autorisation DROP FOREIGN KEY FK_9A431345DAC5993');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C5284465DAC5993');
+        $this->addSql('ALTER TABLE inscription_utilisateur DROP FOREIGN KEY FK_EA6DFE635DAC5993');
+        $this->addSql('ALTER TABLE creneau_niveau_sportif DROP FOREIGN KEY FK_F8981D2AB3B8EF6');
+        $this->addSql('ALTER TABLE format_activite_niveau_sportif DROP FOREIGN KEY FK_BF69240DAB3B8EF6');
+        $this->addSql('ALTER TABLE creneau_profil_utilisateur DROP FOREIGN KEY FK_23BC590BD173D866');
+        $this->addSql('ALTER TABLE format_activite_profil_utilisateur DROP FOREIGN KEY FK_17272F2FD173D866');
+        $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur DROP FOREIGN KEY FK_739402DB275ED078');
+        $this->addSql('ALTER TABLE profil_utilisateur DROP FOREIGN KEY FK_47227AF3727ACA70');
+        $this->addSql('ALTER TABLE reservabilite_profil_utilisateur DROP FOREIGN KEY FK_FC2184D4D173D866');
+        $this->addSql('ALTER TABLE ressource_profil_utilisateur DROP FOREIGN KEY FK_E5BECBA8D173D866');
+        $this->addSql('ALTER TABLE utilisateur DROP FOREIGN KEY FK_1D1C63B3275ED078');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C528446E7A306AC');
+        $this->addSql('ALTER TABLE dhtmlx_date DROP FOREIGN KEY FK_35E52E20E7A306AC');
+        $this->addSql('ALTER TABLE inscription DROP FOREIGN KEY FK_5E90F6D6E7A306AC');
+        $this->addSql('ALTER TABLE reservabilite_profil_utilisateur DROP FOREIGN KEY FK_FC2184D4E7A306AC');
+        $this->addSql('ALTER TABLE creneau DROP FOREIGN KEY FK_F9668B5F6AB213CC');
+        $this->addSql('ALTER TABLE format_activite_lieu DROP FOREIGN KEY FK_1C630F7B6AB213CC');
+        $this->addSql('ALTER TABLE format_avec_reservation_ressource DROP FOREIGN KEY FK_5DDA9AE6FC6CD52A');
+        $this->addSql('ALTER TABLE image_supplementaire DROP FOREIGN KEY FK_383E14D16AB213CC');
+        $this->addSql('ALTER TABLE reservabilite DROP FOREIGN KEY FK_3DEB71DAFC6CD52A');
+        $this->addSql('ALTER TABLE ressource_profil_utilisateur DROP FOREIGN KEY FK_E5BECBA8FC6CD52A');
+        $this->addSql('ALTER TABLE utilisateur DROP FOREIGN KEY FK_1D1C63B3F6203804');
+        $this->addSql('ALTER TABLE creneau DROP FOREIGN KEY FK_F9668B5F357C0A59');
+        $this->addSql('ALTER TABLE format_activite DROP FOREIGN KEY FK_1F4F65C1357C0A59');
+        $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur DROP FOREIGN KEY FK_739402DB357C0A59');
+        $this->addSql('ALTER TABLE ressource DROP FOREIGN KEY FK_939F4544357C0A59');
+        $this->addSql('ALTER TABLE type_autorisation DROP FOREIGN KEY FK_8EE78B31357C0A59');
+        $this->addSql('ALTER TABLE classe_activite DROP FOREIGN KEY FK_82BB9DBBD0165F20');
+        $this->addSql('ALTER TABLE autorisation DROP FOREIGN KEY FK_9A43134A5F17C42');
+        $this->addSql('ALTER TABLE commande_detail DROP FOREIGN KEY FK_2C528446A5F17C42');
+        $this->addSql('ALTER TABLE format_activite DROP FOREIGN KEY FK_1F4F65C1C9C7CEB6');
+        $this->addSql('ALTER TABLE format_activite_type_autorisation DROP FOREIGN KEY FK_8EC36B41A5F17C42');
+        $this->addSql('ALTER TABLE utilisateur_type_autorisation DROP FOREIGN KEY FK_AC5CEE85A5F17C42');
+        $this->addSql('ALTER TABLE appel DROP FOREIGN KEY FK_130D3BDFB88E14F');
+        $this->addSql('ALTER TABLE autorisation DROP FOREIGN KEY FK_9A43134FB88E14F');
+        $this->addSql('ALTER TABLE commande DROP FOREIGN KEY FK_6EEAA67DFB88E14F');
+        $this->addSql('ALTER TABLE commande DROP FOREIGN KEY FK_6EEAA67D30A7B075');
+        $this->addSql('ALTER TABLE creneau_utilisateur DROP FOREIGN KEY FK_BF22A71DFB88E14F');
+        $this->addSql('ALTER TABLE format_activite_utilisateur DROP FOREIGN KEY FK_B5EBAEC5FB88E14F');
+        $this->addSql('ALTER TABLE inscription DROP FOREIGN KEY FK_5E90F6D6FB88E14F');
+        $this->addSql('ALTER TABLE inscription DROP FOREIGN KEY FK_5E90F6D6339724D8');
+        $this->addSql('ALTER TABLE inscription_utilisateur DROP FOREIGN KEY FK_EA6DFE63FB88E14F');
+        $this->addSql('ALTER TABLE log_connexion DROP FOREIGN KEY FK_85696512FB88E14F');
+        $this->addSql('ALTER TABLE utilisateur_groupe DROP FOREIGN KEY FK_6514B6AAFB88E14F');
+        $this->addSql('ALTER TABLE utilisateur_type_autorisation DROP FOREIGN KEY FK_AC5CEE85FB88E14F');
+        $this->addSql('ALTER TABLE utilisateur_credit_historique DROP FOREIGN KEY FK_3C7C0BE6FB88E14F');
+        $this->addSql('DROP TABLE activite');
+        $this->addSql('DROP TABLE actualite');
+        $this->addSql('DROP TABLE appel');
+        $this->addSql('DROP TABLE autorisation');
+        $this->addSql('DROP TABLE classe_activite');
+        $this->addSql('DROP TABLE commande');
+        $this->addSql('DROP TABLE commande_detail');
+        $this->addSql('DROP TABLE commande_detail_commande_detail');
+        $this->addSql('DROP TABLE comportement_autorisation');
+        $this->addSql('DROP TABLE creneau');
+        $this->addSql('DROP TABLE creneau_niveau_sportif');
+        $this->addSql('DROP TABLE creneau_utilisateur');
+        $this->addSql('DROP TABLE creneau_profil_utilisateur');
+        $this->addSql('DROP TABLE dhtmlx_date');
+        $this->addSql('DROP TABLE etablissement');
+        $this->addSql('DROP TABLE ext_annotation');
+        $this->addSql('DROP TABLE ext_log_entries');
+        $this->addSql('DROP TABLE ext_translations');
+        $this->addSql('DROP TABLE fichier');
+        $this->addSql('DROP TABLE format_activite');
+        $this->addSql('DROP TABLE format_activite_lieu');
+        $this->addSql('DROP TABLE format_activite_type_autorisation');
+        $this->addSql('DROP TABLE format_activite_niveau_sportif');
+        $this->addSql('DROP TABLE format_activite_utilisateur');
+        $this->addSql('DROP TABLE format_avec_reservation_ressource');
+        $this->addSql('DROP TABLE format_activite_profil_utilisateur');
+        $this->addSql('DROP TABLE groupe');
+        $this->addSql('DROP TABLE highlight');
+        $this->addSql('DROP TABLE image_fond');
+        $this->addSql('DROP TABLE image_supplementaire');
+        $this->addSql('DROP TABLE inscription');
+        $this->addSql('DROP TABLE inscription_utilisateur');
+        $this->addSql('DROP TABLE log_connexion');
+        $this->addSql('DROP TABLE logo_partenaire');
+        $this->addSql('DROP TABLE montant_tarif_profil_utilisateur');
+        $this->addSql('DROP TABLE niveau_sportif');
+        $this->addSql('DROP TABLE parametrage');
+        $this->addSql('DROP TABLE profil_utilisateur');
+        $this->addSql('DROP TABLE referentiel_immobilier');
+        $this->addSql('DROP TABLE referentiel_statistiques');
+        $this->addSql('DROP TABLE reservabilite');
+        $this->addSql('DROP TABLE reservabilite_profil_utilisateur');
+        $this->addSql('DROP TABLE ressource');
+        $this->addSql('DROP TABLE ressource_profil_utilisateur');
+        $this->addSql('DROP TABLE shnu_highlight');
+        $this->addSql('DROP TABLE statut_utilisateur');
+        $this->addSql('DROP TABLE tarif');
+        $this->addSql('DROP TABLE texte');
+        $this->addSql('DROP TABLE type_activite');
+        $this->addSql('DROP TABLE type_autorisation');
+        $this->addSql('DROP TABLE utilisateur');
+        $this->addSql('DROP TABLE utilisateur_groupe');
+        $this->addSql('DROP TABLE utilisateur_type_autorisation');
+        $this->addSql('DROP TABLE utilisateur_credit_historique');
+    }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
+}

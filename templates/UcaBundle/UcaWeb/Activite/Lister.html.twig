@@ -1,0 +1,231 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+
+{% if app.request.attributes.get('_route') == 'UcaWeb_ClasseActiviteLister' %}
+    {% set home = true %}
+    {% set pageActivity = false %}
+    {% set urlImageFond = emplacementImageFond('Activités').image %}
+    {% set route = 'UcaWeb_ActiviteLister' %}
+    {% set params = {} %}
+    {% set routeAct = 'UcaWeb_FormatActiviteLister' %}
+    {% set description = '' %}
+    {% set title = 'accueil.classeActivite.title' | trans %}
+    {% set titleAct = 'accueil.activite.title' | trans %}
+{% elseif app.request.attributes.get('_route') == 'UcaWeb_ActiviteLister' %}
+    {% set home = false %}
+    {% set pageActivity = false %}
+    {% set urlImageFond = item.image %}
+    {% set route = 'UcaWeb_FormatActiviteLister' %}
+    {% set params = {idCa: item.id} %}
+    {% set title = item.libelle %}
+    {% set description = '' %}
+{% elseif app.request.attributes.get('_route') == 'UcaWeb_FormatActiviteLister' %}
+    {% set home = false %}
+    {% set pageActivity = true %}
+    {% set urlImageFond = item.image %}
+    {% set route = 'UcaWeb_FormatActiviteDetail' %}
+    {% set params = {idCa: idCa, idA: item.id} %}
+    {% set title = item.libelle %}
+    {% set description = item.description %}
+{% endif %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithUrl(urlImageFond) }}
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    </div>
+
+    {{ flashBag.showAll }}
+
+    {% if pageActivity and data is not empty %}
+        <h1 class="h1-light">{{ title }}</h1>
+        {% if description is not empty %}
+            <section class="container container-style bg-white mb-5">
+                {{ description|nl2br }}
+            </section>
+        {% endif %}
+        <section class="container pageFormatActivity pt-3">
+            <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "formatactivite.title"|trans }}</p>
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                {% for dataItem in data %}
+                    {% set hasCreneau = true %}
+                    {% if dataItem.format == 'FormatAvecCreneau' %}
+                        {% if dataItem.creneaux|length == 0 %}
+                            {% set hasCreneau = false %}
+                        {% endif %}
+                        {% set iconFormat = 'fas fa-calendar-alt' %}
+                    {% elseif dataItem.format == 'FormatAvecReservation' %}
+                        {% set iconFormat = 'fas fa-table-tennis' %}
+                    {% elseif dataItem.format == 'FormatAchatCarte' %}
+                        {% set iconFormat = 'fas fa-credit-card' %}
+                    {% else %}
+                        {% set iconFormat = 'fas fa-ticket-alt' %}
+                    {% endif %}
+                    {% if hasCreneau %}
+                        {% set ctaButtonFormat = dataItem.format~'.button' %}
+                        <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <div class="align-self-center text-center w-100 mb-0">
+                                <i class="{{ iconFormat }} text-white mb-2"></i>
+                                <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
+                            </div>
+                            <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="container pageFormatActivity pt-3 mb-5">
+            {% if etablissements is not empty %}
+                <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "formatactivite.etablissements.title"|trans }}</p>
+            {% endif %}
+            {% for etablissement in etablissements %}
+                <div class="accordion" id="accordionEtablissements-{{ loop.index }}">
+                    <div class="card card-install bg-white mb-4">
+                        <div class="card-header" id="">
+                            <a aria-controls="collapse-{{ loop.index }}" aria-expanded="true" class="col-12 collapsed" data-target="#collapse-{{ loop.index }}" data-toggle="collapse">
+                                <div class="row text-left d-flex flex-wrap">
+                                    <h2 class="mb-0 col-11 text-dark text-uppercase">{{ etablissement.libelle }}</h2>
+                                    <p class="m-0 p-0 pr-3 col-1 text-right">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                        <div aria-labelledby="heading1" class="card-body collapse show" data-parent="#accordionEtablissements-{{ loop.index }}" id="collapse-{{ loop.index }}">
+                            <div class="row">
+                                <div class="text-center text-sm-left col-sm-8 col-md-4 install-picture">
+                                    <img class="img-fluid img-rounded" src="{{ ImageAsset.thumb(etablissement.image, 'thumb_large_small') }}">
+                                </div>
+                                <div class="m-0 p-0 p-md-0 pl-3 pl-md-4 pt-3 col-12 col-sm-6 col-md-4 card-section">
+                                    <h3 class="text-uppercase">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ "installationssportives.coordonnees.title"|trans }}</h3>
+                                    <p>
+                                        {{ etablissement.libelle }}
+                                        <br/>{{ etablissement.adresse }}
+                                        <br/>{{ etablissement.codePostal }}
+                                        {{ etablissement.ville }}
+                                    </p>
+                                    <p>
+                                        <i class="fas fa-phone mr-2"></i>
+                                        {{ etablissement.telephone }}
+                                        <br/><i class="fas fa-envelope mr-2"></i>
+                                        {{ etablissement.email }}
+                                    </p>
+                                </div>
+                                <div class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-sm-6 col-md-4 card-section">
+                                    <h3 class="text-uppercase">
+                                        <i class="far fa-clock"></i>
+                                        {{ "installationssportives.horaireouverture.title"|trans }}</h3>
+                                    <pre class="ff-apex fs-16 fw-400 color-dark-gray">{{ etablissement.horairesOuverture }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    {% elseif home %}
+        <section class="container my-5">
+            <h1 class="h1-light text-center">{{ title }}</h1>
+            <div class="well mb-5" id="form-search">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                <div class="row p-4">
+                    <div class="col col-12 col-sm-6 col-xl-4 col-border mb-4 mb-xl-0">{{ form_row(form.activite) }}</div>
+                    <div class="col col-12 col-sm-6 col-xl-4 col-border mb-4 mb-xl-0">{{ form_row(form.etablissement) }}</div>
+                    <div class="col col-12 col-xl-4 d-flex flex-column flex-sm-row align-items-center justify-content-center justify-content-xl-start">
+                        <button type="submit" class="btn btn-primary mb-4 mb-sm-0" id="searchBtn">
+                            <div aria-hidden="true"></div>
+                            {{ 'common.rechercher' | trans }}
+                        </button>
+                        <button type="button" class="ml-sm-3" id="resetForm">
+                            <div aria-hidden="true"></div>
+                            <span>{{ 'bouton.reinitialiser' | trans }}</span>
+                        </button>
+                    </div>
+                </div>
+                {{ form_end(form) }}
+            </div>
+            {% if data is defined and data is not empty %}
+                <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                    {% for dataItem in data %}
+                        <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% if activites is defined and activites is not empty %}
+                <div class="row mb-5 d-flex flex-wrap justify-content-around" id="activities-container">
+                    {% for dataItem in activites %}
+                        <div class="activity-type d-flex align-item-center justify-content-center mb-3 list-activite"  style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                            <a class="align-self-center text-center" href="{{ path(routeAct, {id: dataItem.id, idCa: dataItem.classeActivite.id}) }}">{{ dataItem.libelle }}</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
+    {% else %}
+        <h1 class="h1-light">{{ title }}</h1>
+        {% if description is not empty %}
+            <section class="container container-style bg-white mb-5">
+                {{ description|nl2br }}
+            </section>
+        {% endif %}
+        <section class="container">
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+            {% if data|length > 0 %}
+                {% for dataItem in data %}
+                    <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                        <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                {% set texte = 'aucune.' ~ entite|lower %}
+                <section class="container container-style bg-white mb-5">
+                    {{ texte|trans }}
+                </section>
+            {% endif %}
+                
+            </div>
+        </section>
+    {% endif %}
+    {% include "UcaBundle/UcaWeb/Activite/Modal.Chargement.html.twig" %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('#resetForm').on('click', function() {
+                $('#ucabundle_rechercheactivite_activite').val(0).trigger("change");
+                $('#ucabundle_rechercheactivite_etablissement').val(0).trigger("change");
+                $('form').submit();
+            });
+
+            $('#ucabundle_rechercheactivite_activite, #ucabundle_rechercheactivite_etablissement').on("select2:open", function(e) {
+                const select2Dropdown = $('.select2-dropdown');
+                select2Dropdown.css({
+                    background: '#000',
+                    color: '#c9c9c9',
+                    border: 'none'
+                });
+                select2Dropdown.find('.select2-search__field').css({
+                    background: '#000',
+                    color: '#c9c9c9',
+                    'border-color': '#c9c9c9'
+                });
+            });
+        });        
+    </script>
+{% endblock %}

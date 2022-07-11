@@ -1,0 +1,7 @@
+{% extends "UserBundle/layout.html.twig" %}
+
+{% block fos_user_content %}
+    {% include "UcaBundle/UcaGest/Securite/Groupe/Formulaire.html.twig" 
+        with {'action': 'modifier', 'titrePage': 'groupe.modifier.title', 'formPath':  path('UcaGest_GroupeModifier', {'id': id}) }%}
+{% endblock %}
+

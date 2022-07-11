@@ -15,6 +15,8 @@ var Reservation = {
         this.evenement = Object.create(Evenement)
         this.reference_id = scheduler.data.item.id;
 
+        this.preinscription = data.preinscription;
+
         this.evenementType = "ressource";
         this.evenement.load(data);
         this.evenement.evenementType = 'ressource';
@@ -90,7 +92,7 @@ var Reservation = {
         } else if (data.reservabilite != null) {
             this.loadReservabilite(data.evenement)
         }
-
+        this.defaultColor();
     },
 
     loadReservabilite: function(data) {
@@ -158,6 +160,11 @@ var Reservation = {
     // },
 
     defaultColor: function() {
+        if (this.preinscription == true) {
+            this.color = scheduler.config.preinscription;
+            return true;
+        }
+
         this.color = scheduler.config.defaultColor;
         return true;
     },

@@ -1,0 +1,157 @@
+# formatactivite.capaciteprofil.invalide: Total capacity is inferior to the profil's capacities
+activite.bascule.notBlank: It is mandatory to select at least one activity
+activite.classeactivite.notnull: An activity class must be selected
+activite.description.notblank: The description of the activity is required
+activite.image.format: 'The picture of the activity is not in the right format. (Expected: PNG|JPEG|TIFF)'
+activite.image.notnull: A picture must be selected
+activite.libelle.notblank: The activity's label is required
+activite.uniqueentity: An activity already exists with this label
+actualite.texte.notblank: The news text is required
+actualite.titre.notblank: The news title is required
+classeactivite.image.format: 'The activity class picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+classeactivite.image.notnull: A picture must be selected for the activity class
+classeactivite.libelle.notblank: The activity class label is required
+classeactivite.typeactivite.notnull: An activity type must be selected
+classeactivite.uniqueentity: An activity class already exists with this label
+commande.numero.cheque.notBlank: Cheque's number is mandatory
+commandedetail.informationscarte.datefin.incorrecte: Expiration date cannot be lower than payment's date
+commandedetail.informationscarte.datefin.notBlank: Expiration date is mandatory
+commandedetail.informationscarte.etablissement.notBlank: Campus is mandatory
+commandedetail.informationscarte.numero.notBlank: Card's number is mandatory
+complement.capacite.notblank: Please enter a capacity 
+complement.encadrant.notblank: For a framed format, at least one supervisor must be selected
+complement.niveauxsportifs.notblank: You must enter at least one sport level
+complement.profilsutilisateurs.notblank: You must enter at least one user profile
+complement.tarif.notblank: For a paid format, the rate must be selected
+contact.email.invalide: This is not a valid email address
+contact.email.notblank: An email address is required
+contact.message.notblank: A message is required
+contact.objet.notblank: A mail object is required
+etablissement.adresse.notblank: The campus address is required
+etablissement.code.notblank: The campus code is required
+etablissement.codePostal.invalide: The campus postal code is invalid, it must contain 5 digits
+etablissement.codePostal.notblank: The campus postal code is required
+etablissement.email.invalide: Invalid email
+etablissement.image.format: 'The campus picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+etablissement.image.notnull: A picture must be selected
+etablissement.libelle.notblank: The campus label is required
+etablissement.notblank: A campus is required
+etablissement.telephone.invalide: Invalid phone number
+etablissement.uniqueentity: A campus already exists with this label
+etablissement.ville.notblank: The campus city is required
+formatactivite.achatcarte.carte.notnull: You must choose a card
+formatactivite.capaciteprofil.invalide: One of the capacities per profile is greater than the total capacity
+formatactivite.capaciteprofil.notnull: THe profil's capacity cannot be blank
+formatactivite.dateDebutEffective.notblank: Effective start date is required
+formatactivite.dateDebutInscription.notblank: Registration start date is required
+formatactivite.dateDebutPublication.notblank: Publication start date is required
+formatactivite.dateFinEffective.notblank: Effective end date is required
+formatactivite.dateFinInscription.notblank: Registration end date is required
+formatactivite.dateFinPublication.notblank: Publication end date is required
+formatactivite.description.notblank: The format description is required
+formatactivite.image.format: 'The format picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+formatactivite.image.notnull: A picture must be selected
+formatactivite.libelle.notblank: The format label is required
+formatactivite.lieu.notnull: The place is required
+formatactivite.reservation.ressource.notnull: Please select at least one resource
+formatactivite.uniqueentity: An activity format already exists with this label
+groupe.name.notnull: Group name is required
+groupe.name.tropLong: Group name is too long
+groupe.name.tropPetit: Group name is too short
+groupe.roles.notnull: Rigths is required
+groupe.uniqueentity: An group already exists with this name
+highlight.urlvideo.invalid: The url entered is not a valid url. The url must correspond to that of a Youtube, Dailymotion or Vimeo video.
+highlight.urlvideo.notblank: The video url is required
+imagefond.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+imagefond.image.notnull: A picture must be selected
+imagefond.titre.notnull: The title is required
+imagesupplementaire.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+lieu.adresse.notblank: The place's address is required
+lieu.codepostal.invalide: The post code is invalid, it must contain 5 digits
+lieu.codepostal.notblank: The place's postal code is required
+lieu.libelle.notblank: The place's label is required
+lieu.ville.notblank: The place's city is required
+logopartenaire.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+logopartenaire.image.notnull: A picture must be selected
+logopartenaire.nom.notBlank: The name is required
+mail.destinataires.notBlank: It is mandatory to select at least one recipient
+mail.message.notBlank: The message is required
+mail.objet.notBlank: The subject of your message is required
+materiel.libelle.notblank: The material label is required
+materiel.quantite.notblank: Please enter an available quantity
+message.erreur.datedebut: The start date must be lower than the end date
+message.erreur.datedebutinscription.publication: The start date must be between the start and end dates of publication
+message.erreur.datefin: The end date must be greater than the start date
+message.erreur.datefininscription.effective: The end date of registration must be smaller than the effective end date
+message.erreur.datefininscription.publication: The end date must be between the start and end dates of publication
+message.parametrage.timercb.timerpaybox: The payment time by credit card must be longer than the Paybox payment time
+message.parametrage.timerpaybox.timercb: The Paybox time payment must be longer than the payment time by credit card
+message.typeinvalide.double: The value {{ value }} is not a valid number
+message.typeinvalide.entier: The value {{ value }} is not a valid integer
+parametrage.adressefacturation.notblank: A billing adress is required
+parametrage.anneeuniversitaire.greaterthan: The value must be greater than 2019
+parametrage.anneeuniversitaire.notblank: The academic year is required
+parametrage.anneeuniversitaire.type: This value must be a number
+parametrage.facebook.notblank: A facebook link is required
+parametrage.instagram.notblank: An Instagram link is required
+parametrage.libelleadresse.notblank: A label for the address is required
+parametrage.lien.noturl: This is not a valid URL
+parametrage.mailcontact.notblank: An email address is required
+parametrage.mailcontact.notemail: This is not a valid email address
+parametrage.siret.format: The SIRET must be composed of 14 digits
+parametrage.siret.notblank: The SIRET number is required
+parametrage.timer.type: The value must be a number
+parametrage.timer.zero: The value must be greater than 0
+parametrage.timerbds.notblank: Sports office timer is required
+parametrage.timercb.notblank: CB timer is required
+parametrage.timerpanier.notblank: Basket timer is required
+parametrage.timerpanierapresvalidation.notblank: Basket timer after validation is required
+parametrage.timerpartenaire.notblank: Basket timer with partner is required
+parametrage.timerpaybox.notblank: Paybox timer is required
+parametrage.youtube.notblank: A Youtube link is required
+profilutilisateur.libelle.notblank: The user profile label is required
+profilutilisateur.nbMaxinscriptions.notblank: Maximum subscribtions can't be empty
+profilutilisateur.preinscription.notblank: The preRegistration field cannot be empty
+profilutilisateur.uniqueentity: A user profile already exists with this label
+ressource.image.format: 'The resource picture is not in the right format. (Expected: PNG|JPEG|TIFF)'
+ressource.image.notnull: A picture must be selected
+ressource.nbpartenairesmax.minval: Max number of partners should be greater than or equal to number of required partners
+shnurubrique.image.notnull: Picture is required
+shnurubrique.titre.notnull: Title is required
+shnurubrique.type.notnull: Type is required
+tarif.libelle.notblank: The price list label is required
+tarif.montant.notnull: Please enter an amount
+tarif.tva.invalid: VAT must be between 0 and 100
+tarif.tva.notnull: VAT must not be empty
+tarif.uniqueentity: A price already exists with this label
+texte.texte.notblank: The text is required
+texte.textemobile.notblank: The mobile text is required
+texte.titre.notblank: The text title is required
+traduction.texte.notblank: Translation into this language is required
+typeactivite.libelle.notblank: The activity type label is required
+typeactivite.uniqueentity: An activity type already exists with this label
+typeautorisation.comportement.notnull: Please select a behaviour
+typeautorisation.libelle.notblank: The authorization type label is required
+typeautorisation.uniqueentity: An authorization type already exists with this label
+utilisateur.UserProfile.notnull: Please select an user profil
+utilisateur.credit.dateexpiration.notblank: Please select an expiration date
+utilisateur.document.format.erreur: document type incorrect
+utilisateur.document.notBlank : document missing
+utilisateur.firstname.notnull: First name is required
+utilisateur.mail.existant: The email is already used 
+utilisateur.mail.invalide: Invalid email
+utilisateur.mail.notnull: Mail is required
+utilisateur.mail.shibboleth: You already have a university account
+utilisateur.mail.tropLong: Mail is too long
+utilisateur.mail.tropPetit: Mail is too short
+utilisateur.name.notnull: Name is required
+utilisateur.password.notnull: Password is required
+utilisateur.password.tropPetit: Password is too short
+utilisateur.sexe.notnull: Civility is required
+utilisateur.statut.notnull: Status is required
+utilisateur.telephone.invalide: Invalid telephone number
+utilisateur.username.email: Your username should not be an email
+utilisateur.username.existant: The username is already used
+utilisateur.username.notnull: Username is required
+utilisateur.username.tropLong: Username is too long
+utilisateur.username.tropPetit: Username is too short

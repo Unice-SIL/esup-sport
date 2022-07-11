@@ -1,0 +1,17 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ 'parametrage.modifier.title' | trans }}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+{% endblock %}

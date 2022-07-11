@@ -1,0 +1,6 @@
+em: default
+transactional: false
+migrations_paths:
+  App\Migrations\Base: migrations/app
+table_storage:
+  table_name: migration_versions

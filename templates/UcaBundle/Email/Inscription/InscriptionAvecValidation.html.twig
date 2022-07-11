@@ -1,0 +1,26 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Le {{ inscription.date | date("d/m/Y à H:i") }}, vous avez souhaité vous inscrire à l'activité suivante:
+            <span style="font-weight: bold;">
+                {% include "UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            Cette inscription nécessite la validation d'un
+            {% if inscription.statut == 'attentevalidationencadrant' %}
+                encadrant :
+                {% for encadrant in inscription.encadrants %}
+                </br><span>
+                    {{ encadrant.prenom }} {{ encadrant.nom }} ({{ encadrant.email }})
+                </span>
+                {% endfor %}
+            {% elseif inscription.statut == 'attentevalidationgestionnaire' %}
+                gestionnaire.
+            {% endif %}
+        </p>
+    </div>
+{% endblock %}

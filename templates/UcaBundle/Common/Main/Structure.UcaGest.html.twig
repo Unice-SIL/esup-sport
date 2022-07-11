@@ -1,0 +1,25 @@
+{% extends 'UcaBundle/Common/Main/Structure.Application.html.twig' %}
+{% block stylesheets %}
+    {{ encore_entry_link_tags('cssGest') }}
+{% endblock %}
+{% block body %}
+    <div class="container-admin pb-5">
+        <div class="container-fluid">
+            <div class="row">
+                {% include ('UcaBundle/Common/Securite/Menu.Utilisateur.UcaGest.html.twig') %}
+            </div>
+        </div>
+        <div class="breadcrumb-ucaweb">
+            {% include ('UcaBundle/Common/Main/Structure.Ariane.html.twig') %}
+        </div>
+        {% include ('UcaBundle/Common/Main/Debug.HistoriqueNavigation.html.twig') %}
+        <div class="container container-style bg-white">
+            {% block main %}{% endblock %}
+        </div>
+        {% include ('UcaBundle/Common/Modal/Modal.Loader.html.twig') %}
+    </div>
+{% endblock %}
+
+{% block footer %}
+    {% include 'UcaBundle/Common/Main/footer.html.twig' %}
+{% endblock %}

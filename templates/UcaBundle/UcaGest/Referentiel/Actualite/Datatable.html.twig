@@ -1,0 +1,9 @@
+{% extends "UcaBundle/Common/Liste/Datatable.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type='text/javascript'>
+		'use_strict';
+        _uca.datatable.ordonnerElements('UcaGest_ActualiteModifierOrdre', '#sg-datatables-Actualite_datatable', 3000);
+    </script>
+{% endblock %}

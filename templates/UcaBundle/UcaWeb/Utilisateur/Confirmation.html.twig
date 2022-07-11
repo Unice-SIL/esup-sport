@@ -1,0 +1,13 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/Table.html.twig' as htmlTable %}
+{% block main %}
+    {{ flashBag.showAll }}
+  
+    <h1> {{ 'preinscription.confirmation.titre' | trans}} </h1>
+    <div>
+    <p> {{ 'preinscription.confirmation.message' | trans}} </h1> </p>
+    </div>
+    <a class="btn btn-outline-primary" href="{{ path('UcaWeb_Accueil') }}"> {{ 'sitemap.ucasport.libelle' | trans }} </a>
+
+{% endblock %}

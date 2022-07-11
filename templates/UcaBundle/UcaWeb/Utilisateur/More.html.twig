@@ -1,0 +1,302 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block stylesheets %}
+  {{ parent() }}
+  {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+  {% include "UcaBundle/UcaWeb/Inscription/Modal.Desinscription.html.twig" %}
+  <h1 class="h1-light">{{'utilisateur.planning'|trans}}</h1>
+  <section class="container mb-5">
+
+    {{ flashBag.showAll }}
+    <div class="alert alert-success d-none" id="messageConfirmationMailSend" role="alert">
+        {{ "monPlanning.more.mail.send.success"|trans }}
+    </div>
+
+    <div class="container-style bg-white mb-5">
+      {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+
+      <h2 class="hide-border-title fs-21 fw-700 text-uppercase mt-5 mb-3">{{ eventName }}</h2>
+      <h3>{{ evenement.description }}</h3>
+
+      <div class="row mb-5 d-flex flex-wrap">
+        <div class="col-12 col-md-6 mb-4 text-center">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.horaires"|trans }}</h2>
+              <p>
+                <span class="fw-700">{{ "monPlanning.more.datedebut"|trans }}
+                  :</span>
+                {{ evenement.dateDebut|date('d/m/Y H:i:s') }}</p>
+              <p>
+                <span class="fw-700">{{ "monPlanning.more.datefin"|trans }}
+                  :</span>
+                {{ evenement.dateFin|date('d/m/Y H:i:s') }}</p>
+                {% if evenement.serie is not null and evenement.serie.creneau is not null and evenement.serie.creneau.lieu is not null %}
+                  {% set lieu = evenement.serie.creneau.lieu %}
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.lieu"|trans }} :
+                    </span>
+                    {{ lieu.etablissementLibelle ? lieu.etablissementLibelle ~ ' - ' : '' }}
+                    {{ lieu.libelle }}
+                  </p>
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.coordonnees.adresse"|trans }} :
+                    </span>
+                    {{ getAdresseComplete(lieu) }}
+                  </p>
+                {% elseif evenement.serie is not null and evenement.serie.reservabilite is not null and evenement.serie.reservabilite.ressource is not null and evenement.serie.reservabilite.ressource.etablissement is not null %}
+                  {% set etablissement = evenement.serie.reservabilite.ressource.etablissement %}
+                {% elseif evenement.reservabilite is not null and evenement.reservabilite.ressource is not null and evenement.reservabilite.ressource.etablissement is not null %}
+                  {% set etablissement = evenement.reservabilite.ressource.etablissement %}
+                {% endif %}
+                {% if etablissement is defined and etablissement is not null %}
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.lieu"|trans }} :
+                    </span>
+                    {{ etablissement.libelle }}
+                  </p>
+                  <p>
+                    <span class="fw-700">
+                      {{ "common.coordonnees.adresse"|trans }} :
+                    </span>
+                    {{ getAdresseComplete(etablissement) }}
+                  </p>
+                {% endif %}
+            </div>
+          </div>          
+        </div>
+
+        {% if (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is not empty %}
+            <div class="col-12 col-md-6 mb-4">
+                <div class="row p-3">
+                <div class="col-12 bg-isabelline p-3 text-center">
+                    <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.mail.titre"|trans }}</h2>
+                    <button id="mailButton" class="btn btn-primary">{{ "monPlanning.more.mail.button"|trans }}</button>
+                </div>
+                </div>
+            </div>
+            <div class="col-12 mb-3 text-center">
+                <h2 class="hide-border-title fs-21 fw-700 ">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-sm-auto">{{ "monPlanning.more.appel.titre"|trans }} </div>
+                        <div class="col-12 col-sm-auto mt-2 mt-sm-0">
+                            <a class="btn-sm btn-primary btn-form" href='{{ path("UcaWeb_PlanningMore_listePdf", {id: evenement.id} )}}' title="{{'bouton.exportpdf'|trans}}" id="btn_export_liste_pdf">
+                                <span class="fas fa-file-download"></span>
+                            </a>
+                            <a class="btn-sm btn-primary btn-form ml-2" href='{{ path("UcaWeb_PlanningMore_listeExcel", {id: evenement.id} )}}' title="{{'bouton.exportpdf'|trans}}" id="btn_export_liste_pdf">
+                                <span class="fas fa-file-excel"></span>
+                            </a>
+                        </div>
+                    </div>
+                </h2>  
+            </div>
+            <div class="col-12 mb-4 text-center" id="appel-loader">
+                <button class="btn btn-primary" type="button" id="appel-btn">
+                    {{ 'bouton.appel'|trans }}
+                </button>
+                {% if form.appels|length > 0 %}
+                  <a href="{{ path('UcaWeb_PlanningMore_DesinscrireTout', { 'id': evenement.id }) }}" class="btn btn-danger" type="button">
+                      {{ 'bouton.desinscrire.tout'|trans }}
+                  </a>
+                {% endif %}
+                <div class="text-center" id="loader">
+                    <p>{{ 'monPlanning.more.appel.message'|trans }}</p>
+                    <i class="fas fa-spinner fa-pulse fa-3x my-3"></i>
+                </div>
+            </div>
+            <div class="col-12 col-md-4 mb-4"></div>
+            <div class="col-12 col-md-4 mb-4">
+                {{ form_start(form) }}
+                <table style="width: 100%">
+                    {% for appel in form.appels %}
+                        <tr>
+                            {% if inscriptions[loop.index0].statut == 'valide' %}
+                                {% if inscriptions[loop.index0].utilisateur.telephone != null %}
+                                    {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom ~ ' (' ~ inscriptions[loop.index0].utilisateur.telephone|telephone ~ ')' %}
+                                    <td style="width: 70%">
+                                        {{ form_row(appel.present, {'label': name}) }}
+                                    </td>
+                                {% else %}
+                                    {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom  %}
+                                    <td style="width: 70%">
+                                        {{ form_row(appel.present, {'label': name}) }}
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                                {% set name = inscriptions[loop.index0].utilisateur.nom ~ " " ~ inscriptions[loop.index0].utilisateur.prenom ~ " (" ~ "creneau.list.preinscrit"|trans ~ ")" %}
+                                <td style="width: 70%">
+                                    {{ form_row(appel.present, {'label': name}) }}
+                                </td>
+                            {% endif %}
+                            <td>
+                                <a href="{{ path('UcaWeb_PlanningMore_Desinscrire', {'user': inscriptions[loop.index0].utilisateur.id, 'evenement': evenement.id}) }}" data-toggle='modal' data-target='#modalDesinscription' style="color: white" class="btn btn-danger btn-form" title="{{"bouton.desinscrire"|trans}}">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>                                   
+                          </tr>
+                    {% endfor %}
+                </table>                       
+            </div>
+            <div class="col-12 col-md-4 mb-4"></div>
+            <div class="col-12 my-4">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-2">
+                        <button class="btn btn-danger" type="button" id="annuler-btn">
+                            {{ 'bouton.annuler'|trans }}
+                        </button>
+                    </div>
+                    <div class="col-12 col-sm-2">
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        {% elseif (isEncadrant or app.user.hasRole('ROLE_GESTION_CRENEAU_LECTURE')) and form.appels is empty %}
+            <div class="col-12 col-md-6 mb-4 text-center">
+                <h2 class="hide-border-title fs-21 fw-700">{{ "monPlanning.more.appel.titre"|trans }}</h2>
+                <p>{{ "monplanning.more.appel.empty"|trans }}</p>
+            </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  {% include "UcaBundle/UcaWeb/Utilisateur/Modal.mail.html.twig" %}
+
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% if not formMail.vars.valid %}
+    <script type="text/javascript">
+      'use_strict';
+      $('#mailButton').click();
+    </script>
+  {% endif %}
+
+  <script type="text/javascript">
+    'use_strict';
+    {% include 'UcaBundle/Common/Modal/Modal.Information.js.twig' %}
+  
+    var PATH_SEND_MAIL = '{{ path("UcaWeb_PlanningMore_mail", {id: evenement.id} ) }}'
+    
+    function  cocherDecocherTout(param) {
+      destinataires = document.querySelectorAll( "input[id^='ucabundle_mail_destinataires']" );
+      if (param == 'cocher') {
+        destinataires.forEach( function ( elem ) {
+          if ( ! elem.checked ) elem.checked = true;
+        } )
+      } else if ( param == 'decocher' ) {
+        destinataires.forEach( function ( elem ) {
+          if ( elem.checked ) elem.checked = false;
+        } )
+      }
+    }
+    $("#mailButton").on("click", function(){
+      $('#modalMail').modal();
+    });
+    
+    $(document).on('submit','#modalMailForm',function(event) {
+      event.preventDefault();
+      $.ajax({
+        type: 'POST',
+        url: PATH_SEND_MAIL,
+        data: $(this).serialize(),
+      }).done(function(resultat) {
+        if(resultat.sucess){
+          $('#modalMail').modal('toggle');
+          $('#messageConfirmationMailSend').removeClass('d-none');
+        } else{
+          $("#modalMail form").replaceWith(resultat.form);
+        }
+      }).fail(_uca.ajax.fail);
+    });
+
+    $(document).on('click', '#ucabundle_mail_save', function(event){
+      event.preventDefault();
+      $("#modalMailForm").submit();
+    })
+
+    $(document).ready(function(){
+      appelOff(false);
+      $("#appel-btn").on('click', function(){
+        appelOn();
+      });
+      $("#annuler-btn").on('click', function(){
+        appelOff(false);
+      });
+      $("#ucabundle_evenement_save").on('click', function(){
+        appelOff(true);
+      });      
+    });
+
+    function appelOff(is_end){
+      if(!is_end) {
+        $(".checkbox-presence").each(function(){
+          $(this).attr('disabled', 'disabled');        
+        })
+      }
+      $("#ucabundle_evenement_save").hide();
+      $("#loader").hide();
+      $("#annuler-btn").hide();
+      $("#appel-btn").show();
+    }
+
+    function appelOn(){
+      $(".checkbox-presence").each(function(){
+        $(this).attr('disabled', false);        
+      })
+      $("#ucabundle_evenement_save").show();
+      $("#loader").show();
+      $("#annuler-btn").show();
+      $("#appel-btn").hide();
+      readTag();
+    }
+
+    async function readTag() {
+      if ("NDEFReader" in window) {
+        const reader = new NDEFReader();
+        try {
+          await reader.scan();
+          reader.onreading = event => {
+            //event.serialNumber contient l'identifiant de la carte
+            let uid = event.serialNumber;
+
+            $.ajax({
+              method: "POST",
+              url: Routing.generate("Api_NDEFUser"),
+              data: {
+                id: uid,
+              }
+            })
+            .done(function(data){
+                if(data['user'] != 'null'){
+                  let label = $("label:contains('"+data['user']+"')");
+                  let id = "#" + label.attr("for");
+                  if($(id).length){
+                    $(id).prop("checked", true);
+                  } else {
+                    window.alert(data['user'] + Translator.trans('monPlanning.more.appel.noninscrit'));
+                  }
+                  
+                }
+            })
+            .fail(_uca.ajax.fail);
+          }
+        } catch(error) {
+          console.log(error);
+        }
+      } else {
+        console.log("Web NFC is not supported.");
+      }
+    }
+  </script>
+{% endblock %}

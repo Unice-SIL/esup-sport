@@ -119,7 +119,7 @@ var Evenement = {
     },
 
     isSerie: function() {
-        if (this.rec_type != null && this.rec_type !== '' && this.rec_type !== 'none' || typeof this.objectClass !== "undefined" && this.objectClass.indexOf("UcaBundle\\Entity\\DhtmlxSerie" == -1) && this.serie != null) {
+        if (this.rec_type != null && this.rec_type !== '' && this.rec_type !== 'none' || typeof this.objectClass !== "undefined" && this.objectClass.indexOf("App\\Entity\\Uca\\DhtmlxSerie" == -1) && this.serie != null) {
             return true;
         } else if (this.getParent() != "undefined") {
             return true;

@@ -1,0 +1,43 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/ShowDatatable.html.twig' as Datatable %}
+
+{% block main %}
+	{% block DatatableTitle %}
+		{% if retourBouton is defined %}
+			{% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+		{% endif %}
+		<h1> {{ (codeListe|lower ~ '.list.title')|trans }}</h1>
+		{{ flashBag.showAll }}
+	{% endblock %}
+	
+	{% block DatatableHeader%}
+		{% if not noAddButton is defined %}
+			<div class="row">
+				<a href="{{ path('UcaGest_' ~ codeListe ~ 'Ajouter') }}" class="btn btn-primary btn-xs">{{ 'bouton.ajouter'|trans }}</a>
+			</div>
+		{% endif %}
+		<div id="load" class="d-none">
+			<img src="{{ asset('images/load.gif') }}" id="load-img">
+		</div>
+	{% endblock %}
+
+	{% block DatatableContent %}
+		{{ Datatable.showDatatable(datatable) }}
+	{% endblock %}
+	
+	{% block DatatableFooter %}{% endblock %}
+
+	{% block modal %}
+		{% if app.request.attributes.get("_route") == "UcaWeb_MesInscriptions" %}
+			{% include "UcaBundle/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
+		{% else %}
+			{% include "UcaBundle/Common/Modal/Modal.Suppression.html.twig" %}
+		{% endif %}
+	{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+	{{ Datatable.renderDatatable(datatable) }}
+{% endblock %}

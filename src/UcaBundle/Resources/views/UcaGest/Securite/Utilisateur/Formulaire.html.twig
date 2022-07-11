@@ -1,9 +1,0 @@
-{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
-{% block main %}
-    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-    <h1>{{ ('utilisateur.modifier.title') | trans }}</h1>
-    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" with {'action': 'modifier', 'formPath': '', 'formClass': ''} %}
-{% endblock %}
-{% block javascripts %}
-    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'ucaSport_registration_groups_3'} %}
-{% endblock %}

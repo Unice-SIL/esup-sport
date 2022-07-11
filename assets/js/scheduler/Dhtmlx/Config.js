@@ -15,6 +15,7 @@ scheduler.config.first_hour = 6;
 scheduler.config.key_nav = true;
 scheduler.config.last_hour = 23;
 scheduler.config.defaultColor = "#46aed8";
+scheduler.config.preinscription = "grey";
 scheduler.config.activeColor = "grey";
 scheduler.config.encadrantColor = "#1A1A1A";
 scheduler.config.repeat_date = "%d/%m/%Y";
@@ -74,8 +75,8 @@ if (typeof(ITEM.dateDebutEffective) !== "undefined" && new Date(ITEM.dateDebutEf
 scheduler.init('scheduler_here', initDate, "week");
 var type = "formatActivite";
 if (
-    scheduler.data.item.objectClass == "UcaBundle\\Entity\\Lieu" ||
-    scheduler.data.item.objectClass == "UcaBundle\\Entity\\Materiel"
+    scheduler.data.item.objectClass == "App\\Entity\\Uca\\Lieu" ||
+    scheduler.data.item.objectClass == "App\\Entity\\Uca\\Materiel"
 ) {
     type = "ressource";
     scheduler.data.item.type = "ressource";
@@ -118,16 +119,24 @@ function initLoadData(data) {
     if (data.evenements != null) {
         data.evenements.forEach(loadData);
     }
+
+    if (data.preinscription != null) {
+        data.preinscription.forEach(loadDataPreinscription);
+    }
+
     scheduler.updateView();
     Load.stop()
 
 }
 
+var loadDataPreinscription = function(item) {
+    item.preinscription = true;
+    loadData(item);
+}
+
 //use to load data
 var loadData = function(item) {
-
-
-    if (item.objectClass.includes("Entity\\DhtmlxSerie")) {
+    if (item.objectClass.includes("Entity\\Uca\\DhtmlxSerie")) {
         delete scheduler._series[item.oldId];
         let event = Object.create(Serie);
         event.load(item);

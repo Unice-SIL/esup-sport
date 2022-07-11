@@ -1,0 +1,25 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Le {{ inscription.date | date("d/m/Y à H:i") }}, {{ inscription.utilisateur.prenom }} {{ inscription.utilisateur.nom }} ({{ inscription.utilisateur.email }})  a souhaité s'inscrire à l'activité suivante:
+            <span style="font-weight: bold;">
+                {% include "UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            Cette inscription nécessite votre validation en tant
+            {% if inscription.statut == 'attentevalidationencadrant' %}
+                qu'encadrant.
+            {% elseif inscription.statut == 'attentevalidationgestionnaire' %}
+                que gestionnaire.
+            {% endif %}
+        </p>
+        <p>
+            Pour valider cette inscription, vous pouvez vous rendre à l'adresse suivante :
+            <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAValiderVoir', {id: inscription.id}) }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_InscriptionAValiderVoir', {id: inscription.id}) }}</a>
+        </p>
+    </div>
+{% endblock %}

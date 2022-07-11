@@ -1,0 +1,9 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block main %}
+    <div>
+        {{ flashBag.showAll }}
+        {% block fos_user_content %}{% endblock %}
+    </div>
+{% endblock %}

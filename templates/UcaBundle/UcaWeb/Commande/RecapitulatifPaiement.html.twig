@@ -1,0 +1,44 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import '@LexikPaybox/Macro/paybox.html.twig' as paybox %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+    <h1 class="h1-light">{{ 'paiement.recap' | trans }}</h1>
+
+    <section class="container">
+        <div class="row mb-4 px-2 py-3 container-style bg-white d-flex flex-wrap justify-content-between align-items-center">
+            <div class="col-12 px-5 py-3">
+
+                <h2 class="hide-border-title text-center fs-21 fw-700 color-dark-gray">{{ 'paiement.recapitulatif.titre' | trans }}</h2>
+                {% set credit = panier.utilisateur.getCreditTotal() %}
+                {% if panier.typePaiement == 'PAYBOX' %}
+                <p class="text-center">
+                    {{ 'paiement.recapitulatif.intro' | trans }}
+                    <strong>{{ 'paiement.recapitulatif.paybox' | trans({'%timer%': parametrage().timerPaybox, '%montant%': (panier.getMontantAPayer()) }) }}</strong>
+                    <br/>{{ 'paiement.recapitulatif.fin' | trans }}
+                </p>
+                <form action="{{ url }}" method="post" class="text-center">
+                    {{ paybox.form(form) }}
+                    <input class="btn btn-primary" type="submit" value="{{ 'paiement.cb' | trans }}"/>
+                </form>
+                {% elseif panier.typePaiement == 'BDS' %}
+                <p class="text-center">
+                    {{ 'paiement.recapitulatif.intro' | trans }}
+                    <strong>{{ 'paiement.recapitulatif.bds' | trans({'%timer%': parametrage().timerBds, '%montant%': (panier.getMontantAPayer()) }) }}</strong>
+                    <br/>{{ 'paiement.recapitulatif.fin' | trans }}
+                </p>
+                <p class="text-center">
+                    <a href="{{ path('UcaWeb_MesCommandesVoir', { id: panier.id }) }}" class="btn btn-primary">{{ 'paiement.bouton.commandes' | trans }}</a>
+                </p>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

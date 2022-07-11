@@ -1,6 +1,6 @@
 scheduler.showLightboxBase = scheduler.showLightbox_rec;
 scheduler.showLightboxRecurring = scheduler.showLightbox;
-if ("UcaBundle\\Entity\\Utilisateur" != scheduler.data.item.objectClass) {
+if ("App\\Entity\\Uca\\Utilisateur" != scheduler.data.item.objectClass) {
     scheduler.config.lightbox.get = {
         description: function() {
             return {

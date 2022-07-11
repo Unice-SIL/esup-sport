@@ -1,0 +1,20 @@
+{% extends "UcaBundle/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalInscription' %}
+{% block modalTitle 'modalinscription.panier.valider' %}
+{% block modalBody %}
+    <p>{{'modalinscription.message.validation.article'|trans}}</p>
+    <ul>
+        {% for article in articles %}
+            {% if article.affichageDetailCommande() %}
+                <li><strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€</li>        
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}
+{% block modalFooter %}
+    <button class="btn btn-outline-primary btn-confirmation" data-dismiss="modal" type="button" value="false">
+        {{'bouton.annuler' | trans }}
+    </button>
+    <button class="btn btn-primary btn-confirmation" type="button" value="true">
+        {{'bouton.confirmer' | trans }}</button>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+        <p>
+            {{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': app.request.schemeAndHttpHost ~ path('registration_validate_acount', { 'id': user.id, 'token' : user.confirmationToken })})|nl2br }}
+        </p>
+    </div>
+{% endblock %}

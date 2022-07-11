@@ -1,0 +1,70 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ item.libelle }}</h1>
+     {{ flashBag.showAll }}
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="hide-border-title"> {{'common.description'|trans}} </h2>
+                    <p> {{ item.description|nl2br }} </p>
+                </div>
+                {% if item.tarif != null %}
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.tarif'|trans}} </h2>
+                        <p> {{ item.tarif }} </p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if format  == 'Lieu' %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.coordonnees'|trans}} </h2>
+                        <p> 
+                            {% if item.etablissement %}
+                                {{ item.etablissement.libelle }} <br>
+                            {% else %}
+                                {{ item.libelle }} <br>
+                            {% endif %}
+                            {{ item.adresse }} <br>
+                            {{ item.codePostal }} {{ item.ville }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.infossupplementaires'|trans}} </h2>
+                        <li> {{'ressource.capacite'|trans}} : {{ item.capaciteAccueil }} </li>
+                        <li> {{'ressource.superficie'|trans}} : {{ item.superficie }} </li>
+                        <li> {{'ressource.code.rus'|trans}} : {{ item.nomenclatureRus }} </li>
+                        <li> {{'ressource.latitude'|trans}} / {{'ressource.longitude'|trans}} : {{ item.latitude }} / {{ item.longitude }} </li>
+                        <li> {{'lieu.visitevirtuelle.libelle'|trans}} : {{ item.visiteVirtuelle }} </li>
+                    </div>
+                </div>  
+            {% elseif format == 'Materiel' %}
+                <p> {{'ressource.quantite'|trans}} : {{ item.quantiteDisponible }} </p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h2 class="hide-border-title">{{'common.reservabilites'|trans}}</h2>
+    {{ dhtmlxCalendar.displayCalendarHtml }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type='text/javascript'>
+		'use_strict';
+        var typeA = "{{ type }}";
+        var role = "{{ role }}"; 
+    </script>
+
+    {{ dhtmlxCalendar.initSchedulerData(item) }}
+    {{ dhtmlxCalendar.initCalendarJs(item, format) }}
+    {{ dhtmlxCalendar.debugSchedulerEvents() }}
+{% endblock %}

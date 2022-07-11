@@ -1,0 +1,24 @@
+{% extends "UcaBundle/Common/Liste/Datatable.html.twig" %}
+
+{% block DatatableHeader%}
+    {% if not noAddButton is defined %}
+        <div class="row">
+            <div class="col-lg-6">
+                <a href="{{ path('UcaGest_' ~ codeListe ~ 'Ajouter', { format: 'Lieu' }) }}" class="btn btn-primary btn-xs">{{ 'lieu.ajouter'|trans }}</a>
+                <a href="{{ path('UcaGest_' ~ codeListe ~ 'Ajouter', { format: 'Materiel' }) }}" class="btn btn-primary btn-xs">{{ 'materiel.ajouter'|trans }}</a><br/>
+            </div>
+            <div class="col-lg-6">
+                {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+                {{ form_row(form.imageFile) }}
+                {{ form_end(form) }}
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        _uca.vichImageStyle();
+    </script>
+{% endblock %}

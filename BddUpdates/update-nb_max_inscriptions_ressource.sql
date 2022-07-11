@@ -1,0 +1,1 @@
+UPDATE profil_utilisateur SET nb_max_inscriptions_ressource = nb_max_inscriptions;

@@ -1,0 +1,58 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                charset: UTF8
+            statistique: 
+                url: '%env(resolve:DATABASE_STATISTIQUE_URL)%'
+                charset: UTF8
+
+        # IMPORTANT: You MUST configure your server version,
+        # either here or in the DATABASE_URL env var (see .env file)
+        #server_version: '13'
+
+        # only needed for MySQL
+        # charset: utf8mb4
+        # default_table_options:
+        #     collate: utf8mb4_unicode_ci
+
+        # backtrace queries in profiler (increases memory usage per request)
+        #profiling_collect_backtrace: '%kernel.debug%'
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                connection: default
+                mappings:
+                    Uca:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Uca'
+                        prefix: 'App\Entity\Uca'
+                        alias: Uca
+                dql:
+                    string_functions:
+                        GROUP_CONCAT: DoctrineExtensions\Query\Mysql\GroupConcat
+            statistique:
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                connection: statistique
+                mappings:
+                    Statistique:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Entity/Statistique'
+                        prefix: 'App\Entity\Statistique'
+                        alias: Statistique
+                dql:
+                    string_functions:
+                        GROUP_CONCAT: DoctrineExtensions\Query\Mysql\GroupConcat
+
+
+
+when@test:
+    doctrine:
+        dbal:
+            # "TEST_TOKEN" is typically set by ParaTest
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'

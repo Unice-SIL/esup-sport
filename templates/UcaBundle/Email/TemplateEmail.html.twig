@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr" class="">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <style type="text/CSS">
+            {% block style %}{% endblock %}
+        </style>
+    </head>
+    <body style="font-style: 16px">
+        {% if (_emails_to is defined) %}
+            <tr>
+                <td>
+                    <i>
+                        {{ "email.base_email.notification_destination_for"|trans }} :
+                        {% if _emails_to is iterable %}
+                            {% for _email in _emails_to %}
+                                {% if loop.first == false %}, {% endif %}
+                                {{ _email }}
+                            {% endfor %}
+                        {% else %}
+                            {{ _emails_to }}
+                        {% endif %}
+                    </i>
+                </td>
+            </tr>
+        {% endif %}
+
+        {% block main %}{% endblock %}
+        {% include "UcaBundle/Email/TemplateEmail.Signature.html.twig" %}
+    </body>
+</html>

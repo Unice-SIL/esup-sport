@@ -1,0 +1,6 @@
+em: statistique
+transactional: false
+migrations_paths:
+  App\Migrations\Stat: migrations/stat
+table_storage:
+  table_name: migration_versions

@@ -1,0 +1,48 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+
+    {% if (null == item.id) %}
+        <h1>{{'activite.ajouter.title'|trans}}</h1>
+    {% else %}
+        <h1>{{'activite.modifier.title'|trans}}</h1>
+    {% endif %}
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+
+    <div class="well">
+        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(form.libelle)}}
+                {{ form_row(form.description)}}
+                {{ form_label(form.classeActivite)}}
+                {{ form_widget(form.classeActivite)}}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(form.imageFile) }}
+                {{ ImagePreview.html(item.image, 'ucabundle_activite_imageFile_file') }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_row(form.save) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ ImagePreview.js }}
+    <script>
+        _uca.vichImageStyle();
+    </script>
+{% endblock %}

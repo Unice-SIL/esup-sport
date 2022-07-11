@@ -1,0 +1,30 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+	<section class="container">
+		{% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+		<h1>
+			{{ 'commandedetail.informationscarte.titre'|trans }}
+		</h1>
+
+		<div class="row mb-4 px-2 py-3 container-style bg-white container-style-border-none">
+			<div class="col-12 col-sm-8">
+				<h2 class="hide-border-title">
+					{{ commandeDetail.libelle }}
+				</h2>
+				<p class="p-0 m-0">
+					<strong>{{ 'common.datepaiement' | trans }}
+						:</strong>
+					{{  commandeDetail.commande.datePaiement | dateFormat('dd MMM Y') }}
+				</p>
+				<br>
+				{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+				{{ form_row(form.numeroCarte) }}
+				{{ form_row(form.dateCarteFinValidite) }}
+				{{ form_row(form.etablissementRetraitCarte )}}
+				{{ form_row(form.save) }}
+				{{ form_end(form,{'render_rest': false}) }}
+			</div>
+		</div>
+	</section>
+{% endblock %}

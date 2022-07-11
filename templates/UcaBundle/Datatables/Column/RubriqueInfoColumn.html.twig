@@ -1,0 +1,9 @@
+{% if row.type.id == 1 %}
+    {# Ne rien faire pour Highlights #}
+{% elseif row.type.id == 2 %}
+    {# Ne rien faire pour Partenaires #}
+{% elseif row.type.id == 3 %}
+    {{ row.lien }}
+{% elseif row.type.id == 4 %}
+    {{ row.texte|raw }}
+{% endif %}

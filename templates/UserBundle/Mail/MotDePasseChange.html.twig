@@ -1,0 +1,8 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+        <p>
+            {{ 'utilisateur.change_password.mail.message'|trans|nl2br }}
+        </p>
+    </div>
+{% endblock %}

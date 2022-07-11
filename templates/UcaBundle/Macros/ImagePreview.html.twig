@@ -1,0 +1,16 @@
+{% macro html(url, id, thumb = 'thumb_large_small', imgHeight='150px', imgWidth='150px') %}
+	{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+		<div id="{{ id }}_preview" class="{{ url ? '' : 'd-none'}} img-preview" style="height: {{imgHeight}}; width: {{imgWidth}};">
+			<p> <img alt="" src="{{ ImageAsset.thumb(url, thumb) }}" style="height:  {{imgHeight}};"> </p>
+		</div>
+{% endmacro %}
+
+{% macro js() %}
+		<script type='text/javascript'>
+			'use_strict';
+			$( function () {
+				$( '.form-control-file' ).change( _uca.imgPreview );
+			} );
+	</script>
+{% endmacro %}

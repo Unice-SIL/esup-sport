@@ -1,0 +1,18 @@
+{% extends "UcaBundle/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalMail' %}
+{% block modalTitle 'monPlanning.modal.mail.title' %}
+{% block modalBody %}
+  <p>
+    <button id='boutonCocher' class='btn btn-primary' onclick="cocherDecocherTout('cocher');" />
+      {{ 'bouton.selectionner.tout' | trans }} </button>
+    <button id='boutonDecocher' class='btn btn-outline-primary' onclick="cocherDecocherTout('decocher');" />
+      {{ 'bouton.deselectionner.tout' | trans }} </button>    
+  </p>
+  {% include "UcaBundle/UcaWeb/Utilisateur/Modal.mail.form.html.twig" %}
+{% endblock %}
+{% block modalFooter %}
+  {{ form_row(formMail.save, {'attr': {'role': 'button'}}) }} 
+{% endblock %}
+{% block modalFormEnd %}
+    {{ form_end(formMail) }}
+{% endblock %}

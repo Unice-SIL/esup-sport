@@ -1,0 +1,33 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+  {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+  <h1> {{ item.libelle }} </h1>
+
+  {{ flashBag.showAll }}
+  <div class="row">
+    <div class="col-lg-4">
+      <img class="img-fluid" alt="image_etablissement" style="speak:none;" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}"/>
+    </div>
+    <div class="col-lg-8">
+      <ul>
+        <li> <span> {{ 'etablissement.code' | trans }} : </span> {{ item.code }} </li>
+        <li> <span> {{ 'ressource.list.subTitle' | trans }}:</span>
+          <ol> 
+            {% for ressource in item.ressources %}
+              <li> {{ ressource.libelle }} </li>
+            {% endfor %}
+          </ol>
+        </li> 
+        <li> {{ item.adresse }}, {{ item.codePostal }} {{ item.ville|upper }} </li> 
+        <li> <span> {{ 'etablissement.email.libelle' | trans }} : </span> {{ item.email }} </li>
+        <li> <span> {{ 'etablissement.telephone.libelle' | trans }} :</span> {{ item.telephone }} </li>
+        <li> {{ 'common.horaires.ouverture' | trans }} : <br>
+              {{ item.horairesOuverture|nl2br }}
+        </li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

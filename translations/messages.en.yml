@@ -1,0 +1,1249 @@
+FormatAchatCarte.button: 'Buy the card'
+FormatAvecCreneau.button: 'See the available slots' 
+FormatAvecReservation.button: Book
+FormatSimple.button: See upcoming events
+acceuil.evenements.liste: See all events
+acceuil.evenements.zeroEvt: "No events are planned at this time."
+acceuil.prochainement.consulter: Read more
+accueil.activite.title: 'Sports activities'
+accueil.classeActivite.title: 'Sports activity classes'
+accueil.connexion: Log in
+accueil.cotisations.infos: More about fees
+accueil.demander.inscription: Make an account creation request
+accueil.inscription.title: Registration
+accueil.miseavantcarte.title: Promoted card purchase
+accueil.miseavantcours.title: Featured courses
+accueil.miseavantreservation.title: Free practice
+accueil.prochainement.title: 'Comming soon'
+accueil.ucagest.title: Welcome to UCA Sport
+activite.ajouter.succes: Activity successfully added 
+activite.ajouter.title: Add an activity
+activite.autreReservation: Other activities
+activite.classeactivite.placeholder: '- Select an activity class -'
+activite.creneau.ajouter: Add activity with time slots
+activite.format.ajouter: Add a format
+activite.format.disponible: Available format
+activite.formatachatcarte.ajouter: Card Purchase
+activite.formataveccreneau.ajouter: Time slots reservation
+activite.formatavecreservation.ajouter: Resource reservation
+activite.formats.disponibles.aucun: No format available
+activite.formats.disponibles: Available formats
+activite.formatsimple.ajouter: Event
+activite.gestion: Activities management
+activite.image.libelle: Select a picture
+activite.libelle: Activity 
+activite.list.title: Activities
+activite.modifier.succes: Activity successfully modified 
+activite.modifier.title: Edit an activity
+activite.not.found: This activity does not exists
+activite.recherche.option.lieu: Choose a campus
+activite.recherche.option.typeactivite: Choose an activity
+activite.reservation.ajouter: Add activity with reservation
+activite.simple.ajouter: Add simple activity
+activite.supprimer.erreur: 'Cannot delete activity, activities format are assigned'
+activite.supprimer.succes: Activity successfully deleted
+activites.liste: 'Activities list'
+activites.sportives: Sports activities
+actualite.ajouter.succes: News successfully added
+actualite.ajouter.title: Add news
+actualite.image.libelle: Select an image
+actualite.list.title: News
+actualite.modifier.succes: News successfully modified
+actualite.modifier.title: Edit news
+actualite.supprimer.erreur: Cannot delete news
+actualite.supprimer.succes: News successfully deleted
+aucun.resultat: "No results"
+aucune.activite: "No activities"
+aucune.classeactivite: "No activity classes"
+aucune.formatactivite: "No activity formats"
+avoir.ajouter.success: Credit sucessfully added
+bascule.aucun.choix: No choice selected
+bascule.carte.cotisation.supprimer: Remove user cards and fees
+bascule.cotisation: Sport fee
+bascule.creneau.dupliquer: Duplicate time slots
+bascule.creneau.option: Time slot options
+bascule.creneau.supprimer: Delete time slots
+bascule.evenement.statut: Change registration status
+bascule.loader: Toggle in progress. This action may take several minutes.
+bascule.reservation.supprimer: Remove room and equipment reservations
+bascule.success: The swing was successfull
+bouton.ajouter.credit: Adding a credit²
+bouton.ajouter: Add
+bouton.annuler.commande: Cancel order
+bouton.annuler.inscription: Cancel registration
+bouton.annuler: Cancel
+bouton.appel: Call
+bouton.basculer: Swing
+bouton.bloquer: Block
+bouton.confirmer: Confirm
+bouton.creer: Create
+bouton.debloquer: Unblock
+bouton.descendre: Drop
+bouton.deselectionner.tout: Unselect all
+bouton.desinscrire.inscription: Unsubscribe
+bouton.desinscrire.tout: Unsubscribe everyone
+bouton.desinscrire: Unsubscribe
+bouton.enregistrer: Save
+bouton.exportallfacture.pdf: Export bills
+bouton.exportpdf: Export
+bouton.indisponible.autorisationinvalide: "This time slot requires authorization:% autorisation%. Your authorization expires before the time slot begins. Wait until your authorization expires to register for this course."
+bouton.indisponible.inscriptionsterminees: Registration closed
+bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
+bouton.indisponible.statut.desinscriptionadministrative: You have been unsubscribed by the administration
+bouton.indisponible.statut.inscriptionsterminees: Registrations are closed
+bouton.indisponible.statut.montantincorrect: "The price for this activity is not defined yet, please contact the Sport's office for more details."
+bouton.indisponible.statut.nbcreneaumaxatteint: "You have already registered to %maxCreneau% time slots. You have reached the maximum number of registration for these time slots."
+bouton.indisponible.statut.nbressourcemaxatteint: "You have already registered to %maxCreneau% resource reservations. You have reached the maximum number of registration for these resource reservations."
+bouton.indisponible.statut.nonconnecte.envoimail: "You must be logged-in in order to send mail"
+bouton.indisponible.statut.nonconnecte: "You must be logged-in in order to register to the activities."
+bouton.indisponible.statut.profilinvalide: "Your profile does not allow you to register to this activity."
+bouton.log: Log
+bouton.modifier: Edit
+bouton.monter: Rise
+bouton.ok: Ok
+bouton.panier.ajouter: Add to cart
+bouton.panier.indisponible: "Unavailable"
+bouton.reinitialiser: Reset
+bouton.reportavoir: Carry forward credit
+bouton.retour.element: Back to %element%
+bouton.retour.listeClasse: Back to activities
+bouton.retour: Back
+bouton.save.previsualiser: Save and preview
+bouton.save: Save
+bouton.selectionner.tout: Select all
+bouton.supprimer: Delete
+bouton.tout.supprimer: Delete all
+bouton.voir: See
+button.voir.plus: See more information
+calendrier.etablissements: "Activity offred on %nbCampus% campus :"
+cgv.acceptees: Thank you for accepting the general terms and conditions of sale 
+cgv.information: Please accept the general terms and conditions of sale 
+cgv.modal.titre: General terms and conditions of sale
+cgv.refusees: You must tick the box in order to accept the general terms and conditions of sale 
+cgv.validation: I accept the general terms and conditions of sale 
+classeActivite.list.title: List of activity classes
+classeactivite.ajouter.succes: Activity class successfully added
+classeactivite.ajouter.title: Add an activity class
+classeactivite.gestion: Activity class management
+classeactivite.image.libelle: Select a picture
+classeactivite.libelle: Activity class
+classeactivite.list.title: Activity class management
+classeactivite.modifier.succes: Activity class successfully modified
+classeactivite.modifier.title: Edit an activity class
+classeactivite.supprimer.erreur: Cannot delete activity class, activities are assigned
+classeactivite.supprimer.succes: Activity class successfully deleted
+classeactivite.typeactivite.placeholder: '- Select an activity type -'
+column.champ: Field
+column.ckeditor: Rich text
+column.entite: Entity
+column.entityid: Entity Id
+column.valen: English
+column.valfr: French
+column.valit: Italian
+comamndedetail.informationscarte.etablissement: Pick-up campus
+commande.avoir.ajouter.info.save: This order form is valid for the current calendar year.
+commande.avoir.ajouter.info.unsave: This order form will be valid for the current calendar year.
+commande.avoir.ajouter.titre: Provide a credit note
+commande.avoir.date: Credit's date
+commande.avoir.libelle: Credit
+commande.avoir.lister: Credit note list
+commande.avoir.posseder: Credit note(s)?
+commande.avoir.report: Skipped credit
+commande.avoirdetails.libelle: Credit note's details
+commande.avoirdetails.referenceavoir: Credit note's reference
+commande.avoirdetails.titre: Credit note's elements
+commande.datepaiement: Buying date
+commande.details.avoir.message: This element belongs to a credit note
+commande.evenement.libelle: Event's details
+commande.informations: Order's informations
+commande.libelle: Order
+commande.numero.cheque: Cheque's number
+commande.numero.commande: Order's number
+commande.paybox: PayBox
+commande.supprimer.succes: The order has been deleted
+commande.timeout.commande.expiration: After this deadline, Your order and cancelled registrations will be cancelled.
+commande.timeout.panier.expiration: After this deadline, your shopping cart will be automatically emptied and your registrations cancelled.
+commande.timeout.timer: You have %temps% left to finalize your %typecommande% and validate your registration.
+commandedetail.informationscarte.ajouter: Enter card's data
+commandedetail.informationscarte.datefin: Expiration date
+commandedetail.informationscarte.etabissement: '- Select a withdrawal campus -'
+commandedetail.informationscarte.libelle: Edit card's informations
+commandedetail.informationscarte.message.bds: You've just validate a card command. Do you want to enter the card's datas ? 
+commandedetail.informationscarte.message.vide: The datas from this card were not entered.
+commandedetail.informationscarte.numero: Card's number
+commandedetail.informationscarte.titre: Edit card
+commandedetail.modifier.succes: Order's détail successfully modify
+common.a.venir: To come up
+common.acces.rapide: Quick access
+common.accueil.retour: 'Go back to the home page'
+common.all: All
+common.ancienneinscription: Old registration
+common.and: and
+common.annule: Canceled
+common.apayer: Order to pay
+common.april: April
+common.attenteajoutpanier: Pending to be added to basket
+common.attentepaiement: Pending for payment
+common.attentepartenaire: Waiting partners
+common.attentevalidationencadrant: Pending for a supervisor validation
+common.attentevalidationgestionnaire: Pending for an administrator validation
+common.aucun: '- None -'
+common.aucune.facture: No invoice available for this date or for this person
+common.august: August
+common.autorisations: Authorizations
+common.avoir: Credit note
+common.capacite.totale: Total
+common.capacite: Capacity
+common.carte.acheter: Card to buy
+common.carte.retrait: Card withdrawn
+common.carte: Card
+common.cb: Credit Card
+common.chargement: Loading...
+common.cheque: Cheque
+common.classe.activite: Activity class
+common.commandeencours: Ongoing orders
+common.complement: Complement
+common.coordonnees.adresse: Address
+common.coordonnees.codepostal.abrege: ZC
+common.coordonnees.codepostal: Zip Code
+common.coordonnees.ville: City
+common.coordonnees: Coordinates
+common.credit: User credit
+common.creneaux.details: Time slots details
+common.creneaux: Time slots
+common.date.commande: Order's date
+common.date.debut: Starting on
+common.date.effectives: Effective dates
+common.date.fin: Ending on
+common.date.inscriptions: Registration dates
+common.date.naissance: Date of Birth
+common.date.publication: Publication dates
+common.date: Date
+common.dateCommande: Order date
+common.dateajoutpanier: Added to basket date
+common.datedesinscription: Unsubscribe date
+common.dateinscription: Registration date
+common.datepaiement: Payment date
+common.datevalidation: Validation date
+common.december: December
+common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
+common.description: Description
+common.desinscriptionadministrative: Administrative unsubscription
+common.desinscrit: Unsubscribed
+common.eligible: Eligible for bonus
+common.email: Email
+common.emplacement: Location
+common.encadrant.s: Supervisor(s)
+common.encadrant: Supervisor
+common.encadrants.aucun: no supervisor
+common.encadrants: Supervisors
+common.espece: Cash
+common.et: '{0} | ]0,Inf[ and '
+common.evenement: Event
+common.external_link: External link
+common.extraction.liste.encadrants: Supervisors list extraction
+common.extraction.personnalisee: Custom extraction
+common.extraire: Extract
+common.facture: Invoice
+common.february: February
+common.fermer: "Close"
+common.format.activite.details: Activity format details
+common.friday: Friday
+common.groups: Groups
+common.horaires.ouverture: Opening hours
+common.horaires: Schedules
+common.ht: Excluding tax
+common.indisponible: Unavailable
+common.infos: Informations
+common.infospersonnelles: Personal Information
+common.infossupplementaires: Additional information
+common.inscription.details: Registration details
+common.inscriptionsavenir: Soon available
+common.inscrire: Register
+common.january: January
+common.july: July
+common.june: June
+common.libelle: Label
+common.lieu: Place
+common.liste.inscription: List of registrants 
+common.march: March
+common.materiel: Material
+common.may: May
+common.mobile: Mobile
+common.modifications: Changes
+common.mois.aout: August
+common.mois.avril: April
+common.mois.decembre: December
+common.mois.fevrier: February
+common.mois.janvier: January
+common.mois.juillet: July
+common.mois.juin: June
+common.mois.mai: May
+common.mois.mars: March
+common.mois.novembre: November
+common.mois.octobre: Ocotber
+common.mois.septembre: September
+common.monday: Monday
+common.montant: Amount
+common.montants: Amounts
+common.moyenpaiement: Means of payment
+common.moyenpaiementautre: Others means of payment
+common.naissance: Birth Date
+common.niveauSportif: Sport level
+common.nom.prenom: Name and first name
+common.nom.utilisateur: Username
+common.nom: Name
+common.nomacheteur: Buyer name
+common.nomencaisseur: Cashier name
+common.non: "No"
+common.nonrenseigne: No informations
+common.november: November
+common.numerocommande: Order Number
+common.numerorecu: Bill Number
+common.october: October
+common.operation: Operation
+common.ordre: Order
+common.oui: 'Yes'
+common.paiementcb: Pay with credit card
+common.password: Password
+common.payant: Paying
+common.paye: Payroll amount
+common.payeavec: Payed with
+common.periode: Period
+common.precedent: Previous
+common.prenom: First name
+common.prenomacheteur: Buyer first name
+common.prenomencaisseur: First name cashier
+common.prixunitaire: Item Price
+common.profil: Profile
+common.profils.autorises: Authorized profiles
+common.profils: Profiles
+common.rechercher: Search
+common.reservabilites: Availabilities
+common.ressources.reservees: Reserved ressource 
+common.ressources: Resources
+common.role: Role
+common.saturday: Saturday
+common.select.emptyValue: "- Select a value -"
+common.september: September
+common.statut: Status
+common.suivant: Next
+common.sunday: Sunday
+common.tarif.gratuit: Free
+common.tarif.inconnu: Price unknown
+common.tarif: Price
+common.telephone.placeholder: XXXXXXXXXX
+common.telephone: Phone
+common.temps.heure: '{0} | {1} one hour | ]1,Inf[ %count% hours'
+common.temps.minute: '{0} | {1} one minute | ]1,Inf[ %count% minutes'
+common.temps: "%heures% hour(s) et %minutes% minute(s)"
+common.termine: Ordered
+common.texte: Text
+common.thursday: Thursday
+common.titre: Title
+common.total: Total
+common.toutescartes: All cards
+common.toutescommandes: All orders
+common.ttc: Including all taxes
+common.tuesday: Tuesday
+common.tva.nonapplicable: VAT not applicable
+common.tva: VAT
+common.type.activite: Type of activity
+common.type: Type
+common.url: Url
+common.username: Login
+common.utilisateur: User
+common.valide: Valid
+common.wednesday: Wednesday
+common.weekfrom: "Week from %start% to %end%"
+confirmation.action.message: Are you sure ?
+confirmation.action.titre: Confirmation window
+confirmation.inscription: Confirmed registration
+contact.compteactif.remplir: Fill the form by clicking on this link
+contact.compteactif: You have an enabled UNice account
+contact.compteinactif.remplir: Write your request by filling the form below
+contact.compteinactif: You don't have an enabled UNice account
+contact.demande.success: Your request has been considered. You will receive a confirmation email within a few minutes.
+contact.destinataires.total.message: Number of recipients
+contact.destinataires.vide: No recipients for this email
+contact.destinataires: E-mail's recipients
+contact.email: Your email address
+contact.encadrant.error: Failed to send mail
+contact.encadrant.success: Mail sent successfully 
+contact.envoye.depuis: Mail send from Uca Sport application
+contact.formulaire.nom: GPLI Form
+contact.mail.from: Mail from
+contact.message: Message
+contact.objet: Object of your message
+contact.phrasedepot: You can drop off your requests about UCA SPORT online
+contact.save: Send
+contact.title: Contact
+creneau.ajouter: Add a time slot
+creneau.list.complet: "Full"
+creneau.list.indisponible: "Unavailable"
+creneau.list.inscrit: registered
+creneau.list.next: Next lesson's day
+creneau.list.preinscrit: Pending registration
+creneau.list.prochainCours: "Next lesson"
+creneau.list.reserver: "Subscribe"
+creneau.liste.titre: List of time slots
+creneau.week.indisponible: No lessons are available today
+detail.inscription.commentaireannulation: Comment
+detail.inscription.motifannulation: Cancelation's reason
+detailscommande.list.title: Order details
+email.base_email.notification_destination_for: This TEST notification was for
+email.politesse: Hello,
+email.preinscription.confirmationDemande: Your pre-registration request has been taken into account.
+emailing.list.title: Manage e-mails
+erreur.403.icon: "fas fa-ban"
+erreur.403.message: "You don't have permission to access."
+erreur.403: Error 403
+erreur.404.icon: "fas fa-unlink"
+erreur.404.message: "The page you're trying to access was not found!"
+erreur.404: Error 404
+erreur.500.icon: "fas fa-exclamation-circle"
+erreur.500.message: "An internal error occured. Please contact us if it happens again."
+erreur.500: Error 500
+erreur.button: "Back to the site"
+erreur.formulaire.champ.incorrect: One or more fields are incorrects
+erreur.generale.icon: "fas fa-question-circle"
+erreur.generale.message: An error occured. Please contact us if it happens again.
+erreur.generale: Error
+erreur.info.contact: "contact us"
+erreur.info: "For more information, you can contact us from the contact form: "
+etablissement.ajouter.succes: Campus successfully added 
+etablissement.ajouter.title: Add a Campus
+etablissement.code: Campus code
+etablissement.email.libelle: Contact email
+etablissement.exterieur: "Outside"
+etablissement.gestion: Campus management
+etablissement.horaires.ouverture.libelle: Opening hours
+etablissement.image.libelle: Select a picture
+etablissement.libelle: Campus
+etablissement.list.title: Campus Management
+etablissement.modifier.succes: Campus successfully modified 
+etablissement.modifier.title: Modify a Campus
+etablissement.supprimer.erreur: Cannot delete Campus, resources are assigned
+etablissement.supprimer.succes: Campus successfully deleted 
+etablissement.telephone.libelle: Contact Phone Number
+evenements.title: Events
+extraction.title: Extraction
+footer.accessibilite: "Accessibility"
+footer.cgv: "Conditions of Sale"
+footer.contact: "Contact us"
+footer.donneespersonnelles: Personal data
+footer.mentionslegales: "Legal notices"
+footer.plandusite: "Site map"
+footer.reseauxsociaux: "Find us on : "
+format.achat.carte.autorisation: Select the card to buy
+format.achat.carte.libelle: Card's Purchase
+format.autorisations.placeholder: '- No authorization selected -'
+format.autorisations: Required authorizations
+format.date.debut: Activity from
+format.date.effective.debut: Actual start date
+format.date.effective.fin: Actual end date
+format.date.fin: to
+format.date.inscription.debut: Start date of registration
+format.date.inscription.fin: End date of registration
+format.date.publication.debut: Publication start date
+format.date.publication.fin: Publication end date
+format.encadrants.placeholder: '- Select a manager -'
+format.encadrants: Supervisors
+format.encadre: Is this activity managed?
+format.image.libelle: Select a picture
+format.inscription.date.debut: Registration from
+format.inscription.date.fin: to 
+format.lieu.placeholder: '- Select a place -'
+format.lieu: Place
+format.niveau.sportif: Sporting level required
+format.payant: Is this activity a fee-based activity?
+format.profils.utilisateur.capacite: Number of places
+format.profils.utilisateur: Authorized users profiles
+format.promouvoir: Show the event on the home page
+format.publication.date.debut: Publish from
+format.publication.date.fin: to
+format.reservation.ressource: Resources to be reserved
+format.statut.brouillon: Draft
+format.statut.publie: Published
+format.statut: Status
+format.tarif.placeholder: '- Select a Rate -'
+format.tarif: Price
+formatCarte.list.inscrit: Card purchased
+formatCarte.list.preinscrit: card ordered
+formatCreneau.list.inscrit: registered
+formatCreneau.list.preinscrit: pending registration
+formatSimple.list.inscrit: registered
+formatSimple.list.preinscrit: pending registration
+formatachatcarte.ajouter.succes: Card purchase format successfully added
+formatachatcarte.carte.placeholder: '- Choose a card -'
+formatachatcarte.modalites: Modality
+formatachatcarte.modifier.succes: Card purchase format successfully modified 
+formatachatcarte.supprimer.erreur: Impossible to delete this activity. There'are still link times slots to delte before
+formatachatcarte.supprimer.succes: Card purchase format successfully deleted
+formatachatcarte.title: Card Purchase
+formatachatcarte.validite: Valid until
+formatactivite.autorisation.aucune: No authorization required 
+formatactivite.capacite.error: The sum of the capacities per profile must be less than or equal to the capacity of the activity format.
+formatactivite.carte.ajouter.title: Add a format with card purchase
+formatactivite.carte.modifier.title: Edit a format with card purchase
+formatactivite.creneau.ajouter.title: Add a format with time slots
+formatactivite.creneau.modifier.title: Edit a format with time slots
+formatactivite.etablissements.title: "Where to practice this activity ?"
+formatactivite.fraiscomplementaires.cotisationscartesrequises: "Dues and cards required"
+formatactivite.fraiscomplementaires.montantformat: "Cost of access to the activity - %montant% €"
+formatactivite.fraiscomplementaires.montantsinclus.achatcarte: "* This rate takes into account the price of the card and any fees associated with this purchase."
+formatactivite.fraiscomplementaires.montantsinclus.evenementsimple: "* This rate reflects any costs associated with this purchase."
+formatactivite.fraiscomplementaires.texteinformatif: "These items are payable only once and will be automatically added to the shopping cart if necessary."
+formatactivite.fraiscomplementaires.titre: "Additional expenses"
+formatactivite.horaires: Schedules
+formatactivite.libelle: Activity format
+formatactivite.lieu.aucun: No place defined
+formatactivite.not.found: This format does not exists
+formatactivite.profil.utilisateur.aucun: No authorized profile
+formatactivite.reservation.ajouter.title: Add a format with resource reservation
+formatactivite.reservation.modifier.title: Edit a format with resource reservation
+formatactivite.simple.ajouter.title: Add an event
+formatactivite.simple.modifier.title: Edit an event
+formatactivite.title: "Registration and reservation"
+formataveccreneau.ajouter.succes: Format with time slot successfully added
+formataveccreneau.modifier.succes: Format with time slot successfully modified
+formataveccreneau.panier.info: Registration for the time slot is valid for all the semester
+formataveccreneau.supprimer.erreur: Impossible to delete this activity. There'are still link registrations or times slots to delte before
+formataveccreneau.supprimer.succes: Format with time slot successfully deleted
+formataveccreneau.title: Time slot reservation
+formatavecreservation.ajouter.succes: Format with reservation successfully added
+formatavecreservation.modifier.succes: Format with reservation successfully modified
+formatavecreservation.supprimer.erreur: Impossible to delete this activity. There'are still link times slots to delte before
+formatavecreservation.supprimer.succes: Format with reservation successfully deleted
+formatavecreservation.tarif.ajouttarifressource: plus the amount of the resource reservation
+formatavecreservation.title: Resource reservation
+formatsimple.ajouter.succes: Event successfully added
+formatsimple.modifier.succes: Event successfully modified
+formatsimple.supprimer.erreur: Impossible to delete this activity. There'are still link times slots to delte before
+formatsimple.supprimer.succes: Event successfully deleted
+formatsimple.title: Event
+gestioncommande.list.title: Orders with payment pending
+gestioninscription.list.title: Registrations management
+groupe.ajouter.succes: Group successfully added
+groupe.ajouter.title: 'Add a group'
+groupe.libelle: Group
+groupe.list.title: Rights management
+groupe.modifier.succes: Group successfully modified
+groupe.modifier.title: 'Modify a group'
+groupe.roles.placeholder: '- Select one or more rights -'
+groupe.supprimer.danger: Impossible to remove this group, users are affected to it
+groupe.supprimer.succes: Group successfully deleted
+highlight.ajouter.succes: Highlight successfully added
+highlight.ajouter.title: Add highlight
+highlight.intervenant: Speaker
+highlight.list.title: Highlights
+highlight.modifier.succes: Highlight successfully modified
+highlight.modifier.title: Edit highlight
+highlight.supprimer.erreur: Cannot delete highlight
+highlight.supprimer.succes: Highlight successfully deleted
+highlight.title: Highlights
+highlight.video.autre: Other videos
+highlight.video.indisponible: No videos available
+highlight.video.libelle: Enter video url
+highlight.video.miniature: Video's thumbnail (Facebook only)
+highlight.video.plus: See more videos
+highlight.video.voirplus: See more videos
+hightlight.video.miniature.help: Only Facebook videos need associated thumbnails
+image.alt.ressource.type.lieu: Place type resource
+image.alt.ressource.type.materiel: Equipement type resource
+imagefond.image.libelle: Select a picture
+imagefond.list.title: Background pictures management
+imagefond.modifier.succes: Background picture successfully modified
+imagefond.modifier.title: Modify a background picture
+infospratiques.title: Practical Information
+inscription.aucun.inscrit: No subscribers
+inscription.bouton.justificatif: Download the certificate
+inscription.bouton.refuser: Refuse the registration request
+inscription.bouton.valider: Validate the registration request
+inscription.confirmation.refuser: The registration request has been refused
+inscription.confirmation.valider: The registration request has been validated
+inscription.de: Registration of 
+inscription.pour: for activity
+inscription.refus.motif.libelle: Refusal reason (optionnal)
+inscriptionavalider.list.title: List of registrations to validate
+installationssportives.activitepropose.title: Proposed activities
+installationssportives.activites.aucun: no activities proposed
+installationssportives.coordonnees.title: contact information
+installationssportives.horaireouverture.title: Oppening hours
+installationssportives.lieu.title: Available's sport's rooms
+installationssportives.title: Sports installations
+installationssportives.visitevirtuelle.title: Virtual visit
+langues.gestion: Language management
+layout.logout: Logout
+lieu.ajouter.succes: Location successfully added
+lieu.ajouter.title: Add a place
+lieu.ajouter: Add room
+lieu.modifier.succes: Location successfully modified 
+lieu.modifier.title: Modify a location
+lieu.supprimer.erreur: Cannot delete this location, reservations are assigned
+lieu.supprimer.succes: Location successfully deleted
+lieu.visitevirtuelle.libelle: Virtual visit
+log.libelle: Log
+log.list.title: Log Management
+logopartenaire.ajouter.succes: "Partner successfully added"
+logopartenaire.ajouter.title: Add a partner
+logopartenaire.lien: Partner link
+logopartenaire.list.title: Partner
+logopartenaire.modifier.succes: "Partner successfully modified"
+logopartenaire.modifier.title: Modify a partner
+logopartenaire.nom: Name
+logopartenaire.supprimer.erreur: Cannot delete this partner
+logopartenaire.supprimer.succes: "Partner successfully deleted"
+mail.empty: One of the mail addresses is empty. Mail was not sent.
+mail.error: Failed to send email.
+mail.not_found: "%user%'s mail cannot be found."
+mail.success: Email sent successfully.
+materiel.ajouter.succes: Equipment successfully added
+materiel.ajouter.title: Add a material
+materiel.ajouter: Add material
+materiel.modifier.succes: Equipment successfully modified
+materiel.modifier.title: Modify a material
+materiel.supprimer.erreur: Cannot delete this material, reservations are assigned
+materiel.supprimer.succes: Equipment successfully deleted
+mentions.conditions.nonvalide: "Please accept the general conditions of sales"
+mentions.informations.validation: "I accept the general conditions of sales"
+mescommandes.list.title: My orders
+mescredits.list.title: My credits
+mesinscriptions.label.ancienne.activite: Old activity
+mesinscriptions.list.title: My registrations
+message.confirmation.annulation.commande.titre: Confirm cancellation
+message.confirmation.annulation.commande: All entries related to this order will be deleted. Cancel the order ?
+message.confirmation.annulation.inscription.titre: Confirm cancellation
+message.confirmation.annulation.inscription: No refund of registration will be made after the cancellation of this one. Cancel registration ?
+message.confirmation.desinscription.inscription.titre: Confirm unsubscription
+message.confirmation.desinscription.inscription: No refund of registration will be made after unsubscription. Confirm unsubscription?
+message.confirmation.desinscription.massive.attente: people awaiting payment
+message.confirmation.desinscription.massive.debut: You are about to perform a massive unsubscribe. This will result in the unsubscription of 
+message.confirmation.desinscription.massive.fin: Confirm unsubscription?
+message.confirmation.desinscription.massive.inscrit: registrants
+message.confirmation.desinscription.massive.validation.encadrant: people awaiting officer validation
+message.confirmation.desinscription.massive.validation.gestionnaire: people awaiting manager validation
+message.confirmation.paiement: Confirm the payment ?
+message.confirmation.paiementcarte: Do you confirm paying with a credit card ?
+message.confirmation.paiementcheque: Do you confirm paying with a check ?
+message.confirmation.paiementespece: Do you confirm paying with cash ?
+message.confirmation.suppression.titre: "Confirm deletion"
+message.confirmation.suppression: "Delete entry ?"
+message.desinscription.success: Successful unsubscription
+message.desinscriptionmassive.success: Massive unsubscription successfully completed.
+message.selection.filtre.desinscription: "You did not filter your search or no registration was found. Please filter or modify your filters in order to be able to unsubscribe."
+modal.error.complet: "Error : The max number of subscription has been exceeded"
+modal.error.error500: "Error : if it occurs again, please contact an administrator"
+modal.error.inscriptionsavenir: "Error : Registrations are not yet opened"
+modal.error.inscriptionsterminees: "Error : Registrations are closed"
+modal.error.inscrit: "Error : You are already subscribe"
+modal.error.montantincorrect: "Error : Prices  for this profile is not defined"
+modal.error.nbcreneaumaxatteint: "Error : You have exceeded the max number of subscription"
+modal.error.nbressourcemaxatteint: "Error : You have exceeded the max number of resource reservations"
+modal.error.nonconnecte: "Error: Your are not logged in"
+modal.error.preinscrit: "Error : You are already subscribe"
+modal.error.previsualisation: "Error : The preview mode is active"
+modal.error.profilinvalide: "Error : Prices  for this profile is not authorised"
+modal.error: "Error"
+modalinscription.bouton.inscription: Registration
+modalinscription.bouton.preinscription: Pre-registration
+modalinscription.carte.texte: To register you must have the %nom% card which is worth %montant% €
+modalinscription.continuer: Continue on the website
+modalinscription.cotisation.texte: To register you must subscribe to the %nom% fee which is worth %montant% €
+modalinscription.justificatif.document: '%nom% '
+modalinscription.mention.ajout.panier: ' - Automatic add to cart'
+modalinscription.mention.document.telechargement: ' - Download document below'
+modalinscription.mention.information.importante: 'Important information !'
+modalinscription.mention.obligatoire: 'Required'
+modalinscription.message.confirmation.ajoutpanier: Confirm that you want to add the following item (s) to your basket ?
+modalinscription.message.validation.article: Do you confirm that you want to add the following item (s) to your basket after validation ?
+modalinscription.panier.ajouter: Add to basket
+modalinscription.panier.valider: Validate the articles
+modalinscription.panier.voir: See basket
+modalinscription.titre.ancienneinscription: Old registration
+modalinscription.titre.attentevalidationencadrant: Registration waiting for approuval
+modalinscription.titre.attentevalidationgestionnaire: Registration waiting for approuval
+modalinscription.titre.initialise: subscription
+modalinscription.titre.inscription: Registration
+modalinscription.titre.panier: Add to the basket
+modalinscription.titre.preinscription: Pre-registration
+modalinscription.validation.message: Your inscription has been taken into account. 
+monPlanning.modal.mail.title: Send mail to subscribers
+monPlanning.more.appel.message: "Pass the cards on the back of your device or select those present manually."
+monPlanning.more.appel.noninscrit: " is not on the list of registrants."
+monPlanning.more.appel.texte: "Select people present at activity"
+monPlanning.more.appel.titre: Subscibers list
+monPlanning.more.datedebut: beginning date
+monPlanning.more.datefin: End date
+monPlanning.more.description: Description
+monPlanning.more.detail: Detail
+monPlanning.more.horaires: schedule
+monPlanning.more.mail.button: Send mail
+monPlanning.more.mail.send.success: Your message has been sent
+monPlanning.more.mail.titre: "Need to send a mail to the subscribers ?"
+monplanning.list.title: My schedule
+monplanning.more.appel.empty: No subscribers for this activity
+monplanning.more.mail.sucess: Mail send
+outils.libelle: Tools
+paiement.bouton.commandes: 'See my order'
+paiement.cb.validation: Pay by card
+paiement.cb: Go to the payment website
+paiement.cheque.validation: Pay by check
+paiement.confirmation.canceled: Cancelled payment
+paiement.confirmation.denied: Payment refused
+paiement.confirmation.success: Registered payment
+paiement.especes.validation: Pay in cash
+paiement.gratuit.validation: Finalize the order
+paiement.recap: Information on your payment
+paiement.recapitulatif.bds: 'You have %timer% hours  to pay your order of %montant% € at the sports office'
+paiement.recapitulatif.fin: 'After this time, your order will be automatically canceled.'
+paiement.recapitulatif.intro: 'To validate your registration, '
+paiement.recapitulatif.paybox: 'You have %timer% minutes to pay your order of %montant% € by credit card'
+paiement.recapitulatif.titre: 'Important information!'
+paiement.validation.canceled: Your payment of %montant% € has been cancelled. Find your order in 
+paiement.validation.denied: Your payment of %montant% € has been refused. Find your order in 
+paiement.validation.success: Your payment of %montant% € has been validated.
+panier.libelle: Shopping Basket
+panier.vide: You cart is empty
+parametrage.adressefacturation: Billing adress
+parametrage.anneeUniversitaire: Academic year
+parametrage.facebook: Facebook link
+parametrage.facturation: Billing informations
+parametrage.instagram: Instagram link
+parametrage.libelleadresse: Adress label
+parametrage.mailcontact: Contact email
+parametrage.modifier.succes: Settings successfully modified 
+parametrage.modifier.title: Modifiy Settings
+parametrage.reseauxsociaux: Social Networks
+parametrage.timerbds: Timer to pay for an order on Sports office (in hours)
+parametrage.timercb: Timer to pay for an order by card on Uca Sport (in minutes)
+parametrage.timerpanier: Timer to validate a basket (in minutes)
+parametrage.timerpanierapresvalidation: Timer to add registration in basket after manager validation (in hours)
+parametrage.timerpartenaire: Timer to pay for an order with partners (in hours)
+parametrage.timerpaybox: Timer to pay for an order by card on PayBox (in minutes)
+parametrage.timers: Timers
+parametrage.title: Settings
+parametrage.youtube: Youtube link
+paybox.error.00000: "Successful operation."
+paybox.error.00001: "Connection to the authorization center has failed or an internal error has occurred."
+paybox.error.00003: "Paybox error."
+paybox.error.00004: "Invalid cardholder number or visual cryptogram."
+paybox.error.00006: "Access denied or incorrect site / rank / username."
+paybox.error.00008: "Incorrect expiry date."
+paybox.error.00009: "Error creating a subscription."
+paybox.error.00010: "Unknown currency."
+paybox.error.00011: "Incorrect amount."
+paybox.error.00015: "Payment already made."
+paybox.error.00016: "Already existing subscriber."
+paybox.error.00021: "Unauthorized card."
+paybox.error.00029: "Non-compliant card."
+paybox.error.00030: "Waiting time > 15 minutes by the user / buyer at the level of the payments page."
+paybox.error.00031: "Reserve."
+paybox.error.00032: "Reserve."
+paybox.error.00033: "Country code of the IP address of the unauthorized buyer."
+paybox.error.00040: "Operation without 3-DSecure authentication, blocked by filter."
+paybox.error.001xx: "Payment refused by the authorization center."
+paybox.error.99999: "Operation pending validation by the issuer of the payment method."
+preinscription.confirmation.message: Your registration demand was successfull, a confirmation email has been sent to you. Our team will treat you demand shortly.
+preinscription.confirmation.titre: Registration's Demand confirm
+preinscription.demande.validation.message: A pre-registration request was made by the following user
+profilutilisateur.ajouter.succes: User profile successfully added
+profilutilisateur.ajouter.title: Add a user profile
+profilutilisateur.gestion: User profile management
+profilutilisateur.libelle: User profile
+profilutilisateur.list.title: User profile management
+profilutilisateur.modifier.succes: User profile successfully modified
+profilutilisateur.modifier.title: Modify a user profile
+profilutilisateur.nbmaxinscriptions.libelle: Maximum time slots subscriptions
+profilutilisateur.nbmaxinscriptionsressource.libelle: Maximum resource slots subscriptions
+profilutilisateur.parent: Parent profile
+profilutilisateur.preinscription: Can this profiles pre-register ? 
+profilutilisateur.supprimer.erreur.formatactivite: "Activities format use this profile : <br>%formats%"
+profilutilisateur.supprimer.erreur.montants: Rates are assigned to this profile
+profilutilisateur.supprimer.erreur.profils: "Profiles have this profile as a parent : <br>%profils%"
+profilutilisateur.supprimer.erreur.utilisateurs: "Users use this profile :  : <br>%utilisateurs%"
+profilutilisateur.supprimer.erreur: Cannot delete profile
+profilutilisateur.supprimer.succes: User profile successfully deleted
+referentiel.bouton.maj: Update the repository
+referentiel.libelle.maj: Select a file to update the repository
+referentiel.libelle: Referential
+refus.inscription: Registration refused
+registration.check_email: An email has been sent to %email%. It contains an activation link you must click to activate your account.
+registration.confirm.success: Your account has been activated
+registration.email.message: "Hello %username%!\n\nTo finish activating your account - please visit %confirmationUrl%\n\nThis link can only be used once to validate your account.\n"
+registration.email.subject: 'Welcome %username% !'
+reportingcommandes.list.title: Orders Reporting
+reservation.calendrier.complet: Full
+reservation.calendrier.disponible: Available
+reservation.calendrier.indisponible: Not available
+reservation.calendrier.inscrit: Registered
+reservation.calendrier.titre: Slots available
+resetting.check_email: "An email has been sent. It contains a link you must click to reset your password. Note: You can only request a new password once within %tokenLifetime% hours. If you don't get an email check your spam folder or try again."
+resetting.request.field: Username or e-mail's address
+ressource.ajouter.succes: Resource added
+ressource.capacite: Capacity
+ressource.code.rus: RUS code
+ressource.etablissement: Campus
+ressource.image.libelle: Select a picture
+ressource.latitude: Latitude
+ressource.libelle: Resource
+ressource.lieu.accesprm: Access for PRM
+ressource.lieu.ajouter: Add location
+ressource.lieu.imagesupplementaire.ajouter: Add a picture
+ressource.lieu.imagesupplementaire.nouvelle: New images
+ressource.lieu.imagesupplementaire: Additionals images
+ressource.list.subTitle: Resource List
+ressource.list.title: Resource Management
+ressource.longitude: Longitude
+ressource.modifier.succes: Resource modified
+ressource.nbpartenaires: Number of required partners
+ressource.nbpartenairesmax: Number of possible partners
+ressource.partenaires.alerte: "Partners have %timeout%h to confirm their presence, otherwise the reservation will be automatically canceled."
+ressource.partenaires.email.identique: Some of the email addresses entered are identical, please try again.
+ressource.partenaires.email.identique_user: One of the email addresses entered is identical to yours, please try again.
+ressource.partenaires.email: Mail
+ressource.partenaires.label: Partner coordinate
+ressource.partenaires.panier.success: Items have been added to your cart
+ressource.partenaires.required.texte: "%nbPartenaires% partner(s) at least required"
+ressource.partenaires.texte: In order to validate your <b>pre-registration</b>, you will have to indicate the email addresses of your team-mates! <br/> An email will be sent to your teammates so that they can validate the resource reservation. <br/> Once all participants have validated their attendance, the reservation is confirmed.
+ressource.profils.utilisateur.capacite: Number of places
+ressource.profils.utilisateur: Authorized users profiles
+ressource.quantite: Quantity
+ressource.referentiel.success: The real estate repository has been successfully updated
+ressource.superficie: Surface area
+ressource.supprimer.succes: Resource deleted
+ressource.tarif: Price
+role.liste: Rights
+scheduler.action.delete: Delete
+scheduler.action.save: Save
+scheduler.action.title.delete: delete
+scheduler.action.title.save: save
+scheduler.action.title.update: update
+scheduler.action.update: Update
+scheduler.error.capacite.format.unknow: The total capacity is unknown
+scheduler.error.capacite.format: You cannot exceed the total capacity of the format
+scheduler.error.capacite.profil.debut: The maximum capacity of the profil
+scheduler.error.capacite.profil.fin: is 
+scheduler.error.capacite.somme: You cannot exceed the total capacity indicated
+scheduler.error.date.invalid: "The repeat or period end date is too large. This activity format ends on: "
+scheduler.error.date.prolongation: The date field is empty
+scheduler.error.field: Field
+scheduler.error.isEmpty: is empty
+scheduler.error.occurence.prolongation: The repeat field is empty or is less than 1
+scheduler.error.suppression.inscrit: Impossible to delete this serie for there's subscribers
+scheduler.error.type: "don't have the right type"
+scheduler.message.action.debut: Confirm
+scheduler.message.action.occurence: occurence
+scheduler.message.action.serie: all the series 
+scheduler.message.annuler: Cancel
+scheduler.message.fields: The fields
+scheduler.message.information.modification.serie: are linked to the serie therefore they can not be modified if the event is independent.
+scheduler.message.inscrit_list: Subscribers list
+scheduler.message.prolonger: Extend slot
+scheduler.message.send_mail: Send a mail to the subscribers
+scheduler.message.suppression: Confirm the deletion
+scheduler.message.update: Confirm the update
+scheduler.message.valider: Save
+scheduler.message.voirplus: See more
+scheduler.warning.suppression.inscrit: Do you want to delete this serie despite the pre-registrations awaiting ?
+securite.libelle: Security
+security.login.inscrit: Already have a UCA SPORT account?
+security.login.not.register: You do not have an account yet ?
+security.login.password: Password
+security.login.reinitialiser: forgotten password ?
+security.login.remember_me: 'Remember me'
+security.login.selectionprofil.autres.titre: "Others - You are ?"
+security.login.selectionprofil.label: Choose a profile
+security.login.selectionprofil.message.premierevisite.lien: here
+security.login.selectionprofil.message.premierevisite: You've never logged-in ? Contact us
+security.login.selectionprofil.placeholder: Select
+security.login.selectionprofil.titre: To access the service please specify your profile&
+security.login.selectionprofil.uca.titre: "UCA - You are a student or a staff belonging to ?" 
+security.login.shibboleth.precision: Use your usual <strong>username</strong> and <strong>password</strong> to log in
+security.login.shibboleth: Are you a <strong>student</strong> or <strong>staff</strong> University Côte d'Azur?
+security.login.submit.external: Sign in
+security.login.submit: Sign in
+security.login.username: Username
+security.roles.ROLE_ADMIN: Access UcaGest
+security.roles.ROLE_ENCADRANT: Supervisor
+security.roles.ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION: Manager inscription validator
+security.roles.ROLE_GESTION_ACTIVITE_ECRITURE: Manage activity (read/write)
+security.roles.ROLE_GESTION_ACTIVITE_LECTURE: Manage activity (read only)
+security.roles.ROLE_GESTION_ACTUALITE_ECRITURE: Gestion des actualités (lecture/ecriture) [A traduire]
+security.roles.ROLE_GESTION_ACTUALITE_LECTURE: Gestion des actualités (lecture seule) [A traduire]
+security.roles.ROLE_GESTION_AVOIR: Manage credit notes
+security.roles.ROLE_GESTION_BASCULE: Manage swing
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE: Manage activity categories (read/write)
+security.roles.ROLE_GESTION_CLASSE_ACTIVITE_LECTURE: Manage activity categories (read only)
+security.roles.ROLE_GESTION_COMMANDES: Manage orders
+security.roles.ROLE_GESTION_CREDIT_UTILISATEUR_ECRITURE: Manage user credits (read/write)
+security.roles.ROLE_GESTION_CREDIT_UTILISATEUR_LECTURE: Manage user credits (read only)
+security.roles.ROLE_GESTION_CRENEAU_ECRITURE: Manage time slots (read/write)
+security.roles.ROLE_GESTION_CRENEAU_LECTURE: Manage time slots (read only)
+security.roles.ROLE_GESTION_EMAILING: Manage e-mails
+security.roles.ROLE_GESTION_ETABLISSEMENT_ECRITURE: Manage campus (read/write)
+security.roles.ROLE_GESTION_ETABLISSEMENT_LECTURE: Manage campus (read only)
+security.roles.ROLE_GESTION_EXTRACTION: Manage extraction
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE: Manage activity Formats (read/write)
+security.roles.ROLE_GESTION_FORMAT_ACTIVITE_LECTURE: Manage activity Formats (read only)
+security.roles.ROLE_GESTION_GROUPE_ECRITURE: Access Rights (read/write)
+security.roles.ROLE_GESTION_GROUPE_LECTURE: Access Rigths (read only)
+security.roles.ROLE_GESTION_HIGHLIGHT_ECRITURE: Manage highlights (read/write)
+security.roles.ROLE_GESTION_HIGHLIGHT_LECTURE: Manage highlights (read only)
+security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Manage Background pictures (read/write)
+security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Manage Background pictures (read only)
+security.roles.ROLE_GESTION_INSCRIPTION: Manage registrations
+security.roles.ROLE_GESTION_LOGOPARTENAIRE_ECRITURE: Manage partner (read/write)
+security.roles.ROLE_GESTION_LOGOPARTENAIRE_LECTURE: Manage partner (read only)
+security.roles.ROLE_GESTION_LOG_LECTURE: Manage Logs (read only)
+security.roles.ROLE_GESTION_PAIEMENT_COMMANDE: Cash manager
+security.roles.ROLE_GESTION_PARAMETRAGE: Manage settings
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_ECRITURE: Manage profils (read/write)
+security.roles.ROLE_GESTION_PROFIL_UTILISATEUR_LECTURE: Manage profils (read only)
+security.roles.ROLE_GESTION_RESSOURCE_ECRITURE: Manage resources (read/write)
+security.roles.ROLE_GESTION_RESSOURCE_LECTURE: Manage resources (read only)
+security.roles.ROLE_GESTION_SCHEDULER_LECTURE: Scheduler (Read)
+security.roles.ROLE_GESTION_SHNU_HIGHLIGHT_ECRITURE: Manage UHLS - Highlights (read/write)
+security.roles.ROLE_GESTION_SHNU_HIGHLIGHT_LECTURE: Manage UHLS - Highlights (read only)
+security.roles.ROLE_GESTION_SHNU_RUBRIQUE_ECRITURE: Manage UHLS - Headings (read only/write)
+security.roles.ROLE_GESTION_SHNU_RUBRIQUE_LECTURE: Manage UHLS - Headings (read)
+security.roles.ROLE_GESTION_SUPPRESSION_MASSIVE: Manage mass unsubscribe
+security.roles.ROLE_GESTION_TARIF_ECRITURE: Manage prices (read/write)
+security.roles.ROLE_GESTION_TARIF_LECTURE: Manage prices (read only)
+security.roles.ROLE_GESTION_TEXTE_ECRITURE: Manage texts (read/write)
+security.roles.ROLE_GESTION_TEXTE_LECTURE:  Manage texts (read only)
+security.roles.ROLE_GESTION_TRADUCTION_ECRITURE: Manage Translation (read/write)
+security.roles.ROLE_GESTION_TRADUCTION_LECTURE: Manage Translation (read only)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_ECRITURE: Manage activity types (read/write)
+security.roles.ROLE_GESTION_TYPE_ACTIVITE_LECTURE: Manage activity types (read only)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_ECRITURE: Manage authorization type (read/write)
+security.roles.ROLE_GESTION_TYPE_AUTORISATION_LECTURE: Manage authorization type (read only)
+security.roles.ROLE_GESTION_UTILISATEUR_ECRITURE: Manage users (read/write)
+security.roles.ROLE_GESTION_UTILISATEUR_LECTURE: Manage users (read/write)
+security.roles.ROLE_PREVISUALISATION: Manage previews
+security.roles.ROLE_SUPER_ADMIN: Access UcaGest (Advaanced)
+security.roles.ROLE_USER: Access UcaWeb
+security.shibboleth.login.submit: Sign in
+sg.datatables.actions.title: Action
+shibboleth.error.doctorant: Please login with your student account
+shibboleth.error.dossierincomplet: Your administrative registration file is incomplete. Thank you for getting closer to schooling
+shibboleth.error.profilinconnu: We are unable to identify you as a member of the UCA, please contact us via the contact form
+shibboleth.error.utilisateurbloque: Connection problem - please refer to the sports office 
+shnu.highlight.ajouter.title: SHNU - Add an highlight
+shnu.highlight.modifier.title: SHNU - Modify highlight
+shnu.rubrique.ajouter.title: Add SHNU headings
+shnu.rubrique.modifier.title: Edit SHNU headings
+shnuhighlight.ajouter.succes: Highlight successfully added
+shnuhighlight.list.title: SHNU - Highlights
+shnuhighlight.modifier.succes: Highlight successfully modified
+shnuhighlight.supprimer.succes: Highlight successfully deleted
+shnurubrique.ajouter.succes: Headings successfully added
+shnurubrique.image.libelle: "Select a picture"
+shnurubrique.list.title: SHNU - Headings
+shnurubrique.modifier.succes: Headings successfully modified
+shnurubrique.select.type: Select a type
+shnurubrique.supprimer.succes: Headings successfully deleted
+shnurubrique.type: "Headings type"
+sitemap.activite.libelle: Activities
+sitemap.activites.libelle: Activities
+sitemap.actualite.libelle: News
+sitemap.ajouter: Add
+sitemap.bascule.annee.universitaire.libelle: University year swing
+sitemap.bascule.semestre.libelle: Semester swing
+sitemap.classeactivite.libelle: Activity classes
+sitemap.commande.avoir.ajouter: Provide a credit note 
+sitemap.confirmation.invalide: Confirmation Expired
+sitemap.connexion.selectionprofil: Profile selection
+sitemap.connexion: Login
+sitemap.detailinscription.libelle: Registration details
+sitemap.detailsAvoir.libelle: Credit note's details
+sitemap.detailscommande.informationscarte.modifiier: Edit card
+sitemap.detailscommande.libelle: Order details
+sitemap.emailing.libelle: Emailing
+sitemap.en: Translate to english
+sitemap.etablissement.libelle: Campus
+sitemap.evenements.libelle: Events
+sitemap.extraction: Extraction
+sitemap.format.ajouter: Add format
+sitemap.format.carte.ajouter: Add card purchase format
+sitemap.format.creneau.ajouter: Add time slot format
+sitemap.format.reservation.ajouter: Add time slot format
+sitemap.format.simple.ajouter: Add event
+sitemap.fr: Traduire en français
+sitemap.gestion.libelle: Administration
+sitemap.gestioncommande.libelle: Orders with payment pending
+sitemap.gestioninscription.libelle: Registrations management 
+sitemap.groupe.libelle: Groups 
+sitemap.highlight.libelle: Highlights
+sitemap.highlights.libelle: Highlights
+sitemap.imagefond.libelle: Background pictures 
+sitemap.infospratiques.libelle: Practical information
+sitemap.inscriptionavalider.libelle: Registration to validate
+sitemap.it: Tradurre in italiano
+sitemap.langue: Language
+sitemap.listeinscriptionavalider.libelle: List of registrations to validate
+sitemap.listeinscriptionavaliderencadrant.libelle: My supervisor validations
+sitemap.listeinscriptionavalidergestionnaire.libelle: My manager validations
+sitemap.log.libelle: Logs
+sitemap.logopartenaire.libelle: Partner 
+sitemap.menu: Menu
+sitemap.mescommandes.libelle: My orders
+sitemap.mescredits.libelle: My credits
+sitemap.mesinscriptions.libelle: My registrations
+sitemap.modifier: Edit
+sitemap.moncompte.changermotdepasse: Change password
+sitemap.moncompte.libelle: My Account
+sitemap.moncompte.modifier.libelle: Edit
+sitemap.monplanning.libelle: My schedule
+sitemap.outils.libelle: Tools
+sitemap.panier.libelle: Basket
+sitemap.parametrage.libelle: Settings
+sitemap.parametrage: Settings
+sitemap.preInscription.libelle: Make an account creation request
+sitemap.preInscription_confirmation: Confirmation
+sitemap.profilutilisateur.libelle: User profiles
+sitemap.recapitulatifcommande.libelle: Validation
+sitemap.referentiel.libelle: Referential
+sitemap.reportingavoirs.libelle: Credit note Reporting
+sitemap.reportingcommandes.libelle: Orders Reporting
+sitemap.reportingcredits.libelle: User's credit Reporting
+sitemap.reportingcredits.reporter.libelle: Skip a user's credit
+sitemap.reportings.libelle: Reportings
+sitemap.ressource.libelle: Resources
+sitemap.ressource.lieu.ajouter: Add location
+sitemap.ressource.materiel.ajouter: Add equipment
+sitemap.securite.libelle: Security
+sitemap.shnu.highlight.libelle: UHLS - Highlight
+sitemap.shnu.rubrique.libelle: UHLS - Headings
+sitemap.sporthautniveau.libelle: High-level sport
+sitemap.statistique.KPI.libelle: KPI
+sitemap.supprimer: Delete
+sitemap.tarif.libelle: Prices
+sitemap.texte.libelle: Texts
+sitemap.traduction.libelle: Translations
+sitemap.typeactivite.libelle: Types of activities
+sitemap.typeautorisation.libelle: Types of authorizations
+sitemap.ucagest.libelle: Uca Gest
+sitemap.ucasport.libelle: Uca Sport
+sitemap.utilisateur.changermotdepasse: Change password
+sitemap.utilisateur.credit.ajouter: Adding a user's credit
+sitemap.utilisateur.libelle: Users
+sitemap.utilisateur.verification: Check email
+sitemap.utlisateur.reinitialiser.reset: Reset
+sitemap.utlisateur.reinitialiser.verification: Check E-mail
+sitemap.utlisateur.reinitialiser: Reset password
+sitemap.validation.libelle: Pre-register users
+sitemap.validationcommande.libelle: Paiement
+sitemap.voir: See
+sportdehautniveau.candidater: Student/prospective student, applying for SHN status
+sportdehautniveau.title: 'High-level sport'
+sressource.lieu.imagesupplementaire.ajoutmessage: In order to add more pictures, you'll to create the place first.
+statistique.KPI.autres.title: Other KPIs
+statistique.KPI.etudiants.tableau.nbre_annee_n: Total number of students in year
+statistique.KPI.etudiants.tableau.nbre_annee_n_1: Total number of students in year
+statistique.KPI.etudiants.tableau.nbre_boursier: Number of scholarship students
+statistique.KPI.etudiants.tableau.nbre_inscrits: Total number of students registered
+statistique.KPI.etudiants.tableau.nbre_shnu: Number of SHNU students
+statistique.KPI.etudiants.tableau.percent_boursier: '% of scholarship students enrolled'
+statistique.KPI.etudiants.tableau.percent_inscrit_activite: "% of students enrolled in sports activities out of the total number of students"
+statistique.KPI.etudiants.tableau.percent_shnu: "% SHNU students"
+statistique.KPI.etudiants.tableau.rendement: Performance vs. n-1
+statistique.KPI.etudiants.title: General student KPIs
+statistique.KPI.personnels.tableau.cat_A: Category A
+statistique.KPI.personnels.tableau.cat_B: Category B
+statistique.KPI.personnels.tableau.cat_C: Category C
+statistique.KPI.personnels.tableau.nbr_par_categorie: Number of staff by category
+statistique.KPI.personnels.tableau.nbre_annee_n: Total number of staff in year
+statistique.KPI.personnels.tableau.nbre_annee_n_1: Total number of staff in year
+statistique.KPI.personnels.tableau.nbre_inscrits: Number of registered staff
+statistique.KPI.personnels.tableau.percent_inscrit: "% of registered staff"
+statistique.KPI.personnels.tableau.rendement: Performance vs. n-1
+statistique.KPI.personnels.title: General personnel KPIs
+statistique.KPI.title: Key performance indicators
+statistique.aucune_connexion: No connection
+statistique.customgraph: Custom graph
+statistique.graph.title.categories: Detail of the number of staff's members by categories
+statistique.graph.title.connexion.age: Detail of the number of connections by schedule and age
+statistique.graph.title.connexion.genre: Detail of the number of connections by schedule and gender
+statistique.graph.title.connexion.statut: Detail of the number of connections by schedule and status
+statistique.graph.title.detailstudylevel: Detail of the number of users by study level
+statistique.graph.title.detailuser: Detail of the number of users
+statistique.graph.title.genre: Number of users by gender
+statistique.graph.title.nbboursier: Number of scolarship students
+statistique.graph.title.nbcarteachete: Number of cards purchased
+statistique.graph.title.nbinscription.activite: Number of registration by activity
+statistique.graph.title.nbinscription.classeactivite: Number of registration by activity classes
+statistique.graph.title.nbinscription: Number of registrations
+statistique.graph.title.nbpresent: Number of presents
+statistique.graph.title.nbshnu: Number of SHNU students
+statistique.graph.title.personnelcategories: Distribution of the number of staff by category
+statistique.graph.title.repartitionage: Distribution of the number of users by age
+statistique.nonrenseigne: Not specified
+statistique.options.flux: Registration flow
+statistique.options.frequentation: Course attendance
+statistique.options.nbachatcarte: Number of card purchases
+statistique.options.nbetudperso: Number of student/staff
+statistique.options.recurrence: Recurrence of registrations
+statistique.utilisateur.age: years
+statistique.utilisateur.boursier: Scolarship
+statistique.utilisateur.femme: Woman
+statistique.utilisateur.heure: hour
+statistique.utilisateur.homme: Man
+statistique.utilisateur.nonboursier: No-scolarship
+statistique.utilisateur.nonshnu: No SHNU
+statistique.utilisateur.shnu: SHNU
+tarif.ajouter.succes: Price successfully added
+tarif.ajouter.title: Add a price
+tarif.gestion: Prices management
+tarif.libelle: Price list
+tarif.list.title: Prices
+tarif.mettre.jour: Please update all the prices affected by this user profile
+tarif.modifier.succes: Price successfully modified
+tarif.modifier.title: Modify a price
+tarif.montants: Amounts
+tarif.supprimer.erreur.autorisations: Permissions use this price
+tarif.supprimer.erreur.creneaux: Time slots use this price
+tarif.supprimer.erreur.formatsactivite: Activity format use this price
+tarif.supprimer.erreur.ressources: Resources use this price
+tarif.supprimer.erreur: Unable to remove the price
+tarif.supprimer.succes: Price successfully deleted
+tarif.tva.nonapplicable: TVA not applicable
+tarif.tva.raison: Reason
+texte.ajouter.succes: Text successfully added
+texte.emplacement: Location
+texte.emplacements.indisponibles: All locations are used. Please update existing texts.
+texte.libelle: Text management
+texte.list.title: Text management
+texte.mobile: This text will be displayed on mobile phones
+texte.modifier.succes: Text successfully modified 
+texte.modifier.title: Modify a text
+texte.ordre: Display order
+texte.supprimer.succes: Text successfully deleted
+texte.titre: Title
+traduction.deja.traduit: Allready translated
+traduction.libelle: Translation
+traduction.list.title: Translations
+traduction.modifier.title: 'Edit an translation'
+traduction.pas.encore.traduit: Without translation
+traduction.tous: All
+translation.modifier.succes: Translation successfully modified
+typeactivite.ajouter.succes: Type of activity successfully added
+typeactivite.ajouter.title: Add a type of activity
+typeactivite.gestion: Activity type management
+typeactivite.libelle: Type of activity
+typeactivite.list.title: Activity type management
+typeactivite.modifier.succes: Type of activity successfully modified
+typeactivite.modifier.title: Edit an activity type
+typeactivite.supprimer.erreur: Cannot delete this Activity type, activity classes are assigned
+typeactivite.supprimer.succes: Type of activity successfully deleted
+typeautorisation.ajouter.succes: Authorization successfully added
+typeautorisation.ajouter.title: Add an authorization type
+typeautorisation.comportement: Behaviour
+typeautorisation.cotisation.panier.description: Required for all participation in activities
+typeautorisation.gestion: Authorization types management
+typeautorisation.informations.complementaires: Additional information
+typeautorisation.libelle: Type of authorization
+typeautorisation.list.title: Authorization Management
+typeautorisation.modifier.succes: Authorization successfully modified
+typeautorisation.modifier.title: Modify an authorization type
+typeautorisation.supprimer.erreur: Cannot delete authorization, activities format are assigned
+typeautorisation.supprimer.succes: Authorization successfully deleted
+typeautorisation.tarif: Price
+ucagest.libelle: Uca Gest
+ucasport.libelle: Uca Sport
+utilisateur.activite.souscrite: Subscribed activity
+utilisateur.adresse.aucune: No address registered
+utilisateur.adresse: Address
+utilisateur.ajouter.succes: User successfully added
+utilisateur.ajouter.title: Add user
+utilisateur.ancien.motdepasse: Old password
+utilisateur.autorisation.ajouter.success: Authorization successfully modified
+utilisateur.autorisation.aucun: No authorization registered
+utilisateur.autorisation.modifier: Modify authorizations
+utilisateur.autorisations.aucune: No authorization registered
+utilisateur.autorisations: Authorizations
+utilisateur.bloquer.message: This user is blocked
+utilisateur.bloquer.succes: User successfully bocked
+utilisateur.calendrier.voir: Consult calendar
+utilisateur.change_password.mail.message: We confirm the change of your password.
+utilisateur.change_password.mail.sent: You're password has been successfully changed
+utilisateur.change_password.mail.subject: Password changed
+utilisateur.change_password.mismatch: Passwords must be identical
+utilisateur.change_password.old_password.wrong: Old password is wrong
+utilisateur.changer.motdepasse: Change my password
+utilisateur.civilite: Civility
+utilisateur.codepostal.invalide: Zip Code invalid
+utilisateur.codepostal: Zip Code
+utilisateur.commande: Order
+utilisateur.compte.bloque: Your account is blocked – Thanks for heading to the sport's office. 
+utilisateur.credit.ajouter.title: Adding a user's credit
+utilisateur.credit.bascule.supprimer: Remove user's credits
+utilisateur.credit.de: Credit of
+utilisateur.credit.operation: Operaation
+utilisateur.credit.reporter.title: Skip a credit
+utilisateur.credit.typeoperation: Operation's type
+utilisateur.credits.details: Credit's details
+utilisateur.credits.total: Credit's total
+utilisateur.date.naissance: Date of Birth
+utilisateur.datedenaissance.aucune: No birth date registered
+utilisateur.dbloquer.succes: User successfully unblocked
+utilisateur.description: Manager description
+utilisateur.document inexistant.erreur: File not found
+utilisateur.document.afficher: Attestation
+utilisateur.document.libelle: Attestation for profile
+utilisateur.droits.de: Rights of
+utilisateur.droits: User rights
+utilisateur.envoyer.mailconfirmation.failure: Failed to send e-mail
+utilisateur.envoyer.mailconfirmation.success: The e-mail was sent successfully
+utilisateur.gestion: Users management
+utilisateur.inactif.message: This account has not been activated by the user
+utilisateur.inscription.information.aministrative: Bureaucratic data
+utilisateur.inscription.information.connexion: Login information
+utilisateur.inscription.information.personnelle: Personal information
+utilisateur.inscription.information.preinscription: Your profile
+utilisateur.inscription.information.profil: Profile and access rights
+utilisateur.inscription.libelle: Registration process
+utilisateur.inscriptions: My registrations
+utilisateur.libelle: User
+utilisateur.list.title: Users management
+utilisateur.matricule: Personnel number
+utilisateur.modifier.succes: User successfully modified 
+utilisateur.modifier.title: Edit user
+utilisateur.moncompte.modifier.titre: Edit my informations
+utilisateur.nom: Name
+utilisateur.not_found: User not found
+utilisateur.numero.nfc: NFC number
+utilisateur.password_forgotten.mail.message: "You have requested a password reset. Go to the following link to change your password: %resetPasswordUrl%"
+utilisateur.password_forgotten.mail.sent: An email containing a reset link has been sent to you.
+utilisateur.password_forgotten.mail.subject: Forgot your password
+utilisateur.planning: Scheduler
+utilisateur.preInscription.title: Registration Demand
+utilisateur.preinscription.email.message: You demand has been successfully register. It will be treated by our team shortly. 
+utilisateur.preinscription.message: This user had made a registration demand, please check his informations. 
+utilisateur.preinscription.refuser: Refuse
+utilisateur.preinscription.valider: Approuve
+utilisateur.prenom: First name
+utilisateur.profil: User profile
+utilisateur.refus.message: This user has been refused
+utilisateur.refuser.succes: User successfully refused
+utilisateur.registration.invalide.message: You cannot confirm this account, this link has expired.
+utilisateur.registration.success: User successfully registered !
+utilisateur.reinitialiser.titre: Reset password
+utilisateur.renvoyer.email.activation: re-send activation e-mail
+utilisateur.select.profilutilisateur: '- Select a user profile -'
+utilisateur.select.statututilisateur: Select a status
+utilisateur.sexe.madame: Female
+utilisateur.sexe.monsieur: Male
+utilisateur.statut.datatable: Status
+utilisateur.statut: User status
+utilisateur.supprimer.succes: User successfully deleted
+utilisateur.telephone.aucun: No phone number registered
+utilisateur.telephone: Telephone number
+utilisateur.valider.succes: User successfully validated
+utilisateur.verification.title: Mail Checking
+utilisateur.ville.aucune: No city registered
+utilisateur.ville: City
+utilisateurcredithistorique.ajouter.succes: Credit succefully added
+utilisateurcredithistorique.list.title: User's credits list
+utlisateur.reinitialiser.reset: Resetting the password
+validations.list.title: User waiting for approuval

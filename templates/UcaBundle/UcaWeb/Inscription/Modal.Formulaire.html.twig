@@ -1,0 +1,59 @@
+{% extends "UcaBundle/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalInscription' %}
+{% block modalTitle 'modalinscription.titre.' ~ item.statut %}
+{% block modalFormStart %}
+    {{ form_start(form, {attr: {id: 'form-inscription', novalidate: 'novalidate', target: 'ajax-form-iframe', action: path('UcaWeb_Inscription')}}) }}
+{% endblock %}
+{% block modalBody %}
+    {% set item = form.vars.value %}
+    <input name="id" type="hidden" value="{{ item.itemId }}"/>
+    <input name="type" type="hidden" value="{{ item.itemType }}"/>
+    {% if item.itemType =='Reservabilite' %}
+        <input name="idFormat" type="hidden" value="{{ item.formatActivite.id }}"/>
+    {% endif %}
+
+    {% for autorisation in form.autorisations %}
+        {# {% if autorisation.vars.value.isValid %}valid{% else %}invalid{% endif %} #}
+        {% set typeAutorisation = autorisation.vars.value.typeAutorisation %}
+        {% set codeComportement = typeAutorisation.comportement.codeComportement %}
+        {% if codeComportement == 'case' %}
+            <div class="autorisationCaseACocher fs-14">
+                {{ form_row(autorisation.caseACocher) }}
+            </div>
+        {% elseif codeComportement == 'justificatif' %}
+            <p required="required">
+                <span class="font-weight-bold">{{ ('modalinscription.' ~ codeComportement  ~ '.document') | trans({ '%nom%': typeAutorisation.libelle }) }}</span>
+                <br><span class="fs-14 color-blue">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
+                <span class="fs-14 font-italic">{{ ('modalinscription.mention.document.telechargement') | trans }}</span>
+                {{ form_widget(autorisation.justificatifFile) }}
+            </p>
+        {% elseif codeComportement == 'carte' or codeComportement == 'cotisation' %}
+            <p>
+                <strong>
+                    {{ ('modalinscription.' ~ codeComportement  ~ '.texte') | trans({ '%nom%': typeAutorisation.libelle, '%montant%': typeAutorisation.getArticleMontant(app.user)}) }}
+                </strong>
+                <br><span class="fs-14 color-blue">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
+                <span class="fs-14 font-italic">{{ ('modalinscription.mention.ajout.panier') | trans }}</span>
+            </p>
+        {% elseif codeComportement == 'validationencadrant' or codeComportement == 'validationgestionnaire' %}
+            <div class="w-100 bg-pastel-gray p-3 m-0">
+                <p class="m-0">
+                    <strong>{{ ('modalinscription.mention.information.importante') | trans }}</strong>
+                    <br>{{ typeAutorisation.informationsComplementaires }}</p>
+            </div>
+        {% else %}
+            <p>{{ codeComportement }}</p>
+        {% endif %}
+        {% if loop.last == false %}
+            <hr/>
+        {% endif %}
+    {% endfor %}
+{% endblock %}
+{% block modalFooter %}
+    {{ form_widget(form._token) }}
+    {{ form_row(form.save) }}
+{% endblock %}
+{% block modalFormEnd %}
+    {{ form_end(form, {'render_rest': false}) }}
+    <iframe class="d-none" id="ajax-form-iframe" name="ajax-form-iframe"></iframe>
+{% endblock %}

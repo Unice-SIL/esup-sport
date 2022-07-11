@@ -1,0 +1,31 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ (codeListe|lower ~ '.title')|trans }}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+    {{ form_row(form.imageFile) }}
+    {{ ImagePreview.html(item.image, 'ucabundle_logopartenaire_imageFile_file') }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.lien) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.save) }}
+
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ ImagePreview.js }}
+    <script>
+        _uca.vichImageStyle();
+    </script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+		<p>
+            <span>Vous avez une demande de contact de la part de : {{ contact_from }}</span>
+        </p>
+		<p>
+			<span style="text-decoration: underline;">Sujet :</span> <span class="">{{ objet }}</span>
+			</br>
+			<span style="text-decoration: underline;">Corps du message :</span>
+			</br>
+			{{ message|nl2br }}
+		</p>
+    </div>
+{% endblock %}

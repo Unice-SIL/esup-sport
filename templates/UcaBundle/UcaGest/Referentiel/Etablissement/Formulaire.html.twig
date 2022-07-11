@@ -1,0 +1,82 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+  {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+
+  {% if (null == item.id) %}
+    <h1>{{'etablissement.ajouter.title'|trans}}</h1>
+  {% else %}
+    <h1>{{'etablissement.modifier.title'|trans}}</h1>
+  {% endif %}
+
+  {% if not form.vars.valid %}
+    <div class="alert alert-danger" role="alert" sr-only=""> {{ 'erreur.formulaire.champ.incorrect' | trans }} </div>
+  {% endif %}
+    <div class="well">
+      {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          {{ form_label(form.libelle) }}
+          {# Lerreur est déja dans le label #}
+          {# form_errors(form.libelle)#}
+          {{ form_widget(form.libelle) }}
+        </div>
+        <div class="col-sm-12 col-md-6">
+          {{ form_row(form.code)}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-lg-6">
+          <div class="row">
+            <div class="col-sm-12">{{ form_row(form.adresse)}}</div>
+            <div class="col-sm-12 col-md-4">{{ form_row(form.codePostal)}}</div>
+            <div class="col-sm-12 col-md-8">{{ form_row(form.ville)}}</div>
+          </div>
+        </div>
+        <div class="col-sm-12 col-lg-6">
+          <div class="row">
+            <div class="col-sm-12 col-md-6"> {{ form_row(form.email) }} </div>
+            <div class="col-sm-12 col-md-6"> {{ form_row(form.telephone) }} </div>
+            <div class="col-sm-12"> {{ form_row(form.horairesOuverture) }} </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          {{ form_row(form.imageFile) }}
+          {{ ImagePreview.html(item.image, 'etablissement_imageFile_file') }}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 mt-3"> {{ form_row(form.save) }} </div>
+      </div>
+    {{ form_end(form) }}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ ImagePreview.js }}
+  <script type="text/javascript">
+    'use strict';
+    _uca.vichImageStyle();
+
+    // Accessibilité
+    function vichImageAccess(id = null) { 
+      let imgDiv = document.getElementsByClassName('vich-image');
+      imgDiv[0].innerHTML = "<label for="+ id +" hidden > Image </label> " + imgDiv[0].innerHTML;
+    }
+    
+    let requiredInput= document.querySelectorAll("input[required]");
+    requiredInput.forEach(function(element) { 
+      element.setAttribute("aria-required","true"); 
+    });
+    let errors = document.getElementsByClassName('form-error-message');
+    for (let i = 0; i<errors.length; i++) { 
+      errors[i].setAttribute("aria-invalid", "true");
+    }
+    
+    vichImageAccess('etablissement_imageFile_file');
+
+  </script>
+{% endblock %}

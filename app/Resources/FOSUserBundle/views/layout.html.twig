@@ -1,9 +1,0 @@
-{% extends "@Uca/Common/Main/Structure.UcaGest.html.twig" %}
-{% import '@Uca/Macros/FlashBag.html.twig' as flashBag %}
-
-{% block main %}
-    <div>
-        {{ flashBag.showAll }}
-        {% block fos_user_content %}{% endblock %}
-    </div>
-{% endblock %}

@@ -1,9 +1,0 @@
-{% extends "@Uca/Common/Liste/Datatable.html.twig" %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script type='text/javascript'>
-		'use_strict';
-        _uca.datatable.ordonnerElements('UcaGest_ActiviteModifierOrdre', '#sg-datatables-activite_datatable', 3000);
-    </script>
-{% endblock %}

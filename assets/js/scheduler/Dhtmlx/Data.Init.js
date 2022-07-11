@@ -5,20 +5,20 @@ scheduler.data = {
 $.post(DATAAPI, {
     lists: {
         ressources: {
-            class: '\\UcaBundle\\Entity\\Ressource'
+            class: '\\App\\Entity\\Uca\\Ressource'
         },
         encadrant: {
-            class: '\\UcaBundle\\Entity\\Utilisateur',
+            class: '\\App\\Entity\\Uca\\Utilisateur',
             findBy: {
                 repository: "findtByGroupsName",
                 param: "Encadrant"
             }
         },
         tarifs: {
-            class: '\\UcaBundle\\Entity\\Tarif'
+            class: '\\App\\Entity\\Uca\\Tarif'
         },
         activites: {
-            class: '\\UcaBundle\\Entity\\Activite'
+            class: '\\App\\Entity\\Uca\\Activite'
         },
     }
 
@@ -62,7 +62,7 @@ $.post(DATAAPI, {
             update: ['description', 'resources', 'time']
         };
     } else if (scheduler.data.item.type == "ressource") {
-        let nouvelleRessource = ['description', 'recurring', 'time', 'capacite', 'profils'];
+        let nouvelleRessource = ['description', 'time', 'capacite', 'profils'];
         let ressourceExistante = ['description', 'time', 'capacite', 'profils'];
         scheduler.data.lists.profils.forEach(function(formatProfil) {
             let labelCapacite = 'capaciteProfil_' + formatProfil.profilUtilisateur.id;;
@@ -131,7 +131,7 @@ scheduler.data.fn.toOptions = function(list) {
                     label += list.libelleSeparateur;
                 }
 
-                if (item.objectClass == 'UcaBundle\\Entity\\FormatActiviteProfilUtilisateur' || item.objectClass == 'UcaBundle\\Entity\\RessourceProfilUtilisateur') {
+                if (item.objectClass == 'App\\Entity\\Uca\\FormatActiviteProfilUtilisateur' || item.objectClass == 'App\\Entity\\Uca\\RessourceProfilUtilisateur') {
                     item = item.profilUtilisateur;
                 }
                 label += item[element];

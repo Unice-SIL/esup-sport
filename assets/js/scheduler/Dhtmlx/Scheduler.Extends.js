@@ -1,6 +1,5 @@
 import { loadData } from "./Config"
 import { changeColor } from "./Events"
-import { AST_Atom } from "terser";
 
 scheduler.getEvent_old = scheduler.getEvent;
 scheduler.getEvent = function(id) {

@@ -1,0 +1,33 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ ImageAsset.imageFondCssWithEmplacement('Sport de haut niveau') }}
+{% endblock %}
+
+{% block main %}
+  <section class="container">
+	<div class="row mb-5 d-flex flex-wrap justify-content-around">
+		{% for rubrique in liste_rubriques %}
+			{% set lien = '' %}
+			{% if rubrique.type.id == 1 %}
+				{% set lien = path('UcaWeb_ConsulterRubrique', {id: rubrique.id}) %}
+			{% elseif rubrique.type.id == 2 %}
+				{% set lien = path('UcaWeb_ConsulterRubrique', {id: rubrique.id}) %}
+			{% elseif rubrique.type.id == 3 %}
+				{% set lien = rubrique.lien %}
+			{% elseif rubrique.type.id == 4 %}
+				{% set lien = path('UcaWeb_ConsulterRubrique', {id: rubrique.id}) %}
+			{% endif %}
+
+			<div class="activity-type d-flex align-item-center justify-content-center mb-3" style="padding: 0 20px; background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ rubrique.image) | imagine_filter('thumb_large_small') }}') no-repeat center;background-size: cover;">
+				<a href="{{ lien }}" class="align-self-center text-center">
+					{{ rubrique.titre }}
+				</a>
+			</div>
+		{% endfor %}
+	</div>
+  </section>
+{% endblock %}

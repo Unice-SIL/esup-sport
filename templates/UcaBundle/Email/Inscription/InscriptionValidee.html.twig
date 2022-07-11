@@ -1,0 +1,19 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            Le {{ inscription.date | date("d/m/Y à H:i") }}, vous avez souhaité vous inscrire à l'activité suivante:
+            <span style="font-weight: bold;">
+                {% include "UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig" 
+                    with { 'row': inscription } %}
+            </span>
+            <br/>
+            Votre inscription a été autorisée. Vous devez maintenant accéder à la page "Mes inscriptions" (
+            <a href="{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesInscriptions') }}">{{ app.request.schemeAndHttpHost }}{{ path('UcaWeb_MesInscriptions') }}</a>
+            ) afin de pouvoir ajouter votre inscription au panier et finaliser votre commande.
+        </p>
+        <p> Attention, vous avez {{parametrage().timerPanierApresValidation}} heure(s) pour ajouter votre inscription au panier. Après l'ajout au panier vous disposerez de {{parametrage().timerPanier}} minutes pour soit payer votre commande en ligne, soit confirmer que vous paierez au bureau des sports. Vous finaliserez ainsi votre inscription. <strong>Si vous dépassez ces délais, votre inscription sera automatiquement annulée.<strong></p>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+<h1>{{ group.getLibelle() }}</p></h1>
+<p> 
+  <ul>
+{% for role in group.getRoles() %}
+      <li> {{ ('security.roles.'~role) | trans }}</li>
+    {% endfor %}
+  <ul> 
+</p>

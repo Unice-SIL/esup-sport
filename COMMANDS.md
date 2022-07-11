@@ -55,3 +55,18 @@
 
 > http://www1.paybox.com/espace-integrateur-documentation/la-solution-paybox-system/appel-page-paiement/
 > https://preprod-admin.paybox.com  ===== 199988843 / 1999888I
+
+
+## Commandes utiles pour la migration
+
+### Base de données de l'app
+
+> php bin/console doctrine:migrations:diff --configuration=config/packages/migrations/app.yaml
+> php bin/console doctrine:migrations:migrate --configuration=config/packages/migrations/app.yaml
+> php bin/console doctrine:migrations:generate --configuration=config/packages/migrations/app.yaml
+
+### Base de données de statistique
+
+> php bin/console doctrine:migrations:diff --configuration=config/packages/migrations/stat.yaml
+> php bin/console doctrine:migrations:migrate --configuration=config/packages/migrations/stat.yaml
+> php bin/console doctrine:migrations:generate --configuration=config/packages/migrations/stat.yaml
