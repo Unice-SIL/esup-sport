@@ -71,7 +71,13 @@ var initDate = new Date()
 if (typeof(ITEM.dateDebutEffective) !== "undefined" && new Date(ITEM.dateDebutEffective) > new Date()) {
     initDate = new Date(ITEM.dateDebutEffective);
 }
-scheduler.init('scheduler_here', initDate, "week");
+
+var format_scheduler = "week";
+if(window.innerWidth < 570){
+    format_scheduler = "day";
+}
+
+scheduler.init('scheduler_here', initDate, format_scheduler);
 var type = "formatActivite";
 if (
     scheduler.data.item.objectClass == "UcaBundle\\Entity\\Lieu" ||

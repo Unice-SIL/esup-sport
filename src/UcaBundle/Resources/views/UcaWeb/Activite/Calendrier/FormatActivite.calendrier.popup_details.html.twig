@@ -14,6 +14,23 @@
     </div>
   {% endif %}
 
+  {# Niveau(x) sportif(s) #}
+  {% if creneau.niveauxSportifs|length > 0 %}
+    <div class="info-container">
+      <div class="image-presentation-container">
+        <div class="image-presentation color-blue fs-30"><i class="fas fa-running"></i></div>
+      </div>
+      <div class="d-grid">
+        <span class="font-medium label">{{ 'common.niveauSportif'|trans }}</span>
+        {% for niveau in creneau.niveauxSportifs %}
+          <span class="font-normal">
+            {{ niveau.libelle }}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+
   {# Lieu #}
   <div class="info-container">
     <div class="image-presentation-container">
@@ -99,6 +116,23 @@
   {% endif %}
 {% elseif typeFormat == "FormatAvecReservation" %}
   {% set ressource = event.reservabilite is not null ? event.reservabilite.ressource : event.serie.reservabilite.ressource %}
+
+  {# Niveau(x) sportif(s) #}
+  {% if formatActivite.niveauxSportifs|length > 0 %}
+    <div class="info-container">
+      <div class="image-presentation-container">
+        <div class="image-presentation color-blue fs-30"><i class="fas fa-running"></i></div>
+      </div>
+      <div class="d-grid">
+        <span class="font-medium label">{{ 'common.niveauSportif'|trans }}</span>
+        {% for niveau in formatActivite.niveauxSportifs %}
+          <span class="font-normal">
+            {{ niveau.libelle }}
+          </span>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
   {# Lieu #}
   {% if ressource.etablissement is not null %}

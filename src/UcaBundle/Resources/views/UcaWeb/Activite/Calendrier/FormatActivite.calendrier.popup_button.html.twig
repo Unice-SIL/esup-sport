@@ -22,10 +22,9 @@
     {% endif %}
   {% else %}
     <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
-      {{ 'common.indisponible' | trans | upper }}
       {% set tooltipMessage = (('bouton.indisponible.autorisationinvalide') | trans({'%autorisation%': isValideAutorisation.autorisation})) %}
       <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ tooltipMessage }}" aria-label="{{ tooltipMessage }}">
-        <i class="fas fa-question-circle"></i>
+        <i class="fas fa-question-circle"></i> {{ tooltipMessage }}
       </span>
     </p>
   {% endif %}
@@ -38,10 +37,7 @@
     {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans) %}
   {% endif %}
   <p id="{{ 'indisponible-'~ inscriptionInformations.statut }}" class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center display_desktop">
-    {{ 'common.indisponible' | trans | upper }}
-    <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ tooltipMessage }}" aria-label="{{ tooltipMessage }}">
-      <i class="fas fa-question-circle"></i>
-    </span>
+    <i class="fas fa-question-circle"></i> {{ tooltipMessage }}
   </p>
   <p id="{{ 'indisponible-'~ inscriptionInformations.statut }}_mobile" class="m-0 fs-14 fw-500 color-taupe-gray text-center display_responsive">
     <i class="fas fa-question-circle"></i> {{ tooltipMessage }}

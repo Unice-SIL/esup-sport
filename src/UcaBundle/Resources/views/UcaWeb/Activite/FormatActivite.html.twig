@@ -58,14 +58,25 @@
   
   <script type='text/javascript'>
     'use_strict';
+    var lastWindowWidth;
+
     $(window).resize(function(){
-      $('.modal').modal('hide');
-      _uca.calendrier.loadData();
+      var currentWidth = window.innerWidth;
+      // Utilisation des break points de CalendrierService
+      if((lastWindowWidth >= 1350 && currentWidth < 1350) || 
+        ((lastWindowWidth >= 580 && lastWindowWidth < 1350 && (currentWidth < 580 || currentWidth >= 1350) )) ||
+        (lastWindowWidth < 580 && currentWidth >= 580)
+      ){
+        $('.modal').modal('hide');
+        _uca.calendrier.loadData();
+      }
+      lastWindowWidth = currentWidth;
     });
     
     $(document).ready(function () {
       _uca.openlayersmap.createMap();
-      _uca.bootstrap.tooltip.display()
+      _uca.bootstrap.tooltip.display();
+      lastWindowWidth = window.innerWidth;
       _uca.calendrier.loadData();
     });
   </script>

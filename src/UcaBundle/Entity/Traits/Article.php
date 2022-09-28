@@ -11,6 +11,7 @@ namespace UcaBundle\Entity\Traits;
 
 use UcaBundle\Entity\Creneau;
 use UcaBundle\Entity\CreneauProfilUtilisateur;
+use UcaBundle\Entity\FormatAchatCarte;
 use UcaBundle\Entity\FormatActivite;
 use UcaBundle\Entity\FormatAvecReservation;
 use UcaBundle\Entity\Inscription;
@@ -62,7 +63,7 @@ trait Article
     public function isNotFull($usr, $format = null)
     {
         if ($format && !$format instanceof FormatAvecReservation) {
-            $item = $format;   
+            $item = $format;
         } else {
             $item = $this;
         }
@@ -129,10 +130,16 @@ trait Article
                 [Inscription::getItemColumn($this), 'eq', $this],
                 ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
             ]);
+
+            $inscriptionEnCours = !$inscriptions->isEmpty();
+            if ($this instanceof FormatAchatCarte) {
+                $inscriptionEnCours = $utilisateur->hasAutorisation($this->getCarte());
+            }
+
             if (Previsualisation::$IS_ACTIVE) {
                 $resultat['statut'] = 'previsualisation';
-            } elseif (!$inscriptions->isEmpty()) {
-                if ('valide' == $inscriptions->first()->getStatut()) {
+            } elseif ($inscriptionEnCours) {
+                if ($this instanceof FormatAchatCarte || 'valide' == $inscriptions->first()->getStatut()) {
                     $resultat['statut'] = 'inscrit';
                 } else {
                     $resultat['statut'] = 'preinscrit';
@@ -145,7 +152,7 @@ trait Article
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($formatReference->inscriptionsAVenir()) {
                 $resultat['statut'] = 'inscriptionsavenir';
-            } elseif ($estResa && $event !== null && $this->dateReservationPasse($event)) {
+            } elseif ($estResa && null !== $event && $this->dateReservationPasse($event)) {
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';
