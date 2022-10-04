@@ -67,7 +67,10 @@ class CommandeDetail
      */
     private $creneau;
 
-    /** @ORM\ManyToOne(targetEntity="Reservabilite") */
+    /**
+     * @ORM\ManyToOne(targetEntity="Reservabilite")
+     * @ORM\JoinColumn(name="reservabilite_id", referencedColumnName="id", onDelete="SET NULL")
+     */
     private $reservabilite;
 
     /** @ORM\ManyToOne(targetEntity="TypeAutorisation") */
