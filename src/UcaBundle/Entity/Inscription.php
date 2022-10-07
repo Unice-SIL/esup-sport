@@ -46,7 +46,10 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      */
     private $creneau;
 
-    /** @ORM\ManyToOne(targetEntity="Reservabilite", inversedBy="inscriptions") */
+    /**
+     * @ORM\ManyToOne(targetEntity="Reservabilite", inversedBy="inscriptions")
+     * @ORM\JoinColumn(name="reservabilite_id", referencedColumnName="id", onDelete="SET NULL")
+     */
     private $reservabilite;
 
     /** @ORM\ManyToOne(targetEntity="Utilisateur", inversedBy="inscriptions", cascade={"persist"}) */
@@ -340,6 +343,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get id.
      *
      * @return int
+     *
      */
     public function getId()
     {
@@ -352,6 +356,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \DateTime $date
      *
      * @return Inscription
+     *
      */
     public function setDate($date)
     {
@@ -364,6 +369,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get date.
      *
      * @return \DateTime
+     *
      */
     public function getDate()
     {
@@ -376,6 +382,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\DateTime $dateValidation
      *
      * @return Inscription
+     *
      */
     public function setDateValidation($dateValidation = null)
     {
@@ -388,6 +395,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get dateValidation.
      *
      * @return null|\DateTime
+     *
      */
     public function getDateValidation()
     {
@@ -398,6 +406,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get statut.
      *
      * @return string
+     *
      */
     public function getStatut()
     {
@@ -410,6 +419,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $motifAnnulation
      *
      * @return Inscription
+     *
      */
     public function setMotifAnnulation($motifAnnulation = null)
     {
@@ -422,6 +432,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get motifAnnulation.
      *
      * @return null|string
+     *
      */
     public function getMotifAnnulation()
     {
@@ -434,6 +445,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $commentaireAnnulation
      *
      * @return Inscription
+     *
      */
     public function setCommentaireAnnulation($commentaireAnnulation = null)
     {
@@ -446,6 +458,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get commentaireAnnulation.
      *
      * @return null|string
+     *
      */
     public function getCommentaireAnnulation()
     {
@@ -458,6 +471,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\DateTime $dateDesinscription
      *
      * @return Inscription
+     *
      */
     public function setDateDesinscription($dateDesinscription = null)
     {
@@ -470,6 +484,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get dateDesinscription.
      *
      * @return null|\DateTime
+     *
      */
     public function getDateDesinscription()
     {
@@ -482,6 +497,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\UcaBundle\Entity\FormatActivite $formatActivite
      *
      * @return Inscription
+     *
      */
     public function setFormatActivite(FormatActivite $formatActivite = null)
     {
@@ -494,6 +510,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get formatActivite.
      *
      * @return null|\UcaBundle\Entity\FormatActivite
+     *
      */
     public function getFormatActivite()
     {
@@ -506,6 +523,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\UcaBundle\Entity\Creneau $creneau
      *
      * @return Inscription
+     *
      */
     public function setCreneau(Creneau $creneau = null)
     {
@@ -518,6 +536,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get creneau.
      *
      * @return null|\UcaBundle\Entity\Creneau
+     *
      */
     public function getCreneau()
     {
@@ -530,6 +549,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\UcaBundle\Entity\Reservabilite $reservabilite
      *
      * @return Inscription
+     *
      */
     public function setReservabilite(Reservabilite $reservabilite = null)
     {
@@ -542,6 +562,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get reservabilite.
      *
      * @return null|\UcaBundle\Entity\Reservabilite
+     *
      */
     public function getReservabilite()
     {
@@ -554,6 +575,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\UcaBundle\Entity\Utilisateur $utilisateur
      *
      * @return Inscription
+     *
      */
     public function setUtilisateur(Utilisateur $utilisateur = null)
     {
@@ -566,6 +588,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get utilisateur.
      *
      * @return null|\UcaBundle\Entity\Utilisateur
+     *
      */
     public function getUtilisateur()
     {
@@ -578,6 +601,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\Autorisation $autorisation
      *
      * @return Inscription
+     *
      */
     public function addAutorisation(Autorisation $autorisation)
     {
@@ -592,6 +616,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\Autorisation $autorisation
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      */
     public function removeAutorisation(Autorisation $autorisation)
     {
@@ -602,6 +627,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get autorisations.
      *
      * @return \Doctrine\Common\Collections\Collection
+     *
      */
     public function getAutorisations()
     {
@@ -614,6 +640,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\Utilisateur $encadrant
      *
      * @return Inscription
+     *
      */
     public function addEncadrant(Utilisateur $encadrant)
     {
@@ -628,6 +655,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\Utilisateur $encadrant
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      */
     public function removeEncadrant(Utilisateur $encadrant)
     {
@@ -638,6 +666,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get encadrants.
      *
      * @return \Doctrine\Common\Collections\Collection
+     *
      */
     public function getEncadrants()
     {
@@ -650,6 +679,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
      *
      * @return Inscription
+     *
      */
     public function addCommandeDetail(CommandeDetail $commandeDetail)
     {
@@ -664,6 +694,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param \UcaBundle\Entity\CommandeDetail $commandeDetail
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      */
     public function removeCommandeDetail(CommandeDetail $commandeDetail)
     {
@@ -674,6 +705,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get commandeDetails.
      *
      * @return \Doctrine\Common\Collections\Collection
+     *
      */
     public function getCommandeDetails()
     {
@@ -686,6 +718,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $prenomDesinscription
      *
      * @return Inscription
+     *
      */
     public function setPrenomDesinscription($prenomDesinscription = null)
     {
@@ -698,6 +731,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get prenomDesinscription.
      *
      * @return null|string
+     *
      */
     public function getPrenomDesinscription()
     {
@@ -710,6 +744,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $nomDesinscription
      *
      * @return Inscription
+     *
      */
     public function setNomDesinscription($nomDesinscription = null)
     {
@@ -722,6 +757,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get nomDesinscription.
      *
      * @return null|string
+     *
      */
     public function getNomDesinscription()
     {
@@ -734,6 +770,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|\UcaBundle\Entity\Utilisateur $utilisateurDesinscription
      *
      * @return Inscription
+     *
      */
     public function setUtilisateurDesinscription(Utilisateur $utilisateurDesinscription = null)
     {
@@ -746,6 +783,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get utilisateurDesinscription.
      *
      * @return null|\UcaBundle\Entity\Utilisateur
+     *
      */
     public function getUtilisateurDesinscription()
     {
@@ -758,6 +796,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $libelle
      *
      * @return Inscription
+     *
      */
     public function setLibelle($libelle = null)
     {
@@ -770,6 +809,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get libelle.
      *
      * @return null|string
+     *
      */
     public function getLibelle()
     {
@@ -782,6 +822,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $description
      *
      * @return Inscription
+     *
      */
     public function setDescription($description = null)
     {
@@ -794,6 +835,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get description.
      *
      * @return null|string
+     *
      */
     public function getDescription()
     {
@@ -806,6 +848,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $prenomInscrit
      *
      * @return Inscription
+     *
      */
     public function setPrenomInscrit($prenomInscrit = null)
     {
@@ -818,6 +861,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get prenomInscrit.
      *
      * @return null|string
+     *
      */
     public function getPrenomInscrit()
     {
@@ -830,6 +874,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * @param null|string $nomInscrit
      *
      * @return Inscription
+     *
      */
     public function setNomInscrit($nomInscrit = null)
     {
@@ -842,6 +887,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Get nomInscrit.
      *
      * @return null|string
+     *
      */
     public function getNomInscrit()
     {
@@ -852,6 +898,7 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
      * Fonction qui permet de mettre à jour le champs nbInscrits dans les tables de quota par profil.
      *
      * @param Inscription $inscription
+     *
      */
     public function updateNbInscrits(bool $add = true): void
     {
@@ -879,6 +926,9 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             }
         }
     }
+     *
+     *
+     *
 
     public function getFirstCommande(): ?Commande
     {
