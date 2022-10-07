@@ -926,9 +926,6 @@ class Inscription implements \UcaBundle\Entity\Interfaces\JsonSerializable
             }
         }
     }
-     *
-     *
-     *
 
     public function getFirstCommande(): ?Commande
     {
