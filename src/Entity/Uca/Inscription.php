@@ -26,8 +26,6 @@ class Inscription implements \App\Entity\Uca\Interfaces\JsonSerializable
 
     public const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
 
-    public const STATUT_INVALIDE = ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative', 'annulationgestionnaire', 'annulationutilisateur', 'annulationpartenaire'];
-
     // region Propriétés
     /**
      * @ORM\Id
@@ -1010,6 +1008,7 @@ class Inscription implements \App\Entity\Uca\Interfaces\JsonSerializable
 
     /**
      * Set estPartenaire.
+     *
      * @codeCoverageIgnore
      */
     public function setEstPartenaire(int $estPartenaire): Inscription

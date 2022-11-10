@@ -20,10 +20,9 @@ final class Version20220614095115 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE shnu_rubrique (id INT AUTO_INCREMENT NOT NULL, type_id INT DEFAULT NULL, ordre INT DEFAULT NULL, titre VARCHAR(255) NOT NULL, lien VARCHAR(255) DEFAULT NULL, texte LONGTEXT DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, INDEX IDX_73BBE76EC54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE shnu_rubrique (id INT AUTO_INCREMENT NOT NULL, type_id INT DEFAULT NULL, ordre INT DEFAULT NULL, titre VARCHAR(255) NOT NULL, lien VARCHAR(255) DEFAULT NULL, texte LONGTEXT DEFAULT NULL, image VARCHAR(255) DEFAULT NULL, updated_at datetime DEFAULT NULL, INDEX IDX_73BBE76EC54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB');
         $this->addSql('CREATE TABLE type_rubrique (id INT AUTO_INCREMENT NOT NULL, libelle VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET UTF8 COLLATE UTF8_unicode_ci ENGINE = InnoDB');
         $this->addSql('ALTER TABLE shnu_rubrique ADD CONSTRAINT FK_73BBE76EC54C8C93 FOREIGN KEY (type_id) REFERENCES type_rubrique (id)');
-        $this->addSql('DROP TABLE referentiel_statistiques');
         $this->addSql('ALTER TABLE groupe CHANGE roles roles LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\'');
         $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur CHANGE montant montant NUMERIC(10, 2) DEFAULT \'-1\' NOT NULL');
         $this->addSql('ALTER TABLE tarif CHANGE pourcentage_tva pourcentage_tva NUMERIC(3, 1) DEFAULT \'0\' NOT NULL');
@@ -36,7 +35,6 @@ final class Version20220614095115 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE shnu_rubrique DROP FOREIGN KEY FK_73BBE76EC54C8C93');
-        $this->addSql('CREATE TABLE referentiel_statistiques (code VARCHAR(50) CHARACTER SET utf8 NOT NULL COLLATE utf8_unicode_ci, libelle VARCHAR(100) CHARACTER SET utf8 NOT NULL COLLATE utf8_unicode_ci, min INT NOT NULL, max INT NOT NULL, PRIMARY KEY(code, libelle, min, max)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' ');
         $this->addSql('DROP TABLE shnu_rubrique');
         $this->addSql('DROP TABLE type_rubrique');
         $this->addSql('ALTER TABLE groupe CHANGE roles roles LONGTEXT CHARACTER SET utf8mb4 NOT NULL COLLATE utf8mb4_bin');

@@ -200,7 +200,7 @@ class DhtmlxEvenementRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('d')
             ->where('d.serie = :id')
             ->setParameter('id', $id)
-    ;
+        ;
 
         return $qb->getQuery()->getResult();
     }
@@ -264,23 +264,6 @@ class DhtmlxEvenementRepository extends ServiceEntityRepository
             ->setParameter('id', $ressourceId)
             ->setParameter('dateDebut', $dateDebut)
             ->setParameter('dateFin', $dateFin)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
-    public function findDhtmlxCreneauByUser($user)
-    {
-        return $this->createQueryBuilder('d')
-            ->join('d.serie', 's')
-            ->join('s.creneau', 'c')
-            ->join('c.inscriptions', 'i')
-            ->join('i.formatActivite', 'fa')
-            ->andWhere('i.utilisateur = :user')
-            ->setParameter('user', $user)
-            ->andWhere('i.statut = :statut')
-            ->setParameter('statut', 'valide')
-            ->andWhere('d.dateFin <= fa.dateFinEffective')
             ->getQuery()
             ->getResult()
         ;

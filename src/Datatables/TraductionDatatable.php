@@ -13,7 +13,6 @@ use App\Datatables\Column\TwigVirtualColumn;
 use App\Datatables\Filter\SelectInVirtualColumnFilter;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
-use UcaBundle\Datatables\Filter\SelectInVirtualColumnFilter;
 
 class TraductionDatatable extends AbstractNotTranslatedDatatable
 {

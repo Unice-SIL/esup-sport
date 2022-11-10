@@ -14,8 +14,6 @@ use App\Service\Common\Parametrage;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\PayboxBundle\Event\PayboxResponseEvent;
 use Psr\Log\LoggerInterface;
-use UcaBundle\Service\Common\MailService;
-use UcaBundle\Service\Common\Parametrage;
 
 class PayboxResponseListener
 {

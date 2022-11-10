@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use UcaBundle\Annotations\CKEditor;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TypeAutorisationRepository")
@@ -55,6 +54,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * @Gedmo\Versioned
      * @Gedmo\Translatable
      * @ORM\Column(type="text", nullable=true)
+     *
      * @CKEditor
      */
     private $informationsComplementaires;
@@ -175,6 +175,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get id.
      *
      * @return int
+     *
      * @codeCoverageIgnore
      */
     public function getId()
@@ -188,6 +189,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * @param string $libelle
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setLibelle($libelle)
@@ -201,6 +203,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get libelle.
      *
      * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getLibelle()
@@ -214,6 +217,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * @param null|string $informationsComplementaires
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setInformationsComplementaires($informationsComplementaires = null)
@@ -227,6 +231,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get informationsComplementaires.
      *
      * @return null|string
+     *
      * @codeCoverageIgnore
      */
     public function getInformationsComplementaires()
@@ -238,6 +243,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Set tarif.
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setTarif(Tarif $tarif = null)
@@ -251,6 +257,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get tarif.
      *
      * @return null|Tarif
+     *
      * @codeCoverageIgnore
      */
     public function getTarif()
@@ -262,6 +269,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Set comportement.
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setComportement(ComportementAutorisation $comportement = null)
@@ -275,6 +283,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get comportement.
      *
      * @return null|ComportementAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function getComportement()
@@ -286,6 +295,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Add formatsActivite.
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function addFormatsActivite(FormatActivite $formatsActivite)
@@ -299,6 +309,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Remove formatsActivite.
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      * @codeCoverageIgnore
      */
     public function removeFormatsActivite(FormatActivite $formatsActivite)
@@ -310,6 +321,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get formatsActivite.
      *
      * @return \Doctrine\Common\Collections\Collection
+     *
      * @codeCoverageIgnore
      */
     public function getFormatsActivite()
@@ -321,6 +333,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Add formatsAchatCarte.
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function addFormatsAchatCarte(FormatAchatCarte $formatsAchatCarte)
@@ -334,6 +347,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Remove formatsAchatCarte.
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      * @codeCoverageIgnore
      */
     public function removeFormatsAchatCarte(FormatAchatCarte $formatsAchatCarte)
@@ -345,6 +359,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get formatsAchatCarte.
      *
      * @return \Doctrine\Common\Collections\Collection
+     *
      * @codeCoverageIgnore
      */
     public function getFormatsAchatCarte()
@@ -358,6 +373,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * @param string $tarifLibelle
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setTarifLibelle($tarifLibelle)
@@ -371,6 +387,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get tarifLibelle.
      *
      * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getTarifLibelle()
@@ -384,6 +401,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * @param string $comportementLibelle
      *
      * @return TypeAutorisation
+     *
      * @codeCoverageIgnore
      */
     public function setComportementLibelle($comportementLibelle)
@@ -397,6 +415,7 @@ class TypeAutorisation implements \App\Entity\Uca\Interfaces\JsonSerializable, \
      * Get comportementLibelle.
      *
      * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getComportementLibelle()

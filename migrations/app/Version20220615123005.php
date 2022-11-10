@@ -21,7 +21,6 @@ final class Version20220615123005 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur CHANGE montant montant NUMERIC(10, 2) DEFAULT \'-1\' NOT NULL');
-        $this->addSql('ALTER TABLE shnu_rubrique ADD updated_at DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE tarif CHANGE pourcentage_tva pourcentage_tva NUMERIC(3, 1) DEFAULT \'0\' NOT NULL');
     }
 
@@ -29,7 +28,6 @@ final class Version20220615123005 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('ALTER TABLE montant_tarif_profil_utilisateur CHANGE montant montant NUMERIC(10, 2) DEFAULT \'-1.00\' NOT NULL');
-        $this->addSql('ALTER TABLE shnu_rubrique DROP updated_at');
         $this->addSql('ALTER TABLE tarif CHANGE pourcentage_tva pourcentage_tva NUMERIC(3, 1) DEFAULT \'0.0\' NOT NULL');
     }
 

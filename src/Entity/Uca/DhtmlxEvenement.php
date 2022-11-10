@@ -78,6 +78,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * @param bool $dependanceSerie
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setDependanceSerie($dependanceSerie)
@@ -91,6 +92,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get dependanceSerie.
      *
      * @return bool
+     *
      * @codeCoverageIgnore
      */
     public function getDependanceSerie()
@@ -104,6 +106,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * @param string $description
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setDescription($description)
@@ -117,6 +120,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get description.
      *
      * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getDescription()
@@ -128,6 +132,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Set serie.
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setSerie(DhtmlxSerie $serie = null)
@@ -141,6 +146,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get serie.
      *
      * @return null|DhtmlxSerie
+     *
      * @codeCoverageIgnore
      */
     public function getSerie()
@@ -152,6 +158,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Set formatSimple.
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setFormatSimple(FormatSimple $formatSimple = null)
@@ -165,6 +172,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get formatSimple.
      *
      * @return null|FormatSimple
+     *
      * @codeCoverageIgnore
      */
     public function getFormatSimple()
@@ -176,6 +184,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Set appels.
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setAppels(Appel $appels = null)
@@ -189,6 +198,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get appels.
      *
      * @return null|Appel
+     *
      * @codeCoverageIgnore
      */
     public function getAppels()
@@ -200,6 +210,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Add appel.
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function addAppel(Appel $appel)
@@ -213,6 +224,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Remove appel.
      *
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     *
      * @codeCoverageIgnore
      */
     public function removeAppel(Appel $appel)
@@ -226,6 +238,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * @param bool $eligibleBonus
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setEligibleBonus($eligibleBonus)
@@ -239,6 +252,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get eligibleBonus.
      *
      * @return bool
+     *
      * @codeCoverageIgnore
      */
     public function getEligibleBonus()
@@ -252,6 +266,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * @param null|\App\Entity\Uca\Reservabilite $reservabilite
      *
      * @return DhtmlxSerie
+     *
      * @codeCoverageIgnore
      */
     public function setReservabilite(Reservabilite $reservabilite = null)
@@ -265,6 +280,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get reservabilite.
      *
      * @return null|\App\Entity\Uca\Reservabilite
+     *
      * @codeCoverageIgnore
      */
     public function getReservabilite()
@@ -278,6 +294,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * @param string $informations
      *
      * @return DhtmlxEvenement
+     *
      * @codeCoverageIgnore
      */
     public function setInformations($informations)
@@ -291,6 +308,7 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
      * Get informations.
      *
      * @return string
+     *
      * @codeCoverageIgnore
      */
     public function getInformations()
@@ -314,47 +332,6 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
         }
 
         return '';
-    }
-
-    /**
-     * Get libellé format d'activité.
-     */
-    public function getFormatActiviteLibelle(): string
-    {
-        if ($this->formatSimple) {
-            return $this->formatSimple->getLibelle();
-        }
-        if ($this->reservabilite) {
-            return $this->reservabilite->getRessource()->getLibelle();
-        }
-        if ($this->serie) {
-            return $this->serie->getFormatActiviteLibelle();
-        }
-
-        return '';
-    }
-
-    /**
-     * Get libellé activité.
-     */
-    public function getActiviteLibelle(): string
-    {
-        if ($this->formatSimple) {
-            return $this->formatSimple->getActiviteLibelle();
-        }
-        if ($this->reservabilite) {
-            return $this->reservabilite->getRessource()->getLibelle();
-        }
-        if ($this->serie) {
-            return $this->serie->getActiviteLibelle();
-        }
-
-        return '';
-    }
-
-    public function getLibelle(): string
-    {
-        return $this->getFormatActiviteLibelle();
     }
 
     /**
