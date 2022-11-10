@@ -25,6 +25,16 @@ _uca.toggleFormDisplay = function(ReferenceValues) {
     }
 }
 
+_uca.vichImageStyle = function() {
+    const fileInput = document.querySelectorAll('.form-control-file');
+    for (let i = 0; i < fileInput.length; i++) {
+        const input = fileInput[i];
+        input.classList.remove('custom-file-input');
+        const label = input.parentNode.querySelector('.custom-file-label');
+        label.style.visibility = 'hidden';
+    }
+}
+
 _uca.showEncadrants = _uca.toggleFormDisplay({ '0': 'nonEncadre', '1': 'encadre' });
 _uca.showTarifs = _uca.toggleFormDisplay({ '0': 'nonPayant', '1': 'payant' });
 
@@ -173,11 +183,18 @@ _uca.calendrier.listenClickBtnGetModalDetailCreneau = function() {
 }
 
 _uca.evenement = {};
-_uca.evenement.limitChar = function(){
-    $('.text_evenement_too_long').each(function( index ) {
+_uca.evenement.limitChar = function() {
+    $('.text_evenement_too_long').each(function(index) {
         if (this.offsetHeight < this.scrollHeight ||
             this.offsetWidth < this.scrollWidth) {
-                $(this).parent().find('button[data-toggle="modal"]').show();
+            $(this).parent().find('button[data-toggle="modal"]').show();
         }
     });
+}
+
+_uca.formatDate = function(date){
+    var jour = '0' + date.getDate();
+    var mois = '0' + (date.getMonth() + 1);
+
+    return jour.substr(-2)+'-'+mois.substr(-2)+'-'+date.getFullYear();
 }

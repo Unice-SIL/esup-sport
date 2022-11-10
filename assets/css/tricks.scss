@@ -187,7 +187,7 @@
             &#searchBtn {
                 padding: 18px 22px;
                 div {
-                    background-image: url('images/search.svg');
+                    background-image: url('../images/search.svg');
                     width: 11px;
                     height: 11px;
                     margin-right: 12px;
@@ -202,7 +202,7 @@
                     margin-left: 8px;
                 }
                 div {
-                    background-image: url('images/reset_undo_arrow.svg');
+                    background-image: url('../images/reset_undo_arrow.svg');
                     width: 11px;
                     height: 12px;
                 }
@@ -228,7 +228,7 @@
             right: 25px;
             width: 0;
             b {
-                background-image: url('images/next.svg');
+                background-image: url('../images/next.svg');
                 background-repeat: no-repeat;
                 background-position: center;
                 width: 15px;
@@ -366,37 +366,37 @@ nav#nav-infosPratiques {
         background-position: center;
         background-size: cover;
         &.image-remove {
-            background-image: url('images/remove.svg');
+            background-image: url('../images/remove.svg');
             height: 41px;
             width: 41px;
         }
         &.image-clock {
-            background-image: url('images/clock.svg');
+            background-image: url('../images/clock.svg');
             height: 20px;
             width: 20px;
         }
         &.image-localization {
-            background-image: url('images/localization.svg');
+            background-image: url('../images/localization.svg');
             height: 22px;
             width: 15px;
         }
         &.image-shopping {
-            background-image: url('images/shopping-cart.svg');
+            background-image: url('../images/shopping-cart.svg');
             height: 22px;
             width: 27px;
         }
         &.image-user {
-            background-image: url('images/user.svg');
+            background-image: url('../images/user.svg');
             height: 26px;
             width: 22px;
         }
         &.image-infos {
-            background-image: url('images/infos.svg');
+            background-image: url('../images/infos.svg');
             height: 22px;
             width: 22px;
         }
         &.image-mail {
-            background-image: url('images/mail.svg');
+            background-image: url('../images/mail.svg');
             height: 8px;
             width: 11px;
             display: inline-block;
@@ -558,7 +558,7 @@ nav#nav-infosPratiques {
             padding: 0;
             width: 18px;
             height: 10px;
-            background-image: url('images/next.svg');
+            background-image: url('../images/next.svg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: cover;
@@ -601,7 +601,7 @@ nav#nav-infosPratiques {
                 padding: 0;
                 width: 10px;
                 height: 5px;
-                background-image: url('images/next.svg');
+                background-image: url('../images/next.svg');
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: cover;
@@ -653,7 +653,7 @@ nav#nav-infosPratiques {
             height: 30px;
             padding: 10px;
             margin-left: auto;
-            background-image: url('images/next.svg');
+            background-image: url('../images/next.svg');
             background-repeat: no-repeat;
             background-position: center;
             background-size: 11px 6px;
@@ -667,8 +667,7 @@ nav#nav-infosPratiques {
 }
 
 //
-
-.text_evenement_too_long{
+.text_evenement_too_long {
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;

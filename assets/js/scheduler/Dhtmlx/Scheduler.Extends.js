@@ -1,6 +1,5 @@
 import { loadData } from "./Config"
 import { changeColor } from "./Events"
-import { AST_Atom } from "terser";
 
 scheduler.getEvent_old = scheduler.getEvent;
 scheduler.getEvent = function(id) {
@@ -54,7 +53,7 @@ scheduler.displaySerieModalBox = function(action, ev, unique) {
         position: "middle",
         buttons: [
             unique ? Translator.trans("scheduler.action." + action) + " " + Translator.trans("scheduler.message.action.occurence") : Translator.trans("scheduler.action." + action) + " " + Translator.trans("scheduler.message.action.serie"),
-            //Translator.trans("scheduler.action."+action)+" "+Translator.trans("scheduler.message.action.occurence"),
+            Translator.trans("scheduler.action."+action)+" "+Translator.trans("scheduler.message.action.occurence"),
             scheduler.locale.labels.icon_cancel
         ],
         callback: function(rep) {
@@ -88,15 +87,15 @@ scheduler.displaySerieModalBox = function(action, ev, unique) {
                     event.dependanceSerie = true;
                     event.getParent().updateSerie(event, action);
                 }
-                // } else if (rep == 1) {
-                //     let event = scheduler._events[ev.id];
-                //     if (action == "delete") {
-                //         ev.save("delete");
-                //     } else {
-                //         event.update();
-                //     }
+            } else if (rep == 1) {
+                let event = scheduler._events[ev.id];
+                if (action == "delete") {
+                    ev.save("delete");
+                } else {
+                    event.update();
+                }
             } else {
-                loadData(scheduler._events[ev.id]);
+                // loadData(scheduler._events[ev.id]);
                 changeColor(ev.id);
                 return false;
             }

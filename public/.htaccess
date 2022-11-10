@@ -1,0 +1,15 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
+RewriteRule ^(.*) - [E=BASE:%1]
+
+RewriteCond %{ENV:REDIRECT_STATUS} ^$
+RewriteRule ^index\.php(?:/(.*)|$) %{ENV:BASE}/$1 [R=301,L]
+
+RewriteRule ^index\.php - [L]
+
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_FILENAME} !^.+\.php$
+RewriteRule ^ - [L]
+
+RewriteRule ^ %{ENV:BASE}/index.php [L]

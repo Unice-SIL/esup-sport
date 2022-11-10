@@ -1,0 +1,69 @@
+{% extends "UcaBundle/Common/Liste/Datatable.html.twig" %}
+
+{% block DatatableHeader %}
+  <div id="load">
+		<img src="{{ asset('images/load.gif') }}" id="load-img">
+	</div>
+{% endblock %}
+
+{% block main %}
+    {{ parent() }}
+    <div class="text-right">
+        {% if exportAll is defined %}
+            <a href="#" id="bouton_export_all_pdf" class="btn btn-primary ml-md-auto mt-3" role="button">
+              <span alt="" class="fa fa-file-pdf mr-1"> </span>
+              {{ 'bouton.exportallfacture.pdf'|trans }}
+            </a>
+        {% endif %}   
+        {% if gestionButtons is defined %}
+            <a href="#" id="bouton_extraction_excel" class="btn btn-primary mt-3" role="button">
+              <span alt="" class="fa fa-file-excel mr-1"> </span>
+              {{ 'common.extraire'|trans }}
+            </a>
+        {% endif %}
+    </div>
+ 
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  {% if exportAll is defined and gestionButtons is defined %}
+    <script type="text/javascript">    
+      _uca.ajax.showLoader();
+      setTimeout(function () {
+        let extraction = {
+          'isCommande': true,
+          'delegator': document.getElementById('sg-datatables-Commande_datatable-filterrow'), 
+          'boutonRemovePlage':  document.querySelector('.cancelBtn'),
+          'plage': $('#sg-datatables-Commande_datatable-head-filter-11'),
+          'numeroCommande':  document.getElementById('sg-datatables-Commande_datatable-head-filter-12'), 
+          'numeroRecu':  document.getElementById('sg-datatables-Commande_datatable-head-filter-13'), 
+          'utilisateurNom': document.getElementById('sg-datatables-Commande_datatable-head-filter-14'), 
+          'utilisateurPrenom': document.getElementById('sg-datatables-Commande_datatable-head-filter-15'), 
+          'montant': document.getElementById('sg-datatables-Commande_datatable-head-filter-16'), 
+          'statut': $('#sg-datatables-Commande_datatable-head-filter-17').val(),
+          'moyen': document.getElementById('sg-datatables-Commande_datatable-head-filter-18'),
+          'carte': $('sg-datatables-Commande_datatable-head-filter-19').val(),
+          'carteRetrait': $('sg-datatables-Commande_datatable-head-filter-20').val(),
+          'recherche': document.querySelector("input[type]"),
+          'urlExcel':'UcaGest_ReportingCommandesExtraction',
+          'boutonExtractionExcel': bouton_extraction_excel,
+          'urlPDF': 'UcaGest_ReportingCommandesExportAll',
+          'boutonExtractionPDF': bouton_export_all_pdf,
+        };
+
+        _uca.extraction.preparationExtraction(extraction);
+        _uca.ajax.hideLoader();
+      },6100);
+    </script>
+  {% else %}
+    <script type="text/javascript">    
+        _uca.ajax.hideLoader();
+    </script>
+  {% endif %}
+  <script>
+    $(document).ready(function(){
+      $("#sg-datatables-Commande_datatable-head-filter-15").next().css('width','100px');
+    })
+  </script>
+{% endblock %}

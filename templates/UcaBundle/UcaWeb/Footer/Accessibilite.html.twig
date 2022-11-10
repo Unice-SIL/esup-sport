@@ -1,0 +1,51 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/SiteMap.html.twig' as sitemap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Défaut') }}
+{% endblock %}
+
+{% block main %}
+    <h1 class="h1-light">{{'footer.accessibilite' | trans}}</h1>
+    <section class="container mb-5">
+        <div class="w-100 mb-4 p-2 p-md-4 container-style bg-white justify-content-between card-event">
+            <h2 class="text-uppercase">Aide et accessibilité</h2>
+            <h3>Introduction</h3>
+            <p>Cette page vise à vous guider dans l'utilisation du site.</p>
+            <p>Le site Uca Sport suit les règles d'accessibilité des contenus web (WCAG) et leur traduction. Il utilise ainsi les méthodes et les normes RGAA.</p>
+            <p>Le RGAA est un document évolutif, qu'il est nécessaire de réactualiser régulièrement pour tenir compte des évolutions normatives et techniques. Cette section permet d'accéder aux différentes versions du RGAA.</p>
+            <p>L'accessibilité du Web signifie que les personnes en situation de handicap peuvent utiliser le Web. Plus précisément, qu'elles peuvent percevoir, comprendre, naviguer et interagir avec le Web, et qu'elles peuvent contribuer sur le Web. L'accessibilité du Web bénéficie aussi à d'autres, notamment les personnes âgées dont les capacités changent avec l'âge.</p>
+            <p>On retrouve ainsi 4 principes fondamentaux, en effet les contenus se doivent ainsi d'être perceptibles, utilisables, compréhensibles et robustes.</p>
+            <p>Sur le site Uca Sport sont présents différents types de liens :</p>
+            <ul>
+                <li>des liens particuliers connus sous le nom de « liens d’évitement » ou « liens de navigation interne » comme « Aller au menu », « Aller au contenu », « Retour en haut de page »…
+                </li>
+                <li>des liens de navigations alternatives (ex: flèches pour passer à un élément précédent ou suivant)
+                </li>
+                <li>Bien qu’ils ne soient qu’une exigence de niveau AAA pour WAI/WCAG ou Argent pour Accessiweb (*), ces liens sont pourtant indispensables, notamment pour les utilisateurs de la navigation clavier.
+                </li>
+            </ul>
+            <p>Comme tout dispositif nécessitant une adaptation spécifique de la page, ils doivent être utilisés à bon escient et réclament de respecter quelques règles d’implémentation.</p>
+
+            <h3>Plan du site</h3>
+            {{ sitemap.generatePlanSite() }}
+
+            <h3>Autres systèmes de navigation</h3>
+            <ul>
+                <li>un plan du site accessible via un lien situé en pied de page.
+                </li>
+                <li>un fil d’Ariane placé directement sous le menu principal vous indique où vous vous trouvez et le chemin parcouru pour arriver à la page où vous êtes.
+                </li>
+            </ul>
+            <h3>Technologies de test</h3>
+            <ul>
+                <li>NVDA
+                </li>
+                <li>Tanaguru contrast finder
+                </li>
+            </ul>
+        </div>
+    </section>
+{% endblock %}

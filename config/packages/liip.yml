@@ -1,0 +1,56 @@
+liip_imagine:
+    # driver - one of the three drivers: gd, imagick, gmagick. Default value: gd
+    driver: imagick
+    default_image: null
+    twig:
+        mode: lazy
+    loaders:
+        default:
+            filesystem:
+                data_root:
+                    - "%kernel.project_dir%/public"
+    resolvers :
+        default :
+            web_path : ~
+    filter_sets :
+        cache : ~
+        
+        thumb_small:
+            filters:
+                thumbnail:
+                    size: [50, 50]
+                    mode: outbound
+    
+        thumb_big:
+            filters:
+                thumbnail:
+                    size: [64,64]
+                    mode: outbound
+        
+        thumb_install_salle:
+            filters:
+                thumbnail:
+                    size: [225,135]
+                    mode: outbound
+
+        thumb_partenaires_test-1:
+            filters:
+                thumbnail:
+                    size: [200,200]
+                    mode: inset
+
+        thumb_large_small:
+            filters:
+                thumbnail:
+                    size: [375,225]
+                    mode: outbound
+        thumb_large_big:
+            filters:
+                thumbnail:
+                    size: [750,450]
+                    mode: outbound
+        thumb_background:
+            filters:
+                thumbnail:
+                    size: [1920,1080]
+                    mode: outbound

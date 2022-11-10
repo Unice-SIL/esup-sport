@@ -1,0 +1,11 @@
+{% extends "UcaBundle/Email/TemplateEmail.html.twig" %}
+{% block main %}
+	<div>
+		Bonjour,
+		<span></br></br></span>
+        <p>
+            La commande n°{{ commande.numeroCommande}} a été enregistrée. Vous avez {{ parametrage().timerBds }} heures pour payer cette commande auprès du bureau des sports.
+            Passé ce délai, la commande sera annulée.
+        </p>
+    </div>
+{% endblock %}

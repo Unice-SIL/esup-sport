@@ -1,0 +1,61 @@
+{% extends "UcaBundle/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalInscription' %}
+{% block modalTitle 'modalinscription.panier.ajouter' %}
+{% set hasAutorisationCase = autorisation_case is defined and autorisation_case|length > 0 %}
+{% block modalBody %}
+    {% if reservabilite is defined and reservabilite and item.ressource.nbPartenaires > 0 %}
+        <p class="border-bottom pb-3 mb-0">{{ 'ressource.partenaires.texte'|trans|raw}}</p>
+        <p class="border-bottom pb-3 mb-0">{{ 'ressource.partenaires.required.texte'|trans({ '%nbPartenaires%': item.ressource.nbPartenaires })|raw}}</p>
+        {% for i in 1..item.ressource.nbPartenairesMax %}
+            <div class="d-flex flex-column justify-content-center border-bottom mt-3 pb-4">
+                <p class="font-weight-bold">{{ 'ressource.partenaires.label'|trans ~ ' ' ~ loop.index }}</p>
+                <label class="font-weight-normal d-block" for="email{{ loop.index }}">{{ 'ressource.partenaires.email'|trans }} {{ loop.index <= item.ressource.nbPartenaires ? '*' : null }}</label>
+                <input type="email" name="email{{ loop.index }}" id="email{{ loop.index }}"  {{ loop.index <= item.ressource.nbPartenaires ? 'required' : null }}>
+            </div>
+        {% endfor %}
+
+        <p class="color-red font-weight-bold mt-3">{{ 'ressource.partenaires.alerte'|trans({ '%timeout%': parametrage().timerPartenaire }) }}</p>
+    {% else %}
+        <p>{{ 'modalinscription.message.confirmation.ajoutpanier'|trans }}</p>
+        <ul>
+            {% for article in articles %}
+                {% if article.affichageDetailCommande() %}
+                    <li>
+                        <strong>{{article.getItem().getArticleLibelle()}}</strong> - {{ article.montant }}&nbsp;€
+                        {% if 
+                            (article.inscription is not null and article.inscription.formatActivite is not null and article.inscription.formatActivite is formatType('FormatAvecCreneau')) 
+                            or 
+                            (article.formatActivite is not null and article.formatActivite is formatType('FormatAvecCreneau'))
+                        %}
+                            <p class="color-red fs-18 fw-700">{{ 'formataveccreneau.panier.info'|trans }}</p>
+                        {% endif %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+        {% if hasAutorisationCase %}
+            {% for autorisation in autorisation_case %}
+                <div>
+                    <input type="checkbox" id="autorisation_{{loop.index}}" name="autorisation">
+                    <label for="autorisation_{{loop.index}}">{{ autorisation.typeAutorisation.libelle }}</label>
+                    <br/>
+                    {{ autorisation.typeAutorisation.informationsComplementaires|raw }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% block modalFooter %}
+    <button class="btn btn-outline-primary btn-confirmation" data-dismiss="modal" type="button" value="false">
+        {{'bouton.annuler' | trans }}
+    </button>
+    {% if reservabilite is defined and reservabilite and item.ressource.nbPartenaires > 0 %}
+        <button class="btn btn-primary btn-confirmation" id="btn-confirmation" type="button" value="true" disabled>
+            {{'modalinscription.panier.ajouter' | trans }}
+        </button>
+    {% else %}
+        <button class="btn btn-primary btn-confirmation" id="btn-confirmation" type="button" value="true" {{ hasAutorisationCase ? 'disabled' }}>
+            {{'modalinscription.panier.ajouter' | trans }}
+        </button>
+    {% endif %}
+{% endblock %}

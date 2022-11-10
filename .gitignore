@@ -1,14 +1,44 @@
 *~
 ~*
+pnpm-lock.yaml
 .vscode
-app/config/symfony/parameters.yml
 assets/bundles
-assets/libs/dhtmlxScheduler-5.1.6/*
 node_modules
 var
 vendor
-web/build
-web/bundles
-web/media
-web/upload/private/*
-web/upload/public/*
+public/build
+public/bundles
+public/media
+public/upload/private/*
+public/upload/public/*
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+/vendor/
+###< symfony/framework-bundle ###
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###
+
+###> symfony/phpunit-bridge ###
+.phpunit
+.phpunit.result.cache
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+/tests/coverage/
+###< phpunit/phpunit ###
+/symfony.lock
+
+/assets/libs/dhtmlxScheduler-5.1.6

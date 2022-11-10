@@ -1,0 +1,43 @@
+# parameters:
+#     onurb_yuml.direction: TB
+#     onurb_yuml.colors:
+#         # User
+#         App\Entity\Uca\Groupe: gold
+#         App\Entity\Uca\ProfilUtilisateur: gold
+#         App\Entity\Uca\StatutUtilisateur: gold
+#         App\Entity\Uca\Utilisateur: gold
+#         # Config Activité
+#         App\Entity\Uca\Activite: orangered
+#         App\Entity\Uca\ClasseActivite: orangered
+#         App\Entity\Uca\TypeActivite: orangered
+#         # Formats d'activité
+#         App\Entity\Uca\FormatAchatCarte: red
+#         App\Entity\Uca\FormatActivite: red
+#         App\Entity\Uca\FormatAvecCreneau: red
+#         App\Entity\Uca\FormatAvecReservation: red
+#         App\Entity\Uca\FormatSimple: red
+#         App\Entity\Uca\Creneau: red
+#         # Dhtmlx
+#         App\Entity\Uca\DhtmlxDate: green
+#         App\Entity\Uca\DhtmlxEvenement: green
+#         App\Entity\Uca\DhtmlxSerie: green
+#         # Inscriptions & commandes
+#         App\Entity\Uca\Autorisation: mediumseagreen
+#         App\Entity\Uca\Commande: mediumseagreen
+#         App\Entity\Uca\CommandeDetail: mediumseagreen
+#         App\Entity\Uca\Inscription: mediumseagreen
+#         #Ressources
+#         App\Entity\Uca\Etablissement: darkorange
+#         App\Entity\Uca\Lieu: darkorange
+#         App\Entity\Uca\Materiel: darkorange
+#         App\Entity\Uca\Reservabilite: darkorange
+#         App\Entity\Uca\Ressource: darkorange
+#         # Referentiel
+#         App\Entity\Uca\Actualite: royalblue
+#         App\Entity\Uca\ComportementAutorisation: royalblue
+#         App\Entity\Uca\ImageFond: royalblue
+#         App\Entity\Uca\MontantTarifProfilUtilisateur: royalblue
+#         App\Entity\Uca\NiveauSportif: royalblue
+#         App\Entity\Uca\Tarif: royalblue
+#         App\Entity\Uca\Texte: royalblue
+#         App\Entity\Uca\TypeAutorisation: royalblue

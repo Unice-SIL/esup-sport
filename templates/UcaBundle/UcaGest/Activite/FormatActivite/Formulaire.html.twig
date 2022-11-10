@@ -1,0 +1,162 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+{% import 'UcaBundle/Macros/Formulaire.CapaciteProfil.html.twig' as formMacro %}
+
+
+{% if FormatClassName == 'App\\Entity\\Uca\\FormatAvecCreneau' %}
+	{% set CodeFormat = 'creneau' %}
+	{% set CodeHtml = 'avec_creneau' %}
+{% elseif FormatClassName == 'App\\Entity\\Uca\\FormatAvecReservation' %}
+	{% set CodeFormat = 'reservation' %}
+	{% set CodeHtml = 'avec_reservation' %}
+{% elseif FormatClassName == 'App\\Entity\\Uca\\FormatSimple' %}
+	{% set CodeFormat = 'simple' %}
+	{% set CodeHtml = 'simple' %}
+{% elseif FormatClassName == 'App\\Entity\\Uca\\FormatAchatCarte' %}
+	{% set CodeFormat = 'carte' %}
+	{% set CodeHtml = 'achat_carte' %}
+{% endif %}
+
+{% form_theme form _self %}
+
+{% block _ucabundle_format_activite_achat_carte_formatActivite_profils_capaciteProfil_entry_row %}
+	<div id={{'profils_capaciteProfil_' ~ form.vars.name }}>
+		{{form_row(form)}}
+	</div>
+{% endblock %}
+
+{% block main %}
+	<section class="container">
+		{% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+		{% if (null == item.id) %}
+			<h1>{{('formatactivite.' ~ CodeFormat ~ '.ajouter.title')|trans}}</h1>
+		{% else %}
+			<h1>{{('formatactivite.' ~ CodeFormat ~ '.modifier.title')|trans}}</h1>
+		{% endif %}
+		{{ flashBag.showAll }}
+		<!-- Message de saisie incorrecte -->
+		{% if not form.vars.valid %}
+			<div class="alert alert-danger" role="alert" sr-only="">
+				{{ 'erreur.formulaire.champ.incorrect' | trans }}
+			</div>
+		{% endif %}
+		{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+		<div class='row'>
+			<div class='col-sm-8'>
+				{{ form_row(form.formatActivite.libelle) }}
+				{{ form_row(form.formatActivite.description) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.imageFile) }}
+				{{ ImagePreview.html(item.image, 'ucabundle_format_activite_' ~ CodeHtml ~ '_formatActivite_imageFile_file') }}
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.statut) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateDebutPublication) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateFinPublication) }}
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.capacite) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateDebutInscription) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateFinInscription) }}
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.lieu) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateDebutEffective) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.dateFinEffective) }}
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.promouvoir) }}
+				{% if FormatClassName == 'App\\Entity\\Uca\\FormatAchatCarte' %}
+					{{ form_row(form.carte) }}
+				{% elseif FormatClassName == 'App\\Entity\\Uca\\FormatAvecReservation' %}
+					{{ form_row(form.ressource) }}
+				{% endif %}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.estPayant) }}
+			</div>
+			<div class='col-sm-4'>
+				<div class="form-group" style="display: none;">
+					{{ form_label(form.formatActivite.tarif) }}
+					{{ form_widget(form.formatActivite.tarif) }}
+				</div>
+			</div>
+		</div>
+		<div class='row'>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.niveauxSportifs) }}
+			</div>
+			<div class='col-sm-4'>
+				{{ form_row(form.formatActivite.estEncadre) }}
+			</div>
+			<div class='col-sm-4'>
+				<fieldset class="form-group" style="display: none;">
+					{{ form_label(form.formatActivite.encadrants) }}
+					{{ form_widget(form.formatActivite.encadrants) }}
+				</fieldset>
+			</div>
+		</div>
+		<div class='row' id='wrapperCapaciteProfilUtilisateur' data-prototype="{{ formMacro.afficherCapacite(form.formatActivite.profils.capaciteProfil.vars.prototype) | e('html_attr') }}">
+			<div id="divProfilsUtilisateurs" class='col-sm-4'>
+				{{ form_row(form.formatActivite.profils.profilUtilisateur) }}
+			</div>
+			<div id="divCapaciteProfil" class='{{ CodeFormat == 'reservation' ? 'd-none' : 'col-sm-4' }}'>
+				{{ form_label(form.formatActivite.profils.capaciteProfil) }}
+				{% for formatProfil in form.formatActivite.profils.capaciteProfil %}
+					{% if profilsExistants is defined %}
+						{{ formMacro.afficherCapacite(formatProfil, profilsExistants[loop.index0] ) }}
+					{% else %}
+						{{ formMacro.afficherCapacite(formatProfil, null ) }}
+					{% endif %}
+				{% endfor %}
+			</div>
+			<div class="col-sm-4">
+				{{ form_row(form.formatActivite.autorisations) }}
+			</div>
+		</div>
+	</br>
+	<div class='row'>
+		<div class='col-sm-12 d-inline-flex'>
+			{{ form_row(form.save) }}
+			{{ form_row(form.previsualiser,{'attr': {'class': 'btn btn-secondary ml-1'}}) }}
+		</div>
+	</div>
+	<div style="display:none;">
+	{{ form_rest(form) }}
+	</div>
+	{{ form_end(form) }}
+</section>
+{% endblock %}
+{% block javascripts %}
+	{{ ImagePreview.js }}
+	<Script type="text/javascript">
+		'use_strict';
+		$( "#ucabundle_format_activite_{{ CodeHtml }}_formatActivite_estEncadre input[type=radio]" ).change( _uca.showEncadrants ).trigger( 'change' );
+		$( "#ucabundle_format_activite_{{ CodeHtml }}_formatActivite_estPayant input[type=radio]" ).change( _uca.showTarifs ).trigger( 'change' );
+		let tousProfils = {{ tousProfils | json_encode() | raw }};
+		_uca.capaciteProfils.gestionCapaciteProfil(tousProfils);
+        _uca.vichImageStyle();
+	</script>
+{% endblock %}

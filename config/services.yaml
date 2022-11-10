@@ -1,0 +1,211 @@
+parameters:
+    locale: fr
+    lang.all: fr|en
+    lang.default: fr
+    mailer_user: '%env(MAILER_SENDER)%'
+    mailer_sender: '%env(MAILER_SENDER)%'
+    mailer_exception: '%env(MAILER_EXCEPTION)%'
+    mailer_name: '%env(MAILER_NAME)%'
+    secret: '%env(APP_SECRET)%'
+    environment: '%env(APP_ENV)%'
+    mailerRoutage: '%env(MAILER_ROUTAGE)%'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $mailerUser: '%mailer_user%'
+            $mailerSender: '%mailer_sender%'
+            $projectDir: '%kernel.project_dir%'
+            $exceptionReceiver : '%mailer_exception%'
+            $defaultLocale: '%lang.default%'
+            $supportedLocales: '%lang.all%'
+            $mailerRoutage : '%mailerRoutage%'
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Tests,Kernel.php}'
+            #         exclude:
+            # - '../src/DependencyInjection/'
+            # - '../src/Entity/'
+            # - '../src/Kernel.php'
+            # - '../src/Tests/'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller/'
+        tags: ['controller.service_arguments']
+
+    # add more service definitions when explicit configuration is needed
+    # please note that last definitions always *replace* previous ones
+
+    App\Service\Common\TwigExtensions:
+        tags: [twig.extension]
+
+    # SERVICES - GENERAL
+    uca.tools:
+        alias: App\Service\Common\Tools
+    uca.sitemap:
+        alias: App\Service\Common\SiteMap
+    uca.translatable:
+        alias: App\Service\Common\Translatable
+    uca.annotation.tools:
+        public: true
+        alias: App\Service\Common\Annotation
+    uca.flashbag:
+        public: true
+        alias: App\Service\Common\FlashBag
+    uca.shibboleth.provider:
+        class: App\Service\Securite\GestionnaireUtilisateurShibboleth
+   
+
+    # Overwrite bundle
+    Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request: '@lexik_paybox.request_handler'
+    unicesil.shibboleth_logout_event:
+        class: UniceSIL\ShibbolethBundle\EventListener\LogoutEventListener
+        arguments: ['%unice_sil_shibboleth%', "@router"]
+        tags:
+            - { name: 'kernel.event_listener', event: 'Symfony\Component\Security\Http\Event\LogoutEvent', method: onLogout, dispatcher: security.event_dispatcher.Shibboleth }
+
+    # SERVICES - FONCTIONNALITES
+    uca.paybox:
+        class: App\Service\Securite\PayBox
+    uca.inscription:
+        class: App\Service\Service\InscriptionService
+        autowire: true
+        public: true
+    uca.timeout:
+        class: App\Service\Securite\TimeoutService
+        autowire: true
+        public: true
+    uca.creationPdf: 
+        public: true
+        alias: App\Service\Common\CreationPdf
+    uca.extraction.excel: 
+        class: App\Service\Service\ExtractionExcelService
+    mailService:
+        class: App\Service\Common\MailService
+    App\Service\Common\MailService: '@mailService'
+    uca.calendrier:
+        class: App\Service\Service\CalendrierService
+
+    # SERVICES - LISTENERS
+    # Entity Listeners
+    uca.doctrine.commande.listener:
+        class: App\Service\Listener\Entity\CommandeListener
+        autowire: true
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preUpdate, entity: App\Entity\Uca\Commande }
+    uca.doctrine.groupe.listener:
+        class: App\Service\Listener\Entity\GroupeListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: postPersist, entity: App\Entity\Uca\Groupe, method: postPersist }
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\Groupe, method: preFlush }
+    # uca.doctrine.inscription.listener:
+    #     class: App\Service\Listener\Entity\InscriptionListener
+    #     tags:
+    #         - { name: doctrine.orm.entity_listener, event: prePersist, entity: App\Entity\Uca\Inscription, method: prePersist }
+    uca.doctrine.classe_activite.listener:
+        class: App\Service\Listener\Entity\ClasseActiviteListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\ClasseActivite, method: preFlush }
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
+    uca.doctrine.activite.listener:
+        class: App\Service\Listener\Entity\ActiviteListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\Activite, method: preFlush }
+    uca.doctrine.format_activite.listener:
+        class: App\Service\Listener\Entity\FormatActiviteListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\FormatActivite, method: preFlush }
+    uca.doctrine.creneau.listener:
+        class: App\Service\Listener\Entity\CreneauListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onLateKernelRequest }
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\Creneau, method: preFlush }
+    uca.doctrine.format_achat_carte.listener:
+        class: App\Service\Listener\Entity\FormatAchatCarteListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\FormatAchatCarte, method: preFlush }
+    # uca.doctrine.format_avec_reservation.listener:
+    #     class: App\Service\Listener\Entity\FormatAvecReservationListener
+    #     tags:
+    #         - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\FormatAvecReservation, method: preFlush }
+    uca.doctrine.type_autorisation.listener:
+        class: App\Service\Listener\Entity\TypeAutorisationListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\TypeAutorisation, method: preFlush }
+    uca.doctrine.ressource.listener:
+        class: App\Service\Listener\Entity\RessourceListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\Ressource, method: preFlush }
+    uca.doctrine.logopartenaire.listener:
+        class: App\Service\Listener\Entity\LogoPartenaireListener
+        tags:
+            - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\LogoPartenaire, method: preFlush }
+    
+    # Other Listerners
+    uca.paybox_response_listener:
+        class: App\Service\Listener\PayboxResponseListener
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: paybox.ipn_response, method: onPayboxIpnResponse }
+    uca.previsualisation:
+        class: App\Service\Common\Previsualisation
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    uca.historique_navigation:
+        class: App\Service\Common\HistoriqueNavigation
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    uca.parametrage:
+        class: App\Service\Common\Parametrage
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    uca.locale_rewriter:
+        class: App\Events\LocaleRewriteSubscriber
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    # uca.user.registration.listener:
+    #     class: App\Service\Listener\RegistrationConfirmListener
+    #     autowire: true
+    #     tags:
+    #         - { name: kernel.event_subscriber }
+    uca.listener.exception:
+        class: App\Service\Listener\ExceptionListener
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+    uca.selection.profil: 
+        class: App\Service\Service\SelectionProfil
+    App\Service\Service\SelectionProfil: '@uca.selection.profil'
+    # uca.form.profilUtilisateur:
+    #     class: App\Form\FormatActiviteProfilUtilisateurType
+    #     arguments: ['@doctrine.orm.entity_manager']
+    #     tags: [form.type]
+    # uca.form.ressourceprofilUtilisateur:
+    #     class: UcaBundle\Form\RessourceProfilUtilisateurType
+    #     arguments: ['@doctrine.orm.entity_manager']
+    #     tags: [form.type]
+    App\Service\Listener\Securite\Utilisateur\LoginListener:
+        tags:
+            - { name: 'kernel.event_listener', event: 'security.interactive_login' }
+    uca.extraction.inscription:
+        class: App\Service\Service\ExtractionInscriptionService
+    # uca.form.gestioninscription:
+    #     class: App\Form\GestionInscriptionType
+    #     arguments: ['@uca.extraction.inscription']
+    #     tags: [form.type]
+    Sg\DatatablesBundle\Datatable\DatatableFactory:
+        alias: sg_datatables.factory
+    Sg\DatatablesBundle\Response\DatatableResponse:
+        alias: sg_datatables.response

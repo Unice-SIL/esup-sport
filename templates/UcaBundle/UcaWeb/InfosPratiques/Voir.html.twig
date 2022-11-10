@@ -1,0 +1,229 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Bootstrap.html.twig' as Bootstrap %}
+{% import 'UcaBundle/Macros/OpenLayersMap.html.twig' as OpenLayersMap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Infos pratiques') }}
+{% endblock %}
+
+{% block main %}
+    <section class="container my-5">
+            <nav class="d-flex flex-row flex-nowrap m-auto" id="nav-infosPratiques">
+                <a href="#infosPratiques" class="active btn btn-tab d-flex justify-content-center align-items-center" data-toggle="tab">{{ 'infospratiques.title'|trans }}</a>
+                <a href="#installations" class="btn btn-tab d-flex justify-content-center align-items-center" data-toggle="tab">{{ 'installationssportives.title'|trans }}</a>
+            </nav>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="infosPratiques">
+                    <h1 class="h1-light">{{'infospratiques.title'|trans}}</h1>
+                    {% if emplacement("Infos pratiques - Introduction") is not empty %}
+                    <section class="container container-style bg-white mb-5">
+                        {{ emplacement("Infos pratiques - Introduction")|raw }}
+                    </section>
+                    {% endif %}
+
+                    <section class="container">
+                        <div class="accordion" id="accordionInfosPratiques">
+                            {% for i in 1..5 %}
+                                {% set emplacementName = "Infos pratiques - %02d"|format(i) %}
+                                {% set titre = emplacement(emplacementName,'title') %}
+                                {% set texte = emplacement(emplacementName) %}
+                                {% set mobile = emplacement(emplacementName, 'mobile') %}
+                                {% set texte_mobile = emplacement(emplacementName, 'texte_mobile') %}
+                                {% if titre is not empty %}
+                                    {{ Bootstrap.accordionItem(i, loop.first, titre, texte, mobile, texte_mobile, 'accordionInfosPratiques') }}
+                                    {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+                </div>
+                <div class="tab-pane fade" id="installations">
+                    <h1 class="h1-light">{{'installationssportives.title'|trans}}</h1>
+                    <section class="container">
+                        <div class="accordion" id="accordionInstallations">
+                            {% for item in etablissements %}
+                                <div class="card card-install bg-white mb-4">
+                                    {% set activities = [] %}
+                                    {% for ressource in item.ressources %}
+                                        {% for act in ressource.formatsActivite %}
+                                            {% if act.activite not in activities  %}
+                                                {% set activities = activities|merge([act.activite]) %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endfor %}
+
+                                    <div class="card-header" id="heading{{loop.index}}">
+                                        <a aria-controls="collapse{{loop.index}}" aria-expanded="true" class="col-12 text-decoration-none" data-target="#collapse{{loop.index}}" data-toggle="collapse">
+                                            <div class="row text-left d-flex flex-wrap">
+                                                <h2 class="mb-0 col-11 col-md-5 col-lg-7 text-dark text-uppercase order-1">{{ item.libelle }}</h2>
+                                                <p class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-md-3 col-lg-2 order-3 order-md-2">
+                                                    {% if item.telephone %}
+                                                        <i class="fas fa-phone"></i>
+                                                        {{ item.telephone }}
+                                                    {% endif %}
+                                                </p>
+                                                <p class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-md-3 col-lg-2 order-4 order-md-3">
+                                                    {% if item.email %}
+                                                        <i class="far fa-envelope"></i>
+                                                        {{ item.email }}
+                                                    {% endif %}
+                                                </p>
+                                                <p class="m-0 p-0 pr-3 col-1 order-2 order-md-4 text-right">
+                                                    <i class="fas fa-chevron-down"></i>
+                                                </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div aria-labelledby="heading{{loop.index}}" class="card-body collapse show" data-parent="#accordionInstallations" id="collapse{{loop.index}}">
+                                        <div class="row">
+                                            <div class="text-center text-sm-left col-sm-8 col-md-4 install-picture">
+                                                <img class="img-fluid img-rounded" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+                                            </div>
+                                            <div class="m-0 p-0 p-md-0 pl-3 pl-md-4 pt-3 col-12 col-sm-6 col-md-4 install-coordinates">
+                                                <h3 class="text-uppercase">
+                                                    <i class="fas fa-map-marker-alt"></i>
+                                                    {{ "installationssportives.coordonnees.title"|trans }}</h3>
+                                                <p>
+                                                    {{ item.libelle }}
+                                                    <br/>{{ item.adresse }}
+                                                </p>
+                                            </div>
+                                            <div class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-sm-6 col-md-4 install-opening-hours">
+                                                <h3 class="text-uppercase">
+                                                    <i class="far fa-clock"></i>
+                                                    {{ "installationssportives.horaireouverture.title"|trans }}</h3>
+                                                <p>{{ item.horairesOuverture|nl2br }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row install-activity p-3 d-flex flex-wrap justify-content-start">
+                                            <h3 class="text-uppercase">{{ "installationssportives.activitepropose.title"|trans }}</h3>
+                                            {% if activities is not empty %}
+                                                {% for activity in activities %}
+                                                    {# <div class="p-0 col-6 col-sm-4 col-md-3 col-lg-2">
+                                                        <p class="mr-2 mb-2 h-100 d-flex align-items-center">
+                                                            <span class="ml-auto mr-auto">
+                                                                {{ activity.libelle|upper }}
+                                                            </span>
+                                                        </p>
+                                                    </div> #}
+                                                    <div class="activity-type activity-type-small d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ activity.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                                        <a class="align-self-center text-center" href="{{ path('UcaWeb_FormatActiviteLister', { idCa: activity.classeActivite.id, id: activity.id } ) }}">{{ activity.libelle }}</a>
+                                                    </div>
+                                                {% endfor %}
+                                            {% else %}
+                                                <p>
+                                                    {{'installationssportives.activites.aucun'|trans }}
+                                                </p>
+                                            {% endif %}
+                                        </div>
+
+                                        {# <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                                            {% for dataItem in data %}
+                                                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                                    <a class="align-self-center text-center" href="{{ path(route, params | merge( {id: dataItem.id} )) }}">{{ dataItem.libelle }}</a>
+                                                </div>
+                                            {% endfor %}
+                                        </div> #}
+
+                                        <div class="row card-header border-0 install-activity p-1" id="headingPlace{{loop.index}}">
+                                            <a aria-controls="collapsePlace{{loop.index}}" aria-expanded="false" class="col-12 p-2 collapsed" data-target="#collapsePlace{{loop.index}}" data-toggle="collapse">
+                                                <div class="row text-left d-flex flex-wrap">
+                                                    <h3 class="text-uppercase col-11 order-1">
+                                                        {{'installationssportives.lieu.title'| trans }}</h3>
+                                                    <p class="m-0 p-0 pr-3 col-1 order-2 text-right">
+                                                        <i class="fas fa-chevron-down"></i>
+                                                    </p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                        <div aria-labelledby="headingPlace{{loop.index}}" class="card-body collapse hide pt-0" id="collapsePlace{{loop.index}}">
+                                            <div class="row text-left d-flex flex-wrap">
+                                                {% for ressource in item.ressources %}
+                                                    {% if ressource in lieu %}
+                                                        <div class="col-md-3 text-center pb-1">
+                                                            <!-- Slider image -->
+                                                            <div id="carouselPlace{{loop.index}}" class="carousel slide" data-interval="false" data-ride="carousel" style="height: auto;min-height: auto; margin-top: auto;">
+                                                                <div class="carousel-inner">
+                                                                    <div class="carousel-item active">
+                                                                        <img alt="" src="{{ ImageAsset.thumb(ressource.image, 'thumb_install_salle')}}">
+                                                                    </div>
+                                                                    {% for imageSupplementaire in ressource.imagesSupplementaires %}
+                                                                        <div class="carousel-item">
+                                                                            <img alt="" src="{{ ImageAsset.thumb(imageSupplementaire.image, 'thumb_install_salle')}}">
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                                {% if (ressource.imagesSupplementaires| length) != 0 %}
+                                                                <a class="carousel-control-prev" href="#carouselPlace{{loop.index}}" role="button" data-slide="prev">
+                                                                    <i class="fas fa-angle-left" aria-hidden="true"></i>
+                                                                    <span class="sr-only"> {{ 'common.precedent' | trans }} </span>
+                                                                </a>
+                                                                <a class="carousel-control-next" href="#carouselPlace{{loop.index}}" role="button" data-slide="next">
+                                                                        <i class="fas fa-angle-right" aria-hidden="true"></i>
+                                                                    <span class="sr-only"> {{ 'common.suivant' | trans }} </span>
+                                                                </a>
+                                                                {% endif  %}
+                                                            </div>
+                                                            <!-- fin slider -->
+
+                                                            <p class="font-weight-bold mb-2">
+                                                                <span class="pr-3 color-dark-gray">
+                                                                    {{ ressource.libelle | upper }}
+                                                                </span>
+                                                                {% if ressource.accesPMR %}
+                                                                    <i class="fab fa-accessible-icon"></i>														
+                                                                {% endif %}	
+                                                                <button class="btn btn-link js-openlayersmap" 
+                                                                    data-toggle="modal"
+                                                                    data-target="#modalOpenLayersMap" 
+                                                                    data-libelle="{{ressource.libelle}}" 
+                                                                    data-pmr="{{ressource.accesPMR}}"
+                                                                    data-adresse="{{ressource.adresse}}" 
+                                                                    data-villecp="{{ressource.ville ~ ' / ' ~  ressource.codePostal}}" 
+                                                                    data-campus="{{ressource.etablissement.libelle}}" 
+                                                                    data-latitude="{{ressource.latitude}}" 
+                                                                    data-longitude="{{ressource.longitude}}"													
+                                                                    type="button">
+                                                                        <i class="fas fa-map-marked-alt"></i>
+                                                                </button>
+                                                                {% include 'UcaBundle/UcaWeb/InfosPratiques/Modal.Map.html.twig' %}
+                                                            </p>
+                                                            <p class='text-left color-dark-gray'>
+                                                                {{ ressource.adresse }} <br>
+                                                
+                                                                {{ ressource.codepostal }}
+                                                                {{ ressource.ville }}
+                                                            </p>
+                                                        </div>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>	
+                    </section>
+                </div>
+            </div>
+            {{ OpenLayersMap.HtmlModal }}
+        </section>
+{% endblock %}
+
+{% block javascripts %}	
+    {{ parent() }}
+	{{ OpenLayersMap.Js }}
+    <script>
+        $(document).ready(function(){
+            $('a.btn-tab').on('click', function() {
+                $('a.active').removeClass('active');
+                $('div.show.active').removeClass('show active');
+                if (!$(this).hasClass('active')) {
+                    $(this).addClass('active');
+                    $($(this).attr('href')).addClass('show active');
+                }
+            })
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+	{% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+	{% if (null == item.id) %}
+		<h1> {{ (titre ~ '.ajouter.title') | trans}}</h1>
+	{% else %}
+		<h1> {{ (titre ~ '.modifier.title') | trans}}</h1>
+	{% endif %}
+
+	{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+	<!-- Message de saisie incorrecte -->
+	{% if not form.vars.valid %}
+		<div class="alert alert-danger" role="alert" sr-only="">
+			{{ 'erreur.formulaire.champ.incorrect' | trans }}
+		</div>
+	{% endif %}
+	<div class='row'>
+		<div class="col-sm-6">
+			{{ form_row(form.titre) }}
+			{{ form_row(form.imageFile)}}
+			{{ ImagePreview.html(item.image, 'ucabundle_rubriqueshnu_imageFile_file') }}
+			{{ form_row(form.type) }}
+		</div>
+		<div class='col-sm-12 mt-3' data-forType="4" data-masquable="true">
+			{{ form_row(form.texte) }}
+		</div>
+		<div class='col-sm-12 mt-3' data-forType="3" data-masquable="true">
+			{{ form_row(form.lien) }}
+		</div>
+		<div class='col-sm-12 mt-3'>
+			{{ form_row(form.save) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+{% endblock %}
+{% block javascripts %}
+	{{ ImagePreview.js }}
+	<script>
+        _uca.vichImageStyle();
+
+		$("#ucabundle_rubriqueshnu_type").change(function () {
+            val = $(this).val();
+            $('[data-masquable="true"][data-forType="'+val+'"]').show().removeClass("hide");
+            $('[data-masquable="true"][data-forType!="'+val+'"]').hide().addClass("hide");
+        });
+        $("#ucabundle_rubriqueshnu_type").change();
+
+		$("#ucabundle_rubriqueshnu_texte").change(function () {
+            val = $(this).val();
+            CKEDITOR.instances.ucabundle_rubriqueshnu_texte.setData(val)
+        });
+
+        // remove value for hidden field
+        $("form").submit(function (e) {
+			$(this).find('.hide').find('.hiddenInput').val("");
+			$(this).find('.hide').find('.hiddenInput').trigger('change');
+        });
+    </script>
+{% endblock %}

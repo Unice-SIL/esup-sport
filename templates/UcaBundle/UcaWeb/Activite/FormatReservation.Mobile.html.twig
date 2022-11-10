@@ -1,0 +1,84 @@
+<div class="row d-lg-none" id="calendar-mobile">
+    <div class="col-12">
+        <div class="row d-flex justify-content-between align-items-center mb-5">
+            <div id="header-left" class="calendar-arrow-left text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": previous_date | dateFormat('Y_ww'), beginning: "end" }) }}">
+                <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
+            </div>
+
+            <div class="flex-fill d-flex justify-content-center align-items-center text-uppercase fs-14 fw-700" id="header-mid"></div>
+
+            <div id="header-right" class="calendar-arrow-right text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
+                <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
+            </div>
+        </div>
+
+        {% set nbToDisplay = 1 %}
+        {% if beginning == "end"  %}
+            {% set nbToDisplay = 7 %}
+        {% endif %}
+        <div class="row body-calendar-mobile">
+
+            {% if dayResponsive is defined and dayResponsive is not null %}
+                {% set actualDay = dayResponsive %}
+                {% set nbToDisplay = dayResponsive %}
+            {% elseif beginning == "end" %}
+                {% set actualDay = 7 %}
+                {% set nbToDisplay = 7 %}
+            {% else %}
+                {% set actualDay = 1 %}
+            {% endif %}
+
+            {% for day in reservabilitesByDay %}
+
+                {% set hidden = "d-none" %}
+                {% if loop.index == actualDay %}
+                    {% set hidden = "week-active" %}
+                {% elseif loop.index == nbToDisplay %}
+                    {% set hidden = "week-active" %}
+                {% endif %}
+
+                <div class="week-mobile col-12 {{ hidden }}" day="{{ loop.index }}" daytrans="{{ ("common."~days[loop.index0])|lower|trans }} {{ start_date|date_modify('+' ~ loop.index0 ~ ' day')|date("d/m/Y") }}">
+                    {% set isDispo = false %}
+                    {% for reservabilite in day %}
+                        {% if reservabilite.getInscriptionInformations(app.user, item).statut == 'disponible' %}
+                            {% set isDispo = true %}
+                        {% endif %}
+                        {% include 'UcaBundle/UcaWeb/Activite/FormatReservation.Bouton.html.twig' with { cssClass: 'p-2' } %}
+                    {% endfor %}
+
+                    <div class="row mt-1">
+                        {% if loop.index < premierJourSemaineCreneau %}
+                            <div class="col-12 text-center">
+                                <p>{{ "creneau.week.indisponible"|trans }}</p>
+                                <p>
+                                    <button class="btn btn-primary changeJour" baseday="{{loop.index}}" targetday="{{premierJourSemaineCreneau}}">{{ "creneau.list.next"|trans }}</button>
+                                </p>
+                            </div>
+                        {% elseif loop.index > premierJourSemaineCreneau and loop.index < dernierJourSemaineCreneau and not isDispo %}
+                            <div class="col-12 text-center">
+                                <p>{{ "creneau.week.indisponible"|trans }}</p>
+                                <p>
+                                    <button class="btn btn-primary changeJour" baseday="{{loop.index}}" targetday="{{dernierJourSemaineCreneau}}">{{ "creneau.list.next"|trans }}</button>
+                                </p>
+                            </div>
+                        {% elseif loop.index > premierJourSemaineCreneau and day is empty %}
+                            <div class="col-12 text-center">
+                                <p>{{ "creneau.week.indisponible"|trans }}</p>
+                                <p>
+                                    {% if nextCreneau is defined and nextCreneau is not null %}
+                                        <a href="{{path('UcaWeb_FormatActiviteReservationDetailAnneeSemaineJour', { 'idCa' : idCa, 'idA' : idA, 'id' : id, 'idRessource' : idRessource, 'year_week' : nextCreneau|dateFormat('Y_ww') , 'day_week' : nextCreneau|dateFormat('e') })}}">
+                                            <button class="btn btn-primary" id="changeWeek">{{ "creneau.list.next"|trans }}</button>
+                                        </a>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>

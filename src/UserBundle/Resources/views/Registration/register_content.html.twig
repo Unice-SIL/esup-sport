@@ -1,9 +1,0 @@
-{% block main %}
-    {% include "@Uca/Common/Component/Bouton.Retour.html.twig" %}
-    <h1>{{ ('utilisateur.ajouter.title') | trans }}</h1>
-    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Content.html.twig" 
-  with {'action': 'ajouter', 'formPath': 'UcaGest_UtilisateurEnregistrement', 'formClass': 'UcaGest_UtilisateurEnregistrement'} %}
-{% endblock %}
-{% block javascripts %}
-    {% include "@Uca/UcaGest/Securite/Utilisateur/Formulaire.Js.html.twig" with {'checkboxEncadrantHtmlId': 'fos_user_registration_form_groups_3'} %}
-{% endblock %}

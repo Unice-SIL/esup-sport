@@ -1,0 +1,71 @@
+{% extends "UcaBundle/Common/Liste/Datatable.html.twig" %}
+
+{% block main %}
+	<div id="load">
+		<img src="{{ asset('images/load.gif') }}" id="load-img">
+	</div>
+    {% block DatatableTitle %}
+        {{ parent() }}  
+        <div class="alert alert-success d-none" id="messageConfirmationMailSend" role="alert">
+            {{ "monPlanning.more.mail.send.success"|trans }}
+        </div>
+	{% endblock %}
+
+    {% block DatatableHeader %}
+        {{ form_start(form) }}
+        <div class="row mb-1">
+            <div class="col-sm-4"> {{ form_row(form.type_activite) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.classe_activite) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.activite) }} </div>
+            </div>
+            <div class="row btn-outline-infomb-1">
+                <div class="col-sm-4"> {{ form_row(form.formatActivite) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.creneau) }} </div>
+            </div>
+            <div class="row mb-1">
+                <div class="col-sm-4"> {{ form_row(form.encadrants) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.etablissements) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.lieux) }} </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-sm-4"> {{ form_row(form.nom) }} </div>
+                <div class="col-sm-4"> {{ form_row(form.prenom) }}</div>
+            </div>
+            {{ form_end(form, {'render_rest': false}) }}
+        {% endblock %} 
+           {% block DatatableContent %}
+        {{ parent() }}
+	{% endblock %}
+
+    {% block DatatableFooter %}
+        <div id="divEnvoyerEmail" class="row mt-4">
+            <div class='col-sm-9'>
+                <p> {{ 'monPlanning.modal.mail.title' | trans }} </p>
+            </div>
+            <div id="divBoutonEmailing" class='col-sm-3'>
+                <button data-url="" id="boutonEmailing" class='btn btn-primary'> {{ 'monPlanning.more.mail.button' | trans }} </button>
+            </div>
+        </div>
+    {% endblock %}
+    {% include "UcaBundle/UcaGest/Outils/Emailing/Modal.mail.html.twig" %}
+{% endblock %}
+
+
+{% block javascripts %}
+  {{ parent() }}
+  <script type='text/javascript'>
+    'use_strict';
+    {% include 'UcaBundle/Common/Modal/Modal.Information.js.twig' %}
+    $(document).ready(function() {  
+        _uca.ajax.hideLoader();
+        _uca.datatable.filter.getInscriptionsForEmailing($('#sg-datatables-gestioninscription_datatable').DataTable());
+
+        _uca.mail.emailing.url_emailing = "{{ path('UcaGest_EmailingListeEmails', {'nom': 'filtre_nom', 'prenom': 'filtre_prenom', 'idTypeActivite': 'id_typeActivite', 'idClasseActivite': 'id_classeActivite', 'idActivite': 'id_activite', 'idFormatActivite': 'id_formatActivite', 'idCreneau': 'id_creneau', 'idEncadrant': 'id_encadrant', 'idEtablissement': 'id_etablissement', 'idLieu': 'id_lieu' }) }}";
+
+        _uca.mail.emailing.seturlListeDestinataires(boutonEmailing);
+        _uca.mail.emailing.setListeDestinataires(boutonEmailing, ucabundle_mail_save);
+        _uca.mail.emailing.envoyerMail('#modalMailForm');
+        _uca.bootstrap.modal.formSubmit('#ucabundle_mail_save', '#modalMailForm');
+    });
+  </script> 
+{% endblock %}

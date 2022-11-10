@@ -1,0 +1,60 @@
+{# Légende #}
+<div class="row d-none d-lg-block">
+    <div class="d-flex justify-content-center mb-5">
+        <div class="legend d-flex align-items-center mx-3">
+            <div class="legend-item bg-danger mr-2"></div>
+            <p class="m-0">{{ "reservation.calendrier.complet"|trans }}</p>
+        </div>
+        <div class="legend d-flex align-items-center mx-3">
+            <div class="legend-item bg-blue-calendar d-flex align-items-center mr-2">
+                <div class="available-icon bg-success ml-1"></div>
+            </div>
+            <p class="m-0">{{ "reservation.calendrier.disponible"|trans }}</p>
+        </div>
+        <div class="legend d-flex align-items-center mx-3">
+            <div class="legend-item bg-taupe-gray mr-2"></div>
+            <p class="m-0 text-capitalize">{{ "reservation.calendrier.indisponible"|trans }}</p>
+        </div>
+        <div class="legend d-flex align-items-center mx-3">
+            <div class="legend-item bg-blue mr-2"></div>
+            <p class="m-0 text-capitalize">{{ "reservation.calendrier.inscrit"|trans }}</p>
+        </div>
+    </div>
+</div>
+
+{# Calendrier #}
+<div class="row d-none d-lg-block">
+    <div class="d-flex justify-content-between">
+        <div class="calendar-arrow-left text-center fs-30">
+            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": previous_date | dateFormat('Y_ww') }) }}">
+                <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
+            </a>
+        </div>
+        <div class="flex-fill">
+            <div class="row mb-4 d-flex justify-content-between" id="header-calendar">
+                {% for day in  0..6 %}
+                    <p class="day text-center text-uppercase fs-14 fw-700">
+                        {{ ("common."~days[day])|lower|trans }}<br/>
+                        {{ start_date|date_modify('+' ~ day ~ ' day')|date("d/m/Y") }}
+                    </p>
+                {% endfor %}
+            </div>
+
+            <div class="row d-flex justify-content-between align-items-stretch">
+                {% set actualDay = 0 %}
+                {% for day in reservabilitesByDay %}
+                    <div class="day-time-slots text-center">
+                        {% for reservabilite in day %}
+                            {% include 'UcaBundle/UcaWeb/Activite/FormatReservation.Bouton.html.twig' with { cssClass: 'w-100 p-0 m-0' } %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="calendar-arrow-right text-center fs-30">
+            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
+                <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
+            </a>
+        </div>
+    </div>
+</div>

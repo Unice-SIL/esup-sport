@@ -1,0 +1,7 @@
+{% extends "UcaBundle/Common/Modal/Modal.Information.html.twig" %}
+{% block modalId 'modalSuppression' %}
+{% block modalTitle 'message.confirmation.annulation.commande.titre' %}
+{% block modalBody %}
+    {{ 'message.confirmation.annulation.commande'|trans }}
+{% endblock %}
+{% block modalBoutonActionLibelle 'bouton.annuler.commande' | trans %}

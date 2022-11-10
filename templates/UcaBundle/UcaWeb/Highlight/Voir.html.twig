@@ -1,0 +1,125 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% if routeName_autre_video == "UcaWeb_ShnuHighlights" %}
+        {{ ImageAsset.imageFondCssWithUrl(rubrique.image) }}
+    {% else %}
+        {{ ImageAsset.imageFondCssWithEmplacement('Defaut') }}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(".card_autre_video").hover(
+            function() {
+                $(this).find(".play_hors_hover").hide();
+                $(this).find(".play_on_hover").show();
+            }, function() {
+                $(this).find(".play_hors_hover").show();
+                $(this).find(".play_on_hover").hide();
+            }
+        );
+    </script>
+{% endblock %}
+
+{% block main %}
+
+
+    <h1 class="h1-light">
+        {% if routeName_autre_video == "UcaWeb_ShnuHighlights" %}
+            {{ rubrique.titre }}
+        {% else %}
+            {{'highlight.title'|trans}}
+        {% endif %}
+    </h1>
+
+    {% if premiere_video is not null %}
+        <div class="container container-style bg-white mb-5">
+            {% if premiere_video.lecteurVideo == 'instagram' %}
+                {% set classVideo = 'embed-responsive embed-responsive-4by3 mb-4' %} 
+                {% set styleTitre = '' %} 
+            {% elseif premiere_video.lecteurVideo == 'facebook' %}
+                {% set classVideo = 'embed-responsive embed-responsive-1by1 mb-4' %}   
+                {% set styleTitre = 'margin-top: -45%' %}   
+            {% else %}
+                {% set classVideo = 'embed-responsive embed-responsive-16by9 mb-4' %}   
+                {% set styleTitre = '' %}   
+            {% endif %}
+
+            <div class="row">
+                <div class="col-lg-8 pb-3">
+                    {% if premiere_video.lecteurVideo == 'instagram' %}
+                        <iframe style="width: 100%; height: 1000px;" title="{{ premiere_video.titre }}" class="embed-responsive embed-responsive-item border-0" height="{{ premiere_video.height }}" src="{{premiere_video.video}}" allowTransparency="true" scrolling="true" allowfullscreen></iframe>
+                    {% else %}
+                    <!-- style="width: 100%; height: 1000px;" -->
+                        <div class="{{ classVideo }}">
+                            <iframe title="{{ premiere_video.titre }}" class="embed-responsive embed-responsive-item" src="{{premiere_video.video}}" allowTransparency="true" scrolling="no" allowfullscreen></iframe>
+                        </div>
+                    {% endif %}
+                    <div style="{{ styleTitre }}">
+                        <h2 class="text-center">{{ premiere_video.titre}}</h2>
+                        {{ premiere_video.texte | raw }}
+                    </div>
+                </div>
+                {% if liste_videos %}
+                    <div class="col-lg-4 text-center">
+                        <h2 class="text-center no-after">{{ 'highlight.video.autre'|trans }}</h2>
+                        {% for video in liste_videos %}
+                            {% if video.image != null %}
+                                {% set minia = asset( '../upload/public/image/' ~ video.image) %}
+                            {% else %}
+                                {% set minia = video.miniature %}
+                            {% endif %}
+
+                            <a class="mt-auto mb-auto card_autre_video" href="{{ path(routeName_autre_video, {'id': video.id } )}}">
+                                <div class="d-flex align-item-center p-3 img-rounded card-video card-video-small mb-3" href="#" style="background: url('{{ minia }}') no-repeat center center;background-size: cover;">
+                                    <i class="far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style="margin-left: 45%; margin-top: 25%;"></i>
+                                    <i class="fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;margin-left: 45%; margin-top: 25%;"></i>
+                                    <img class="invisible" alt="" src="{{ minia }}">
+                                </div>
+                            </a>
+                        {% endfor %}
+                        <a class="btn btn-primary" href="{{ rubrique is defined ? path('UcaWeb_ConsulterRubrique', {id: rubrique.id}) : path(routeName_autre_video) }}">
+                            {{'highlight.video.plus'|trans}}
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+         
+    {% elseif liste_videos|length != 0 %}
+        <div class="container mb-5">
+            <div class="mt-4 d-flex flex-wrap justify-content-around">                
+                {% for video in liste_videos %}
+                    {% if video.image != null %}
+                        {% set minia = asset( '../upload/public/image/' ~ video.image) %}
+                    {% else %}
+                        {% set minia = video.miniature %}
+                    {% endif %}
+
+                    <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('{{ minia }}') no-repeat center center;background-size: cover;">
+                        <a class="d-flex p-3 w-100 card_autre_video" href="{{path(routeName_autre_video, {'id': video.id } )}}">
+                            <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                            <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                            <div class="mt-auto ml-3 {{ video.intervenant == null ? 'mb-3' }}">
+                                <span class="font-weight-bold text-uppercase color-blanc" style="">{{video.titre}}</span>
+                                
+                                {% if video.intervenant != null %}
+                                    <br/>
+                                    <span class="color-blanc">avec {{video.intervenant}}</span>
+                                {% endif %}
+                            </div>
+                        </a>
+                        {# <img class="invisible" alt="" src="{{ minia }}"> #}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-center">{{ 'highlight.video.indisponible'|trans }}</p>
+    {% endif %}
+{% endblock %}

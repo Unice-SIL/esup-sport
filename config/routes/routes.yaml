@@ -1,0 +1,37 @@
+uca:
+    resource: "../../src/Controller"
+    prefix: /{_locale}/
+    type: annotation
+    requirements:
+        _locale: '%lang.all%'
+    defaults:
+        _locale: '%lang.default%'
+
+# Pour mettre par défaut en fr => solution pas terrible :(
+# root:
+#     path: /
+#     defaults:
+#         _controller: App\Controller\AccueilController:accueilAction
+#         path: /%lang.default%
+#         permanent: true
+
+sg_datatables_bundle:
+    resource: "@SgDatatablesBundle/Controller/"
+    type:     annotation
+    prefix:   /sg
+
+_liip_imagine:
+    resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+bazinga_jstranslation:
+    resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
+
+lexik_paybox:
+    resource: '@LexikPayboxBundle/Resources/config/routing.yml'
+
+gregwar_captcha_routing:
+    resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
+    prefix: /_gcb

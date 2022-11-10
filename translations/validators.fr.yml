@@ -1,0 +1,157 @@
+# formatactivite.capaciteprofil.invalide: La capacité totale est inférieure aux capacités par profil
+activite.bascule.notBlank: Il est obligatoire de sélectionner au moins une activité
+activite.classeactivite.notnull: Une classe d'activité doit être sélectionnée
+activite.description.notblank: La description de l'activité est obligatoire
+activite.image.format: 'L''image de l''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+activite.image.notnull: Une image doit être sélectionnée
+activite.libelle.notblank: Le libellé de l'activité est obligatoire
+activite.uniqueentity: Une activité existe déjà avec ce libellé
+actualite.texte.notblank: Le texte du l'actualité est obligatoire
+actualite.titre.notblank: Le titre du l'actualité est obligatoire
+classeactivite.image.format: 'L''image de la classe d''activité n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+classeactivite.image.notnull: Une image doit être sélectionnée pour la classe d'activité
+classeactivite.libelle.notblank: Le libellé de la classe d'activité est obligatoire
+classeactivite.typeactivite.notnull: Un type d'activité doit être sélectionné
+classeactivite.uniqueentity: Une classe d'activité existe déjà avec ce libellé
+commande.numero.cheque.notBlank: Le numero de chèque est obligatoire
+commandedetail.informationscarte.datefin.incorrecte: La date de validité ne peut être inférieure à la date de paiement
+commandedetail.informationscarte.datefin.notBlank: La date de validité est obligatoire
+commandedetail.informationscarte.etablissement.notBlank: Le campus de retrait est obligatoire
+commandedetail.informationscarte.numero.notBlank: Le numéro de carte est obligatoire
+complement.capacite.notblank: Veuillez saisir une capacité 
+complement.encadrant.notblank: Pour un format encadré, au moins un encadrant doit être sélectionné
+complement.niveauxsportifs.notblank: Vous devez saisir au moins un niveau sportif
+complement.profilsutilisateurs.notblank: Vous devez saisir au moins un profil d'utilisateur
+complement.tarif.notblank: Pour un format payant, le tarif doit être sélectionné
+contact.email.invalide: Il ne s'agit pas d'une adresse email valide
+contact.email.notblank: Une adresse email doit être renseignée
+contact.message.notblank: Un message doit être renseigné
+contact.objet.notblank: Un object de mail doit être renseigné
+etablissement.adresse.notblank: L'adresse du campus est obligatoire
+etablissement.code.notblank: Le code du campus est obligatoire
+etablissement.codePostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
+etablissement.codePostal.notblank: Le code postal du campus est obligatoire
+etablissement.email.invalide: Email Invalide
+etablissement.image.format: 'L''image n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+etablissement.image.notnull: Une image doit être sélectionnée
+etablissement.libelle.notblank: Le libellé du campus est obligatoire
+etablissement.notblank: Un établissement doit être renseigné
+etablissement.telephone.invalide: Numéro de téléphone invalide
+etablissement.uniqueentity: Un établissment existe déjà avec ce libellé
+etablissement.ville.notblank: La ville du campus est obligatoire
+formatactivite.achatcarte.carte.notnull: Vous devez choisir une carte
+formatactivite.capaciteprofil.invalide: Une des capacités par profil est supérieure à la capcité totale
+formatactivite.capaciteprofil.notnull: La capacité par profil ne peut pas être vide
+formatactivite.dateDebutEffective.notblank: La date de début effective est obligatoire
+formatactivite.dateDebutInscription.notblank: La date de début d'inscription est obligatoire
+formatactivite.dateDebutPublication.notblank: La date de début de publication est obligatoire
+formatactivite.dateFinEffective.notblank: La date de fin effective est obligatoire
+formatactivite.dateFinInscription.notblank: La date de fin d'inscription est obligatoire
+formatactivite.dateFinPublication.notblank: La date de fin de publication est obligatoire
+formatactivite.description.notblank: La description du format est obligatoire
+formatactivite.image.format: 'L''image du format n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+formatactivite.image.notnull: Une image doit être sélectionnée
+formatactivite.libelle.notblank: Le libellé du format est obligatoire
+formatactivite.lieu.notnull: Le lieu est obligatoire
+formatactivite.reservation.ressource.notnull: Veuillez sélectionner au moins une ressource
+formatactivite.uniqueentity: Un format d'activité existe déjà avec ce libellé
+groupe.name.notnull: Le nom du groupe est obligatoire
+groupe.name.tropLong: Le nom du groupe est trop long
+groupe.name.tropPetit: Le nom du groupe est trop petit
+groupe.roles.notnull: Le rôle est obligatoire
+groupe.uniqueentity: Un groupe existe déjà avec ce nom
+highlight.urlvideo.invalid: L'url saisie n'est pas une url valide. L'url doit correspondre à celle d'une vidéo Youtube, Dailymotion ou Vimeo.
+highlight.urlvideo.notblank: L'url de la vidéo est obligatoire
+imagefond.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
+imagefond.image.notnull: Une image doit être sélectionnée
+imagefond.titre.notnull: Le titre est obligatoire
+imagesupplementaire.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|JPG|TIFF)"
+lieu.adresse.notblank: L'adresse du lieu est obligatoire
+lieu.codepostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
+lieu.codepostal.notblank: Le code postal du lieu est obligatoire
+lieu.libelle.notblank: Le libellé du lieu est obligatoire
+lieu.ville.notblank: La ville du lieu est obligatoire
+logopartenaire.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
+logopartenaire.image.notnull: Une image doit être sélectionnée
+logopartenaire.nom.notBlank: Le nom est obligatoire
+mail.destinataires.notBlank: Il est obligatoire de sélectionner au moins un destinataire
+mail.message.notBlank: Le message est obligatoire
+mail.objet.notBlank: L'objet de votre message est obligatoire
+materiel.libelle.notblank: Le libellé du lieu est obligatoire
+materiel.quantite.notblank: Veuillez renseigner une quantité disponible
+message.erreur.datedebut: La date de début doit être inférieure à la date de fin
+message.erreur.datedebutinscription.publication: La date de début doit être comprise entre les dates de début et de fin de publication
+message.erreur.datefin: La date de fin doit être supérieure à la date de début
+message.erreur.datefininscription.effective: La date de fin d'inscription doit être plus petite que la date de fin effective
+message.erreur.datefininscription.publication: La date de fin doit être comprise entre les dates de début et de fin de publication
+message.parametrage.timercb.timerpaybox: Le délai de paiement par CB doit être supérieur au délai de paiement Paybox
+message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être inférieur au délai de paiement par CB
+message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
+message.typeinvalide.entier: La valeur {{ value }} n'est pas un entier valide
+parametrage.adressefacturation.notblank: L'adresse de facturation doit être renseignée
+parametrage.anneeuniversitaire.greaterthan: Cette valeur doit être supérieure à 2019
+parametrage.anneeuniversitaire.notblank: L'année universitaire est obligatoire
+parametrage.anneeuniversitaire.type: Cette valeur doit être un nombre
+parametrage.facebook.notblank: Un lien Facebook doit être renseigné
+parametrage.instagram.notblank: Un lien Instagram doit être renseigné
+parametrage.libelleadresse.notblank: Un libelle pour l'adresse doit être renseigné
+parametrage.lien.noturl: Il ne s'agit pas d'une URL valide
+parametrage.mailcontact.notblank: Une adresse email doit être renseignée
+parametrage.mailcontact.notemail: Il ne s'agit pas d'une adresse email valide
+parametrage.siret.format: Le SIRET doit être composé de 14 chiffres
+parametrage.siret.notblank: Un numéro de SIRET doit être renseigné
+parametrage.timer.type: Cette valeur doit être un nombre
+parametrage.timer.zero: Cette valeur doit être supérieure à 0
+parametrage.timerbds.notblank: Le délai de paiement au Bureau des sports doit être renseigné
+parametrage.timercb.notblank: Le délai de paiement par CB doit être renseigné
+parametrage.timerpanier.notblank: Le délai de validation du panier doit être renseigné
+parametrage.timerpanierapresvalidation.notblank: Le délai de mise au panier après validation doit être renseigné
+parametrage.timerpartenaire.notblank: Le délai de paiement avec partenaire doit être renseigné
+parametrage.timerpaybox.notblank: Le délai de paiement Paybox doit être renseigné
+parametrage.youtube.notblank: Un lien Youtube doit être renseigné
+profilutilisateur.libelle.notblank: Le libellé du profil utilisateur est obligatoire
+profilutilisateur.nbMaxinscriptions.notblank: Le nombre maximum d'inscriptions du profil utilisateur est obligatoire
+profilutilisateur.preinscription.notblank: La pré-inscription ne doit pas être vide
+profilutilisateur.uniqueentity: Un profil utilisateur existe déjà avec ce libellé
+ressource.image.format: 'L''image de la ressource n''est pas au bon format. (Attendu : PNG|JPEG|TIFF)'
+ressource.image.notnull: Une image doit être sélectionnée
+ressource.nbpartenairesmax.minval: Le nombre max de partenaires doit être supérieure ou égale ou nombre de partenaires requis
+shnurubrique.image.notnull: L'image est obligatoire
+shnurubrique.titre.notnull: Le titre est obligatoire
+shnurubrique.type.notnull: Le type est obligatoire
+tarif.libelle.notblank: Le libellé du tarif est obligatoire
+tarif.montant.notnull: Veuillez saisir un montant
+tarif.tva.invalid: La TVA est comprise entre 0 et 100
+tarif.tva.notnull: La TVA ne doit pas être vide
+tarif.uniqueentity: Un tarif existe déjà avec ce libellé
+texte.texte.notblank: Le texte est obligatoire
+texte.textemobile.notblank: Le texte mobile est obligatoire
+texte.titre.notblank: Le titre du texte est obligatoire
+traduction.texte.notblank: La traduction dans cette langue est obligatoire
+typeactivite.libelle.notblank: Le libellé du type d'activité est obligatoire
+typeactivite.uniqueentity: Un type d'activité existe déjà avec ce libellé
+typeautorisation.comportement.notnull: Veuillez sélectionner un comportement
+typeautorisation.libelle.notblank: Le libellé du type d'autorisation est obligatoire
+typeautorisation.uniqueentity: Un type d'autorisation existe déjà avec ce libellé
+utilisateur.UserProfile.notnull: Veuillez selectionner un profil d'utilisateur
+utilisateur.credit.dateexpiration.notblank: Veuillez saisir la date d'expiration
+utilisateur.document.format.erreur: Format du document invalide
+utilisateur.document.notBlank : Pièce justificative manquante
+utilisateur.firstname.notnull: Le prénom est obligatoire
+utilisateur.mail.existant: L'adresse e-mail est déjà utilisée
+utilisateur.mail.invalide: L'adresse e-mail est invalide
+utilisateur.mail.notnull: L'adresse e-mail est obligatoire
+utilisateur.mail.shibboleth: Vous avez déja un comtpe universitaire
+utilisateur.mail.tropLong: L'adresse e-mail trop long
+utilisateur.mail.tropPetit: L'adresse e-mail trop court
+utilisateur.name.notnull: Le nom est obligatoire
+utilisateur.password.notnull: Le mot de passe est obligatoire
+utilisateur.password.tropPetit: Le mot de passe est trop court
+utilisateur.sexe.notnull: La civilité est obligatoire
+utilisateur.statut.notnull: Le statut est obligatoire
+utilisateur.telephone.invalide: Le numéro de téléphone invalide
+utilisateur.username.email: Votre nom d'utilisateur ne doit pas être un e-mail
+utilisateur.username.existant: Le nom d'utilisateur est déjà utilisé
+utilisateur.username.notnull: Le nom d'utilisateur est obligatoire
+utilisateur.username.tropLong: Le nom d'utilisateur est trop long
+utilisateur.username.tropPetit: "Le nom d'utilisateur est trop court"

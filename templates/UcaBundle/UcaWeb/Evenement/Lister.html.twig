@@ -1,0 +1,37 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Inscription.html.twig' as Inscription %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Evenements') }}
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="h1-light">{{ 'evenements.title'|trans }}</h1>
+
+    <section class="container mb-5">
+        {% for item in evenements %}
+            {% include 'UcaBundle/UcaWeb/Activite/CarteEvenement.html.twig' %}
+        {% endfor %}
+        {% include "UcaBundle/Common/Pagination/Pagination.html.twig" %}
+    </section>
+    <div class="d-none" id="js-text-inscrit-clone">
+        <div class="color-blue">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ "creneau.list.inscrit"|trans|upper }}</span>
+        </div>
+    </div>
+    {{ Inscription.HtmlModal }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ Inscription.Js }}
+    <script type='text/javascript'>
+        'use_strict';
+        _uca.evenement.limitChar();
+    </script>
+{% endblock %}

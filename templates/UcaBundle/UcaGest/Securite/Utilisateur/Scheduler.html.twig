@@ -1,0 +1,20 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% block main %}
+    {{ flashBag.showAll }}
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+        <h2>Réservabilités</h2>
+        {{ dhtmlxCalendar.displayCalendarHtml }}
+{% endblock %}
+{% block javascripts %}
+    <script type='text/javascript'>
+		'use_strict';
+        var typeA = "{{ type }}";
+        var role = "{{ role }}"; 
+    </script>
+
+    {{ dhtmlxCalendar.initSchedulerData(item) }}
+    {{ dhtmlxCalendar.initCalendarJs(item) }}
+    {{ dhtmlxCalendar.debugSchedulerEvents() }}
+{% endblock %}

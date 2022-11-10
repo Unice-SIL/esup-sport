@@ -1,0 +1,65 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block title %}
+    Détail de l'activité
+{% endblock %}
+
+{% block main %}
+    {% include "UcaBundle/Common/Modal/Modal.Suppression.html.twig" %}
+
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>
+        {{ item.libelle }}
+    </h1>
+    {{ flashBag.showAll }}
+    <p>
+        <span class="badge badge-dark">{{ item.classeActivite.typeActivite.libelle }}</span>
+        <span class="badge badge-primary">{{ item.classeActivite.libelle }}</span>
+    </p>
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+        </div>
+        <div class="col-md-8">
+            <h2 class="hide-border-title">
+                {{'common.description'|trans}}
+            </h2>
+            <p>
+                {{ item.description|nl2br }}
+            </p>
+        </div>
+    </div>
+    {% if is_granted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE') %}
+        <div class="row">
+            <div class="col-sm-12 table-responsive">
+                <h2 class="hide-border-title">
+                    {{ 'activite.format.ajouter'|trans }}
+                </h2>
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecCreneau'}) }}">
+                    {{ 'activite.formataveccreneau.ajouter'|trans }}</a>
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAvecReservation'}) }}">
+                    {{ 'activite.formatavecreservation.ajouter'|trans }}</a>
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatSimple'}) }}">
+                    {{ 'activite.formatsimple.ajouter'|trans }}</a>
+                <a class="btn btn-primary" href="{{ path('UcaGest_FormatActiviteAjouter', { idActivite: item.id, format: 'FormatAchatCarte'}) }}">
+                    {{ 'activite.formatachatcarte.ajouter'|trans }}</a>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-sm-12 table-responsive">
+            <h2 class="hide-border-title">
+                {{ 'activite.format.disponible'|trans }}
+            </h2>
+            {{ sg_datatables_render_html(datatable) }}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ sg_datatables_render_js(datatable) }}
+{% endblock %}

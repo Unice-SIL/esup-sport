@@ -1,0 +1,82 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/Dhtmlx.html.twig' as dhtmlxCalendar %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% block main %}
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ item.libelle }}</h1>
+     {{ flashBag.showAll }}
+    <div class="row">
+        <div class="col-md-4">
+            <img class="img-fluid rounded mb-4" alt="" src="{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}">
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="hide-border-title"> {{'common.description'|trans}} </h2>
+                    <p> {{ item.description|nl2br }} </p>
+                </div>
+                {% if item.tarif != null %}
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.tarif'|trans}} </h2>
+                        <p> {{ item.tarif }} </p>
+                    </div>
+                {% endif %}
+            </div>
+            {% if format  == 'Lieu' %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.coordonnees'|trans}} </h2>
+                        <p> 
+                            {% if item.etablissement %}
+                                {{ item.etablissement.libelle }} <br>
+                            {% else %}
+                                {{ item.libelle }} <br>
+                            {% endif %}
+                            {{ item.adresse }} <br>
+                            {{ item.codePostal }} {{ item.ville }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="hide-border-title"> {{'common.infossupplementaires'|trans}} </h2>
+                        <li> {{'ressource.capacite'|trans}} : {{ item.capaciteAccueil }} </li>
+                        <li> {{'ressource.superficie'|trans}} : {{ item.superficie }} </li>
+                        <li> {{'ressource.code.rus'|trans}} : {{ item.nomenclatureRus }} </li>
+                        <li> {{'ressource.latitude'|trans}} / {{'ressource.longitude'|trans}} : {{ item.latitude }} / {{ item.longitude }} </li>
+                        <li> {{'lieu.visitevirtuelle.libelle'|trans}} : {{ item.visiteVirtuelle }} </li>
+                    </div>
+                </div>  
+            {% elseif format == 'Materiel' %}
+                <p> {{'ressource.quantite'|trans}} : {{ item.quantiteDisponible }} </p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <h2 class="hide-border-title">{{'common.reservabilites'|trans}}</h2>
+    {{ dhtmlxCalendar.displayCalendarHtml(true) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script type='text/javascript'>
+		'use_strict';
+        var typeA = "{{ type }}";
+        var role = "{{ role }}";
+
+        var baseURL = "{{ path('UcaGest_RessourceDuplicate', {id: item.id, typeperiode: 'type_periode', periodeDebut: 'periodeDebut', periodeFin: 'periodeFin'}) }}";
+        duplicateScheduler = function(lien){
+            var periodeDebut = _uca.formatDate(scheduler._min_date);
+            var periodeFin = _uca.formatDate(scheduler._max_date);
+            var typeperiode = $('.dhx_cal_tab.active').attr('name');
+            typeperiode = typeperiode.replace('_tab', '');
+
+            var url = baseURL.replace('type_periode', typeperiode).replace('periodeDebut', periodeDebut).replace('periodeFin', periodeFin);
+
+            $(lien).attr('href', url);
+        }
+    </script>
+
+    {{ dhtmlxCalendar.initSchedulerData(item) }}
+    {{ dhtmlxCalendar.initCalendarJs(item, format) }}
+    {{ dhtmlxCalendar.debugSchedulerEvents() }}
+{% endblock %}

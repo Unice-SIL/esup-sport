@@ -1,0 +1,16 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block main %}
+    {{ flashBag.showAll }}
+    <h3> Payment </h3>
+    <form method="POST" action="https://{{ payboxServer }}/cgi/MYchoix_pagepaiement.cgi">
+    {% for key, val in postData %}
+    <input type="hidden" name="{{ key }}" value="{{ val }}">
+    {% endfor %}
+    <input type="submit" value="Payer">
+    </form>
+{% endblock %}
+
+{# 3749 0740 3001 005 12/20 1234 #}
+

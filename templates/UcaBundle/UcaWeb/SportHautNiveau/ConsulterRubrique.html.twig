@@ -1,0 +1,16 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Bootstrap.html.twig' as Bootstrap %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithUrl(rubrique.image) }}
+{% endblock %}
+
+{% block main %}    
+
+    <h1 class="h1-light">{{ rubrique.titre }}</h1>
+    <section class="container container-style bg-white mb-5">
+        {{ rubrique.texte|raw }}
+    </section>
+{% endblock %}

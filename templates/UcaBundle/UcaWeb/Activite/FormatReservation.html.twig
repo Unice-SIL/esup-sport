@@ -1,0 +1,69 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import 'UcaBundle/Macros/Inscription.html.twig' as Inscription %}
+
+{% block title %}
+    Uca Web
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithUrl(item.image) }}
+{% endblock %}
+
+{% block main %}
+    {% set premierJourSemaineCreneau = 0 %}
+    {% set dernierJourSemaineCreneau = 0 %}
+    {% for k, v in reservabilitesByDay|filter(v => v is not empty ) -%}
+        {% for l, w in v|filter(w => w.getInscriptionInformations(app.user, item).statut == 'disponible' ) -%}
+            {% if premierJourSemaineCreneau == 0 %}
+                {% set premierJourSemaineCreneau = loop.parent.loop.index %}
+            {% endif %}
+            {% set dernierJourSemaineCreneau = loop.parent.loop.index %}
+        {% endfor %}
+    {% endfor %}
+
+
+    <div class="container p-0 pl-4 pl-xl-0">
+        {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    </div>
+    <input type="hidden" value="{{app.request.attributes.get('day_week')}}" id="dayWeekParameter">
+    <h1 class="h1-light">{{ item.libelle }}
+        -
+        {{ libelleRessource }}</h1>
+
+    <section class="container container-style bg-white mb-5">
+
+        <h2 class="hide-border-title color-dark-gray text-center text-uppercase fs-21 fw-800 mb-5">{{ "reservation.calendrier.titre"|trans }}</h2>
+
+        {% include 'UcaBundle/UcaWeb/Activite/FormatReservation.Desktop.html.twig' %}
+        {% include 'UcaBundle/UcaWeb/Activite/FormatReservation.Mobile.html.twig' %}
+
+        {# Ajouter style du blocInscription dans un CSS #}
+        <div class="col-12 text-center" style="visibility:hidden;" id="blocInscription">
+            <button class="btn btn-success js-inscription" data-type="Reservabilite" id="inscription" url="">{{ "creneau.list.reserver"|trans }}</button>
+        </div>
+
+    </section>
+
+
+    {% include 'UcaBundle/UcaWeb/Activite/BlocReservation.html.twig' %}
+    {{ Inscription.HtmlModal }}
+{% endblock %}
+
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('calendar') }}
+    {{ Inscription.Js }}
+ 
+    <script type='text/javascript'>
+        'use_strict';
+        $(document).ready(function () {
+            $(".notFull").on('click', function () {
+                _uca.common.afficherElement(blocInscription);
+            });
+            _uca.bootstrap.tooltip.display();
+        });
+    </script>
+{% endblock %}

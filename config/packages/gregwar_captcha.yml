@@ -1,0 +1,3 @@
+gregwar_captcha:
+    as_url: true
+    reload: true

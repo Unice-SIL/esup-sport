@@ -1,0 +1,119 @@
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+{% set inscriptionInformations = item.getInscriptionInformations(app.user) %}
+
+<div class="w-100 mb-4 p-2 py-4 p-md-4 container-style bg-white d-flex flex-wrap justify-content-between card-event">
+  <div class="col-4 d-none d-sm-flex justify-content-center event-img img-rounded" style="background: url('{{ ImageAsset.thumb(item.image, 'thumb_large_small') }}') no-repeat center center;background-size: cover;">
+    <p class="event-date align-self-center text-center">
+      {{ item.dateDebutEffective | dateFormat('dd') }}<br/>
+      {{ item.dateDebutEffective | dateFormat('MMM') }}<br/>
+      {{ item.dateDebutEffective | dateFormat('Y') }}
+    </p>
+  </div>
+
+  <!-- INFO EVENEMENT --> 
+  <div class="m-0 p-0 pl-4 pl-md-0 col-12 col-sm-8 event-info">
+    
+    <!-- EN-TETE --> 
+    <div class="row mb-4">
+      <h2 class="m-0 mb-2 p-0 pl-2 pl-md-5 col-12 text-dark text-uppercase">{{ item.libelle }}</h2>
+      <p class="d-block d-sm-none m-0 mb-2 p-0 pl-2 pl-md-5 col-12 font-italic fs-14 color-taupe-gray"> Le {{ item.dateDebutEffective | dateFormat('dd/mm/Y') }}</p>
+      <p class="m-0 p-0 pl-2 pl-md-5 col-12 text_evenement_too_long" style="">{{ item.description | nl2br }}</p>
+
+      <button type="button" class="ml-2 ml-md-5 btn btn-primary" data-toggle="modal" data-target="#modal_details_event_{{item.id}}" style="display: none">
+        {{ 'button.voir.plus' | trans }}
+      </button>
+      {% include "UcaBundle/UcaWeb/Activite/Modal.EvenementDetails.html.twig" with {'idModalDetailsEvent' : 'modal_details_event_'~item.id, 'details' : item.description} %}
+    </div>
+    <div class="row d-flex flex-wrap">
+      <!-- col. LIEU --> 
+      <div class="p-0 pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-2 event-location">
+        <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.lieu' | trans }}</h3>
+        {% if item.lieu is not empty %}
+          {% for l in item.lieu %}
+            <p class="m-0 mb-3 p-0">{{ l.libelle }}</p>
+          {% endfor %}
+        {% else %}
+          <p class="m-0 mb-3 p-0">{{ 'formatactivite.lieu.aucun' | trans }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Col. ENCADRANT --> 
+      <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-4 col-lg-3 event-supervisor">
+        <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.encadrants' | trans }}</h3>
+        <p class="m-0 mb-3 p-0">
+          {% if item.encadrants is not empty %}
+            {% for encadrant in item.encadrants %}
+              {{ encadrant.prenom }}
+              {{ encadrant.nom }}<br/>
+            {% endfor %}
+          {% else %}
+            {{ 'common.encadrants.aucun'|trans }}
+          {% endif %}
+        </p>
+      </div>
+
+      <!-- Col. HORRAIRE --> 
+      <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-2 event-time">
+        <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.horaires' | trans }}</h3>
+        <p class="m-0 mb-3 p-0">
+          {{ item.dateDebutEffective|date("d/m/Y") }}
+          <br/>{{ item.dateDebutEffective|date("H:i") }}</p>
+      </div>
+
+      <!-- Col. TARIF -->
+      <div class="pl-2 pl-md-5 col-12 col-sm-6 col-md-3 col-lg-auto event-price">
+        {% if inscriptionInformations.montant.total >= 0  %}
+          <h3 class="m-0 mb-2 p-0 text-uppercase">{{ 'common.tarif' | trans }}</h3>
+          <p class="m-0 mb-3 p-0">{{ inscriptionInformations.montant.total | number_format }}&nbsp;€ *</p>
+        {% endif %}
+      </div>
+
+      <!-- Col. BOUTON --> 
+      <!-- {{ inscriptionInformations.statut }} -->
+      <div class="pl-0 pl-md-5 col-12 col-md-auto text-center">
+        {% if inscriptionInformations.statut in ['previsualisation'] %}
+          <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans | upper }}</button>
+        {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
+          <p class="m-0 fs-14 fw-500 color-blue">
+            <i class="fas fa-check-circle"></i>
+            {{ ('formatSimple.list.' ~ inscriptionInformations.statut) | trans | upper }}
+          </p>
+        {% elseif inscriptionInformations.statut in ['complet'] %}
+          <p class="m-0 fs-14 fw-500 text-uppercase color-red">{{ "creneau.list.complet"|trans }}</p>
+        {% elseif inscriptionInformations.statut in ['inscriptionsavenir'] %}
+          <button class="btn btn-info disabled">{{ 'common.inscriptionsavenir' | trans | upper }}</button>
+        {% elseif inscriptionInformations.statut in ['inscriptionsterminees'] %}
+          <button class="btn btn-info disabled">{{ 'bouton.indisponible.inscriptionsterminees' | trans | upper }}</button>
+        {% elseif inscriptionInformations.statut in ['disponible'] %}
+          <button class="btn btn-primary js-inscription" data-type="FormatSimple" data-id="{{ item.id }}">{{ 'common.inscrire' | trans }}</button>
+        {% elseif inscriptionInformations.statut in ['nbcreneaumaxatteint', 'nbressourcemaxatteint', 'profilinvalide', 'nonconnecte', 'montantincorrect', 'cgvnonacceptees'] %}
+            {% if inscriptionInformations.statut == 'nbcreneaumaxatteint' %}
+              {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions})) %}
+            {% elseif inscriptionInformations.statut == 'nbressourcemaxatteint' %}
+              {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptionsRessource})) %}
+            {% else %}
+              {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans) %}
+            {% endif %}
+            <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">
+              {# {{ 'common.indisponible' | trans | upper }} #}
+              <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ tooltipMessage }}" aria-label="{{ tooltipMessage }}">
+                <i class="fas fa-question-circle"></i>
+              </span>
+              {{ tooltipMessage }}
+            </p>
+          {% else %}
+            <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray w-100 text-center">{{ 'common.indisponible' | trans | upper }}</p>
+          {% endif %}
+      </div>
+    </div>
+    <br/>
+    
+    <!-- NOTE BAS DE PAGE --> 
+    <div class="row">
+      <div class="pl-0 pl-md-5 col-12">
+        {{ 'formatactivite.fraiscomplementaires.montantsinclus.evenementsimple' | trans }}
+      </div>
+    </div>
+  </div> <!-- Fin INFO EVENEMENT -->
+</div> <!-- Fin container -->

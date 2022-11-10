@@ -24,32 +24,26 @@ _uca.datatable.stateLoaded = function () {
 /**
  * Function : ordonnerElements
  * Monter/descendre un elément du DT (NB: l'ordre est en BDD)
-*/
-_uca.datatable.ordonnerElements = function (url, idDt, timeOut = 1000, idLoader = 'loaderDiv') {
-    setTimeout(function () {
-        document.querySelectorAll('.js-monter, .js-descendre').forEach(function (boutonOrdre) {
-            boutonOrdre.addEventListener('click', function (event) {
-                _uca.datatable.loader(idLoader);
-                let id = this.parentElement.parentElement.id;
-                let pathUrl = Routing.generate(url, { 'id': id, 'action': this.dataset.action });
-                let xhr = _uca.ajax.getXmlhttp();
-                xhr.open("GET", pathUrl, true);
-                xhr.send();
-                xhr.onload = function () {
-                    if (xhr.readyState == 4 && xhr.status == 200) {
-                        if (200 == xhr.response) {
-                            _uca.datatable.loader(idLoader);
-                            $(idDt).DataTable().draw();
-                            _uca.datatable.ordonnerElements(url, idDt);
-                        }
-                    } else {
-                        _uca.datatable.loader(idLoader);
-                        _uca.ajax.fail(xhr);
-                    }
+ */
+_uca.datatable.ordonnerElements = function (url, idDt, timeOut = 1000, idLoader = 'load') {
+    $(document).on("click", ".js-monter, .js-descendre", function () {
+        _uca.datatable.loader(idLoader);
+        let id = this.parentElement.parentElement.id;
+        let pathUrl = Routing.generate(url, { 'id': id, 'action': this.dataset.action });
+        let xhr = _uca.ajax.getXmlhttp();
+        xhr.open("GET", pathUrl, true);
+        xhr.send();
+        xhr.onload = function () {
+            _uca.datatable.loader(idLoader);
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                if (200 == xhr.response) {
+                    $(idDt).DataTable().draw();
                 }
-            });
-        });
-    }, timeOut);
+            } else {
+                _uca.ajax.fail(xhr);
+            }
+        }
+    });
 };
 
 /** 

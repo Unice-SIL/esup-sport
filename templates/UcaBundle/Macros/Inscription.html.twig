@@ -1,0 +1,12 @@
+{% macro HtmlModal() %}
+    {% include 'UcaBundle/UcaWeb/Inscription/Modal.Chargement.html.twig' %}
+{% endmacro %}
+
+
+{% macro Js() %}
+    <script type='text/javascript'>
+		'use_strict';
+        _uca.inscription.init();
+        $('.js-inscription').each(_uca.inscription.addButtonEvent);
+    </script>
+{% endmacro %}

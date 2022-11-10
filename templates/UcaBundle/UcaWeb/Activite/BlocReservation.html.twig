@@ -1,0 +1,36 @@
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+    {% set imageFond = item %}
+    {% set params = {idCa: idCa, idA: idA} %}
+
+{% if data|length > 1 %}
+    <section class="section-home py-5 bg-bloc-reservation">
+
+        <div class="container pageFormatActivity pt-3">
+            <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "activite.autreReservation"|trans }}</p>
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+            {% for dataItem in data %}
+                {% if dataItem.format == 'FormatAvecCreneau' %}
+                    {% set iconFormat = 'fas fa-calendar-alt' %}
+                {% elseif dataItem.format == 'FormatAvecReservation' %}
+                    {% set iconFormat = 'fas fa-table-tennis' %}
+                {% elseif dataItem.format == 'FormatAchatCarte' %}
+                    {% set iconFormat = 'fas fa-credit-card' %}
+                {% else %}
+                    {% set iconFormat = 'fas fa-ticket-alt' %}
+                {% endif %}
+                {% set ctaButtonFormat = dataItem.format~'.button' %}
+                {% if dataItem.id != id %}
+                    <div class="format-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center">
+                            <i class="{{ iconFormat }} text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold">{{ dataItem.libelle }}</p>
+                            <a class="btn btn-primary d-block" href="{{ path("UcaWeb_FormatActiviteDetail", params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+
+    </section>
+{% endif %}

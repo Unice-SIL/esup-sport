@@ -1,8 +1,0 @@
-{% extends "@Uca/Email/TemplateEmail.html.twig" %}
-{% block main %}
-	<div>
-        <p>
-            {{ 'registration.email.message'|trans({'%username%': user.username, '%confirmationUrl%': app.request.schemeAndHttpHost ~ path('fos_user_registration_confirm', {'token' : user.confirmationToken})})|nl2br }}
-        </p>
-    </div>
-{% endblock %}
