@@ -184,21 +184,6 @@ const checkInputAutorisations = function() {
     }
 }
 
-const checkInputAutorisations = function() {
-    var autorisationsInputs = $('input[type="checkbox"][name="autorisation"]');
-    if (autorisationsInputs.length > 0) {
-        autorisationsInputs.on('change', function() {
-            let disabled = $('input[type="checkbox"][name="autorisation"]:not(:checked)').length > 0;
-
-            if (disabled) {
-                $('#btn-confirmation').attr('disabled', true);
-            } else {
-                $('#btn-confirmation').removeAttr('disabled');
-            }
-        });
-    }
-}
-
 const checkInputEmail = function(partenairesInputs) {
 
     if (partenairesInputs.length > 0) {
@@ -252,18 +237,3 @@ const validateEmail = (email) => {
         email != '' &&
         email != USER_MAIL;
 };
-
-const checkInputAutorisations = function() {
-    var autorisationsInputs = $('input[type="checkbox"][name="autorisation"]');
-    if (autorisationsInputs.length > 0) {
-        autorisationsInputs.on('change', function() {
-            let disabled = $('input[type="checkbox"][name="autorisation"]:not(:checked)').length > 0;
-
-            if (disabled) {
-                $('#btn-confirmation').attr('disabled', true);
-            } else {
-                $('#btn-confirmation').removeAttr('disabled');
-            }
-        });
-    }
-}

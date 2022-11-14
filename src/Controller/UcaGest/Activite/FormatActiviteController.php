@@ -10,12 +10,17 @@
 namespace App\Controller\UcaGest\Activite;
 
 use App\Entity\Uca\Activite;
+use App\Entity\Uca\Appel;
+use App\Entity\Uca\DhtmlxEvenement;
+use App\Entity\Uca\EvenementType;
 use App\Entity\Uca\FormatAchatCarte;
 use App\Entity\Uca\FormatActivite;
 use App\Entity\Uca\FormatActiviteProfilUtilisateur;
 use App\Entity\Uca\FormatAvecCreneau;
 use App\Entity\Uca\FormatAvecReservation;
 use App\Entity\Uca\FormatSimple;
+use App\Entity\Uca\Utilisateur;
+use App\Form\PlanningMailType;
 use App\Repository\NiveauSportifRepository;
 use App\Repository\ProfilUtilisateurRepository;
 use App\Service\Common\FlashBag;
@@ -27,11 +32,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use UcaBundle\Entity\Appel;
-use UcaBundle\Entity\DhtmlxEvenement;
-use UcaBundle\Entity\Utilisateur;
-use UcaBundle\Form\EvenementType;
-use UcaBundle\Form\PlanningMailType;
 
 /**
  * @Route("UcaGest/Activite/{idActivite}/FormatActivite", requirements={"idActivite"="\d+"})

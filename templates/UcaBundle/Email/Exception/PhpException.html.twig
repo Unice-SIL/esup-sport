@@ -38,45 +38,47 @@
                 </td>
             </tr>
         {% endif %}
-        {% if (app.request.server.get("HTTP_REFERER") is not empty) %}
-            <tr>
-                <td>
-                    URL de provenance :
-                </td>
-                <td>
-                    {{ app.request.server.get("HTTP_REFERER") }}
-                </td>
-            </tr>
-        {% endif %}
-        {% if (app.request.uri is not empty) %}
-            <tr>
-                <td>
-                    URL :
-                </td>
-                <td>
-                    {{ app.request.uri }}
-                </td>
-            </tr>
-        {% endif %}
-        {% if (app.request.request is not empty) %}
-            <tr>
-                <td>
-                    $_POST :
-                </td>
-                <td>
-                    <pre>{{ var_dump(app.request.request) }}</pre>
-                </td>
-            </tr>
-        {% endif %}
-        {% if (app.request.query is not empty) %}
-            <tr>
-                <td>
-                    $_GET :
-                </td>
-                <td>
-                    <pre>{{ var_dump(app.request.query) }}</pre>
-                </td>
-            </tr>
+        {% if (app.request != null) %}
+            {% if (app.request.server.get("HTTP_REFERER") is not empty) %}
+                <tr>
+                    <td>
+                        URL de provenance :
+                    </td>
+                    <td>
+                        {{ app.request.server.get("HTTP_REFERER") }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if (app.request.uri is not empty) %}
+                <tr>
+                    <td>
+                        URL :
+                    </td>
+                    <td>
+                        {{ app.request.uri }}
+                    </td>
+                </tr>
+            {% endif %}
+            {% if (app.request.request is not empty) %}
+                <tr>
+                    <td>
+                        $_POST :
+                    </td>
+                    <td>
+                        <pre>{{ var_dump(app.request.request) }}</pre>
+                    </td>
+                </tr>
+            {% endif %}
+            {% if (app.request.query is not empty) %}
+                <tr>
+                    <td>
+                        $_GET :
+                    </td>
+                    <td>
+                        <pre>{{ var_dump(app.request.query) }}</pre>
+                    </td>
+                </tr>
+            {% endif %}
         {% endif %}
         {% if (exception.message is not empty) %}
             <tr>

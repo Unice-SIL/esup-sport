@@ -14,6 +14,7 @@ use App\Entity\Uca\Utilisateur;
 use App\Exception\ShibbolethException;
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\User\UserInterface;
 use UniceSIL\ShibbolethBundle\Security\Provider\AbstractShibbolethUserProvider;
 
@@ -23,8 +24,9 @@ class GestionnaireUtilisateurShibboleth extends AbstractShibbolethUserProvider
     private $userRepo;
     private $firstConnection = false;
 
-    public function __construct(EntityManagerInterface $em, UtilisateurRepository $userRepo)
+    public function __construct(EntityManagerInterface $em, UtilisateurRepository $userRepo, RequestStack $requestStack)
     {
+        parent::__construct($requestStack);
         $this->em = $em;
         $this->userRepo = $userRepo;
     }
@@ -41,6 +43,9 @@ class GestionnaireUtilisateurShibboleth extends AbstractShibbolethUserProvider
      */
     public function loadUserByIdentifier($identifier)
     {
+        $shibbolethUserAttributes = $this->getAttributes();
+
+        return $this->loadUser($shibbolethUserAttributes);
     }
 
     public function loadUser(array $credentials)

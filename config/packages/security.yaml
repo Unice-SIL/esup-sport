@@ -39,6 +39,7 @@ security:
                 target: UcaWeb_Accueil
             # logout_on_user_change: true
             entry_point: form_login
+            context: app
     
     role_hierarchy: 
         # Basiques: 

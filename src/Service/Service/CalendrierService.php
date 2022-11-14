@@ -3,6 +3,7 @@
 namespace App\Service\Service;
 
 use App\Entity\Uca\DhtmlxEvenement;
+use App\Entity\Uca\FormatActivite;
 use App\Repository\DhtmlxEvenementRepository;
 use App\Repository\EtablissementRepository;
 use App\Repository\FormatAvecCreneauRepository;
@@ -14,10 +15,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use UcaBundle\Entity\Etablissement;
-use UcaBundle\Entity\FormatActivite;
-use UcaBundle\Entity\FormatAvecCreneau;
-use UcaBundle\Entity\FormatAvecReservation;
 
 class CalendrierService
 {

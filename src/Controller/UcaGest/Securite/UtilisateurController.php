@@ -9,27 +9,27 @@
 
 namespace App\Controller\UcaGest\Securite;
 
-use App\Form\UtilisateurType;
-use App\Entity\Uca\Utilisateur;
-use App\Service\Common\FlashBag;
-use App\Entity\Uca\CommandeDetail;
-use App\Service\Common\MailService;
-use App\Entity\Uca\StatutUtilisateur;
 use App\Datatables\UtilisateurDatatable;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\Request;
+use App\Entity\Uca\CommandeDetail;
+use App\Entity\Uca\StatutUtilisateur;
+use App\Entity\Uca\Utilisateur;
 use App\Entity\Uca\UtilisateurCreditHistorique;
+use App\Form\UtilisateurType;
 use App\Repository\StatutUtilisateurRepository;
+use App\Service\Common\FlashBag;
+use App\Service\Common\MailService;
 use App\Service\Securite\RegistrationHandler;
-use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sg\DatatablesBundle\Datatable\DatatableFactory;
 use Sg\DatatablesBundle\Response\DatatableResponse;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Vich\UploaderBundle\Handler\UploadHandler;
 
@@ -69,14 +69,12 @@ class UtilisateurController extends AbstractController
 
     /**
      * @Route("/Enregistrement", name="UcaGest_UtilisateurEnregistrement")
-     *
-     * @param Request $request
-     * @return void
      */
-    public function creationUtilisateur(Request $request, RegistrationHandler $registrationHandler) {
+    public function creationUtilisateur(Request $request, RegistrationHandler $registrationHandler)
+    {
         $utilisateur = (new Utilisateur())->setPlainPassword(Utilisateur::getRandomPassword());
         $form = $this->createForm(UtilisateurType::class, $utilisateur, ['action_type' => 'enregistrement']);
-        
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $registrationHandler->createUser($utilisateur);
@@ -172,7 +170,7 @@ class UtilisateurController extends AbstractController
         $twigConfig['item'] = $item;
         $twigConfig['encadrant'] = ($item->hasRole('ROLE_ENCADRANT') && $usr->hasRole('ROLE_GESTION_SCHEDULER_LECTURE'));
 
-        //$twigConfig['encadrant'] = $item->getGroups()->contains($em->getReference(Groupe::class, 3));
+        // $twigConfig['encadrant'] = $item->getGroups()->contains($em->getReference(Groupe::class, 3));
 
         return $this->render('UcaBundle/UcaGest/Securite/Utilisateur/Voir.html.twig', $twigConfig);
     }
@@ -206,7 +204,7 @@ class UtilisateurController extends AbstractController
                 $item->setEnabled(0);
             }
 
-            //si ajout d'une carte, on va mettre à jour la date de fin de validité de la commande la plus récente pour que l'utilisateur puisse s'inscrire
+            // si ajout d'une carte, on va mettre à jour la date de fin de validité de la commande la plus récente pour que l'utilisateur puisse s'inscrire
             foreach ($item->getAutorisations() as $autorisation) {
                 if (!in_array($autorisation->getId(), $oldAutorisations) && 4 == $autorisation->getComportement()->getId()) {
                     $commandeDetail = $em->getRepository(CommandeDetail::class)->findCommandeDetailWithAutorisationByUser($item->getId(), $autorisation->getId());
@@ -222,7 +220,7 @@ class UtilisateurController extends AbstractController
             return $this->redirectToRoute('UcaGest_UtilisateurLister');
         }
 
-        //On récupère les id des autorisations actuelles de l'utilisateur pour pouvoir voir si on lui en a ajouté pour les gérer
+        // On récupère les id des autorisations actuelles de l'utilisateur pour pouvoir voir si on lui en a ajouté pour les gérer
         $oldAutorisations = [];
         foreach ($item->getAutorisations() as $autorisation) {
             $oldAutorisations[] = $autorisation->getId();
@@ -311,7 +309,7 @@ class UtilisateurController extends AbstractController
     {
         $statutRepo = $em->getRepository(StatutUtilisateur::class);
         $ccUser = $this->getUser();
-        if ((!($item->isEnabled()) or (null == $item->getLastLogin())) && $item->getStatut() != $statutRepo->find(4)) {
+        if ((!$item->isEnabled() or (null == $item->getLastLogin())) && $item->getStatut() != $statutRepo->find(4)) {
             $this->envoyerEmailConfirmation($item, $ccUser->getEmail(), $mailer, $em);
             $flashBag->addMessageFlashBag('utilisateur.envoyer.mailconfirmation.success', 'success');
         } else {

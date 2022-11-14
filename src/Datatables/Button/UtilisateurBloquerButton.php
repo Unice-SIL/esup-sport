@@ -24,7 +24,7 @@ class UtilisateurBloquerButton extends AbstractButton
     public function getRenderIf()
     {
         return function ($row) {
-            return 1 == $row['enabled'] && 1 == $row['statut']['id'] && $this->datatable->getAuthorizationChecker()->isGranted('ROLE_GESTION_UTILISATEUR_ECRITURE');
+            return 1 == $row['enabled'] && null != $row['statut'] && 1 == $row['statut']['id'] && $this->datatable->getAuthorizationChecker()->isGranted('ROLE_GESTION_UTILISATEUR_ECRITURE');
         };
     }
 }

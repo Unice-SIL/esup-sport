@@ -39,7 +39,7 @@ class Previsualisation
         }
         $this->event = $event;
 
-        //Check if the user have the role previsualisation and delete session var if is not the case
+        // Check if the user have the role previsualisation and delete session var if is not the case
         if (!$this->authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->clearSession();
 
