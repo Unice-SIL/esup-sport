@@ -23,7 +23,7 @@ security:
                 path: UcaWeb_AppLogout
                 target: UcaWeb_ShibLogout
             guard:
-              authenticators:
+              custom_authenticators:
                 - unicesil.shibboleth_authenticator
             # logout_on_user_change: true
             context: app
