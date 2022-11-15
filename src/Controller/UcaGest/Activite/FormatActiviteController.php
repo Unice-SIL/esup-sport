@@ -50,7 +50,8 @@ class FormatActiviteController extends AbstractController
         $twigConfig['item'] = $item;
         $twigConfig['type'] = 'FormatActivite';
         $twigConfig['role'] = 'admin';
-        $twigConfig['format'] = explode('\\', get_class($item))[2];
+        $array_class = explode('\\', get_class($item));
+        $twigConfig['format'] = end($array_class);
 
         if (($item instanceof FormatAvecCreneau) && $this->isGranted('ROLE_GESTION_FORMAT_ACTIVITE_ECRITURE')) {
             $twigConfig['Scheduler'] = true;
