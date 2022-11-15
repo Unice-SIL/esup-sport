@@ -10,6 +10,8 @@
 
 namespace App\Controller\UcaWeb;
 
+use App\Entity\Uca\Appel;
+use App\Entity\Uca\DhtmlxEvenement;
 use App\Entity\Uca\Inscription;
 use App\Entity\Uca\Utilisateur;
 use App\Form\EvenementType;
@@ -28,8 +30,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use UcaBundle\Entity\Appel;
-use UcaBundle\Entity\DhtmlxEvenement;
 
 /**
  * @Route("UcaWeb/MonPlanning")

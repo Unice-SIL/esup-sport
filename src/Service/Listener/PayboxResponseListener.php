@@ -32,20 +32,20 @@ class PayboxResponseListener
 
     public function onPayboxIpnResponse(PayboxResponseEvent $event)
     {
-        $this->logger->info('PAYBOX -- catched : '.$_SERVER['REQUEST_URI']);
+        $this->logger->notice('PAYBOX -- catched : '.$_SERVER['REQUEST_URI']);
         if ($event->isVerified() && 0 == $event->getData()['Erreur']) {
-            $this->logger->info('PAYBOX -- verified ! ');
+            $this->logger->notice('PAYBOX -- verified ! ');
             $idCommande = $_GET['id'];
             $noCommande = $event->getData()['Ref'];
             $montant = $event->getData()['Mt'];
-            $this->logger->info('PAYBOX -- Id: '.$idCommande);
-            $this->logger->info('PAYBOX -- Ref: '.$noCommande);
-            $this->logger->info('PAYBOX -- Mt: '.$montant);
+            $this->logger->notice('PAYBOX -- Id: '.$idCommande);
+            $this->logger->notice('PAYBOX -- Ref: '.$noCommande);
+            $this->logger->notice('PAYBOX -- Mt: '.$montant);
             $commande = $this->commandeRepository->findOneBy(['id' => $idCommande, 'montantPaybox' => $montant / 100]);
             if (!empty($commande) && $commande->getMontantAPayer() == $montant / 100) {
-                $this->logger->info('PAYBOX -- commande found ! ');
-                $this->logger->info('PAYBOX -- commande->getId: '.$commande->getId());
-                $this->logger->info('PAYBOX -- commande->getNumeroCommande: '.$commande->getNumeroCommande());
+                $this->logger->notice('PAYBOX -- commande found ! ');
+                $this->logger->notice('PAYBOX -- commande->getId: '.$commande->getId());
+                $this->logger->notice('PAYBOX -- commande->getNumeroCommande: '.$commande->getNumeroCommande());
                 $commande->changeStatut('termine', ['typePaiement' => 'PAYBOX', 'moyenPaiement' => 'cb']);
                 $this->em->persist($commande);
                 $this->em->flush();
