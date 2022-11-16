@@ -79,6 +79,9 @@
         "test": "php bin/phpunit tests --coverage-html tests/coverage"
     },
     "config": {
+        "platform": {
+            "php": "7.4.33"
+        },
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true
