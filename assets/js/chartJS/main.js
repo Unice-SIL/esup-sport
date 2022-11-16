@@ -1,4 +1,10 @@
-_chart = {}
+import { Chart, registerables } from 'chart.js';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
+// import { getRelativePosition } from 'chart.js/helpers';
+Chart.register(...registerables);
+Chart.register(ChartDataLabels);
+
+global._chart = {};
 
 _chart.colors = [
     "#B892FF",
@@ -118,8 +124,6 @@ _chart.createBouton = function(color, icone, label) {
 };
 
 _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding = 0, displayLegend = true) {
-    let Chart = require('chart.js');
-
     let dataValues = [];
     let dataColors = [];
     let dataLabels = [];
@@ -188,7 +192,6 @@ _chart.createPieChart = function(title, datas, position, idCanvas, legendPadding
 };
 
 _chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
-    let Chart = require('chart.js');
     let datasets = [];
     let yAxesType = 'linear';
 
@@ -247,13 +250,13 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
                 text: title,
             },
             scales: {
-                xAxes: [{
+                x: {
                     display: true,
-                }],
-                yAxes: [{
+                },
+                y: {
                     display: true,
                     type: yAxesType
-                }]
+                }
             },
             // Parametrage du tooltip sur le graphique
             tooltips: {
@@ -287,7 +290,7 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
 						weight: 'bold'
 					},
                     offset: function(context) {
-                        var max = context.chart.scales["y-axis-0"].max;
+                        var max = context.chart.scales["y"].max;
                         var index = context.dataIndex;
                         var value = context.dataset.data[index];
                         var percent = value*100/max;
@@ -311,7 +314,6 @@ _chart.createVertictalBarChart = function(title, datas, idCanvas, labels=null) {
 };
 
 _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
-    let Chart = require('chart.js');
     let datasetsWithKey = [];
     let datasets = [];
     let labels = [];
@@ -382,13 +384,13 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
                 text: title,
             },
             scales: {
-                xAxes: [{
+                x: {
                     display: true,
-                }],
-                yAxes: [{
+                },
+                y: {
                     display: true,
                     type: yAxesType
-                }]
+                }
             },
             // Parametrage du tooltip sur le graphique
             tooltips: {
@@ -420,7 +422,7 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
 						return context.chart.isDatasetVisible(context.datasetIndex);
 					},
                     offset: function(context) {
-                        var max = context.chart.scales["y-axis-0"].max;
+                        var max = context.chart.scales["y"].max;
                         var index = context.dataIndex;
                         var value = context.dataset.data[index];
                         var percent = value*100/max;
@@ -450,7 +452,6 @@ _chart.createVertictalBarGroupChart = function(title, datas, idCanvas) {
 };
 
 _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
-    let Chart = require('chart.js');
     let datasets = { labels: new Array(), datasets: new Array() };
     let color = _chart.getColor();
     let cpt;
@@ -471,7 +472,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
         backgroundColor: color,
         hoverBackgroundColor: color
     };
-    total = 0;
+    let total = 0;
     for (const [tranche, donnees] of Object.entries(datas)) {
         datasets.labels.push(tranche);
         cpt = 0;
@@ -494,6 +495,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
     datasets.datasets.push(femme);
 
     let options = {
+        indexAxis: 'y',
         tooltips: {
             enabled: true,
             callbacks: {
@@ -511,7 +513,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
         },
         hover: { animationDuration: 0 },
         scales: {
-            xAxes: [{
+            x: {
                 ticks: {
                     beginAtZero: true,
                     fontFamily: "'Apex New Book', sans-serif",
@@ -522,8 +524,8 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
                 },
                 scaleLabel: { display: false },
                 stacked: true
-            }],
-            yAxes: [{
+            },
+            y: {
                 gridLines: {
                     display: false,
                     color: "#fff",
@@ -535,7 +537,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
                     fontSize: 11
                 },
                 stacked: true
-            }]
+            }
         },
         legend: {
             position: 'bottom',
@@ -547,23 +549,23 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
 
         animation: {
             onComplete: function() {
-                var chartInstance = this.chart;
-                var ctx = chartInstance.ctx;
+                var ctx = this.$context;
+                var chartInstance = ctx.chart;
                 ctx.textAlign = "left";
                 ctx.font = "0px Open Sans";
                 ctx.fillStyle = "#fff";
 
-                Chart.helpers.each(this.data.datasets.forEach(function(dataset, i) {
-                    var meta = chartInstance.controller.getDatasetMeta(i);
-                    Chart.helpers.each(meta.data.forEach(function(bar, index) {
-                        data = dataset.data[index];
-                        if (i == 0) {
-                            ctx.fillText(data, 50, bar._model.y + 4);
-                        } else {
-                            ctx.fillText(data, bar._model.x - 25, bar._model.y + 4);
-                        }
-                    }), this)
-                }), this);
+                // Chart.helpers.each(this.data.datasets.forEach(function(dataset, i) {
+                //     var meta = chartInstance.controller.getDatasetMeta(i);
+                //     Chart.helpers.each(meta.data.forEach(function(bar, index) {
+                //         data = dataset.data[index];
+                //         if (i == 0) {
+                //             ctx.fillText(data, 50, bar._model.y + 4);
+                //         } else {
+                //             ctx.fillText(data, bar._model.x - 25, bar._model.y + 4);
+                //         }
+                //     }), this)
+                // }), this);
             }
         },
         pointLabelFontFamily: "Quadon Extra Bold",
@@ -579,7 +581,7 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
 
     var ctx = document.getElementById(idCanvas);
     var myChart = new Chart(ctx, {
-        type: 'horizontalBar',
+        type: 'bar',
         data: datasets,
         options: options,
     });
@@ -590,7 +592,6 @@ _chart.createPopulationPyramidChart = function(title, datas, idCanvas) {
 };
 
 _chart.createLineChart = function(title, label, datas, idCanvas) {
-    let Chart = require('chart.js');
     let dataLabels = [];
     let dataValues = [];
     // let color = '#'+Math.floor(Math.random()*16777215).toString(16);
@@ -634,12 +635,12 @@ _chart.createLineChart = function(title, label, datas, idCanvas) {
                 intersect: true
             },
             scales: {
-                xAxes: [{
+                x: {
                     display: true,
-                }],
-                yAxes: [{
+                },
+                y: {
                     display: true,
-                }]
+                }
             },
             // Parametrage de plugins
 	        plugins: {

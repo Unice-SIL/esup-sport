@@ -26,9 +26,9 @@ use Sg\DatatablesBundle\Datatable\DatatableFactory;
 use Sg\DatatablesBundle\Response\DatatableResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
-use Symfony\Component\HttpFoundation\File\MimeType\FileinfoMimeTypeGuesser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Mime\FileinfoMimeTypeGuesser;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Vich\UploaderBundle\Handler\UploadHandler;
@@ -96,8 +96,8 @@ class UtilisateurController extends AbstractController
             $file = $item->getDocument();
             $response = new BinaryFileResponse($path.$file);
             $mimeTypeGuesser = new FileinfoMimeTypeGuesser();
-            if ($mimeTypeGuesser->isSupported()) {
-                $response->headers->set('Content-Type', $mimeTypeGuesser->guess($path.$file));
+            if ($mimeTypeGuesser->isGuesserSupported()) {
+                $response->headers->set('Content-Type', $mimeTypeGuesser->guessMimeType($path.$file));
             } else {
                 $response->headers->set('Content-Type', 'text/plain');
             }
