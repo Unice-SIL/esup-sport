@@ -1,14 +1,64 @@
 FROM php:7.4.33-cli
 
-RUN apt-get update \
-    &&  apt-get install -y --no-install-recommends \
-        locales apt-utils git libicu-dev g++ libpng-dev libxml2-dev libzip-dev libonig-dev libxslt-dev unzip libpq-dev nodejs wget \
-        apt-transport-https lsb-release ca-certificates libldap2-dev
+# LIBRARIES
+RUN apt-get update  &&  apt-get install -y --no-install-recommends \
+    apt-transport-https \
+    apt-utils \
+    ca-certificates \
+    gcc \
+    git libicu-dev \
+    g++ \
+    libldap2-dev \
+    libmagickwand-dev \
+    libonig-dev \
+    libpng-dev \
+    libpq-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libzip-dev \
+    locales  \
+    lsb-release \
+    make \
+    nodejs \
+    unzip \
+    wget
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen  \
-    &&  echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen \
-    &&  locale-gen
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# PHP
+RUN docker-php-ext-install \
+    calendar \
+    dom \
+    exif \
+    gd \
+    intl \
+    ldap \
+    mbstring \
+    pdo \
+    pdo_mysql \
+    pdo_pgsql \
+    opcache \
+    xml \
+    xsl \
+    zip
+
+RUN docker-php-ext-configure \
+    intl
+
+RUN pecl install \
+    apcu \
+    imagick
+
+RUN docker-php-ext-enable \
+    apcu \
+    imagick
+
+RUN echo memory_limit = -1 >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
+
+# LOCALES
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && echo "fr_FR.UTF-8 UTF-8" >> /etc/locale.gen && locale-gen
+
+# NODEJS + YARN
 RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt install -y nodejs \
     && mkdir ~/.npm-global \
@@ -19,38 +69,16 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash - \
     && apt update \
     && apt install -y yarn
 
-RUN curl -sS https://getcomposer.org/installer | php -- \
-    &&  mv composer.phar /usr/local/bin/composer
+# COMPOSER
+#RUN curl -sS https://getcomposer.org/installer | php -- &&  mv composer.phar /usr/local/bin/composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# SYMFONY
 RUN curl -sS https://get.symfony.com/cli/installer | bash \
     &&  mv /root/.symfony5/bin/symfony /usr/local/bin
 
-RUN docker-php-ext-configure \
-            intl
-
-RUN docker-php-ext-install \
-            pdo pdo_mysql pdo_pgsql opcache intl zip calendar dom mbstring gd xsl ldap xml
-
-RUN pecl install apcu && docker-php-ext-enable apcu
-
-RUN git config --global user.email "you@example.com" \
-    &&  git config --global user.name "Your Name"
-
-RUN echo memory_limit = -1 >> /usr/local/etc/php/conf.d/docker-php-memlimit.ini
-
-CMD tail -f /dev/null
+# GIT
+#RUN git config --global user.email "you@example.com" \
+#    &&  git config --global user.name "Your Name"
 
 WORKDIR /web/app
-
-#RUN cd /web/app \
-    #&& composer install \
-    #&& yarn install \
-    #&& php bin/console doctrine:database:create --if-not-exists --no-interaction \
-    #&& php bin/console doctrine:migration:migrate --configuration=config/packages/migrations/app.yaml --no-interaction \
-    #&& php bin/console doctrine:database:create --connection=statistique --if-not-exists --no-interaction \
-    #&& php bin/console doctrine:migration:migrate --configuration=config/packages/migrations/stat.yaml --no-interaction \
-    #&& php bin/console ckeditor:install \
-    #&& php bin/console assets:install --symlink assets \
-    #&& php bin/console bazinga:js-translation:dump assets/bundles/bazingajstranslation --merge-domains --format=js \
-    #&& php bin/console fos:js-routing:dump --format=json --target=assets/bundles/fosjsrouting/fos_routes.json \
-    #&& yarn encore prod
