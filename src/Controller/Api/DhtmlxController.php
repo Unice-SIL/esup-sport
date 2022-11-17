@@ -25,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DhtmlxController extends AbstractController
 {
@@ -71,7 +72,7 @@ class DhtmlxController extends AbstractController
     /**
      * @Route("/DhtmlxSendMail", methods={"POST"}, name="DhtmlxSendMail", options={"expose"=true})
      */
-    public function sendMail(Request $request, MailService $mailer, DhtmlxEvenementRepository $eventRepo)
+    public function sendMail(Request $request, MailService $mailer, DhtmlxEvenementRepository $eventRepo, TranslatorInterface $translator)
     {
         $id = $request->request->get('id');
         $text = $request->request->get('text');
@@ -83,7 +84,6 @@ class DhtmlxController extends AbstractController
         $inscriptions = $c->getInscriptions();
 
         $emailToSend = [];
-        $translator = $this->get('translator');
         foreach ($inscriptions as $key => $i) {
             $user = $i->getUtilisateur();
             if ($user->getEmail()) {
