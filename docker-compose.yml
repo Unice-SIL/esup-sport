@@ -28,8 +28,13 @@ services:
 
   php:
     container_name: ${PROJECT_NAME:-esup_sport}_php
+    tty: true
+    entrypoint: ./docker/php/entrypoint.sh
     build:
-      context: ./docker/php
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    env_file:
+      - .env.local
     environment:
       DATABASE_URL: mysql://root:${DATABASE_ROOT_PASSWORD:-password}@database/${DATABASE_NAME:-esup_sport}?serverVersion=mariadb-${DATABASE_VERSION:-10.3.34}
       DATABASE_STATISTIQUE_URL: mysql://root:${DATABASE_ROOT_PASSWORD:-password}@database/${DATABASE_STATISTIQUE_NAME:-esup_statistique}?serverVersion=mariadb-${DATABASE_VERSION:-10.3.34}
