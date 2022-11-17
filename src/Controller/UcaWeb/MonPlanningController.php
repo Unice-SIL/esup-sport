@@ -134,7 +134,6 @@ class MonPlanningController extends AbstractController
             $inscriptions = $dhtmlxEvenement->getFormatSimple()->getAllInscriptions();
         }
         $destinataires = [];
-        $translator = $this->get('translator');
         foreach ($inscriptions as $key => $inscription) {
             $user = $inscription->getUtilisateur();
             if ($user->getEmail()) {
