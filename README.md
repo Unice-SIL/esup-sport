@@ -85,7 +85,7 @@ xdebug.log_level=7
 - Mettre à jour la variable __DATABASE_URL__ dans __.env.test__
 - > php bin/console doctrine:database:create --env=test
 - > php bin/console doctrine:migrations:migrate --configuration=config/packages/migrations/app.yaml --env=test
-- > php bin/console doctrine:fixtures:load --env=test
+- > php bin/console doctrine:fixtures:load --append --env=test
 
 ### Création de test
 > php bin/console make:test
