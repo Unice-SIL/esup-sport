@@ -14,7 +14,9 @@
         }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.4",
+        "ext-json": "*",
+        "ext-imagick": "*",
         "acatus-dev/paybox-bundle": "^2.2",
         "beberlei/doctrineextensions": "^1.2",
         "composer/package-versions-deprecated": "1.11.99.1",
@@ -79,6 +81,9 @@
         "test": "php bin/phpunit tests --coverage-html tests/coverage"
     },
     "config": {
+        "platform": {
+            "php": "7.4.33"
+        },
         "sort-packages": true,
         "allow-plugins": {
             "symfony/flex": true

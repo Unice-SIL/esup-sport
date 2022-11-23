@@ -1,0 +1,57 @@
+version: '3.7'
+
+services:
+  database:
+    container_name: ${PROJECT_NAME:-esup_sport}_database
+    image: mariadb:${DATABASE_VERSION:-10.3.34}
+    environment:
+      MARIADB_NAME: ${DATABASE_NAME:-esup_sport}
+      MARIADB_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD:-password}
+    ports:
+      - ${DATABASE_PORT:-3320}:3306
+    volumes:
+      - db-data:/var/lib/mysql:rw
+    networks:
+      - dev
+
+  phpmyadmin:
+    container_name: ${PROJECT_NAME:-esup_sport}_phpmyadmin
+    image: phpmyadmin
+    ports:
+      - ${PHPMYADMIN_PORT:-9021}:80
+    environment:
+      PMA_HOST: database
+    depends_on:
+      - database
+    networks:
+      - dev
+
+  php:
+    container_name: ${PROJECT_NAME:-esup_sport}_php
+    tty: true
+    entrypoint: ./docker/php/entrypoint.sh
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    env_file:
+      - .env.local
+    environment:
+      DATABASE_URL: mysql://root:${DATABASE_ROOT_PASSWORD:-password}@database/${DATABASE_NAME:-esup_sport}?serverVersion=mariadb-${DATABASE_VERSION:-10.3.34}
+      DATABASE_STATISTIQUE_URL: mysql://root:${DATABASE_ROOT_PASSWORD:-password}@database/${DATABASE_STATISTIQUE_NAME:-esup_statistique}?serverVersion=mariadb-${DATABASE_VERSION:-10.3.34}
+    ports:
+      - ${PHP_PORT:-9020}:8000
+    volumes:
+      - .:/web/app:cached
+      - /web/app/node_modules
+      - /web/app/var/cache
+      - /web/app/vendor
+    depends_on:
+      - database
+    networks:
+      - dev
+
+networks:
+  dev:
+
+volumes:
+  db-data:
