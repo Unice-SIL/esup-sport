@@ -40,8 +40,7 @@
         "path": "^0.12.7",
         "popper.js": "^1.16.1",
         "sass-loader": "^12.3.0",
-        "select2": "4.0.13",
-        "webpack": ">=5.0.0 <6.0.0"
+        "select2": "4.0.13"
     },
     "browser": {
         "fs": false,

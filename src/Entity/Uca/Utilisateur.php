@@ -1458,6 +1458,7 @@ class Utilisateur implements \App\Entity\Uca\Interfaces\JsonSerializable, UserIn
     {
         if (!$this->groups->contains($group)) {
             $this->groups->add($group);
+            $group->addUtilisateur($this);
         }
 
         return $this;
