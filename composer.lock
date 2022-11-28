@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "acatus-dev/paybox-bundle",
-            "version": "v2.2.3",
+            "version": "v2.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Acatus-dev/LexikPayboxBundle.git",
-                "reference": "913a64d72a2d982a74effdeaf4ab1147e7cf924b"
+                "reference": "360180e1f42f88511a956a485ff83beea67254d1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Acatus-dev/LexikPayboxBundle/zipball/913a64d72a2d982a74effdeaf4ab1147e7cf924b",
-                "reference": "913a64d72a2d982a74effdeaf4ab1147e7cf924b",
+                "url": "https://api.github.com/repos/Acatus-dev/LexikPayboxBundle/zipball/360180e1f42f88511a956a485ff83beea67254d1",
+                "reference": "360180e1f42f88511a956a485ff83beea67254d1",
                 "shasum": ""
             },
             "require": {
@@ -67,9 +67,9 @@
                 "symfony5"
             ],
             "support": {
-                "source": "https://github.com/Acatus-dev/LexikPayboxBundle/tree/v2.2.3"
+                "source": "https://github.com/Acatus-dev/LexikPayboxBundle/tree/v2.2.4"
             },
-            "time": "2022-11-25T13:20:29+00:00"
+            "time": "2022-11-28T13:11:08+00:00"
         },
         {
             "name": "beberlei/doctrineextensions",
