@@ -36,7 +36,11 @@ class CorrectPayboxTimeoutCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $commandes = $this->commandeRepository->findByNumerosCommandes([18292, 18290, 18281, 18196, 18182, 18172, 18114]);
+        $liste =[
+            33669,33743,33525,33527,33528,33532,33533,33534,33535,33536,33553,33560,33562,33564,33568,33569,33593,33594,33904,33911,33960,33969,
+            33599,33601,33602,33614,33616,33617,33624,33623,33627,33650,33665,33664,33667,33670,33696,33727,33744,33757,33769,33915,33926,33958,
+            33775,33776,33778,33780,33781,33792,33794,33799,33828, 33829,33830,33846,33858,33859,33879,33882,33886,33892,33894,33937];
+        $commandes = $this->commandeRepository->findByNumerosCommandes($liste);
 
         foreach ($commandes as $commande) {
             $user = $commande->getUtilisateur();
