@@ -18,7 +18,7 @@ use App\Repository\UtilisateurRepository;
 use App\Service\Common\MailService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 
 class InscriptionService
@@ -34,11 +34,11 @@ class InscriptionService
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(EntityManagerInterface $em, Environment $twig, TokenStorageInterface $tokenStorage, MailService $mailer, UtilisateurRepository $utilisateurRepository, CommandeDetailRepository $commandeDetailRepository)
+    public function __construct(EntityManagerInterface $em, Environment $twig, Security $security, MailService $mailer, UtilisateurRepository $utilisateurRepository, CommandeDetailRepository $commandeDetailRepository)
     {
         $this->em = $em;
         $this->twig = $twig;
-        $this->user = $tokenStorage->getToken()->getUser();
+        $this->user = $security->getUser();
         $this->mailer = $mailer;
         $this->utilisateurRepository = $utilisateurRepository;
         $this->commandeDetailRepository = $commandeDetailRepository;
