@@ -12,6 +12,7 @@ namespace App\Datatables;
 use App\Datatables\Button\InscriptionAjouterPanierButton;
 use App\Datatables\Button\InscriptionAnnulerButton;
 use App\Datatables\Button\InscriptionDesinscrireButton;
+use App\Datatables\Button\InscriptionValiderButton;
 use App\Datatables\Column\TwigDataColumn;
 use App\Datatables\Column\TwigVirtualColumn;
 use App\Datatables\Filter\ActivitiesFilter;
@@ -51,6 +52,8 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
 
         $qb = $this->em->createQueryBuilder();
         $qb1 = $this->em->createQueryBuilder();
+        $qb2 = $this->em->createQueryBuilder();
+        $qb3 = $this->em->createQueryBuilder();
 
         $this->columnBuilder
             ->add('utilisateur.nom', Column::class, [
@@ -119,6 +122,30 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                 'visible' => false,
                 'searchable' => false,
             ])
+            ->add('commandeTermine', Column::class, [
+                'dql' => '('.
+                    $qb2->select($qb2->expr()->countDistinct('com.statut'))
+                    ->from(Inscription::class, 'i2')
+                    ->leftJoin('i2.commandeDetails', 'comd')
+                    ->leftJoin('comd.commande', 'com')
+                    ->andWhere('i2.id = inscription.id')
+                    ->andWhere('com.statut = \'annule\'')
+                    ->getDQL()
+                .')',
+                'visible' => false,
+            ])
+            ->add('typePaiement', Column::class, [
+                'dql' => '('.
+                    $qb3->select($qb3->expr()->countDistinct('com1.typePaiement'))
+                    ->from(Inscription::class, 'i3')
+                    ->leftJoin('i3.commandeDetails', 'comd1')
+                    ->leftJoin('comd1.commande', 'com1')
+                    ->andWhere('i3.id = inscription.id')
+                    ->andWhere('com1.typePaiement = \'PAYBOX\'')
+                    ->getDQL()
+                .')',
+                'visible' => false,
+            ])
             ->add('formatActivite.listeEncadrants', Column::class, [
                 'visible' => false,
             ])
@@ -131,6 +158,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                     (new InscriptionAnnulerButton($this, 'UcaWeb_MesInscriptionsAnnuler', ['id' => 'id']))->getConfig(),
                     (new InscriptionAjouterPanierButton($this, 'UcaWeb_MesInscriptionsAjoutPanier', ['id' => 'id']))->getConfig(),
                     (new InscriptionDesinscrireButton($this, 'UcaWeb_MesInscriptionsSeDesinscrire', ['id' => 'id']))->getConfig(),
+                    (new InscriptionValiderButton($this, 'UcaGest_ValiderInscription', ['id' => 'id']))->getConfig(),
                 ],
             ])
         ;

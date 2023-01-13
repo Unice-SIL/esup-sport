@@ -49,14 +49,26 @@ class HistoriqueNavigation
     public static function urlInExcludeList($url)
     {
         $array_search = [
-            'UcaWeb/Paiement/Recapitulatif',
-            'UcaWeb/Paiement/Retour',
-            'media/cache/resolve',
-            'historiqueNavigationDebug=o',
-            'urlHistory=clear',
+            '/\/UcaWeb\/Paiement\/Recapitulatif/',
+            '/\/UcaWeb\/Paiement\/Retour/',
+            '/\/UcaWeb\/Paiement\/Validation/',
+            '/\/media\/cache\/resolve/',
+            '/historiqueNavigationDebug=o/',
+            '/urlHistory=clear/',
+            
+            // Gestion des inscriptions
+            '/\/UcaWeb\/\d+\/AjoutPanier/',
+            '/\/UcaWeb\/\d+\/Annuler/',
+            '/\/UcaWeb\/\d+\/SeDesinscrire/',
+
+            // Gestion du panier
+            '/\/UcaWeb\/Panier/',
+            '/\/UcaWeb\/SuppressionArticle\/\d+/',
+            '/\/UcaWeb\/SuppressionToutArticle\/\d+/',
+
         ];
         foreach ($array_search as $search) {
-            if (false !== strpos($url, $search)) {
+            if (1 === \preg_match($search, $url)) {
                 return true;
             }
         }

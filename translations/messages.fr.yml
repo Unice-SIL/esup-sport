@@ -98,6 +98,7 @@ bouton.indisponible.statut.nbressourcemaxatteint: "Vous êtes déjà inscrit à 
 bouton.indisponible.statut.nonconnecte.envoimail: "Il faut être connecté pour pouvoir envoyer un mail"
 bouton.indisponible.statut.nonconnecte: "Il faut être connecté pour pouvoir s'inscrire aux activités"
 bouton.indisponible.statut.profilinvalide: "Cette activité n'est pas autorisée pour votre profil d'utilisateur"
+bouton.inscription.valider: Valider cette inscription
 bouton.log: Historique
 bouton.modifier: Modifier
 bouton.monter: Monter

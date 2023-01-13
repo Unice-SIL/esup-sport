@@ -30,6 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 /**
  * @Route("UcaWeb")
  */
@@ -108,9 +109,9 @@ class ActiviteController extends AbstractController
      * @param mixed      $day
      * @param null|mixed $yearWeek
      */
-    public function FormatActiviteDetailAction($idCa, $idA, $id, $day = 1, $yearWeek = null, EntityManagerInterface $em, FormatActiviteRepository $faRepo)
+    public function FormatActiviteDetailAction($idCa, $idA, FormatActivite $id, $day = 1, $yearWeek = null, EntityManagerInterface $em, FormatActiviteRepository $faRepo)
     {
-        $item = $em->getReference(FormatActivite::class, $id);
+        $item = $id;
         $twigConfig = [
             'data' => $faRepo->findFormatPublie($idA, $this->getUser()),
             'idCa' => $idCa,
@@ -165,11 +166,10 @@ class ActiviteController extends AbstractController
      * @param mixed $idA
      * @param mixed $idRessource
      */
-    public function FormatActiviteAvecReservationDetailsRessource($idCa, $idA, $id, $idRessource, FormatActiviteRepository $faRepo, RessourceRepository $rRepo, ActiviteRepository $aRepo, EtablissementRepository $eRepo)
+    public function FormatActiviteAvecReservationDetailsRessource($idCa, $idA, FormatActivite $id, Ressource $idRessource, FormatActiviteRepository $faRepo, RessourceRepository $rRepo, ActiviteRepository $aRepo, EtablissementRepository $eRepo)
     {
-        $item = $faRepo->findOneBy(['id' => $id]);
-        $ressource = $rRepo->findOneBy(['id' => $idRessource]);
-
+        $item = $id;
+        $ressource = $idRessource;
         $twigConfig['item'] = $item;
         $twigConfig['entite'] = 'FormatActiviteDetail';
         $twigConfig['idCa'] = $idCa;
@@ -201,10 +201,10 @@ class ActiviteController extends AbstractController
      * @param null|mixed $year_week
      * @param null|mixed $day_week
      */
-    public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, $id, $idRessource, $year_week = null, $day_week = null, RessourceRepository $rRepo, FormatAvecReservationRepository $farRepo, ActiviteRepository $aRepo, FormatActiviteRepository $faRepo, ReservabiliteRepository $resRepo)
+    public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, FormatAvecReservation $id, Ressource $idRessource, $year_week = null, $day_week = null, RessourceRepository $rRepo, FormatAvecReservationRepository $farRepo, ActiviteRepository $aRepo, FormatActiviteRepository $faRepo, ReservabiliteRepository $resRepo)
     {
-        $ressource = $rRepo->findOneBy(['id' => $idRessource]);
-        $item = $farRepo->findOneBy(['id' => $id]);
+        $ressource = $idRessource;
+        $item = $id;
         $twigConfig['idRessource'] = $idRessource;
         $twigConfig['libelleRessource'] = $ressource->getLibelle();
         $twigConfig['idCa'] = $idCa;

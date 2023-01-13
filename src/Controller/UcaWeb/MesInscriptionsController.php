@@ -279,4 +279,21 @@ class MesInscriptionsController extends AbstractController
 
         return $this->redirectToRoute('UcaWeb_MesInscriptions');
     }
+
+    /**
+     * @Route("UcaGest/{id}/Valider", name="UcaGest_ValiderInscription")
+     * @Security("is_granted('ROLE_GESTION_COMMANDES')")
+     */
+    public function validerAction(Inscription $inscription, EntityManagerInterface $em) {
+        $inscription->setStatut('valide');
+        $autorisations = $inscription->getAutorisationTypes();
+        $user = $inscription->getUtilisateur();
+        foreach ($autorisations as $autorisation) {
+            if (!$user->getAutorisations()->contains($autorisation)) {
+                $user->addAutorisation($autorisation);
+            }
+        }
+        $em->flush();
+        return $this->redirectToRoute('UcaGest_GestionInscription');
+    }
 }

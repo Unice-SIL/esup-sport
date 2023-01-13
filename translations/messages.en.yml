@@ -98,6 +98,7 @@ bouton.indisponible.statut.nbressourcemaxatteint: "You have already registered t
 bouton.indisponible.statut.nonconnecte.envoimail: "You must be logged-in in order to send mail"
 bouton.indisponible.statut.nonconnecte: "You must be logged-in in order to register to the activities."
 bouton.indisponible.statut.profilinvalide: "Your profile does not allow you to register to this activity."
+bouton.inscription.valider: Validate this registration
 bouton.log: Log
 bouton.modifier: Edit
 bouton.monter: Rise
