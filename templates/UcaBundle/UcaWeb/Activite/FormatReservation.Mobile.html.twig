@@ -1,13 +1,13 @@
 <div class="row d-lg-none" id="calendar-mobile">
     <div class="col-12">
         <div class="row d-flex justify-content-between align-items-center mb-5">
-            <div id="header-left" class="calendar-arrow-left text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": previous_date | dateFormat('Y_ww'), beginning: "end" }) }}">
+            <div id="header-left" class="calendar-arrow-left text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, 'idA': idA, 'id': id, 'idRessource': idRessource, "year_week": previous_date | dateFormat('Y_ww'), beginning: "end" }) }}">
                 <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
             </div>
 
             <div class="flex-fill d-flex justify-content-center align-items-center text-uppercase fs-14 fw-700" id="header-mid"></div>
 
-            <div id="header-right" class="calendar-arrow-right text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, "idRessource": idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
+            <div id="header-right" class="calendar-arrow-right text-center fs-30 p-2" url="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, 'idA': idA, 'id': id, 'idRessource': idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
                 <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
             </div>
         </div>

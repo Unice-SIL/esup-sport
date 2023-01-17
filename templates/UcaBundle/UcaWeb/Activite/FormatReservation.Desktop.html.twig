@@ -26,7 +26,7 @@
 <div class="row d-none d-lg-block">
     <div class="d-flex justify-content-between">
         <div class="calendar-arrow-left text-center fs-30">
-            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": previous_date | dateFormat('Y_ww') }) }}">
+            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, 'idA': idA, 'id': id, 'idRessource': idRessource, 'year_week': previous_date | dateFormat('Y_ww') }) }}">
                 <i class="fas fa-angle-left color-dark-gray" id="left-arrow"></i>
             </a>
         </div>
@@ -52,7 +52,7 @@
             </div>
         </div>
         <div class="calendar-arrow-right text-center fs-30">
-            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, "idA": idA, "id": id, idRessource: idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
+            <a href="{{ path("UcaWeb_FormatActiviteReservationDetailAnneeSemaine", {'idCa': idCa, 'idA': idA, 'id': id, 'idRessource': idRessource, "year_week": next_date | dateFormat('Y_ww') }) }}">
                 <i class="fas fa-angle-right color-dark-gray" id="right-arrow"></i>
             </a>
         </div>

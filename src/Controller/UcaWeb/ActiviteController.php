@@ -166,10 +166,11 @@ class ActiviteController extends AbstractController
      * @param mixed $idA
      * @param mixed $idRessource
      */
-    public function FormatActiviteAvecReservationDetailsRessource($idCa, $idA, FormatActivite $id, Ressource $idRessource, FormatActiviteRepository $faRepo, RessourceRepository $rRepo, ActiviteRepository $aRepo, EtablissementRepository $eRepo)
+    public function FormatActiviteAvecReservationDetailsRessource($idCa, $idA, $id, $idRessource, FormatActiviteRepository $faRepo, RessourceRepository $rRepo, ActiviteRepository $aRepo, EtablissementRepository $eRepo)
     {
-        $item = $id;
-        $ressource = $idRessource;
+        $item = $faRepo->findOneBy(['id' => $id]);
+        $ressource = $rRepo->findOneBy(['id' => $idRessource]);
+
         $twigConfig['item'] = $item;
         $twigConfig['entite'] = 'FormatActiviteDetail';
         $twigConfig['idCa'] = $idCa;
@@ -201,10 +202,10 @@ class ActiviteController extends AbstractController
      * @param null|mixed $year_week
      * @param null|mixed $day_week
      */
-    public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, FormatAvecReservation $id, Ressource $idRessource, $year_week = null, $day_week = null, RessourceRepository $rRepo, FormatAvecReservationRepository $farRepo, ActiviteRepository $aRepo, FormatActiviteRepository $faRepo, ReservabiliteRepository $resRepo)
+    public function FormatActiviteAvecReservation(Request $request, $idCa, $idA, $id, $idRessource, $year_week = null, $day_week = null, RessourceRepository $rRepo, FormatAvecReservationRepository $farRepo, ActiviteRepository $aRepo, FormatActiviteRepository $faRepo, ReservabiliteRepository $resRepo)
     {
-        $ressource = $idRessource;
-        $item = $id;
+        $ressource = $rRepo->findOneBy(['id' => $idRessource]);
+        $item = $farRepo->findOneBy(['id' => $id]);
         $twigConfig['idRessource'] = $idRessource;
         $twigConfig['libelleRessource'] = $ressource->getLibelle();
         $twigConfig['idCa'] = $idCa;

@@ -42,7 +42,6 @@
 				</div>
 			{% endfor %}
 		</div>
-
 		<div class='row'>
 			{% for ligneData in dataCalendrier %}
 				<div class="w-100"></div> 
@@ -56,7 +55,6 @@
 						{% endif %}
 					</div>
 				{% endif %}
-		
 				{% for oneCaseData in ligneData %}
 					<div class="col-sm {{ typeVisualisation == 'mois' and oneCaseData[" actif"] is defined and not onecasedata[" actif"] ? 'othermonth' }} data-div">
 						{% if oneCaseData != null %}
@@ -66,7 +64,8 @@
 
 							{% for event in oneCaseData["data"] %}
 								<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-format="{{ typeFormat }}" data-idformat="{{ formatActivite ? formatActivite.id : null }}">
-									<div class="bg-white mb-1 mt-1 p-1" style="border-radius: 5px;">
+									<div class="{{event.serie is null ? '' : (event.serie.creneau.getInscriptionInformations(app.user).statut in ['complet'] ? 'bg-opacity-40' : '')}} bg-white mb-1 mt-1 p-1" 
+									style="border-radius: 5px;">
 										<span class="color-dark-gray">
 											{{ event.dateDebut|date('H:i') }}
 											-
