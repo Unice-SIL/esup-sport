@@ -125,11 +125,15 @@
       </div>
       <div class="d-grid">
         <span class="font-medium label">{{ 'common.niveauSportif'|trans }}</span>
-        {% for niveau in formatActivite.niveauxSportifs %}
+        {% if typeFormat == 'FormatAvecReservation' %}
+          {{formatActivite.listeNiveauxSportifs}}
+        {% else %}
           <span class="font-normal">
-            {{ niveau.libelle }}
+            {% for niveau in formatActivite.niveauxSportifs %}
+              {{ niveau.libelle }}
+            {% endfor %}
           </span>
-        {% endfor %}
+        {% endif %}
       </div>
     </div>
   {% endif %}
