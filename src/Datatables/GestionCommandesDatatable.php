@@ -48,6 +48,8 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
 
         $optionsTypeAutorisations = $this->createCarteAutorisationOptions($this->em->getRepository(TypeAutorisation::class)->findBy(['comportement' => 4], ['libelle' => 'asc']));
 
+        $qb = $this->em->createQueryBuilder();
+
         $this->columnBuilder
             ->add('date', TwigVirtualColumn::class, [
                 'title' => $this->translator->trans('common.date'),
@@ -112,14 +114,14 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                     'classes' => 'selectCommande',
                     'initial_search' => '',
                     'select_search_types' => [
-                        'panier' => 'like',
+                        '' => 'like',
                         'termine' => 'like',
                         'annule' => 'like',
                         'apayer' => 'like',
                         'avoir' => 'like',
                     ],
                     'select_options' => [
-                        'panier' => $this->translator->trans('common.toutescommandes'),
+                        '' => $this->translator->trans('common.toutescommandes'),
                         'termine' => $this->translator->trans('common.termine'),
                         'annule' => $this->translator->trans('common.annule'),
                         'apayer' => $this->translator->trans('common.apayer'),
@@ -137,7 +139,7 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
                 'title' => $this->translator->trans('common.carte'),
                 'twigTemplate' => 'CommandeAchatCarte',
                 'searchable' => true,
-                'search_column' => 'commandeDetails.libelle',
+                'search_column' => 'commandeDetails.typeAutorisation',
                 'orderable' => true,
                 'order_column' => 'commandeDetails.libelle',
                 'filter' => [SelectInVirtualColumnFilter::class, [
@@ -198,12 +200,12 @@ class GestionCommandesDatatable extends AbstractTranslatedDatatable
     private function createCarteAutorisationOptions($typeAutorisations): array {
         $optionValues = $optionLabels = [];
 
-        $optionValues['toutes'] = 'neq';
-        $optionLabels['toutes'] = $this->translator->trans('common.toutescartes');
+        $optionValues[0] = 'neq';
+        $optionLabels[0] = $this->translator->trans('common.toutescartes');
 
         foreach ($typeAutorisations as $typeAutorisation) {
-            $optionValues[$typeAutorisation->getLibelle()] = 'eq';
-            $optionLabels[$typeAutorisation->getLibelle()] = $typeAutorisation->getLibelle();
+            $optionValues[$typeAutorisation->getId()] = 'like';
+            $optionLabels[$typeAutorisation->getId()] = $typeAutorisation->getLibelle();
         }
 
         return ['values' => $optionValues, 'labels' => $optionLabels];

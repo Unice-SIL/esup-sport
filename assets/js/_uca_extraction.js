@@ -189,7 +189,7 @@ _uca.extraction.setUrlParametersCredit = function (plage, nom, prenom, operation
  * Initialise les paramêtres pour les urls d'extraction (Excel et PDF) pour les commandes
  * @param plage,nom,prenom 
  */
-_uca.extraction.setUrlParametersCommande = function (numCommande, numRecu, nom, prenom, montant, statut, moyen, plage, picker, recherche) {
+_uca.extraction.setUrlParametersCommande = function (numCommande, numRecu, nom, prenom, montant, statut, moyen, plage, picker, recherche, carte, carteRetrait) {
   let parameters = {};
   if ('undefined' != typeof(picker) && picker != "") {
     parameters.dateDebut = ('undefined' != typeof(picker.dateDebut) && picker.dateDebut != "") ? picker.dateDebut : 'null';
@@ -204,6 +204,8 @@ _uca.extraction.setUrlParametersCommande = function (numCommande, numRecu, nom, 
   parameters.prenom = ('undefined' != typeof(prenom) && prenom !="") ? prenom : 'null';
   parameters.moyen = ('undefined' != typeof(moyen) && moyen !="") ? moyen : 'null';
   parameters.statut = ('undefined' != typeof(statut) && statut !="") ? statut : 'null';
+  parameters.carte = ('undefined' != typeof(carte) && carte !="") ? carte : 'null';
+  parameters.carteRetrait = ('undefined' != typeof(carteRetrait) && carteRetrait !="") ? carteRetrait : 'null';
   parameters.montant = ('undefined' != typeof(montant) && montant !="") ? montant : 'null';
   parameters.recherche = ('undefined' != typeof(recherche) && recherche !="") ? recherche : 'null';
 
@@ -216,6 +218,7 @@ _uca.extraction.setUrlParametersCommande = function (numCommande, numRecu, nom, 
  * @param url,boutonExtraction
  */
 _uca.extraction.setUrlExtractionExcel = function (url, parameters, boutonExtraction) {
+  console.log(parameters);
   boutonExtraction.href = Routing.generate(url, parameters);
 };
 
@@ -239,10 +242,9 @@ _uca.extraction.initUrls = function (params) {
   if (null != document.querySelector('.alert-danger')) {
     document.querySelector('.alert-danger').style.display = 'none';
   }
-
   let  urlParameters;
   if ('undefined' != typeof(params.isCommande)) {
-    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut.value, params.moyen.value, params.plage.value, params.picker, params.recherche.value.replaceAll("/","-"));
+    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut, params.moyen.value, params.plage.value, params.picker, params.recherche.value.replaceAll("/","-"), params.carte, params.carteRetrait);
   } else { 
     urlParameters = _uca.extraction.setUrlParametersCredit(params.plage.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.operation.value, params.statut.value, params.montant.value, params.picker, params.recherche.value); 
   }
@@ -275,11 +277,16 @@ _uca.extraction.preparationExtraction = function (params) {
   params.delegator.addEventListener('change', function() {
     _uca.extraction.initUrls(params);
   });
-
+  $(document).on('change', '.selectCommande', function(){
+    params.statut = $('#sg-datatables-Commande_datatable-head-filter-17').val();
+    params.carte = $('#sg-datatables-Commande_datatable-head-filter-19').val();
+    params.carteRetrait = $('#sg-datatables-Commande_datatable-head-filter-20').val();
+    _uca.extraction.initUrls(params);
+  });
 
   let urlParameters;
   if ('undefined' != typeof(params.isCommande)) {
-    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut.value, params.moyen.value, params.plage.val(),params.picker, params.recherche.value.replaceAll('/','-'));
+    urlParameters = _uca.extraction.setUrlParametersCommande(params.numeroCommande.value, params.numeroRecu.value, params.utilisateurNom.value, params.utilisateurPrenom.value, params.montant.value, params.statut, params.moyen.value, params.plage.val(),params.picker, params.recherche.value.replaceAll('/','-'),params.carte,params.carteRetrait);
   } else { 
     urlParameters = _uca.extraction.setUrlParametersCredit(params.plage.val(), params.utilisateurNom.value, params.utilisateurPrenom.value, params.operation.value, params.statut.value, params.montant.value, params.recherche.value.replaceAll('/','-')); 
   }

@@ -119,8 +119,8 @@ class Creneau implements \App\Entity\Uca\Interfaces\JsonSerializable, \App\Entit
     public function getArticleLibelle()
     {
         if (false !== $this->getSerieEvenements()->first()) {
-            $dateDebut = $this->getSerieEvenements()->first()->getDateDebut();
-            $dateFin = $this->getSerieEvenements()->first()->getDateFin();
+            $dateDebut = $this->getSerieEvenements()->last()->getDateDebut();
+            $dateFin = $this->getSerieEvenements()->last()->getDateFin();
 
             return $this->getFormatActivite()->getLibelle()
                 .' ['.Fctn::intlDateFormat($dateDebut, 'cccc')

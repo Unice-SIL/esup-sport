@@ -241,7 +241,7 @@ class ReportingController extends AbstractController
     }
 
     /**
-     * @Route("/Commandes/Extraction/{dateDebut}/{dateFin}/{numCommande}/{numRecu}/{nom}/{prenom}/{montant}/{statut}/{moyen}/{recherche}" , name="UcaGest_ReportingCommandesExtraction", options={"expose"=true})
+     * @Route("/Commandes/Extraction/{dateDebut}/{dateFin}/{numCommande}/{numRecu}/{nom}/{prenom}/{montant}/{statut}/{moyen}/{recherche}/{carte}/{carteRetrait}" , name="UcaGest_ReportingCommandesExtraction", options={"expose"=true})
      *
      * @param mixed $dateDebut
      * @param mixed $dateFin
@@ -253,8 +253,10 @@ class ReportingController extends AbstractController
      * @param mixed $statut
      * @param mixed $moyen
      * @param mixed $recherche
+     * @param mixed $carte
+     * @param mixed $carteRetrait
      */
-    public function commandesExtractionAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $numCommande, $numRecu, $montant, $statut, $moyen, $recherche, FlashBag $flashBag, ExtractionExcelService $extractionService, EntityManagerInterface $em)
+    public function commandesExtractionAction(Request $request, $dateDebut, $dateFin, $nom, $prenom, $numCommande, $numRecu, $montant, $statut, $moyen, $recherche, $carte, $carteRetrait, FlashBag $flashBag, ExtractionExcelService $extractionService, EntityManagerInterface $em)
     {
         $dateDebut = 'null' !== $dateDebut ? \DateTime::createFromFormat('Y-m-d', $dateDebut)->setTime(0, 0, 0) : null;
         $dateFin = 'null' !== $dateFin ? \DateTime::createFromFormat('Y-m-d', $dateFin)->setTime(23, 59, 59) : null;
@@ -264,14 +266,16 @@ class ReportingController extends AbstractController
         'null' != $numCommande ?: $numCommande = null;
         'null' != $numRecu ?: $numRecu = null;
         'null' != $statut ?: $statut = null;
+        'null' != $carte ?: $carte = null;
+        'null' != $carteRetrait ?: $carteRetrait = null;
         'null' != $moyen ?: $moyen = null;
         $recherche = ('null' != $recherche) ? str_replace('/', '-', $recherche) : null;
 
         $cmdDetailsPayant = $em->getRepository(CommandeDetail::class)
-            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche, true)
+            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche, $carte, $carteRetrait, true)
         ;
         $cmdDetailsAll = $em->getRepository(CommandeDetail::class)
-            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche)
+            ->findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numCommande, $numRecu, $recherche, $carte, $carteRetrait)
         ;
 
         if (!empty($cmdDetailsAll)) {

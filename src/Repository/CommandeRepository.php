@@ -97,6 +97,21 @@ class CommandeRepository extends ServiceEntityRepository
         return $criteria;
     }
 
+    public static function criteriaBetweenDateAnnulation($startDate, $endDate)
+    {
+        $criteria = Criteria::create();
+        $er = $criteria->expr();
+
+        if (null !== $startDate) {
+            $criteria->andWhere($er->gt('commande.dateAnnulation', $startDate));
+        }
+        if (null !== $endDate) {
+            $criteria->andWhere($er->lt('commande.dateAnnulation', $endDate));
+        }
+
+        return $criteria;
+    }
+
     public static function criteriaANettoyer()
     {
         $eb = Criteria::expr();

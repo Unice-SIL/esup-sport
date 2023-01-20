@@ -35,6 +35,35 @@ class CommandeDetailRepository extends ServiceEntityRepository
         ;
     }
 
+    
+    public static function criteriaByCarte($carte)
+    {
+        $criteria = Criteria::create();
+        $er = $criteria->expr();
+
+        if (null !== $carte) {
+            $criteria->andWhere($er->eq('cmdDetail.typeAutorisation', $carte));
+        }
+
+        return $criteria;
+    }
+
+    public static function criteriaByCarteRetrait($carteRetrait)
+    {
+        $criteria = Criteria::create();
+        $er = $criteria->expr();
+
+        if (null !== $carteRetrait) {
+            if($carteRetrait == 'oui'){
+                $criteria->andWhere($er->neq('c.etablissementRetraitCarte', null));
+            }elseif($carteRetrait == 'non'){
+                $criteria->andWhere($er->isNull('c.etablissementRetraitCarte'));
+            }
+        }
+
+        return $criteria;
+    }
+
     /**
      * Fonction qui permet de récupérer des détails de commande en fonction de dates et de montant.
      *
@@ -104,7 +133,7 @@ class CommandeDetailRepository extends ServiceEntityRepository
         return empty($res) ? 0 : $res;
     }
 
-    public function findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numComamnde, $numRecu, $recherche, $estPayant = false)
+    public function findExtractedCommandeDetails($dateDebut, $dateFin, $nom, $prenom, $statut, $moyen, $montant, $numComamnde, $numRecu, $recherche, $carte, $carteRetrait, $estPayant = false)
     {
         $qb = $this->createQueryBuilder('cmdDetail');
         $qb->leftJoin('App\Entity\Uca\Commande', 'commande', 'WITH', 'commande.id = cmdDetail.commande');
@@ -117,9 +146,15 @@ class CommandeDetailRepository extends ServiceEntityRepository
         if ($estPayant) {
             $qb->addCriteria($repo::criteriabyStatut(['termine', 'avoir'], 'commande.'));
             $qb->addCriteria(self::criteriaEstPayant());
+        }elseif(null !== $statut){
+            $qb->addCriteria($repo::criteriaByStatut([$statut], 'commande.'));
         }
         if (null !== $dateDebut || null !== $dateFin) {
-            $qb->addCriteria($repo::criteriaBetweenDates($dateDebut, $dateFin));
+            if($statut == 'annule'){
+                $qb->addCriteria($repo::criteriaBetweenDateAnnulation($dateDebut, $dateFin));
+            }else{
+                $qb->addCriteria($repo::criteriaBetweenDates($dateDebut, $dateFin));
+            }
         }
         if (null !== $moyen) {
             $qb->addCriteria($repo::criteriaByMoyen($moyen));
@@ -132,6 +167,12 @@ class CommandeDetailRepository extends ServiceEntityRepository
         }
         if (null !== $nom || null !== $prenom) {
             $qb->addCriteria($repo::criteriaByUtilisateur($nom, $prenom));
+        }
+        if(null !== $carte){
+            $qb->addCriteria(self::criteriaByCarte($carte));
+        }
+        if(null !== $carteRetrait){
+            $qb->addCriteria(self::criteriaByCarteRetrait($carteRetrait));
         }
         if (null !== $recherche) {
             $qb->addCriteria($repo::criteriaByRecherche($recherche));
