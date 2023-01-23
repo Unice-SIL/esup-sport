@@ -48,11 +48,11 @@ class DhtmlxController extends AbstractController
             $preInscriptionsReservabilite = null;
         } elseif ('encadrant' == $type || 'user' == $type) {
             $user = $this->getUser();
-            if (null == $user) {
-                return false;
+            if (!$user) {
+                return $this->redirectToRoute('security_login');
             }
 
-            $id = $user->getId();
+            // $id = $user->getId();
 
             $InscriptionsCreneaux = $eventRepo->findDhtmlxCreneauByUser($user);
             $EncadrementsCreneaux = $serieRepo->findDhtmlxCreneauByEncadrant($user);
