@@ -631,6 +631,7 @@ message.confirmation.paiementcheque: Do you confirm paying with a check ?
 message.confirmation.paiementespece: Do you confirm paying with cash ?
 message.confirmation.suppression.titre: "Confirm deletion"
 message.confirmation.suppression: "Delete entry ?"
+message.confirmation.validation.inscription: Successful subscription
 message.desinscription.success: Successful unsubscription
 message.desinscriptionmassive.success: Massive unsubscription successfully completed.
 message.selection.filtre.desinscription: "You did not filter your search or no registration was found. Please filter or modify your filters in order to be able to unsubscribe."

@@ -13,17 +13,21 @@ use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
 use Sg\DatatablesBundle\Datatable\Style;
 use App\Datatables\Button\DescendreButton;
+use App\Datatables\Button\InvisibleButton;
 use App\Datatables\Button\LogButton;
 use App\Datatables\Button\ModifierButton;
 use App\Datatables\Button\MonterButton;
 use App\Datatables\Button\SupprimerButton;
+use App\Datatables\Column\TwigDataColumn;
+use App\Entity\Uca\Actualite;
 
 class ActualiteDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
+        $qb = $this->em->createQueryBuilder();
+        $qb1 = $this->em->createQueryBuilder();
         $this->setUcaDefault();
-
         $this->columnBuilder
             ->add('id', Column::class, [
                 'title' => 'Id',
@@ -31,6 +35,7 @@ class ActualiteDatatable extends AbstractTranslatedDatatable
             ])
             ->add(null, ActionColumn::class, [
                 'title' => '',
+                'class_name' => 'align-middle',
                 'actions' => [
                     (new MonterButton($this, null, ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
                     (new DescendreButton($this, null, ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
@@ -63,6 +68,22 @@ class ActualiteDatatable extends AbstractTranslatedDatatable
                     (new SupprimerButton($this, 'UcaGest_ActualiteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Actualite', 'objectId' => 'id'], 'ROLE_GESTION_ACTUALITE_ECRITURE'))->getConfig(),
                 ],
+            ])
+            ->add('max_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb->select('MAX(a1.ordre)')
+                    ->from(Actualite::class, 'a1')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
+            ])
+            ->add('min_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb1->select('MIN(a2.ordre)')
+                    ->from(Actualite::class, 'a2')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
             ])
         ;
 

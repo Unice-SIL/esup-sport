@@ -63,7 +63,7 @@ class ActualiteController extends AbstractController
     public function ajouterAction(Request $request, FlashBag $flashBag, EntityManagerInterface $em)
     {
         $item = new Actualite();
-        $item->setOrdre(count($em->getRepository(Actualite::class)->findAll()));
+        $item->setOrdre($em->getRepository(Actualite::class)->findMaxOrdre() + 1);
         $form = $this->createForm(ActualiteType::class, $item);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $em->persist($item);
@@ -85,6 +85,10 @@ class ActualiteController extends AbstractController
      */
     public function supprimerAction(Request $request, Actualite $actualite, FlashBag $flashBag, EntityManagerInterface $em)
     {
+        $actus = $em->getRepository(Actualite::class)->findByOrdreSuperieur($actualite->getOrdre());
+        foreach ($actus as $actu) {
+            $actu->setOrdre($actu->getOrdre() - 1);
+        }
         $em->remove($actualite);
         $em->flush();
         $flashBag->addActionFlashBag($actualite, 'Supprimer');
@@ -122,18 +126,20 @@ class ActualiteController extends AbstractController
     {
         $actualites = $em->getRepository(Actualite::class)->findAll();
         if ('monter' == $action) {
-            $condition = $actualite->getOrdre() > 0;
+            $condition = $actualite->getOrdre() > 1;
             $oldOrdre = $actualite->getOrdre();
             $newOrdre = $actualite->getOrdre() - 1;
         } elseif ('descendre' == $action) {
-            $condition = $actualite->getOrdre() < count($actualites) - 1;
+            $condition = $actualite->getOrdre() < count($actualites);
             $oldOrdre = $actualite->getOrdre();
             $newOrdre = $actualite->getOrdre() + 1;
         }
         // Si c'est le premier dans l'ordre et qu'on veut monter encore
         if ($condition) {
             $actuAffecteeParChangement = $em->getRepository(Actualite::class)->findOneByOrdre($newOrdre);
-            $actuAffecteeParChangement->setOrdre($oldOrdre);
+            if (null !== $actuAffecteeParChangement) {
+                $actuAffecteeParChangement->setOrdre($oldOrdre);
+            }
             $actualite->setOrdre($newOrdre);
             $em->flush();
 

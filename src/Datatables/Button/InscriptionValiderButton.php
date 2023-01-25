@@ -10,7 +10,7 @@ class InscriptionValiderButton extends AbstractButton
         $this->icone = 'fas fa-check';
         $this->libelle = 'bouton.inscription.valider';
         $this->bsClass = 'btn btn-primary btn-form';
-        $this->attributsAdditionnels = [];
+        $this->attributsAdditionnels = ['data-toggle' => 'modal', 'data-target' => '#modalConfirmation'];
     }
 
     public function getRenderIf()

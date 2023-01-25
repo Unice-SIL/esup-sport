@@ -13,7 +13,14 @@ class MonterButton extends AbstractButton
     {
         $this->libelle = 'bouton.monter';
         $this->icone = 'fas fa-arrow-circle-up';
-        $this->bsClass = 'btn btn-form js-monter';
+        $this->bsClass = 'btn-form js-monter my-2';
         $this->attributsAdditionnels = ['data-action' => 'monter'];
+    }
+
+    public function getRenderIf()
+    {
+        return function ($row) {
+            return $row['min_ordre'] != $row['ordre'] ;
+        };
     }
 }

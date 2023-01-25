@@ -631,6 +631,7 @@ message.confirmation.paiementcheque: Confirmez-vous le paiement par chèque ?
 message.confirmation.paiementespece: Confirmez-vous le paiement par espèce ?
 message.confirmation.suppression.titre: "Confirmez la suppression"
 message.confirmation.suppression: "Supprimer l'enregistrement ?"
+message.confirmation.validation.inscription: Inscription réussie
 message.desinscription.success: Désinscription réussie
 message.desinscriptionmassive.success: Désinscription massive effectué avec succès.
 message.selection.filtre.desinscription: "Vous n'avez pas filtrer votre recherche ou aucune inscription n'a été trouvé. Merci de bien vouloir filtrer ou modifier vos filtres afin de pouvoir procéder à la désincription."

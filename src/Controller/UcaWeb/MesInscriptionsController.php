@@ -284,7 +284,7 @@ class MesInscriptionsController extends AbstractController
      * @Route("UcaGest/{id}/Valider", name="UcaGest_ValiderInscription")
      * @Security("is_granted('ROLE_GESTION_COMMANDES')")
      */
-    public function validerAction(Inscription $inscription, EntityManagerInterface $em) {
+    public function validerAction(Inscription $inscription, EntityManagerInterface $em, FlashBag $flashbag) {
         $inscription->setStatut('valide');
         $autorisations = $inscription->getAutorisationTypes();
         $user = $inscription->getUtilisateur();
@@ -294,6 +294,7 @@ class MesInscriptionsController extends AbstractController
             }
         }
         $em->flush();
+        $flashbag->addMessageFlashBag('message.confirmation.validation.inscription', 'success');
         return $this->redirectToRoute('UcaGest_GestionInscription');
     }
 }
