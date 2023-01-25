@@ -24,6 +24,8 @@ class ActiviteDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
+        $qb = $this->em->createQueryBuilder();
+        $qb1 = $this->em->createQueryBuilder();
         $this->setUcaDefault();
 
         $this->addInvisibleColumns([
@@ -75,6 +77,22 @@ class ActiviteDatatable extends AbstractTranslatedDatatable
                     (new SupprimerButton($this, 'UcaGest_ActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'Activite', 'objectId' => 'id'], 'ROLE_GESTION_ACTIVITE_ECRITURE'))->getConfig(),
                 ],
+            ])
+            ->add('max_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb->select('MAX(a1.ordre)')
+                    ->from(Activite::class, 'a1')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
+            ])
+            ->add('min_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb1->select('MIN(a2.ordre)')
+                    ->from(Activite::class, 'a2')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
             ])
         ;
         $this->options->set([

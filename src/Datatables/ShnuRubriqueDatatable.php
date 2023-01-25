@@ -14,6 +14,7 @@ use App\Datatables\Button\ModifierButton;
 use App\Datatables\Button\MonterButton;
 use App\Datatables\Button\SupprimerButton;
 use App\Datatables\Column\TwigVirtualColumn;
+use App\Entity\Uca\ShnuRubrique;
 use Sg\DatatablesBundle\Datatable\Column\ActionColumn;
 use Sg\DatatablesBundle\Datatable\Column\Column;
 use Sg\DatatablesBundle\Datatable\Column\ImageColumn;
@@ -23,6 +24,8 @@ class ShnuRubriqueDatatable extends AbstractTranslatedDatatable
 {
     public function buildDatatable(array $options = [])
     {
+        $qb = $this->em->createQueryBuilder();
+        $qb1 = $this->em->createQueryBuilder();
         $this->setUcaDefault();
 
         $this->addInvisibleColumns([
@@ -76,6 +79,22 @@ class ShnuRubriqueDatatable extends AbstractTranslatedDatatable
                     (new SupprimerButton($this, 'UcaGest_ShnuRubriqueSupprimer', ['id' => 'id'], 'ROLE_GESTION_SHNU_RUBRIQUE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'ShnuRubrique', 'objectId' => 'id'], 'ROLE_GESTION_SHNU_RUBRIQUE_ECRITURE'))->getConfig(),
                 ],
+            ])
+            ->add('max_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb->select('MAX(a1.ordre)')
+                    ->from(ShnuRubrique::class, 'a1')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
+            ])
+            ->add('min_ordre', Column::class, [
+                'visible' => false,
+                'dql' => '('.$qb1->select('MIN(a2.ordre)')
+                    ->from(ShnuRubrique::class, 'a2')
+                    ->getDQL().')',
+                'type_of_field' => 'string',
+                'searchable' => false,
             ])
         ;
         $this->options->set([
