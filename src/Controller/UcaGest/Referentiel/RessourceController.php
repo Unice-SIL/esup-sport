@@ -14,6 +14,7 @@ use App\Entity\Uca\Fichier;
 use App\Entity\Uca\Lieu;
 use App\Entity\Uca\Materiel;
 use App\Entity\Uca\ReferentielImmobilier;
+use App\Entity\Uca\ReservabiliteProfilUtilisateur;
 use App\Entity\Uca\Ressource;
 use App\Form\FichierType;
 use App\Repository\ProfilUtilisateurRepository;
@@ -402,12 +403,16 @@ class RessourceController extends AbstractController
         }
 
         $reservabilitesList = $reservabiliteRepository->findReservabiliteByRssourceAndDates($item->getId(), $dateDebut, $dateFin);
-        foreach ($reservabilitesList as $reservalitite) {
-            $r = clone $reservalitite;
+        foreach ($reservabilitesList as $reservabilite) {
+            $r = clone $reservabilite;
             $r->getEvenement()->setDateDebut($r->getEvenement()->getDateDebut()->add($intervalleDiff));
             $r->getEvenement()->setDateFin($r->getEvenement()->getDateFin()->add($intervalleDiff));
             $em->persist($r->getEvenement());
             $em->persist($r);
+            foreach($r->getProfilsUtilisateurs()->toArray() as $profilResa){
+                $resProfil = (new ReservabiliteProfilUtilisateur($r, $profilResa->getProfilUtilisateur(), $profilResa->getCapaciteProfil()));
+                $em->persist($resProfil);
+            }
         }
         $em->flush();
 

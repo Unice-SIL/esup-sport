@@ -30,50 +30,54 @@ class PaiementController extends AbstractController
      */
     public function paiementRecapitulatifAction(Request $request, Commande $commande, PayBox $paybox, EntityManagerInterface $em)
     {
-        $typePaiement = $request->get('typePaiement');
-        $moyenPaiement = 'PAYBOX' == $typePaiement ? 'cb' : null;
-        $commande->changeStatut('apayer', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
-        $em->flush();
-        if ($commande->getUtilisateur()->getCreditTotal() >= $commande->getMontantTotal()) {
-            $moyenPaiement = 'credit';
-            $typePaiement = 'credit';
-            $usr = $commande->getUtilisateur();
-            $commande->setCreditUtilise(min($usr->getCreditTotal(), $commande->getMontantTotal()));
-            $creditHistorique = new UtilisateurCreditHistorique($usr, min($usr->getCreditTotal(), $commande->getMontantTotal()), null, 'debit', "Règlement d'une commande");
-            $creditHistorique->setCommandeAssociee($commande->getId());
-            $usr->addCredit($creditHistorique);
-            $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
+        if(!$commande->getDatePaiement()){
+            $typePaiement = $request->get('typePaiement');
+            $moyenPaiement = 'PAYBOX' == $typePaiement ? 'cb' : null;
+            $commande->changeStatut('apayer', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
             $em->flush();
+            if ($commande->getUtilisateur()->getCreditTotal() >= $commande->getMontantTotal()) {
+                $moyenPaiement = 'credit';
+                $typePaiement = 'credit';
+                $usr = $commande->getUtilisateur();
+                $commande->setCreditUtilise(min($usr->getCreditTotal(), $commande->getMontantTotal()));
+                $creditHistorique = new UtilisateurCreditHistorique($usr, min($usr->getCreditTotal(), $commande->getMontantTotal()), null, 'debit', "Règlement d'une commande");
+                $creditHistorique->setCommandeAssociee($commande->getId());
+                $usr->addCredit($creditHistorique);
+                $commande->changeStatut('termine', ['typePaiement' => $typePaiement, 'moyenPaiement' => $moyenPaiement]);
+                $em->flush();
 
-            $twigConfig['status'] = 'success';
-            $twigConfig['source'] = $moyenPaiement;
-            $twigConfig['commande'] = $commande;
+                $twigConfig['status'] = 'success';
+                $twigConfig['source'] = $moyenPaiement;
+                $twigConfig['commande'] = $commande;
 
-            return $this->render('UcaBundle/UcaWeb/Commande/PaiementValidation.html.twig', $twigConfig);
+                return $this->render('UcaBundle/UcaWeb/Commande/PaiementValidation.html.twig', $twigConfig);
+            }
+            if ($commande->getMontantTotal() > 0 && $commande->getUtilisateur()->getCreditTotal() > 0 && $commande->getUtilisateur()->getCreditTotal() < $commande->getMontantTotal()) {
+                $usr = $commande->getUtilisateur();
+                $commande->setCreditUtilise($usr->getCreditTotal());
+                $creditHistorique = new UtilisateurCreditHistorique($usr, $usr->getCreditTotal(), null, 'debit', "Règlement d'une commande");
+                $creditHistorique->setCommandeAssociee($commande->getId());
+                $usr->addCredit($creditHistorique);
+                $em->flush();
+            }
+
+            if ('PAYBOX' == $typePaiement) {
+                $commande->setMontantPaybox($commande->getMontantAPayer());
+                $em->flush();
+            }
+
+            if ('PAYBOX' == $typePaiement) {
+                $paybox->setCommande($commande);
+                $twigConfig['url'] = $paybox->getUrl();
+                $twigConfig['form'] = $paybox->getForm();
+            }
+
+            $twigConfig['panier'] = $commande;
+
+            return $this->render('UcaBundle/UcaWeb/Commande/RecapitulatifPaiement.html.twig', $twigConfig);
         }
-        if ($commande->getMontantTotal() > 0 && $commande->getUtilisateur()->getCreditTotal() > 0 && $commande->getUtilisateur()->getCreditTotal() < $commande->getMontantTotal()) {
-            $usr = $commande->getUtilisateur();
-            $commande->setCreditUtilise($usr->getCreditTotal());
-            $creditHistorique = new UtilisateurCreditHistorique($usr, $usr->getCreditTotal(), null, 'debit', "Règlement d'une commande");
-            $creditHistorique->setCommandeAssociee($commande->getId());
-            $usr->addCredit($creditHistorique);
-            $em->flush();
-        }
 
-        if ('PAYBOX' == $typePaiement) {
-            $commande->setMontantPaybox($commande->getMontantAPayer());
-            $em->flush();
-        }
-
-        if ('PAYBOX' == $typePaiement) {
-            $paybox->setCommande($commande);
-            $twigConfig['url'] = $paybox->getUrl();
-            $twigConfig['form'] = $paybox->getForm();
-        }
-
-        $twigConfig['panier'] = $commande;
-
-        return $this->render('UcaBundle/UcaWeb/Commande/RecapitulatifPaiement.html.twig', $twigConfig);
+        return $this->redirectToRoute('UcaWeb_MesCommandesVoir', ['id' => $commande->getId()]);
     }
 
     /**
