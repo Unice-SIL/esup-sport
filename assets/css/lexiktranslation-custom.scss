@@ -1,0 +1,23 @@
+
+div {
+    &.page-header {
+        > h1 {
+            > div {
+                &.pull-right {
+                    text-align: end;
+                    font-size: 1rem;
+                }
+            }
+        }
+    }
+}
+
+.ng-table-pagination{
+    a {
+        margin: 2px;
+    }
+}
+
+li.disabled {
+    font-weight: bold;
+}

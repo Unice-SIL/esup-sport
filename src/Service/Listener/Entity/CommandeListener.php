@@ -10,18 +10,25 @@ namespace App\Service\Listener\Entity;
 
 use App\Entity\Uca\Commande;
 use App\Service\Common\MailService;
+use App\Service\Common\Parametrage;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 
 class CommandeListener
 {
     private $mailer;
+    private $request;
+    private $router;
 
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(MailService $mailer)
+    public function __construct(MailService $mailer, RequestStack $request, RouterInterface $router)
     {
         $this->mailer = $mailer;
+        $this->request = $request;
+        $this->router = $router;
     }
 
     public function preUpdate(Commande $commande, PreUpdateEventArgs $event)
@@ -38,10 +45,10 @@ class CommandeListener
                     if ('test' !== $_ENV['APP_ENV']) {
                         //@codeCoverageIgnoreStart
                         $this->mailer->sendMailWithTemplate(
-                            'Commande à régler au bureau des sports',
+                            null,
                             $commande->getUtilisateur()->getEmail(),
-                            'UcaBundle/Email/Commande/CommandeARegler.html.twig',
-                            ['commande' => $commande]
+                            'CommandeARegler',
+                            ['numeroCommande' => $commande->getNumeroCommande(), 'timerBds' => Parametrage::getTimerBds()]
                         );
                         //@codeCoverageIgnoreEnd
                     }
@@ -60,14 +67,15 @@ class CommandeListener
                     $commande->setNumeroCommande($numero);
                 }
 
+                $lienFacture = $this->router->generate('UcaWeb_MesCommandesExport', ['id' => $commande->getId()]);
                 if ($commande->getUtilisateur()->getEmail()) {
                     if ('test' !== $_ENV['APP_ENV']) {
                         //@codeCoverageIgnoreStart
                         $this->mailer->sendMailWithTemplate(
-                            'Validation de la commande',
+                            null,
                             $commande->getUtilisateur()->getEmail(),
-                            'UcaBundle/Email/Commande/ValidationCommande.html.twig',
-                            ['commande' => $commande]
+                            'ValidationCommande',
+                            ['numeroCommande' => $commande->getNumeroCommande(), 'lienFacture' => $this->request->getMainRequest()->getScheme().'://'.$this->request->getMainRequest()->getHttpHost().$lienFacture]
                         );
                         //@codeCoverageIgnoreEnd
                     }
@@ -77,10 +85,10 @@ class CommandeListener
                 if ('test' !== $_ENV['APP_ENV']) {
                     //@codeCoverageIgnoreStart
                     $this->mailer->sendMailWithTemplate(
-                        'Annulation de la commande',
+                        null,
                         $commande->getUtilisateur()->getEmail(),
-                        'UcaBundle/Email/Commande/AnulationCommande.html.twig',
-                        ['commande' => $commande]
+                        'AnulationCommande',
+                        ['numeroCommande' => $commande->getNumeroCommande()]
                     );
                     //@codeCoverageIgnoreEnd
                 }

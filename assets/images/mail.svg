@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="11.205" height="8.482" viewBox="0 0 11.205 8.482">
-  <g id="Glyph_copy_2" transform="translate(-0.006 -7.783)">
-    <path id="Tracé_32" data-name="Tracé 32" d="M11.829,8.167a.876.876,0,0,0-.723-.384H1.651a.875.875,0,0,0-.712.371L6.4,12.7Z" transform="translate(-0.77)" fill="#46aed8"/>
-    <path id="Tracé_33" data-name="Tracé 33" d="M.006,14.328v6.46a.878.878,0,0,0,.876.876h9.454a.878.878,0,0,0,.876-.876V14.351L5.626,19.014Z" transform="translate(0 -5.399)" fill="#46aed8"/>
+  <g id="mail" transform="translate(-0.006 -7.783)">
+    <path id="Tracé_32" data-name="Tracé 32" d="M11.829,8.167a.876.876,0,0,0-.723-.384H1.651a.875.875,0,0,0-.712.371L6.4,12.7Z" transform="translate(-0.77)" fill="currentColor"/>
+    <path id="Tracé_33" data-name="Tracé 33" d="M.006,14.328v6.46a.878.878,0,0,0,.876.876h9.454a.878.878,0,0,0,.876-.876V14.351L5.626,19.014Z" transform="translate(0 -5.399)" fill="currentColor"/>
   </g>
 </svg>

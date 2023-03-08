@@ -26,6 +26,8 @@
         {% endif %}
 
         {% block main %}{% endblock %}
-        {% include "UcaBundle/Email/TemplateEmail.Signature.html.twig" %}
+        {% block signature %}
+            {% include "UcaBundle/Email/TemplateEmail.Signature.html.twig" %}
+        {% endblock %}
     </body>
 </html>

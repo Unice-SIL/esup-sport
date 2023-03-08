@@ -5,15 +5,15 @@
             {% for itemAriane in sitemap.getAriane %}
                 {% if itemAriane.route and loop.last %}
                     <li aria-current="page" class="breadcrumb-item active">
-                        <span>{{ sitemap.getTitre(itemAriane, _context) }}</span>
+                        <span>{{ sitemap.getTitre(itemAriane, _context) | raw }}</span>
                     </li>
                 {% elseif itemAriane.route %}
                     <li class="breadcrumb-item">
-                        <a href="{{ sitemap.getUrl(itemAriane) }}">{{ sitemap.getTitre(itemAriane, _context) }}</a>
+                        <a href="{{ sitemap.getUrl(itemAriane) }}">{{ sitemap.getTitre(itemAriane, _context) | raw }}</a>
                     </li>
                 {% else %}
                     <li class="breadcrumb-item">
-                        <span>{{ sitemap.getTitre(itemAriane, _context) }}</span>
+                        <span>{{ sitemap.getTitre(itemAriane, _context) | raw }}</span>
                     </li>
                 {% endif %}
             {% endfor %}

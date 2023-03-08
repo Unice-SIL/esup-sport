@@ -30,16 +30,6 @@ class UtilisateurResetPasswordTest extends KernelTestCase
         $em->flush();
     }
 
-    protected function tearDown(): void
-    {
-        $container = static::getContainer();
-        $em = $container->get(EntityManagerInterface::class);
-
-        $em->remove($container->get(UtilisateurRepository::class)->findOneByUsername('UtilisateurResetPasswordTest'));
-
-        $em->flush();
-    }
-
     /**
      * @covers \App\Service\Securite\UtilisateurResetPassword::__construct
      */
@@ -174,6 +164,7 @@ class UtilisateurResetPasswordTest extends KernelTestCase
 
         $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('UtilisateurResetPasswordTest');
         $this->assertNotNull($user->getConfirmationToken());
+        $this->assertEmailCount(1);
     }
 
     // Cas non possible a tester car il n'y a que des actions dans le flashbag

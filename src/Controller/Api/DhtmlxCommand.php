@@ -17,6 +17,7 @@ use App\Entity\Uca\DhtmlxSerie;
 use App\Entity\Uca\FormatActivite;
 use App\Entity\Uca\Lieu;
 use App\Entity\Uca\NiveauSportif;
+use App\Entity\Uca\PeriodeFermeture;
 use App\Entity\Uca\ProfilUtilisateur;
 use App\Entity\Uca\ReservabiliteProfilUtilisateur;
 use App\Entity\Uca\Reservabilite;
@@ -31,17 +32,19 @@ class DhtmlxCommand
     private $action;
     private $item;
     private $commands;
+    private $notCreated;
 
     public function init($em, $data, $parent = null)
     {
         $this->em = $em;
         $this->data = $data;
         $this->commands = [];
+        $this->notCreated = [];
         if (isset($data['action']) && in_array($data['action'], ['insert', 'update', 'delete', 'extend'])) {
             $this->action = $data['action'];
         } elseif (!isset($data['action']) && $parent) {
             $this->action = $parent->action;
-        }else {
+        } else {
             throw new \Exception("L'action ".$data['action']." n'est pas valide !");
         }
         $this->initItemAndCommands($parent);
@@ -70,6 +73,13 @@ class DhtmlxCommand
                         $this->item->setEligibleBonus(true);
                     } else {
                         $this->item->setEligibleBonus(false);
+                    }
+                }
+                if (isset($this->data['forte_frequence'])) {
+                    if ('true' == $this->data['forte_frequence']) {
+                        $this->item->setForteFrequence(true);
+                    } else {
+                        $this->item->setForteFrequence(false);
                     }
                 }
             } elseif ('App\Entity\Uca\DhtmlxSerie' == get_class($this->item)) {
@@ -102,11 +112,27 @@ class DhtmlxCommand
         if ('delete' == $this->action) {
             $res['id'] = null;
         }
+        if (!empty($this->notCreated)) {
+            $res['notCreated'] = $this->notCreated;
+        }
         if (!empty($res['evenements'])) {
             $res['enfants'] = $res['evenements'];
         }
-
         return $res;
+    }
+
+    public function isInPeriodeFermeture($data): bool
+    {
+        $periodesFermeture = $this->em->getRepository(PeriodeFermeture::class)->findAll();
+        $date = new \Datetime($data['dateDebut']);
+        $ret = false;
+        foreach ($periodesFermeture as $periodeFermeture) {
+            $ret = $periodeFermeture->getDateDeb() <= $date && $date < $periodeFermeture->getDateFin();
+            if ($ret) {
+                break;
+            }
+        }
+        return $ret;
     }
 
     private function initItemAndCommands($parent)
@@ -123,6 +149,13 @@ class DhtmlxCommand
                     $this->item->setEligibleBonus(false);
                 }
             }
+            if (isset($this->data['forte_frequence'])) {
+                if ('true' == $this->data['forte_frequence']) {
+                    $this->item->setForteFrequence(true);
+                } else {
+                    $this->item->setForteFrequence(false);
+                }
+            }
             if (!empty($parent)) {
                 $this->item->setSerie($parent->getItem());
                 $parent->getItem()->addEvenement($this->item);
@@ -134,9 +167,13 @@ class DhtmlxCommand
 
         if (isset($this->data['enfants'])) {
             foreach ($this->data['enfants'] as $enfant) {
-                $c = new DhtmlxCommand();
-                $c->init($this->em, $enfant, $this);
-                array_push($this->commands, $c);
+                if (!$this->isInPeriodeFermeture($enfant)) {
+                    $c = new DhtmlxCommand();
+                    $c->init($this->em, $enfant, $this);
+                    array_push($this->commands, $c);
+                } else {
+                    array_push($this->notCreated, $enfant['dateDebut']);
+                }
             }
         }
         $this->item->oldId = isset($this->data['id']) ? $this->data['id'] : null;
@@ -221,7 +258,7 @@ class DhtmlxCommand
                 foreach (explode(',', $this->data['profil_ids']) as $key => $profil) {
                     $keyStr = 'capaciteProfil_'.$profil;
                     $capaciteProfil = (isset($this->data[$keyStr]) && '' !== $this->data[$keyStr]) ? $this->data[$keyStr] : 0;
-                    if ($item instanceof Reservabilite) {                        
+                    if ($item instanceof Reservabilite) {
                         $creneauProfil = new ReservabiliteProfilUtilisateur(
                             $item,
                             $this->em->getReference(ProfilUtilisateur::class, $profil),
@@ -234,7 +271,7 @@ class DhtmlxCommand
                             $capaciteProfil
                         );
                     }
-                        
+
                     $item->addProfilsUtilisateur($creneauProfil);
                 }
             }

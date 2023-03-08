@@ -322,7 +322,16 @@ class CommandeTest extends WebTestCase
      */
     public function testEligibleFalse(): void
     {
-        $commande = new Commande(static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin'));
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
+        $commande = new Commande($user);
         $this->assertFalse($commande->eligibleAvoir());
     }
 
@@ -430,7 +439,15 @@ class CommandeTest extends WebTestCase
      */
     private function createCommande(): void
     {
-        $this->user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $this->user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
         $this->commande = new Commande($this->user);
 
         $formatSimple = (new FormatSimple())

@@ -3,8 +3,8 @@
 namespace App\Tests\Service\Listener;
 
 use App\Entity\Uca\Commande;
+use App\Entity\Uca\Utilisateur;
 use App\Repository\CommandeRepository;
-use App\Repository\UtilisateurRepository;
 use App\Service\Common\MailService;
 use App\Service\Listener\PayboxResponseListener;
 use Doctrine\ORM\EntityManagerInterface;
@@ -77,8 +77,18 @@ class PayboxResponseListenerTest extends WebTestCase
         $_SERVER['REQUEST_URI'] = 'test';
 
         $em = static::getContainer()->get(EntityManagerInterface::class);
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
-
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('password')
+        ;
+        $em->persist($user);
+        $em->flush();
+        
         // Création de la commande
         $commande = (new Commande($user))
             ->setMontantPaybox('100')
@@ -105,6 +115,9 @@ class PayboxResponseListenerTest extends WebTestCase
 
         $em->remove($commande);
         $em->flush();
+
+        $em->remove($user);
+        $em->flush();
     }
 
     /**
@@ -115,7 +128,17 @@ class PayboxResponseListenerTest extends WebTestCase
         $_SERVER['REQUEST_URI'] = 'test';
 
         $em = static::getContainer()->get(EntityManagerInterface::class);
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('password')
+        ;
+        $em->persist($user);
+        $em->flush();
 
         // Création de la commande
         $commande = (new Commande($user))
@@ -142,6 +165,10 @@ class PayboxResponseListenerTest extends WebTestCase
         $this->assertNull($commande->getMoyenPaiement());
 
         $em->remove($commande);
+        $em->flush();
+
+        
+        $em->remove($user);
         $em->flush();
     }
 

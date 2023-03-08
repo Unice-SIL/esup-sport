@@ -14,6 +14,7 @@ $( ".datetimepicker" ).each(function( index ) {
     var dateValue = $(this).val();
     var format = $(this).data("datetimepicker-format");
     var timepicker = format.indexOf('H') >= 0 || format.indexOf('i') >= 0;
+    var datepicker = format.indexOf('d') >= 0 || format.indexOf('M') >= 0 || format.indexOf('y') >= 0;
     var step = $(this).data("datetimepicker-step");
     var minTime = $(this).data("datetimepicker-mintime");
     var maxTime = $(this).data("datetimepicker-maxtime");
@@ -25,6 +26,7 @@ $( ".datetimepicker" ).each(function( index ) {
     $(this).datetimepicker({
         format:format,
         timepicker:timepicker,
+        datepicker: datepicker,
         step:step,
         minTime:minTime,
         maxTime:maxTime,

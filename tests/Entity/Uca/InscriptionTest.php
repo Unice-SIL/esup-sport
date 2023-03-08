@@ -427,7 +427,7 @@ class InscriptionTest extends KernelTestCase
     {
         $typeAutorisation1 = (new TypeAutorisation())
             ->setComportement((new ComportementAutorisation())
-            ->setCodeComportement('case'))
+            ->setCodeComportement('justificatif'))
         ;
 
         $typeAutorisation2 = (new TypeAutorisation())

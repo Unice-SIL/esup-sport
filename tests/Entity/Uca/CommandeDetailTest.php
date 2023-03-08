@@ -851,7 +851,16 @@ class CommandeDetailTest extends KernelTestCase
 
     private function createCommande(): Commande
     {
-        return new Commande(static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin'));
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
+        return new Commande($user);
     }
 
     private function createCommandeDetailInscription(): CommandeDetail

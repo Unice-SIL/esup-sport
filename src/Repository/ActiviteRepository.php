@@ -11,6 +11,7 @@ namespace App\Repository;
 use App\Entity\Uca\Activite;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 class ActiviteRepository extends ServiceEntityRepository
@@ -124,7 +125,7 @@ class ActiviteRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('a')
             ->leftJoin('a.formatsActivite', 'fa')
-            ->andWhere('fa.dateFinEffective < :now')
+            ->andWhere('fa.dateFinEffective > :now')
             ->setParameter('now', new DateTime())
         ;
 
@@ -148,11 +149,50 @@ class ActiviteRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('a')
             ->leftJoin('a.formatsActivite', 'fa')
-            ->andWhere('fa.dateFinEffective <= :now')
+            ->andWhere('fa.dateFinEffective > :now')
             ->setParameter(':now', new DateTime())
             ->orderBy('a.libelle', 'ASC')
             ->getQuery()
             ->getResult()
+        ;
+    }
+
+    public function findActiviteByDateTimePeriod($daysofweek, $timeStart, $timeEnd, $idEtablissement = null)
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->distinct()
+            ->innerJoin('App\Entity\Uca\FormatActivite', 'formAct', 'WITH', 'formAct.activite = a.id')
+            ->innerJoin('App\Entity\Uca\Creneau', 'cre', 'WITH', 'cre.formatActivite = formAct.id')
+            ->innerJoin('cre.serie', 's')
+            ->innerJoin('s.evenements', 'ev')
+            ->andWhere('formAct.statut = 1')
+            ->andWhere('formAct.dateDebutPublication <= :now')
+            ->andWhere('formAct.dateFinPublication >= :now')
+            ->andWhere('DATE(ev.dateDebut) >= DATE(:now)')
+            ->andWhere('TIME(ev.dateDebut) BETWEEN TIME(:timeStart) AND TIME(:timeEnd)')
+            ->andWhere('TIME(ev.dateFin) BETWEEN TIME(:timeStart) AND TIME(:timeEnd)')
+            ->orderBy('a.libelle', 'ASC')
+            ->setParameter(':now', new DateTime())
+            ->setParameter(':timeStart', $timeStart)
+            ->setParameter(':timeEnd', $timeEnd)
+        ;
+
+        if (null !== $daysofweek && '' !== $daysofweek && '0' !== $daysofweek && 0 !== $daysofweek) {
+            $qb->andWhere('DAYOFWEEK(ev.dateDebut) IN (:daysofweek)')
+                ->setParameter(':daysofweek', $daysofweek)
+            ;
+        }
+
+        if (null !== $idEtablissement && '' !== $idEtablissement && '0' !== $idEtablissement && 0 !== $idEtablissement) {
+            $qb->innerJoin('formAct.lieu', 'l')
+                ->andWhere('l.etablissement = :idEtablissement')
+                ->setParameter('idEtablissement', $idEtablissement)
+            ;
+        }
+
+        return $qb->getQuery()
+                ->setHint(Query::HINT_READ_ONLY, true)
+                ->getResult()
         ;
     }
 }

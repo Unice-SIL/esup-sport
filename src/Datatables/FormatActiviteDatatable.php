@@ -45,9 +45,9 @@ class FormatActiviteDatatable extends AbstractTranslatedDatatable
                 'searchable' => true,
                 'class_name' => 'hide-column',
             ])
-            ->add('niveauxSportifs.libelle', Column::class, [
+            ->add('niveauxSportifs.niveauSportif.libelle', Column::class, [
                 'title' => 'niveauxSportifs',
-                'data' => 'niveauxSportifs[,].libelle',
+                'data' => 'niveauxSportifs[,].niveauSportif.libelle',
                 'visible' => false,
             ])
             ->add('activite.libelle', Column::class, [

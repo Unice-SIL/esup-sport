@@ -3,28 +3,50 @@
 namespace App\Tests\Service\Securite;
 
 use App\Entity\Uca\Utilisateur;
-use App\Repository\UtilisateurRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
 use App\Service\Securite\LoginFormAuthenticator;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 
 /**
  * @internal
+ *
+ * @coversNothing
  */
 class LoginFormAuthenticatorTest extends WebTestCase
 {
-    // /**
-    //  * @var LoginFormAuthenticator
-    //  */
-    // private $loginFormAuthenticator;
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
 
-    // protected function setUp(): void
-    // {
-    // }
+    private $client;
+
+    private $user;
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $this->em = static::getContainer()->get(EntityManagerInterface::class);
+        $hasher = static::getContainer()->get(UserPasswordHasherInterface::class);
+        $this->user = (new Utilisateur())
+            ->setNom('in')
+            ->setPrenom('log')
+            ->setUsername('login-test')
+            ->setSexe('M')
+            ->setEmail('login@test.fr')
+            ->setEnabled(true)
+        ;
+        $this->user->setPassword($hasher->hashPassword($this->user, $_ENV['ADMIN_PWD']))
+        ;
+        $this->em->persist($this->user);
+        $this->em->flush();
+    }
 
     /**
      * @covers \App\Service\Securite\LoginFormAuthenticator::__construct
@@ -52,11 +74,10 @@ class LoginFormAuthenticatorTest extends WebTestCase
      */
     public function testGetCredentials(): void
     {
-        $client = static::createClient();
         $loginFormAuthenticator = static::getContainer()->get(LoginFormAuthenticator::class);
-        $client->request('POST', 'security_login', ['_username' => 'username', '_password' => 'password', '_csrf_token' => 'csrf_token']);
+        $this->client->request('POST', 'security_login', ['_username' => 'username', '_password' => 'password', '_csrf_token' => 'csrf_token']);
 
-        $request = $client->getRequest();
+        $request = $this->client->getRequest();
 
         $credentials = $loginFormAuthenticator->getCredentials($request);
 
@@ -72,15 +93,14 @@ class LoginFormAuthenticatorTest extends WebTestCase
     public function testCheckCredentials(): void
     {
         $credentials = [
-            'username' => 'admin',
+            'username' => 'login-test',
             'password' => $_ENV['ADMIN_PWD'],
             'csrf_token' => null,
         ];
 
         $loginFormAuthenticator = static::getContainer()->get(LoginFormAuthenticator::class);
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
 
-        $this->assertTrue($loginFormAuthenticator->checkCredentials($credentials, $user));
+        $this->assertTrue($loginFormAuthenticator->checkCredentials($credentials, $this->user));
     }
 
     /**
@@ -88,15 +108,15 @@ class LoginFormAuthenticatorTest extends WebTestCase
      */
     public function testOnAuthenticationSuccessWithRequestedRoute(): void
     {
-        $client = static::createClient();
         $loginFormAuthenticator = static::getContainer()->get(LoginFormAuthenticator::class);
-        $client->request('GET', static::getContainer()->get(RouterInterface::class)->generate('UcaWeb_MonPlanning'));
+        $this->client->request('GET', static::getContainer()->get(RouterInterface::class)->generate('UcaWeb_MonPlanning'));
 
-        $request = $client->getRequest();
+        $request = $this->client->getRequest();
 
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $redirection = $loginFormAuthenticator->onAuthenticationSuccess($request, $token, 'main');
 
@@ -109,15 +129,15 @@ class LoginFormAuthenticatorTest extends WebTestCase
      */
     public function testOnAuthenticationSuccessWithWrongRequestedRoute(): void
     {
-        $client = static::createClient();
         $loginFormAuthenticator = static::getContainer()->get(LoginFormAuthenticator::class);
-        $client->request('GET', static::getContainer()->get(RouterInterface::class)->generate('UcaWeb_Accueil'));
+        $this->client->request('GET', static::getContainer()->get(RouterInterface::class)->generate('UcaWeb_Accueil'));
 
-        $request = $client->getRequest();
+        $request = $this->client->getRequest();
 
         $token = $this->getMockBuilder('Symfony\Component\Security\Core\Authentication\Token\TokenInterface')
             ->disableOriginalConstructor()
-            ->getMock();
+            ->getMock()
+        ;
 
         $redirection = $loginFormAuthenticator->onAuthenticationSuccess($request, $token, 'main');
 
@@ -130,21 +150,17 @@ class LoginFormAuthenticatorTest extends WebTestCase
      */
     public function testGetUser(): void
     {
-        $client = static::createClient();
-        $usersRepository = static::getContainer()->get(UtilisateurRepository::class);
-        $testUserAdmin = $usersRepository->find(1);
+        $this->client->loginUser($this->user, 'app');
 
-        $client->loginUser($testUserAdmin);
-
-        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
+        $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
 
         $parametersRequest = [
-            '_username' => 'admin',
+            '_username' => 'login-test',
             '_password' => 'Admin123*',
-            '_csrf_token' => $csrfToken->getValue()
+            '_csrf_token' => $csrfToken->getValue(),
         ];
-        $client->request('POST', 'security_login', $parametersRequest);
-        $request = $client->getRequest();
+        $this->client->request('POST', 'security_login', $parametersRequest);
+        $request = $this->client->getRequest();
 
         $container = static::getContainer();
         $loginFormAuthenticator = $container->get(LoginFormAuthenticator::class);
@@ -152,7 +168,8 @@ class LoginFormAuthenticatorTest extends WebTestCase
         $credentials = $loginFormAuthenticator->getCredentials($request);
         $userProvider = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')
-            ->getMock();
+            ->getMock()
+        ;
 
         $user = $loginFormAuthenticator->getUser($credentials, $userProvider);
         $this->assertInstanceOf(Utilisateur::class, $user);
@@ -165,9 +182,8 @@ class LoginFormAuthenticatorTest extends WebTestCase
     {
         $this->expectException(InvalidCsrfTokenException::class);
 
-        $client = static::createClient();
-        $client->request('POST', 'security_login', ['_username' => 'username', '_password' => 'password', '_csrf_token' => 'csrf_token']);
-        $request = $client->getRequest();
+        $this->client->request('POST', 'security_login', ['_username' => 'username', '_password' => 'password', '_csrf_token' => 'csrf_token']);
+        $request = $this->client->getRequest();
 
         $container = static::getContainer();
         $loginFormAuthenticator = $container->get(LoginFormAuthenticator::class);
@@ -177,7 +193,8 @@ class LoginFormAuthenticatorTest extends WebTestCase
         $credentials = $loginFormAuthenticator->getCredentials($request);
         $userProvider = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')
-            ->getMock();
+            ->getMock()
+        ;
 
         $user = $loginFormAuthenticator->getUser($credentials, $userProvider);
     }
@@ -188,21 +205,18 @@ class LoginFormAuthenticatorTest extends WebTestCase
     public function testGetUserNotFound(): void
     {
         $this->expectException(CustomUserMessageAuthenticationException::class);
-        $client = static::createClient();
-        $usersRepository = static::getContainer()->get(UtilisateurRepository::class);
-        $testUserAdmin = $usersRepository->find(1);
 
-        $client->loginUser($testUserAdmin);
+        $this->client->loginUser($this->user, 'app');
 
-        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
+        $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
 
         $parametersRequest = [
             '_username' => 'WrongPseudoForTest',
             '_password' => 'Admin123*',
-            '_csrf_token' => $csrfToken->getValue()
+            '_csrf_token' => $csrfToken->getValue(),
         ];
-        $client->request('POST', 'security_login', $parametersRequest);
-        $request = $client->getRequest();
+        $this->client->request('POST', 'security_login', $parametersRequest);
+        $request = $this->client->getRequest();
 
         $container = static::getContainer();
         $loginFormAuthenticator = $container->get(LoginFormAuthenticator::class);
@@ -210,7 +224,8 @@ class LoginFormAuthenticatorTest extends WebTestCase
         $credentials = $loginFormAuthenticator->getCredentials($request);
         $userProvider = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')
-            ->getMock();
+            ->getMock()
+        ;
 
         $user = $loginFormAuthenticator->getUser($credentials, $userProvider);
     }
@@ -221,22 +236,19 @@ class LoginFormAuthenticatorTest extends WebTestCase
     public function testGetUserNotEnable(): void
     {
         $this->expectException(CustomUserMessageAuthenticationException::class);
-        $client = static::createClient();
-        $usersRepository = static::getContainer()->get(UtilisateurRepository::class);
-        $testUserAdmin = $usersRepository->find(1);
-        $testUserAdmin->setEnabled(false);
+        $this->user->setEnabled(false);
+        $this->em->flush();
+        $this->client->loginUser($this->user, 'app');
 
-        $client->loginUser($testUserAdmin);
-
-        $csrfToken = $client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
+        $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('authenticate');
 
         $parametersRequest = [
-            '_username' => 'admin',
+            '_username' => 'login-test',
             '_password' => 'Admin123*',
-            '_csrf_token' => $csrfToken->getValue()
+            '_csrf_token' => $csrfToken->getValue(),
         ];
-        $client->request('POST', 'security_login', $parametersRequest);
-        $request = $client->getRequest();
+        $this->client->request('POST', 'security_login', $parametersRequest);
+        $request = $this->client->getRequest();
 
         $container = static::getContainer();
         $loginFormAuthenticator = $container->get(LoginFormAuthenticator::class);
@@ -244,9 +256,8 @@ class LoginFormAuthenticatorTest extends WebTestCase
         $credentials = $loginFormAuthenticator->getCredentials($request);
         $userProvider = $this
             ->getMockBuilder('Symfony\Component\Security\Core\User\UserProviderInterface')
-            ->getMock();
-
+            ->getMock()
+        ;
         $user = $loginFormAuthenticator->getUser($credentials, $userProvider);
-        $testUserAdmin->setEnabled(true);
     }
 }

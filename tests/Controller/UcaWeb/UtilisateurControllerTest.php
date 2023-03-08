@@ -2,17 +2,18 @@
 
 namespace App\Tests\Controller\UcaWeb;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Uca\ProfilUtilisateur;
 use App\Entity\Uca\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class UtilisateurControllerTest extends WebTestCase
@@ -34,7 +35,7 @@ class UtilisateurControllerTest extends WebTestCase
         $this->em = static::getContainer()->get(EntityManagerInterface::class);
 
         $profilUtilisateur = (new ProfilUtilisateur())
-            ->setLibelle("Testeur")
+            ->setLibelle('Testeur')
             ->setPreinscription(true)
             ->setNbMaxInscriptions(100)
             ->setNbMaxInscriptionsRessource(100)
@@ -76,6 +77,7 @@ class UtilisateurControllerTest extends WebTestCase
 
         $this->em->flush();
 
+        parent::tearDown();
         static::ensureKernelShutdown();
     }
 
@@ -90,18 +92,20 @@ class UtilisateurControllerTest extends WebTestCase
     /**
      * @dataProvider dataProviderMonCompte
      *
-     * @covers App\Controller\UcaWeb\UtilisateurController::voirAction
-     * @covers App\Controller\UcaWeb\UtilisateurController::FormatParActivite
+     * @covers \App\Controller\UcaWeb\UtilisateurController::FormatParActivite
+     * @covers \App\Controller\UcaWeb\UtilisateurController::voirAction
+     *
+     * @param mixed $userKey
      */
     public function testMonCompte($userKey)
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         $this->client->request('GET', $this->router->generate('UcaWeb_MonCompte'));
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\UtilisateurController::preInscriptionActionConfirmation
+     * @covers \App\Controller\UcaWeb\UtilisateurController::preInscriptionActionConfirmation
      */
     public function testUcaWebpreInscriptionConfirmation(): void
     {
@@ -110,7 +114,7 @@ class UtilisateurControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\UtilisateurController::confirmationExpireeAction
+     * @covers \App\Controller\UcaWeb\UtilisateurController::confirmationExpireeAction
      */
     public function testUtilisateurConfirmationInvalide(): void
     {
@@ -119,7 +123,7 @@ class UtilisateurControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\utilisateurController::preInscriptionAction
+     * @covers \App\Controller\UcaWeb\utilisateurController::preInscriptionAction
      */
     public function testGetPreInscription(): void
     {
@@ -129,62 +133,66 @@ class UtilisateurControllerTest extends WebTestCase
 
     public function dataProviderPreInscriptionForm(): array
     {
-        $filePdf = new UploadedFile(__DIR__.'/../../fixtures/test.pdf', 'test.pdf');
-        $fileTxt = new UploadedFile(__DIR__.'/../../fixtures/test.txt', 'test.txt');
+        $filePdf = new UploadedFile(dirname(__DIR__, 2).'/fixtures/test.pdf', 'test.pdf');
+        $fileTxt = new UploadedFile(dirname(__DIR__, 2).'/fixtures/test.txt', 'test.txt');
 
         return [
             // Cas complet
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
             // Cas partiels valide
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','codePostal' => '45000','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','adresse' => 'Rue des tests','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','adresse' => 'Rue des tests','codePostal' => '45000','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','adresse' => 'Rue des tests','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','adresse' => 'Rue des tests','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','codePostal' => '45000','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','codePostal' => '45000','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','ville' => 'Orléans','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'codePostal' => '45000', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'adresse' => 'Rue des tests', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'adresse' => 'Rue des tests', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'adresse' => 'Rue des tests', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'codePostal' => '45000', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'codePostal' => '45000', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'ville' => 'Orléans', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, true],
 
             // Cas Invalide
-            [['username' => 'userExists','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], null, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => '0'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/13/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '32/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'G','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'u','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '02384273','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'P','second' => 'P'],'profil' => 'id_profil'], $filePdf, false],
-            [['username' => 'user','email' => 'test@test.fr','prenom' => 'Test','nom' => 'test','sexe' => 'M','dateNaissance' => '01/10/2008','adresse' => 'Rue des tests','codePostal' => '45000','ville' => 'Orléans','telephone' => '0238427378','plainPassword' => ['first' => 'Password123!','second' => 'Password123!'],'profil' => 'id_profil'], $fileTxt, false],
+            [['username' => 'userExists', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], null, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => '0'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/13/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '32/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'G', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'u', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '02384273', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'P', 'second' => 'P'], 'profil' => 'id_profil'], $filePdf, false],
+            [['username' => 'user', 'email' => 'test@test.fr', 'prenom' => 'Test', 'nom' => 'test', 'sexe' => 'M', 'dateNaissance' => '01/10/2008', 'adresse' => 'Rue des tests', 'codePostal' => '45000', 'ville' => 'Orléans', 'telephone' => '0238427378', 'plainPassword' => ['first' => 'Password123!', 'second' => 'Password123!'], 'profil' => 'id_profil'], $fileTxt, false],
         ];
     }
 
     /**
      * @dataProvider dataProviderPreInscriptionForm
      *
-     * @covers App\Controller\UcaWeb\utilisateurController::preInscriptionAction
+     * @covers \App\Controller\UcaWeb\utilisateurController::preInscriptionAction
+     *
+     * @param mixed $data
+     * @param mixed $file
+     * @param mixed $redirect
      */
     public function testPostPreInscription($data, $file, $redirect): void
     {
         $csrfToken = static::getContainer()->get('security.csrf.token_manager')->getToken('ucaSport_Utilisateur');
-        if ($data['profil'] === 'id_profil') {
+        if ('id_profil' === $data['profil']) {
             $data['profil'] = $this->ids['profil'];
         }
 
@@ -192,21 +200,19 @@ class UtilisateurControllerTest extends WebTestCase
         $session = static::getContainer()->get(SessionInterface::class);
         $session->set('captcha_whitelist_key', ['_captcha_captcha']);
         $captcha = 'test5';
-        $session->set('_captcha_captcha', ['phrase'=> $captcha]);
-
+        $session->set('_captcha_captcha', ['phrase' => $captcha]);
 
         $this->client->request(
             'POST',
             $this->router->generate('UcaWeb_preInscription'),
-            ['ucaSport_Utilisateur' => array_merge($data, ['captcha' => $captcha,'_token' => $csrfToken->getValue(), 'save' => ''])],
+            ['ucaSport_Utilisateur' => array_merge($data, ['captcha' => $captcha, '_token' => $csrfToken->getValue(), 'save' => ''])],
             ['ucaSport_Utilisateur' => ['documentFile' => ['file' => $file]]]
         );
 
-
         $response = $this->client->getResponse();
-        if ($response->getStatusCode() === Response::HTTP_FOUND && null !== $file) {
+        if (Response::HTTP_FOUND === $response->getStatusCode() && null !== $file) {
             $newUser = $this->em->getRepository(Utilisateur::class)->findBy([], ['id' => 'DESC'], 1, 0)[0];
-            copy(__DIR__.'/../../fixtures/documents/'.$newUser->getDocument(), $file->getPathname());
+            copy(dirname(__DIR__, 2).'/fixtures/documents/'.$newUser->getDocument(), $file->getPathname());
             $this->em->remove($newUser);
             $this->em->flush();
         }

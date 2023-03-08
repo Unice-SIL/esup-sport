@@ -1,0 +1,12 @@
+{% set color = style().dangerColor %}
+{% set colorHover = style().dangerColorHover %}
+{% set colorShadow = style().dangerColorShadow %}
+
+.btn-danger {
+    background-color: {{ color | raw }} !important;
+    box-shadow: 0 3px 0 {{ colorShadow | raw }} !important;
+}
+
+.btn-danger:hover {
+    background-color: {{ colorHover | raw }} !important;
+}

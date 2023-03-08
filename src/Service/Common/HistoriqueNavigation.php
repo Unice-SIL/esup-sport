@@ -55,7 +55,7 @@ class HistoriqueNavigation
             '/\/media\/cache\/resolve/',
             '/historiqueNavigationDebug=o/',
             '/urlHistory=clear/',
-            
+
             // Gestion des inscriptions
             '/\/UcaWeb\/\d+\/AjoutPanier/',
             '/\/UcaWeb\/\d+\/Annuler/',
@@ -65,6 +65,9 @@ class HistoriqueNavigation
             '/\/UcaWeb\/Panier/',
             '/\/UcaWeb\/SuppressionArticle\/\d+/',
             '/\/UcaWeb\/SuppressionToutArticle\/\d+/',
+
+            // Captcha
+            '/\/_gcb/',
 
         ];
         foreach ($array_search as $search) {

@@ -152,6 +152,11 @@ services:
             - { name: doctrine.orm.entity_listener, event: preFlush, entity: App\Entity\Uca\LogoPartenaire, method: preFlush }
     
     # Other Listerners
+    uca.sitemap_listener:
+        class: App\Service\Listener\SiteMapListener
+        autowire: true
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, method: onKernelController }
     uca.paybox_response_listener:
         class: App\Service\Listener\PayboxResponseListener
         autowire: true
@@ -209,3 +214,19 @@ services:
         alias: sg_datatables.factory
     Sg\DatatablesBundle\Response\DatatableResponse:
         alias: sg_datatables.response
+
+    Imagine\Image\ImagineInterface:
+        alias: liip_imagine
+
+    # Liip custom filters
+    app.filter.remove_alpha:
+        class: App\Service\Imagine\Filter\RemoveAlphaFilter
+        tags:
+            - { name: "liip_imagine.filter.loader", loader: remove_alpha }
+
+    Twig\Extension\StringLoaderExtension: ~
+
+lexik_translation:
+    fallback_locale: [fr] # (required) default locale(s) to use
+    managed_locales: [fr, en] # (required) locales that the bundle has to manage
+    base_layout: "LexikTranslationBundle/layout.html.twig"

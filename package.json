@@ -20,6 +20,7 @@
         "@popperjs/core": "^2.11.0",
         "@ttskch/select2-bootstrap4-theme": "^1.5.2",
         "@types/express": "^4.17.13",
+        "angular": "1.5.9",
         "bootstrap": "^4.6.1",
         "bootstrap-daterangepicker": "^3.1.0",
         "chart.js": "^3.6.1",
@@ -40,7 +41,8 @@
         "path": "^0.12.7",
         "popper.js": "^1.16.1",
         "sass-loader": "^12.3.0",
-        "select2": "4.0.13"
+        "select2": "4.0.13",
+        "webpack": ">=5.0.0 <6.0.0"
     },
     "browser": {
         "fs": false,

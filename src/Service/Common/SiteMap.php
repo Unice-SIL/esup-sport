@@ -8,6 +8,10 @@
 
 namespace App\Service\Common;
 
+use App\Entity\Uca\FormatActivite;
+use Doctrine\Common\Util\ClassUtils;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -21,11 +25,12 @@ class SiteMap
     private $translator;
     private $requestStack;
     private $router;
-
+    private $em;
     private $sitemapOriginal;
     private $sitemapByRoute;
 
-    public function __construct(string $projectDir, RequestStack $requestStack, RouterInterface $router, TranslatorInterface $translator, AuthorizationCheckerInterface $authorizationChecker)
+    public function __construct(string $projectDir, RequestStack $requestStack, RouterInterface $router, TranslatorInterface $translator, AuthorizationCheckerInterface $authorizationChecker,
+    EntityManagerInterface $em)
     {
         $this->requestStack = $requestStack;
         $this->router = $router;
@@ -33,6 +38,7 @@ class SiteMap
         $this->authorizationChecker = $authorizationChecker;
         $this->sitemapOriginal = Yaml::parseFile($projectDir.'/src/Resources/config/sitemap.yml');
         $this->sitemapByRoute = $this->getSitemapByRoute($this->sitemapOriginal);
+        $this->em = $em;
     }
 
     public function get()
@@ -63,7 +69,7 @@ class SiteMap
     {
         $currentRequest = $this->requestStack->getCurrentRequest()->get('_route');
         $menuName = 'UcaWeb_Accueil';
-        if (false !== strpos($currentRequest, 'UcaGest')) {
+        if (false !== strpos($currentRequest, 'UcaGest') || false !== strpos($currentRequest, 'lexik_translation_')) {
             $menuName = 'UcaGest_Accueil';
         }
         $key = array_search($menuName, array_column($this->sitemapOriginal, 'route'));
@@ -103,12 +109,32 @@ class SiteMap
             $currentRequest = $this->requestStack->getCurrentRequest();
             $options = ['_locale' => $currentRequest->get('_locale')];
             foreach ($item['params'] as $key => $param) {
-                $options[$key] = $currentRequest->get($param);
+                if($this->isEntity($this->em, $currentRequest->get($param))){
+                    $options[$key] = $currentRequest->get($param)->getId();
+                }else{
+                    $options[$key] = $currentRequest->get($param);
+                }
             }
             $url = $this->router->generate($item['route'], $options);
         }
 
         return $url;
+    }
+
+    /**
+     * @param EntityManager $em
+     * @param string|object $class
+     *
+     * @return boolean
+     */
+    function isEntity($em, $class)
+    {
+        if(is_object($class)){
+            $class = ClassUtils::getClass($class);
+        }else{
+            $class = '';
+        }
+        return ! $em->getMetadataFactory()->isTransient($class);
     }
 
     public function getTitre($itemAriane, $context = [])
@@ -120,9 +146,14 @@ class SiteMap
         }, function ($arguments, $str) {
             return $this->translator->trans($str);
         });
+        $el->register('icon', function ($str) {
+            return '<i class="'.$str.'"></i>';
+        }, function ($arguments, $str) {
+            return '<i class="'.$str.'"></i>';
+        });
         $titre = $el->evaluate($instruction, $context);
 
-        return strip_tags($titre);
+        return strip_tags($titre, ['i']);
     }
 
     public function getSitemapOriginal()
@@ -138,6 +169,7 @@ class SiteMap
             $itemByRoute['titre'] = $itemOriginal['titre'];
             $itemByRoute['route'] = $itemOriginal['route'];
             $itemByRoute['params'] = isset($itemOriginal['params']) ? $itemOriginal['params'] : [];
+            $itemByRoute['droit'] = isset($itemOriginal['droit']) ? $itemOriginal['droit'] : '';
             $itemAriane = $byRoute;
             array_push($itemAriane, $itemByRoute);
             $itemByRoute['ariane'] = $itemAriane;
@@ -145,10 +177,19 @@ class SiteMap
                 $res[$routeName] = $itemByRoute;
             }
             if (isset($itemOriginal['items'])) {
-                $res = $res + $this->getSitemapByRoute($itemOriginal['items'], $itemAriane);
+                $itemDroit = [];
+                foreach($itemOriginal['items'] as $item){
+                    // Première option : la priorité est pour le parent dans sitemap
+                    // $item['droit'] = $itemByRoute['droit'] ?: (isset($item['droit']) ? $item['droit']  : '');
+
+                    // Deuxième option : la priorité est pour le droit de l'item et pas du parent
+                    $item['droit'] =  isset($item['droit']) ? $item['droit']  : $itemByRoute['droit'];
+
+                    $itemDroit[] = $item;
+                }
+                $res = $res + $this->getSitemapByRoute($itemDroit, $itemAriane);
             }
         }
-
         return $res;
     }
 }

@@ -134,7 +134,7 @@ class Tarif implements \App\Entity\Uca\Interfaces\JsonSerializable
         $montant = $this->getMontantUtilisateur($utilisateur);
         $coefTva = $this->getPourcentageTva() / 100;
 
-        return $montant * $coefTva / (1 + $coefTva);
+        return $montant * $coefTva;
     }
 
     /**

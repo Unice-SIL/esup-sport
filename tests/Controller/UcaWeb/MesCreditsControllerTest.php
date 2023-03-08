@@ -12,6 +12,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MesCreditsControllerTest extends WebTestCase
@@ -58,7 +59,7 @@ class MesCreditsControllerTest extends WebTestCase
         ;
         $this->em->persist($user_no_credit);
 
-        $credit = new UtilisateurCreditHistorique($user_credit, 8.0, null, 'credit', "Ajout manuel de crédits", null);
+        $credit = new UtilisateurCreditHistorique($user_credit, 8.0, null, 'credit', 'Ajout manuel de crédits', null);
         $this->em->persist($credit);
         $user_credit->addCredit($credit);
 
@@ -70,47 +71,29 @@ class MesCreditsControllerTest extends WebTestCase
         $this->ids['credit'] = $credit->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $container = static::getContainer();
-
-        $credit = $this->em->getRepository(UtilisateurCreditHistorique::class)->find($this->ids['credit']);
-        $credit->setUtilisateur(null);
-        $this->em->remove($credit);
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_credit']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_no_credit']));
-
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_user_non_admin']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     public function accessDataProvider()
     {
         return [
             // UcaWeb_MesCredits
-            [null,'GET','UcaWeb_MesCredits',Response::HTTP_FOUND],
-            ['user_credit@test.fr','GET','UcaWeb_MesCredits',Response::HTTP_OK],
-            ['user_no_credit@test.fr','GET','UcaWeb_MesCredits',Response::HTTP_OK],
+            [null, 'GET', 'UcaWeb_MesCredits', Response::HTTP_FOUND],
+            ['user_credit@test.fr', 'GET', 'UcaWeb_MesCredits', Response::HTTP_OK],
+            ['user_no_credit@test.fr', 'GET', 'UcaWeb_MesCredits', Response::HTTP_OK],
 
             // UcaWeb_MesCreditsExport
-            [null,'GET','UcaWeb_MesCreditsExport',Response::HTTP_FOUND,['id'=>'id_credit']],
-            ['user_no_credit@test.fr','GET','UcaWeb_MesCreditsExport',Response::HTTP_FOUND,['id'=>'id_credit']],
+            [null, 'GET', 'UcaWeb_MesCreditsExport', Response::HTTP_FOUND, ['id' => 'id_credit']],
+            ['user_no_credit@test.fr', 'GET', 'UcaWeb_MesCreditsExport', Response::HTTP_FOUND, ['id' => 'id_credit']],
         ];
     }
 
     public function dataTableDataProvider()
     {
         return [
-            ['user_credit@test.fr','GET','UcaWeb_MesCredits',Response::HTTP_OK,[
-                    'draw' => 1, 'columns' => [['data' => 'id', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'avoir', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'commandeAssociee', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'date', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'operation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'typeOperation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montant', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => '7', 'name' => '', 'searchable' => false, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]]], 'order' => [['column' => 0, 'dir' => 'asc']], 'start' => 0, 'length' => 10, 'search' => ['value' => '', 'regex' => false], '_' => 1657195188930
-                ],
+            ['user_credit@test.fr', 'GET', 'UcaWeb_MesCredits', Response::HTTP_OK, [
+                'draw' => 1, 'columns' => [['data' => 'id', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'avoir', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'commandeAssociee', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'date', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'operation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'typeOperation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montant', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => '7', 'name' => '', 'searchable' => false, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]]], 'order' => [['column' => 0, 'dir' => 'asc']], 'start' => 0, 'length' => 10, 'search' => ['value' => '', 'regex' => false], '_' => 1657195188930,
+            ],
                 [],
-                true
-            ]
+                true,
+            ],
         ];
     }
 
@@ -118,8 +101,16 @@ class MesCreditsControllerTest extends WebTestCase
      * @dataProvider accessDataProvider
      * @dataProvider dataTableDataProvider
      *
-     * @covers App\Controller\UcaWeb\MesCreditsController::voirCreditsAction
-     * @covers App\Controller\UcaWeb\MesCreditsController::exportCreditAction
+     * @covers \App\Controller\UcaWeb\MesCreditsController::exportCreditAction
+     * @covers \App\Controller\UcaWeb\MesCreditsController::voirCreditsAction
+     *
+     * @param mixed $userEmail
+     * @param mixed $method
+     * @param mixed $routeName
+     * @param mixed $httpResponse
+     * @param mixed $urlParameters
+     * @param mixed $body
+     * @param mixed $ajax
      */
     public function testAccesRoutes($userEmail, $method, $routeName, $httpResponse, $urlParameters = [], $body = [], $ajax = false): void
     {
@@ -127,7 +118,7 @@ class MesCreditsControllerTest extends WebTestCase
 
         if (null != $userEmail) {
             $userTest = $this->em->getRepository(Utilisateur::class)->findOneByEmail($userEmail);
-            $this->client->loginUser($userTest);
+            $this->client->loginUser($userTest, 'app');
         }
         $route = $router->generate($routeName, $urlParameters);
         $route = str_replace('id_credit', $this->ids['credit'], $route);
@@ -141,20 +132,20 @@ class MesCreditsControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\MesCreditsController::exportCreditAction
+     * @covers \App\Controller\UcaWeb\MesCreditsController::exportCreditAction
      */
     public function testExportOK()
     {
         ob_start();
         $router = static::getContainer()->get(RouterInterface::class);
         $userTest = $this->em->getRepository(Utilisateur::class)->findOneByEmail('user_credit@test.fr');
-        $this->client->loginUser($userTest);
-        $route = $router->generate('UcaWeb_MesCreditsExport', ['id'=>$this->ids['credit']]);
+        $this->client->loginUser($userTest, 'app');
+        $route = $router->generate('UcaWeb_MesCreditsExport', ['id' => $this->ids['credit']]);
         $this->client->request('GET', $route);
         $this->client->getResponse()->sendContent();
         $response = ob_get_contents();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertStringStartsWith("%PDF-", $response);
+        $this->assertStringStartsWith('%PDF-', $response);
         $this->assertStringEndsWith("\n%%EOF\n", $response);
         ob_end_clean();
     }

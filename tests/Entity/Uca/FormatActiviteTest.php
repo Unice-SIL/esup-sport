@@ -7,6 +7,7 @@ use App\Entity\Uca\ClasseActivite;
 use App\Entity\Uca\ComportementAutorisation;
 use App\Entity\Uca\FormatAchatCarte;
 use App\Entity\Uca\FormatActivite;
+use App\Entity\Uca\FormatActiviteNiveauSportif;
 use App\Entity\Uca\FormatActiviteProfilUtilisateur;
 use App\Entity\Uca\FormatAvecCreneau;
 use App\Entity\Uca\FormatAvecReservation;
@@ -159,7 +160,7 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $formatActivite = (new FormatSimple())->setImageFile($file);
 
         $this->assertInstanceOf(File::class, $formatActivite->getImageFile());
@@ -201,7 +202,15 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testGetArticleMontantGratuit(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
 
         $formatActivite = (new FormatSimple())->setEstPayant(false);
 
@@ -215,7 +224,15 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testGetArticleMontantSansTarif(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
 
         $formatActivite = (new FormatSimple())->setEstPayant(true);
 
@@ -229,7 +246,15 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testGetArticleMontantAvecTarif(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
 
         $tarif = new Tarif();
         $montant = new MontantTarifProfilUtilisateur(
@@ -304,7 +329,15 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testVerifieCoherenceDonnees(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
 
         $formatActivite = (new FormatSimple())
             ->setEstPayant(false)
@@ -402,11 +435,12 @@ class FormatActiviteTest extends KernelTestCase
      */
     public function testUpdateListeNiveauxSportifs(): void
     {
-        $formatActivite = (new FormatSimple())
-            ->addNiveauxSportif((new NiveauSportif())->setLibelle('Premier niveau'))
-            ->addNiveauxSportif((new NiveauSportif())->setLibelle('Deuxième niveau'))
-            ->updateListeNiveauxSportifs()
-        ;
+        $ns1 = (new NiveauSportif())->setLibelle('Premier niveau');
+        $ns2 = (new NiveauSportif())->setLibelle('Deuxième niveau');
+        $formatActivite = (new FormatSimple());
+        $formatActivite->addNiveauxSportif(new FormatActiviteNiveauSportif($formatActivite, $ns1, '1er niveau'));
+        $formatActivite->addNiveauxSportif(new FormatActiviteNiveauSportif($formatActivite, $ns2, '2eme niveau'));
+        $formatActivite->updateListeNiveauxSportifs();
 
         $this->assertIsString($formatActivite->getListeNiveauxSportifs());
         $this->assertEquals('Premier niveau, Deuxième niveau', $formatActivite->getListeNiveauxSportifs());
@@ -584,9 +618,18 @@ class FormatActiviteTest extends KernelTestCase
      */
     private function createInscription(string $statut = 'valide'): Inscription
     {
+        $user = (new Utilisateur())
+            ->setNom('Admin')
+            ->setPrenom('Utilisateur')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
         return (new Inscription(
             (new FormatSimple())->setDateDebutEffective(new DateTime()),
-            static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin'),
+            $user,
             []
         ))->setStatut($statut);
     }

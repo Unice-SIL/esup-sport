@@ -34,6 +34,7 @@ class CalendrierService
     private $twig;
     private $translator;
     private $logger;
+    private $previewService;
 
     /**
      * @codeCoverageIgnore
@@ -45,7 +46,8 @@ class CalendrierService
         FormatAvecReservationRepository $formatAvecReservationRepository,
         DhtmlxEvenementRepository $dhtmlxEvenementRepository,
         EtablissementRepository $etablissementRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        StylePreviewService $previewService
     ) {
         $this->formatAvecCreneauRepository = $formatAvecCreneauRepository;
         $this->formatAvecReservationRepository = $formatAvecReservationRepository;
@@ -54,6 +56,7 @@ class CalendrierService
         $this->twig = $twig;
         $this->translator = $translator;
         $this->logger = $logger;
+        $this->previewService = $previewService;
     }
 
     /**
@@ -61,7 +64,9 @@ class CalendrierService
      */
     public function createPlanning(array $parametreData): JsonResponse
     {
-        if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
+        if ('FormatAvecCreneau' == $parametreData['typeFormat'] && $parametreData['preview'] === 'true') {
+            $item = $this->previewService->getFormatAvecCreneau();
+        } elseif ('FormatAvecCreneau' == $parametreData['typeFormat']) {
             $item = $this->formatAvecCreneauRepository->findOneById($parametreData['itemId']);
         } elseif ('FormatAvecReservation' == $parametreData['typeFormat']) {
             $item = $this->formatAvecReservationRepository->findOneById($parametreData['itemId']);
@@ -70,7 +75,7 @@ class CalendrierService
         }
 
         if (null !== $item) {
-            $twigConfig['itemId'] = $item->getId();
+            $twigConfig['itemId'] = $item->getId() ?? 0;
             $twigConfig['typeVisualisation'] = $parametreData['typeVisualisation'];
             $twigConfig['currentDate'] = \DateTime::createFromFormat('d/m/Y', $parametreData['currentDate'])->setTime(0, 0);
             $twigConfig['typeFormat'] = $parametreData['typeFormat'];
@@ -145,7 +150,12 @@ class CalendrierService
                 $dt = $dt->modify('+1 day');
             }
         }
-        $listeEvenements = $this->getEvents($parametreData, $dateDebut, $datefin, $item);
+
+        if ($item->getId() === null) {
+            $listeEvenements = $this->previewService->getEvents($dateDebut, $datefin, $item);
+        } else {
+            $listeEvenements = $this->getEvents($parametreData, $dateDebut, $datefin, $item);
+        }
 
         foreach ($listeEvenements as $evenement) {
             $indexColonneCorrespondantDate = null;
@@ -232,7 +242,12 @@ class CalendrierService
         $listeCampus = [];
         $dataCalendrier = [];
 
-        $listeEvenements = $this->getEvents($parametreData, $dateDebut, $datefin, $item);
+        if ($item->getId() === null) {
+            $listeEvenements = $this->previewService->getEvents($dateDebut, $datefin, $item);
+        } else {
+            $listeEvenements = $this->getEvents($parametreData, $dateDebut, $datefin, $item);
+        }
+        
         foreach ($listeEvenements as $evenement) {
             if ('FormatAvecCreneau' == $parametreData['typeFormat']) {
                 if ($evenement->getSerie()->getCreneau()->getLieu()->getEtablissement()) {
@@ -288,7 +303,11 @@ class CalendrierService
         $dateDebut = clone $currentDate->modify('first day of this month');
         $dateFin = (clone $currentDate->modify('last day of this month'))->setTime(23, 59, 59);
 
-        $events = $this->getEvents($parametreData, $dateDebut, $dateFin, $item);
+        if ($item->getId() === null) {
+            $events = $this->previewService->getEvents($dateDebut, $dateFin, $item);
+        } else {
+            $events = $this->getEvents($parametreData, $dateDebut, $dateFin, $item);
+        }
 
         $listeEtablissements = [];
         $datas = [];
@@ -320,14 +339,17 @@ class CalendrierService
      */
     public function getModalDetailCreneau(DhtmlxEvenement $event, string $typeFormat, string $idFormat): JsonResponse
     {
+        $dateDebutSerie = $dateFinSerie = $formatActivite = null;
         if ('FormatAvecReservation' == $typeFormat) {
             $formatActivite = $this->formatAvecReservationRepository->find($idFormat);
-        } else {
-            $formatActivite = null;
+        } elseif ('FormatAvecCreneau' == $typeFormat){
+            $dateDebutSerie = $event->getSerie()->getEvenements()->first()->getDateDebut();
+            $dateFinSerie = $event->getSerie()->getEvenements()->last()->getDateDebut();
         }
 
         return new JsonResponse([
-            'html' => $this->twig->render('UcaBundle/UcaWeb/Activite/Calendrier/Modal.DetailCreneau.html.twig', ['event' => $event, 'typeFormat' => $typeFormat, 'formatActivite' => $formatActivite]),
+            'html' => $this->twig->render('UcaBundle/UcaWeb/Activite/Calendrier/Modal.DetailCreneau.html.twig', 
+            ['event' => $event, 'typeFormat' => $typeFormat, 'formatActivite' => $formatActivite, 'dateDebutSerie' => $dateDebutSerie, 'dateFinSerie' => $dateFinSerie ]),
         ]);
     }
 

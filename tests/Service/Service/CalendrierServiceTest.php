@@ -78,7 +78,8 @@ class CalendrierServiceTest extends WebTestCase
     }
     protected function tearDown(): void
     {
-        self::ensureKernelShutdown();
+        parent::tearDown();
+        static::ensureKernelShutdown();
     }
 
 
@@ -154,12 +155,18 @@ class CalendrierServiceTest extends WebTestCase
             ->setCreneau($creneau)
             ->setDateDebut($serieData['DateDebut'])
             ->setDateFin($serieData['DateFin']);
+        if (null !== $creneau) {
+            $creneau->setSerie($serie);
+        }
         foreach ($eventsData as $eventData) {
-            $events[] = (new DhtmlxEvenement())
+            $event = (new DhtmlxEvenement())
                 ->setSerie($serie)
+                ->setDependanceSerie(true)
                 ->setDescription($eventData['Description'])
                 ->setDateDebut($eventData['DateDebut'])
                 ->setDateFin($eventData['DateFin']);
+            $events[] = $event;
+            $serie->addEvenement($event);
         }
 
         if ($formatActivite instanceof FormatAvecReservation) {
@@ -745,7 +752,7 @@ class CalendrierServiceTest extends WebTestCase
 
         $ressourceData['Libelle'] = 'lieu';
         $ressourceData['NbPartenaires'] = 1;
-        $imageTest = new File(__DIR__ . '../../../fixtures/vtt.jpg');
+        $imageTest = new File(dirname(__DIR__, 2).'/fixtures/vtt.jpg');;
         $ressourceData['ImageFile'] = $imageTest;
         $ressourceData['Image'] = $imageTest->getRealPath();
         $ressourceData['NbPartenairesMax'] = 1;

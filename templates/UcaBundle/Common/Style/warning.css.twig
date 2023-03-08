@@ -1,0 +1,12 @@
+{% set color = style().warningColor %}
+{% set colorHover = style().warningColorHover %}
+{% set colorShadow = style().warningColorShadow %}
+
+.btn-warning {
+    background-color: {{ color | raw }} !important;
+    box-shadow: 0 3px 0 {{ colorShadow | raw }} !important;
+}
+
+.btn-warning:hover {
+    background-color: {{ colorHover | raw }} !important;
+}

@@ -72,7 +72,7 @@
 			</div>
 			{% for carte in cartes %}
 				<div class="row container-style bg-white container-style-border-none d-flex flex-wrap justify-content-between mt-1 px-2 py-3">
-					<div class='text-uppercase fw-500 color-blue mt-3 ml-2'>
+					<div class='text-uppercase fw-500 color-primary mt-3 ml-2'>
 						{{ carte.libelle }}:
 					</div>
 					<a href="{{ path('UcaGest_CommandeDetails_InformationsCarte', {'id':carte.id}) }}" role="button" class='btn btn-primary mr-1'>

@@ -35,6 +35,15 @@
         <p>{{'parametrage.libelleadresse'|trans}} : {{item.libelleAdresse}}</p>
         <p>{{'parametrage.adressefacturation'|trans}} : {{item.adresseFacturation}}</p>
         <p>SIRET : {{item.siret}}</p>
+        <h2 class="hide-border-title">{{'parametrage.mail'|trans}}</h2>
+        <p>{{'parametrage.prefixmail'|trans}} : {{item.prefixMail}}</p>
+        <p>{{'parametrage.signaturemail'|trans}} : {{ include(template_from_string(item.signatureMail|replace({'&#39;': "'"})|raw)) }}
+        <br>
+        {% set image = logo('Signature des mails') %}
+        {% if image.actif %}
+            <img class="img-fluid rounded mb-3" alt="image_activite" src="{{ asset('/upload/public/images/logos/' ~ image.image ) | imagine_filter('mail_signature') }}"/>
+        {% endif %}
+        </p>
     </div>
 
 {% endblock %}

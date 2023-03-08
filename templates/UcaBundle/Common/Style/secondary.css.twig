@@ -1,0 +1,26 @@
+{% set secondaryColor = style().secondaryColor %}
+{% set secondaryColorHover = style().secondaryColorHover %}
+{% set secondaryColorShadow = style().secondaryColorShadow %}
+
+.btn-secondary
+{
+    box-shadow: 0 3px 0 {{ secondaryColorShadow | raw }} !important;
+    background-color: {{ secondaryColor | raw }} !important;
+}
+
+.btn-secondary:hover,
+.btn-outline-secondary:hover
+{
+    background-color: {{ secondaryColorHover | raw }} !important;
+}
+
+.btn-outline-secondary
+{
+    color: {{ secondaryColor | raw }} !important;
+    border-color: {{ secondaryColor | raw }} !important;
+}
+
+.btn-outline-secondary:hover
+{
+    color: white !important;
+}

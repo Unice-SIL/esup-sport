@@ -1,0 +1,10 @@
+{% set color = style().navbarColors %}
+.navbar-footer,
+nav.main-nav,
+.main-nav *,
+.second-nav-header .nav-link:hover,
+.dropdown-menu
+{
+    background-color: {{ color['background']|raw }} !important;
+    color: {{ color['foreground']|raw }} !important;
+}

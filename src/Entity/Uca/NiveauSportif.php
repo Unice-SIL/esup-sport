@@ -11,10 +11,13 @@ namespace App\Entity\Uca;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\NiveauSportifRepository")
  * @Gedmo\Loggable
+ * @UniqueEntity(fields="libelle", message="niveausportif.uniqueentity")
  */
 class NiveauSportif implements \App\Entity\Uca\Interfaces\JsonSerializable
 {
@@ -22,6 +25,9 @@ class NiveauSportif implements \App\Entity\Uca\Interfaces\JsonSerializable
 
     /** @ORM\ManyToMany(targetEntity="Creneau", mappedBy="niveauxSportifs") */
     protected $creneaux;
+
+    /** @ORM\OneToMany(targetEntity="FormatActiviteNiveauSportif", mappedBy="niveauSportif") */
+    protected $formatsActivite;
 
     //region Propriétés
     /**
@@ -33,7 +39,9 @@ class NiveauSportif implements \App\Entity\Uca\Interfaces\JsonSerializable
 
     /**
      * @Gedmo\Translatable
+     * @Gedmo\Versioned
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="niveausportif.libelle.notblank")
      */
     private $libelle;
 
@@ -47,6 +55,7 @@ class NiveauSportif implements \App\Entity\Uca\Interfaces\JsonSerializable
     public function __construct()
     {
         $this->creneaux = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->formatsActivite = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     //endregion
@@ -128,5 +137,40 @@ class NiveauSportif implements \App\Entity\Uca\Interfaces\JsonSerializable
     public function getCreneaux()
     {
         return $this->creneaux;
+    }
+
+    /**
+     * Add creneaux.
+     *
+     * @return NiveauSportif
+     * @codeCoverageIgnore
+     */
+    public function addFormatActivite(FormatActivite $format)
+    {
+        $this->formatsActivite[] = $format;
+
+        return $this;
+    }
+
+    /**
+     * Remove creneaux.
+     *
+     * @return bool TRUE if this collection contained the specified element, FALSE otherwise
+     * @codeCoverageIgnore
+     */
+    public function removeFormatActivite(FormatActivite $formatActivite)
+    {
+        return $this->creneaux->removeElement($formatActivite);
+    }
+
+    /**
+     * Get creneaux.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     * @codeCoverageIgnore
+     */
+    public function getFormatsActivite()
+    {
+        return $this->formatsActivite;
     }
 }

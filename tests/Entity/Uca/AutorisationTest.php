@@ -66,7 +66,7 @@ class AutorisationTest extends TestCase
      */
     public function testSetJustificatifFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $this->autorisation->setJustificatifFile($file);
 
         $this->assertEquals($file, $this->autorisation->getJustificatifFile());

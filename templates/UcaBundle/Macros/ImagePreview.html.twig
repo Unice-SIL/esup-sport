@@ -6,6 +6,14 @@
 		</div>
 {% endmacro %}
 
+{% macro logoHtml(url, id, thumb = 'thumb_large_small', imgHeight='150px', imgWidth='150px') %}
+	{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+
+		<div id="{{ id }}_preview" class="{{ url ? '' : 'd-none'}} img-preview" style="height: {{imgHeight}}; width: {{imgWidth}};">
+			<p> <img alt="" src="{{ ImageAsset.logoThumb(url, thumb) }}" style="height:  {{imgHeight}};"> </p>
+		</div>
+{% endmacro %}
+
 {% macro js() %}
 		<script type='text/javascript'>
 			'use_strict';

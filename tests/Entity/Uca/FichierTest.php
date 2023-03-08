@@ -30,7 +30,7 @@ class FichierTest extends TestCase
      */
     public function testSetImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $this->fichier->setImageFile($file);
 
         $this->assertEquals($file, $this->fichier->getImageFile());

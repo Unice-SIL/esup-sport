@@ -23,6 +23,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MonPlanningControllerTest extends WebTestCase
@@ -249,40 +250,6 @@ class MonPlanningControllerTest extends WebTestCase
         $this->ids['inscription4'] = $inscription4->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $appel = $this->em->getRepository(Appel::class)->find($this->ids['appel']);
-        if (null !== $appel) {
-            $this->em->remove($appel);
-        }
-
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscription1']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscription2']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscription3']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscription4']));
-        $this->em->remove($this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite']));
-        $this->em->remove($this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite2']));
-        $this->em->remove($this->em->getRepository(Lieu::class)->find($this->ids['ressource']));
-        $this->em->remove($this->em->getRepository(FormatSimple::class)->find($this->ids['formatSimple']));
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement']));
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement2']));
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement3']));
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serie']));
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneau']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActivite']));
-        $this->em->remove($this->em->getRepository(Activite::class)->find($this->ids['activite']));
-        $this->em->remove($this->em->getRepository(ClasseActivite::class)->find($this->ids['classeActivite']));
-        $this->em->remove($this->em->getRepository(TypeActivite::class)->find($this->ids['typeActivite']));
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     public function dataProviderlister()
     {
         return [
@@ -327,7 +294,7 @@ class MonPlanningControllerTest extends WebTestCase
         $route = str_replace('id_user', $this->ids['user'], $route);
 
         if (null !== $userKey) {
-            $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+            $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         }
         if (!empty($body) && isset($body['ucabundle_evenement'])) {
             $body['ucabundle_evenement']['_token'] = $this->tokens['ucabundle_evenement'];
@@ -348,7 +315,7 @@ class MonPlanningControllerTest extends WebTestCase
     public function testListePdfOK()
     {
         ob_start();
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']), 'app');
         $route = $this->router->generate('UcaWeb_PlanningMore_listePdf', ['id' => $this->ids['evenement']]);
         $this->client->request('GET', $route);
         $this->client->getResponse()->sendContent();
@@ -362,7 +329,7 @@ class MonPlanningControllerTest extends WebTestCase
     public function testListeExcelOK()
     {
         ob_start();
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']), 'app');
         $route = $this->router->generate('UcaWeb_PlanningMore_listeExcel', ['id' => $this->ids['evenement']]);
         $this->client->request('GET', $route);
         $this->client->getResponse()->sendContent();
@@ -388,7 +355,7 @@ class MonPlanningControllerTest extends WebTestCase
 
     public function testNDEFSansBody()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->request('POST', $this->router->generate('Api_NDEFUser'));
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
@@ -398,7 +365,7 @@ class MonPlanningControllerTest extends WebTestCase
 
     public function testNDEFAvecBody()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->request('POST', $this->router->generate('Api_NDEFUser'), ['id' => 'cd:ab:10:32:54:76:98']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
@@ -408,7 +375,7 @@ class MonPlanningControllerTest extends WebTestCase
 
     public function testGetPlanningMail()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']), 'app');
         $this->client->request('GET', $this->router->generate('UcaWeb_PlanningMore_mail', ['id' => $this->ids['evenement']]));
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
@@ -420,7 +387,7 @@ class MonPlanningControllerTest extends WebTestCase
 
     public function testPostPlanningMail()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_encadrant_gestion']), 'app');
         $this->client->request('POST', $this->router->generate('UcaWeb_PlanningMore_mail', ['id' => $this->ids['evenement']]), [
             'ucabundle_mail' => [
                 'save' => '',

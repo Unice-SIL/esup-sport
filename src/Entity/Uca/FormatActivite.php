@@ -167,9 +167,9 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
     /** @ORM\ManyToMany(targetEntity="TypeAutorisation", inversedBy="formatsActivite", fetch="LAZY") */
     private $autorisations;
 
-    /** @ORM\ManyToMany(targetEntity="NiveauSportif", fetch="LAZY")
-     * @Assert\NotBlank(message="complement.niveauxsportifs.notblank")
-     * @Assert\Count(min = 1, minMessage = "complement.niveauxsportifs.notblank")
+    /**
+     * @ORM\OneToMany(targetEntity="FormatActiviteNiveauSportif", mappedBy="formatActivite", fetch="LAZY", cascade={"persist", "remove"})
+     * @Assert\Valid()
      */
     private $niveauxSportifs;
 
@@ -236,6 +236,12 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
     /** @Gedmo\Versioned
      * @ORM\Column(type="boolean", nullable=false) */
     private $promouvoir = false;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="boolean", nullable=false)
+     */
+    private $contactEncadrant = false;
     //endregion
 
     /**
@@ -393,7 +399,7 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
             if (!empty($this->listeNiveauxSportifs)) {
                 $this->listeNiveauxSportifs .= ', ';
             }
-            $this->listeNiveauxSportifs .= $niveauSportif->getLibelle();
+            $this->listeNiveauxSportifs .= $niveauSportif->getNiveauSportif()->getLibelle();
         }
 
         return $this;
@@ -1051,7 +1057,7 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
      * @return FormatActivite
      * @codeCoverageIgnore
      */
-    public function addNiveauxSportif(NiveauSportif $niveauxSportif)
+    public function addNiveauxSportif(FormatActiviteNiveauSportif $niveauxSportif)
     {
         $this->niveauxSportifs[] = $niveauxSportif;
 
@@ -1064,7 +1070,7 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
      * @return bool TRUE if this collection contained the specified element, FALSE otherwise
      * @codeCoverageIgnore
      */
-    public function removeNiveauxSportif(NiveauSportif $niveauxSportif)
+    public function removeNiveauxSportif(FormatActiviteNiveauSportif $niveauxSportif)
     {
         return $this->niveauxSportifs->removeElement($niveauxSportif);
     }
@@ -1375,5 +1381,25 @@ abstract class FormatActivite implements \App\Entity\Uca\Interfaces\JsonSerializ
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public function isContactEncadrant(): ?bool
+    {
+        return $this->contactEncadrant;
+    }
+
+     /**
+     * @return FormatActivite
+     * @codeCoverageIgnore
+     */
+    public function setContactEncadrant(?bool $contactEncadrant): self
+    {
+        $this->contactEncadrant = $contactEncadrant;
+
+        return $this;
     }
 }

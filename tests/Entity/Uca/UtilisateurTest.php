@@ -320,6 +320,8 @@ class UtilisateurTest extends TestCase
         $this->userAddAutorisation->addAutorisation($this->typeAutorisationAddAutorisation);
 
         $this->assertTrue($this->userAddAutorisation->getAutorisations()->contains($this->typeAutorisationAddAutorisation));
+        
+        $this->assertEquals($this->utilisateur, $this->utilisateur->addAutorisation($this->typeAutorisationAddAutorisation));
     }
 
     /**  @covers \App\Entity\Uca\Utilisateur::isEncadrantEvenement
@@ -335,6 +337,16 @@ class UtilisateurTest extends TestCase
         $this->evenement->getSerie()->getCreneau()->addEncadrant($this->utilisateur);
 
         $this->assertTrue($this->utilisateur->isEncadrantEvenement($this->evenement));
+
+        $this->evenement->setFormatSimple((new FormatSimple())
+        ->setEstEncadre(true)
+        ->addEncadrant($this->utilisateur));
+
+        $serie = new DhtmlxSerie();
+        $serie->setCreneau(null);
+        $this->evenement->setSerie(null);
+        $this->assertTrue($this->utilisateur->isEncadrantEvenement($this->evenement));
+
     }
 
     /**  @covers \App\Entity\Uca\Utilisateur::getEmailDomain
@@ -369,6 +381,8 @@ class UtilisateurTest extends TestCase
         $this->utilisateur->addRole('ROLE_ADMIN');
 
         $this->assertTrue(in_array('ROLE_USER', $this->utilisateur->getRoles()) && in_array('ROLE_ADMIN', $this->utilisateur->getRoles()));
+
+        $this->assertSame($this->utilisateur, $this->utilisateur->addRole('ROLE_USER'));
     }
 
     /**  @covers \App\Entity\Uca\Utilisateur::getRoles

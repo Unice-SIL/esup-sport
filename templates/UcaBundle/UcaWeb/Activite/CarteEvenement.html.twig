@@ -75,7 +75,7 @@
         {% if inscriptionInformations.statut in ['previsualisation'] %}
           <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans | upper }}</button>
         {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
-          <p class="m-0 fs-14 fw-500 color-blue">
+          <p class="m-0 fs-14 fw-500 color-primary">
             <i class="fas fa-check-circle"></i>
             {{ ('formatSimple.list.' ~ inscriptionInformations.statut) | trans | upper }}
           </p>

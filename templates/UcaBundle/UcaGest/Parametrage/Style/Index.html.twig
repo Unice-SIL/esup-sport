@@ -1,0 +1,90 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+
+{% block main %}
+    <h1>
+        {{ 'style.title' | trans }}
+    </h1>
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('UcaGest_StyleModifier') }}">
+        {{'bouton.modifier'|trans}}
+    </a>
+    <a class="btn btn-warning" href="{{ path('UcaGest_LogLister', {'objectClass' : 'Style', 'objectId' : '1'}) }}">
+        {{'bouton.log'|trans}}
+    </a>
+
+    {% set style = style().style %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-6">
+                {% set color = style().primaryColor %}
+                <h2 class="hide-border-title">{{'style.color.primary'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().primaryColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.primaryHover >= 0 ? '+ ' : '') ~ style.primaryHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().primaryColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.primaryShadow >= 0 ? '+ ' : '') ~ style.primaryShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-6">
+                {% set color = style().secondaryColor %}
+                <h2 class="hide-border-title">{{'style.color.secondary'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().secondaryColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.secondaryHover >= 0 ? '+ ' : '') ~ style.secondaryHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().secondaryColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.secondaryShadow >= 0 ? '+ ' : '') ~ style.secondaryShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().successColor %}
+                <h2 class="hide-border-title">{{'style.color.success'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().successColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.successHover >= 0 ? '+ ' : '') ~ style.successHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().successColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.successShadow >= 0 ? '+ ' : '') ~ style.successShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().warningColor %}
+                <h2 class="hide-border-title">{{'style.color.warning'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().warningColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.warningHover >= 0 ? '+ ' : '') ~ style.warningHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().warningColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.warningShadow >= 0 ? '+ ' : '') ~ style.warningShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().dangerColor %}
+                <h2 class="hide-border-title">{{'style.color.danger'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().dangerColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.dangerHover >= 0 ? '+ ' : '') ~ style.dangerHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().dangerColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.dangerShadow >= 0 ? '+ ' : '') ~ style.dangerShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-12">
+                <h2 class="hide-border-title">{{'style.color.navbar'|trans}}</h2>
+                {% set color = style().navbarColors %}
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="hide-border-title">{{'style.background'|trans}}</h3>
+                        <p><span style="background-color: {{ color['background'] }}; color: {{ color['background'] }};">___</span>{{ color['background'] }}</p>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="hide-border-title">{{'style.foreground'|trans}}</h3>
+                        <p style="background-color: {{ color['background'] }}; color: {{ color['foreground'] }};">{{ color['foreground'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

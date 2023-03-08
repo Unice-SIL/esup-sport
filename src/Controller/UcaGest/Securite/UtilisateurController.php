@@ -118,25 +118,23 @@ class UtilisateurController extends AbstractController
         if ('valider' == $action) {
             $usr->addRole('ROLE_USER');
             $usr->setStatut($statutRepo->find(1));
-            $messageTitre = $translator->trans('confirmation.inscription');
-            $messageView = 'UcaBundle/Email/PreInscription/ConfirmationEmail.html.twig';
+            $messageView = 'ConfirmationEmail';
             $token = rtrim(strtr(base64_encode(random_bytes(32)), '+/', '-_'), '=');
             $url = $this->generateUrl('registration_validate_acount', ['id' => $usr->getId(), 'token' => $token], true);
             $usr->setConfirmationToken($token);
             $flashBag->addActionFlashBag($usr, 'valider');
         } elseif ('refuser' == $action) {
             $usr->setStatut($statutRepo->find(3));
-            $messageTitre = $translator->trans('refus.inscription');
-            $messageView = 'UcaBundle/Email/PreInscription/RefusEmail.html.twig';
+            $messageView = 'RefusEmail';
             $flashBag->addActionFlashBag($usr, 'refuser');
         }
         $em->persist($usr);
 
         $mailer->sendMailWithTemplate(
-            $messageTitre,
+            null,
             $usr->getEmail(),
             $messageView,
-            ['user' => $usr, 'confirmationUrl' => $url]
+            ['user' => $usr, 'lienPreInscription' => $url ?? '']
         );
         $uploadHandler->remove($usr, 'documentFile');
         $em->flush();
@@ -259,22 +257,20 @@ class UtilisateurController extends AbstractController
             $item->setEnabled(false);
             $item->setStatut($bloquer);
             $flashBag->addActionFlashBag($item, 'bloquer');
-            $messageTitre = 'Votre compte est bloqué';
-            $messageView = 'UcaBundle/Email/CompteUtilisateur/UtilisateurBloquerEmail.html.twig';
+            $messageView = 'UtilisateurBloquerEmail';
         } else {
             $item->setEnabled(true);
             $item->setStatut($valide);
             $flashBag->addActionFlashBag($item, 'debloquer');
-            $messageTitre = 'Votre compte est activé';
-            $messageView = 'UcaBundle/Email/CompteUtilisateur/UtilisateurDebloquerEmail.html.twig';
+            $messageView = 'UtilisateurDebloquerEmail';
         }
         $em->persist($item);
 
         $mailer->sendMailWithTemplate(
-            $messageTitre,
+            null,
             $item->getEmail(),
             $messageView,
-            ['user' => $item]
+            []
         );
         $em->flush();
 

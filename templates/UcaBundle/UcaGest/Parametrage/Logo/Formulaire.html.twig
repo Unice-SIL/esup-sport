@@ -1,0 +1,43 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
+
+{% block main %}
+
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ 'logoparametrable.modifier.title' | trans }}</h1>
+    <!-- Message de saisie incorrecte -->
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    <p>{{ item.description }}</p>
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    <div class="row">
+        <div class="col-sm-12 mt-4">
+            {{ form_row(form.actif) }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 mt-4">
+            {{ form_row(form.imageFile) }}
+            {{ ImagePreview.html(item.image, 'ucabundle_logoparametrable_imageFile_file') }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 mt-4">
+            {{ form_row(form.save) }}
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ ImagePreview.js }}
+	<script type="text/javascript">
+		'use_strict';
+        _uca.vichImageStyle();
+	</script>
+{% endblock %}

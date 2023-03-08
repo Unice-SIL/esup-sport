@@ -110,20 +110,20 @@ trait Article
 
         if ($this instanceof FormatActivite) {
             $formatReference = $this;
-        } elseif (empty($format)) {
-            $formatReference = $this->getFormatActivite();
-        } else {
+        } elseif (isset($format) && !empty($format)) {
             $formatReference = $format;
+        } else {
+            $formatReference = $this->getFormatActivite();
         }
 
         if (empty($utilisateur)) {
             $resultat['statut'] = 'nonconnecte';
-        } elseif (!$this->autoriseProfil($utilisateur->getProfil())) {
+        } elseif (!$this->autoriseProfil($utilisateur->getProfil()) |- ($this instanceof Creneau && !$this->getCapaciteProfil($utilisateur->getProfil()))) {
             $resultat['statut'] = 'profilinvalide';
         } elseif (!$utilisateur->getCgvAcceptees()) {
             $resultat['statut'] = 'cgvnonacceptees';
         } else {
-            $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $format);
+            $resultat['montant'] = $this->getArticleArrayMontant($utilisateur, $formatReference);
             $inscriptions = $utilisateur->getInscriptionsByCriteria([
                 [Inscription::getItemColumn($this), 'eq', $this],
                 ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
@@ -132,6 +132,11 @@ trait Article
             $inscriptionEnCours = !$inscriptions->isEmpty();
             if ($this instanceof FormatAchatCarte) {
                 $inscriptionEnCours = $utilisateur->hasAutorisation($this->getCarte());
+            }
+
+            $estAForteFrequentation = false;
+            if ($this instanceof Creneau) {
+                $estAForteFrequentation = $this->getSerieEvenements()->first()->getForteFrequence();
             }
 
             if (Previsualisation::$IS_ACTIVE) {
@@ -148,14 +153,30 @@ trait Article
                 $resultat['statut'] = 'nbcreneaumaxatteint';
             } elseif ($this instanceof Reservabilite && (null === $this->getEvenement() || $utilisateur->nbRessourceMaximumAtteint($this))) {
                 $resultat['statut'] = 'nbressourcemaxatteint';
-            } elseif ($formatReference->inscriptionsTerminees()) {
+            } elseif (!$estResa && $formatReference->inscriptionsTerminees()) {
                 $resultat['statut'] = 'inscriptionsterminees';
-            } elseif ($formatReference->inscriptionsAVenir()) {
+            } elseif (!$estResa && $formatReference->inscriptionsAVenir()) {
                 $resultat['statut'] = 'inscriptionsavenir';
             } elseif ($estResa && null !== $event && $this->dateReservationPasse($event)) {
                 $resultat['statut'] = 'inscriptionsterminees';
             } elseif ($resultat['montant']['total'] < 0) {
                 $resultat['statut'] = 'montantincorrect';
+            } elseif ($this instanceof Creneau && $estAForteFrequentation) {
+                $autresInscriptions = $utilisateur->getInscriptionsByCriteria([
+                    ['creneau', 'neq', null],
+                    ['creneau', 'neq', $this],
+                    ['formatActivite', 'eq', $formatReference],
+                    ['statut', 'notIn', ['annule', 'desinscrit', 'ancienneinscription', 'desinscriptionadministrative']],
+                ]);
+                $autresCreneauxInscrits = [];
+                foreach ($autresInscriptions as $inscription) {
+                    $autresCreneauxInscrits[] = $inscription->getCreneau()->getSerieEvenements()->first()->getForteFrequence();
+                }
+                if (in_array(true, $autresCreneauxInscrits)) {
+                    $resultat['statut'] = 'fortefrequence';
+                } else {
+                    $resultat['statut'] = 'disponible';
+                }
             } else {
                 $resultat['statut'] = 'disponible';
             }

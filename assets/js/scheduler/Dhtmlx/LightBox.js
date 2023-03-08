@@ -131,6 +131,9 @@ if ("App\\Entity\\Uca\\Utilisateur" != scheduler.data.item.objectClass) {
         eligibilite: function() {
             return { name: Translator.trans("common.eligible"), type: "checkbox", map_to: "eligible_bonus", dependanceSerie: false }
         },
+        frequence: function() {
+            return { name: Translator.trans("common.forteFrequence"), type: "checkbox", map_to: "forte_frequence", dependanceSerie: false }
+        },
         time: function() {
             return { name: "time", height: 72, type: "calendar_time", map_to: "auto", dependanceSerie: false };
         }

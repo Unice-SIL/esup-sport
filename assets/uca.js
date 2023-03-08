@@ -99,6 +99,7 @@ import "./js/_uca_extraction.js";
 import "./js/_uca_inscription.js";
 import "./js/_uca_mail.js";
 import "./js/_uca_multipleImages.js";
+import "./js/_uca_niveauxSportif.js";
 import "./js/_uca_openlayersmap.js";
 import "./js/_uca_timer.js";
 import "./js/mail.js";
@@ -110,3 +111,8 @@ import "./js/bootstrap/bootstrapTooltip.js";
 const { Chart } = require("chart.js");
 const { ChartDataLabels } = require("chartjs-plugin-datalabels");
 import "./js/chartJS/main.js";
+
+// Imports LexikTranslationsBundle
+require('angular');
+require('./bundles/lexiktranslation/ng-table/ng-table.min.js');
+require('./bundles/lexiktranslation/js/translation');

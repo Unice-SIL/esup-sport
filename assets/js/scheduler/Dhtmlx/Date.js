@@ -74,6 +74,17 @@ function show_extend_date_minical() {
     }
 }
 
+export function isInPeriodeFermeture(date) {
+    let ret = false;
+    for (const periode of scheduler.data.lists.periodesFermeture) {
+        ret = date >= periode.dateDeb && date < periode.dateFin;
+        if (ret) {
+            break;
+        }
+    }
+    return ret;
+}
+
 export {dateToStr}
 export {show_minical}
 export {show_end_date_minical}

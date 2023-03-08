@@ -40,5 +40,5 @@ yarn-error.log
 /tests/coverage/
 ###< phpunit/phpunit ###
 /symfony.lock
-
-/assets/libs/dhtmlxScheduler-5.1.6
+### SITEMAP.YML ###
+/src/Resources/config/sitemap.yml

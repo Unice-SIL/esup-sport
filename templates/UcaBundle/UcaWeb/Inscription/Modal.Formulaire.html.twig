@@ -23,7 +23,7 @@
         {% elseif codeComportement == 'justificatif' %}
             <p required="required">
                 <span class="font-weight-bold">{{ ('modalinscription.' ~ codeComportement  ~ '.document') | trans({ '%nom%': typeAutorisation.libelle }) }}</span>
-                <br><span class="fs-14 color-blue">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
+                <br><span class="fs-14 color-primary">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
                 <span class="fs-14 font-italic">{{ ('modalinscription.mention.document.telechargement') | trans }}</span>
                 {{ form_widget(autorisation.justificatifFile) }}
             </p>
@@ -32,7 +32,7 @@
                 <strong>
                     {{ ('modalinscription.' ~ codeComportement  ~ '.texte') | trans({ '%nom%': typeAutorisation.libelle, '%montant%': typeAutorisation.getArticleMontant(app.user)}) }}
                 </strong>
-                <br><span class="fs-14 color-blue">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
+                <br><span class="fs-14 color-primary">{{ ('modalinscription.mention.obligatoire') | trans }}</span>
                 <span class="fs-14 font-italic">{{ ('modalinscription.mention.ajout.panier') | trans }}</span>
             </p>
         {% elseif codeComportement == 'validationencadrant' or codeComportement == 'validationgestionnaire' %}

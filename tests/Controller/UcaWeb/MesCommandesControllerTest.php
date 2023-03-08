@@ -7,20 +7,18 @@ use App\Entity\Uca\CommandeDetail;
 use App\Entity\Uca\FormatSimple;
 use App\Entity\Uca\Inscription;
 use App\Entity\Uca\Utilisateur;
-use App\Repository\CommandeDetailRepository;
-use App\Repository\CommandeRepository;
-use App\Repository\FormatSimpleRepository;
-use App\Repository\InscriptionRepository;
-use App\Repository\UtilisateurRepository;
-use App\Service\Securite\LoginFormAuthenticator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 class MesCommandesControllerTest extends WebTestCase
 {
     private $router;
@@ -130,22 +128,6 @@ class MesCommandesControllerTest extends WebTestCase
         $this->ids['user_lambda_bis'] = $user_lambda_bis->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $this->em->remove($this->em->getRepository(CommandeDetail::class)->find($this->ids['avoirDetail']));
-        $this->em->remove($this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscription']));
-        $this->em->remove($this->em->getRepository(FormatSimple::class)->find($this->ids['formatSimple']));
-        $this->em->remove($this->em->getRepository(Commande::class)->find($this->ids['commande']));
-        $this->em->remove($this->em->getRepository(Commande::class)->find($this->ids['avoir']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     public function listerDataProvider()
     {
         return [
@@ -155,9 +137,9 @@ class MesCommandesControllerTest extends WebTestCase
             [
                 true,
                 [
-                    'draw' => 1, 'columns' => [['data' => 'id', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'statut', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'datePaiement', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'dateAnnulation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'dateCommande', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montantTotal', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'numeroCommande', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'numeroRecu', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montantTotalFormated', 'name' => '', 'searchable' => true, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]], ['data' => 'statutTraduit', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'paiement', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'date', 'name' => '', 'searchable' => true, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]], ['data' => '12', 'name' => '', 'searchable' => false, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]]], 'order' => [['column' => 3, 'dir' => 'DESC']], 'start' => 0, 'length' => 10, 'search' => ['value' => '', 'regex' => false], '_' => 1659619619363
-                ]
-            ]
+                    'draw' => 1, 'columns' => [['data' => 'id', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'statut', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'datePaiement', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'dateAnnulation', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'dateCommande', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montantTotal', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'numeroCommande', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'numeroRecu', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'montantTotalFormated', 'name' => '', 'searchable' => true, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]], ['data' => 'statutTraduit', 'name' => '', 'searchable' => true, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'paiement', 'name' => '', 'searchable' => false, 'orderable' => true, 'search' => ['value' => '', 'regex' => false]], ['data' => 'date', 'name' => '', 'searchable' => true, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]], ['data' => '12', 'name' => '', 'searchable' => false, 'orderable' => false, 'search' => ['value' => '', 'regex' => false]]], 'order' => [['column' => 3, 'dir' => 'DESC']], 'start' => 0, 'length' => 10, 'search' => ['value' => '', 'regex' => false], '_' => 1659619619363,
+                ],
+            ],
         ];
     }
 
@@ -171,17 +153,20 @@ class MesCommandesControllerTest extends WebTestCase
                 true,
                 [
                     'draw' => 1,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
     /**
      * @dataProvider listerDataProvider
+     *
+     * @param mixed $isAjax
+     * @param mixed $urlParams
      */
     public function testLister($isAjax = false, $urlParams = [])
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
         $route = $this->router->generate('UcaWeb_MesCommandes', $urlParams);
 
         if ($isAjax) {
@@ -194,8 +179,8 @@ class MesCommandesControllerTest extends WebTestCase
 
     public function testVoirRedirection()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']));
-        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id' => $this->ids['commande']]);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesCommandes');
         $this->assertResponseRedirects($expectedRedirection);
@@ -203,11 +188,14 @@ class MesCommandesControllerTest extends WebTestCase
 
     /**
      * @dataProvider voirDataProvider
+     *
+     * @param mixed $isAjax
+     * @param mixed $urlParams
      */
     public function testGetVoir($isAjax = false, $urlParams = [])
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesCommandesVoir', array_merge(['id'=>$this->ids['commande']], $urlParams));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesVoir', array_merge(['id' => $this->ids['commande']], $urlParams));
         if ($isAjax) {
             $this->client->xmlHttpRequest('GET', $route);
         } else {
@@ -218,28 +206,28 @@ class MesCommandesControllerTest extends WebTestCase
 
     public function testPostVoirFormValid()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id' => $this->ids['commande']]);
         $this->client->request('POST', $route, [
             'ValiderPaiementPayboxType' => [
                 'cgvAcceptees' => true,
                 'save' => '',
-                '_token' => $this->tokens['ValiderPaiementPayboxType']
-            ]
+                '_token' => $this->tokens['ValiderPaiementPayboxType'],
+            ],
         ]);
-        $expectedRedirection = $this->router->generate('UcaWeb_PaiementRecapitulatif', ['id'=>$this->ids['commande'],'typePaiement'=>'PAYBOX']);
+        $expectedRedirection = $this->router->generate('UcaWeb_PaiementRecapitulatif', ['id' => $this->ids['commande'], 'typePaiement' => 'PAYBOX']);
         $this->assertResponseRedirects($expectedRedirection);
     }
 
     public function testPostVoirFormInvalid()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesVoir', ['id' => $this->ids['commande']]);
         $this->client->request('POST', $route, [
             'ValiderPaiementPayboxType' => [
                 'save' => '',
-                '_token' => $this->tokens['ValiderPaiementPayboxType']
-            ]
+                '_token' => $this->tokens['ValiderPaiementPayboxType'],
+            ],
         ]);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertStringContainsStringIgnoringCase($this->translator->trans('mentions.conditions.nonvalide', [], null, 'fr'), $this->client->getResponse()->getContent());
@@ -247,8 +235,8 @@ class MesCommandesControllerTest extends WebTestCase
 
     public function testRouteMesCommandesAnnuler(): void
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesCommandesAnnuler', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesAnnuler', ['id' => $this->ids['commande']]);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesCommandes');
         $this->assertResponseRedirects($expectedRedirection);
@@ -256,8 +244,8 @@ class MesCommandesControllerTest extends WebTestCase
 
     public function testRouteMesCommandesAnnulerPasBonUser(): void
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']));
-        $route = $this->router->generate('UcaWeb_MesCommandesAnnuler', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesAnnuler', ['id' => $this->ids['commande']]);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesCommandes');
         $this->assertResponseRedirects($expectedRedirection);
@@ -265,8 +253,8 @@ class MesCommandesControllerTest extends WebTestCase
 
     public function testExportPasBonUser()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']));
-        $route = $this->router->generate('UcaWeb_MesCommandesExport', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesExport', ['id' => $this->ids['commande']]);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesCommandes');
         $this->assertResponseRedirects($expectedRedirection);
@@ -275,13 +263,13 @@ class MesCommandesControllerTest extends WebTestCase
     public function testExportBonUser()
     {
         ob_start();
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesCommandesExport', ['id'=>$this->ids['commande']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesCommandesExport', ['id' => $this->ids['commande']]);
         $this->client->request('GET', $route);
         $this->client->getResponse()->sendContent();
         $response = ob_get_contents();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertStringStartsWith("%PDF-", $response);
+        $this->assertStringStartsWith('%PDF-', $response);
         $this->assertStringEndsWith("\n%%EOF\n", $response);
         ob_end_clean();
     }
@@ -289,8 +277,8 @@ class MesCommandesControllerTest extends WebTestCase
     public function testExportAvoirPasBonUser()
     {
         $avoir = $this->em->getRepository(CommandeDetail::class)->find($this->ids['avoirDetail']);
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']));
-        $route = $this->router->generate('UcaWeb_MesAvoirsExport', ['id'=>$this->ids['commande'],'refAvoir'=>$avoir->getReferenceAvoir()]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda_bis']), 'app');
+        $route = $this->router->generate('UcaWeb_MesAvoirsExport', ['id' => $this->ids['commande'], 'refAvoir' => $avoir->getReferenceAvoir()]);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesCredits');
         $this->assertResponseRedirects($expectedRedirection);
@@ -300,13 +288,13 @@ class MesCommandesControllerTest extends WebTestCase
     {
         ob_start();
         $avoir = $this->em->getRepository(CommandeDetail::class)->find($this->ids['avoirDetail']);
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $route = $this->router->generate('UcaWeb_MesAvoirsExport', ['id'=>$this->ids['commande'],'refAvoir'=>$avoir->getReferenceAvoir()]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
+        $route = $this->router->generate('UcaWeb_MesAvoirsExport', ['id' => $this->ids['commande'], 'refAvoir' => $avoir->getReferenceAvoir()]);
         $this->client->request('GET', $route);
         $this->client->getResponse()->sendContent();
         $response = ob_get_contents();
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertStringStartsWith("%PDF-", $response);
+        $this->assertStringStartsWith('%PDF-', $response);
         $this->assertStringEndsWith("\n%%EOF\n", $response);
         ob_end_clean();
     }

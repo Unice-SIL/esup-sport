@@ -22,6 +22,7 @@ use App\Entity\Uca\ComportementAutorisation;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\Uca\ReservabiliteProfilUtilisateur;
+use App\Entity\Uca\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
@@ -62,11 +63,22 @@ class ActiviteControllerTest extends WebTestCase
     {
         $client = static::createClient();
         $router = static::getContainer()->get(RouterInterface::class);
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
         $em = static::getContainer()->get(EntityManagerInterface::class);
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('test')
+        ;
+        $em->persist($user);
+        $em->flush();
+
 
         $dhtmlxEvenement = new DhtmlxEvenement();
-        $imageTest = new File(__DIR__ . '../../../fixtures/vtt.jpg');
+        $imageTest = new File(dirname(__DIR__, 2).'/fixtures/vtt.jpg');
 
         // DxhtmlEvent > Reservabilite > Ressource > FormatAvecReservation
         $formatAvecReservation = (new FormatAvecReservation())
@@ -128,7 +140,7 @@ class ActiviteControllerTest extends WebTestCase
         $inscription->addAutorisation($autorisation);
         $inscription->addEncadrant($user);
 
-        $Commande = new Commande(static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin'));
+        $Commande = new Commande($user);
         // DhtmlxEvenement > Inscription > CommandeDetail
         $commandeDetail = new CommandeDetail(
             $Commande,
@@ -232,6 +244,7 @@ class ActiviteControllerTest extends WebTestCase
         $em->remove($autorisation);
         $em->remove($formatAvecReservation);
         $em->remove($dhtmlxEvenement);
+        $em->remove($user);
         $em->flush();
     }
 }

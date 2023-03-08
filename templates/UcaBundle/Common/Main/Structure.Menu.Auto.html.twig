@@ -16,17 +16,17 @@
                 {% set url = path(itemMenu.route)  %}
             {% endif %}
             <a role="option" class="nav-link nav-link-border d-flex align-items-center {{ current }}" href="{{ url }}">
-                <span>{{ sitemap.getTitre(itemMenu, _context) }}</span>
+                <span>{{ sitemap.getTitre(itemMenu, _context) | raw }}</span>
             </a>
         {% elseif not itemMenu.items is empty %}
             <a role="button" aria-haspopup="true" id="{{'menu'~sitemap.getTitre(itemMenu, _context)}}" class=" d-flex align-items-center nav-link dropdown-toggle {{ current }}" data-toggle="dropdown" href="#" id="{{sitemap.getTitre(itemMenu, _context)}}" role="button">
-                {{ sitemap.getTitre(itemMenu, _context) }}
+                {{ sitemap.getTitre(itemMenu, _context) | raw }}
             </a>
             <div aria-expanded="false" aria-labelledby="{{'menu'~sitemap.getTitre(itemMenu, _context)}}" class="dropdown-menu" role="menu">
                 {% for itemSubMenu in itemMenu.items %}
                     {% set current = (sitemap.isCurrentAncestor(itemSubMenu.route) ? 'active' : '') %}
                     <a role="menuitem" class="dropdown-item  {{ current }}" href="{{ path(itemSubMenu.route) }}">
-                        {{ sitemap.getTitre(itemSubMenu, _context) }}
+                        {{ sitemap.getTitre(itemSubMenu, _context) | raw }}
                     </a>
                 {% endfor %}
             </div>

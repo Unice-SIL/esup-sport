@@ -143,10 +143,8 @@ class Groupe
      */
     public function addUtilisateur(Utilisateur $utilisateur)
     {
-        if (!$this->utilisateurs->contains($utilisateur)) {
-            $this->utilisateurs[] = $utilisateur;
-            $utilisateur->addGroup($this);
-        }
+        $this->utilisateurs[] = $utilisateur;
+
         return $this;
     }
 

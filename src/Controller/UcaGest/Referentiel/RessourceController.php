@@ -407,6 +407,7 @@ class RessourceController extends AbstractController
             $r = clone $reservabilite;
             $r->getEvenement()->setDateDebut($r->getEvenement()->getDateDebut()->add($intervalleDiff));
             $r->getEvenement()->setDateFin($r->getEvenement()->getDateFin()->add($intervalleDiff));
+
             $em->persist($r->getEvenement());
             $em->persist($r);
             foreach($r->getProfilsUtilisateurs()->toArray() as $profilResa){

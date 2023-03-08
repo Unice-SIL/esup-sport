@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Uca\Actualite;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 
 /**
  * ActualiteRepository
@@ -17,5 +18,42 @@ class ActualiteRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Actualite::class);
+    }
+
+    public function findMaxOrdre(): int
+    {
+        $ret = $this->createQueryBuilder('a')
+            ->select('MAX(a.ordre) as maxOrdre')
+            ->distinct()
+            ->getQuery()
+            ->getResult()
+        ;
+
+        $ret[0]['maxOrdre'] = isset($ret[0]['maxOrdre']) ? $ret[0]['maxOrdre'] : 0;
+        return $ret[0]['maxOrdre'];
+    }
+
+    public function findByOrdreSuperieur($ordre)
+    {
+        return $this->createQueryBuilder('a')
+            ->select()
+            ->distinct()
+            ->where('a.ordre > :ordre')
+            ->setParameter(':ordre', $ordre)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    public function findByOrdreInferieur($ordre)
+    {
+        return $this->createQueryBuilder('a')
+            ->select()
+            ->distinct()
+            ->where('a.ordre < :ordre')
+            ->setParameter(':ordre', $ordre)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 }

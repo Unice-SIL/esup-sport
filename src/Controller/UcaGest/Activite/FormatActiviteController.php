@@ -14,6 +14,7 @@ use App\Entity\Uca\Appel;
 use App\Entity\Uca\DhtmlxEvenement;
 use App\Entity\Uca\FormatAchatCarte;
 use App\Entity\Uca\FormatActivite;
+use App\Entity\Uca\FormatActiviteNiveauSportif;
 use App\Entity\Uca\FormatActiviteProfilUtilisateur;
 use App\Entity\Uca\FormatAvecCreneau;
 use App\Entity\Uca\FormatAvecReservation;
@@ -124,7 +125,8 @@ class FormatActiviteController extends AbstractController
             }
             $niveaux = $niveauSportifRepo->findAll();
             foreach ($niveaux as $niveau) {
-                $item->addNiveauxSportif($niveau);
+                $formatNiveau = new FormatActiviteNiveauSportif($item, $niveau);
+                $item->addNiveauxSportif($formatNiveau);
             }
             // }
             $typeClassName = $tools->getClassName($format, 'FormType');
@@ -136,10 +138,15 @@ class FormatActiviteController extends AbstractController
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
             $profilsExistants = [];
+            $niveauxExistants = [];
             foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
                 $profilsExistants[] = $formatProfil->getProfilUtilisateur()->getLibelle();
             }
+            foreach ($form->getData()->getNiveauxSportifs() as $formatNiveau) {
+                $niveauxExistants[] = $formatNiveau->getNiveauSportif()->getLibelle();
+            }
             $twigConfig['profilsExistants'] = $profilsExistants;
+            $twigConfig['niveauxExistants'] = $niveauxExistants;
 
             if ($form->isValid()) {
                 $item->verifieCoherenceDonnees();
@@ -152,6 +159,7 @@ class FormatActiviteController extends AbstractController
         }
         $twigConfig['FormatClassName'] = $className;
         $twigConfig['tousProfils'] = $tousProfils;
+        $twigConfig['tousNiveaux'] = $niveaux;
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
 
@@ -164,11 +172,13 @@ class FormatActiviteController extends AbstractController
      *
      * @param mixed $idActivite
      */
-    public function modifierAction(Request $request, $idActivite, FormatActivite $item, FlashBag $flashBag, Tools $tools, EntityManagerInterface $em, ProfilUtilisateurRepository $profilUtilisateurRepository)
+    public function modifierAction(Request $request, $idActivite, FormatActivite $item, FlashBag $flashBag, Tools $tools, EntityManagerInterface $em, ProfilUtilisateurRepository $profilUtilisateurRepository, NiveauSportifRepository $niveauSportifRepository)
     {
         $item->updateListeProfils();
         $tousProfils = $profilUtilisateurRepository->findAll();
+        $tousNiveaux = $niveauSportifRepository->findAll();
         $profilsExistants = explode(', ', $item->getListeProfils());
+        $niveauxExistants = explode(', ', $item->getListeNiveauxSportifs());
 
         $className = get_class($item);
         $path = explode('\\', $className);
@@ -178,13 +188,22 @@ class FormatActiviteController extends AbstractController
         $form->handleRequest($request);
         if ($request->isMethod('POST')) {
             $profilsExistants = [];
+            $niveauxExistants = [];
             $tabProfil = [];
+            $tabNiveau = [];
             foreach ($form->getData()->getProfilsUtilisateurs() as $formatProfil) {
                 $tabProfil[$formatProfil->getProfilUtilisateur()->getId()] = $formatProfil->getProfilUtilisateur()->getLibelle();
                 ksort($tabProfil);
             }
             foreach ($tabProfil as $profil) {
                 $profilsExistants[] = $profil;
+            }
+            foreach ($form->getData()->getNiveauxSportifs() as $formatNiveau) {
+                $tabNiveau[$formatNiveau->getNiveauSportif()->getId()] = $formatNiveau->getNiveauSportif()->getLibelle();
+                ksort($tabNiveau);
+            }
+            foreach ($tabNiveau as $niveau) {
+                $niveauxExistants[] = $niveau;
             }
 
             if ($form->isValid()) {
@@ -198,7 +217,9 @@ class FormatActiviteController extends AbstractController
         $twigConfig['FormatClassName'] = $className;
         $twigConfig['item'] = $item;
         $twigConfig['profilsExistants'] = $profilsExistants;
+        $twigConfig['niveauxExistants'] = $niveauxExistants;
         $twigConfig['tousProfils'] = $tousProfils;
+        $twigConfig['tousNiveaux'] = $tousNiveaux;
         $twigConfig['form'] = $form->createView();
 
         return $this->render('UcaBundle/UcaGest/Activite/FormatActivite/Formulaire.html.twig', $twigConfig);

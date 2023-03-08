@@ -20,10 +20,18 @@ $.post(DATAAPI, {
         activites: {
             class: '\\App\\Entity\\Uca\\Activite'
         },
+        periodesFermeture: {
+            class: '\\App\\Entity\\Uca\\PeriodeFermeture'
+        },
     }
 
 }, function(data) {
     scheduler.data.lists = data;
+
+    for (const periode of scheduler.data.lists.periodesFermeture) {
+        periode.dateDeb = new Date(periode.dateDeb);
+        periode.dateFin = new Date(periode.dateFin);
+    }
 
     scheduler.data.lists.profils = [];
     scheduler.data.lists.capaciteProfil = []
@@ -34,7 +42,10 @@ $.post(DATAAPI, {
         scheduler.data.lists.profils = ITEM.profilsUtilisateurs;
     }
     if (ITEM.niveauxSportifs != null) {
-        scheduler.data.lists.niveauxSportifs = ITEM.niveauxSportifs;
+        niveauxSportifs = ITEM.niveauxSportifs;
+        for (const niveauSportif of niveauxSportifs) {
+            scheduler.data.lists.niveauxSportifs.push(niveauSportif.niveauSportif);
+        }
     }
     if (ITEM.encadrants != null) {
         scheduler.data.lists.encadrant = ITEM.encadrants;
@@ -53,8 +64,8 @@ $.post(DATAAPI, {
             creneauExistant.push(labelCapacite);
         });
         scheduler.config.lightbox.toDisplay = {
-            new: nouveauCreneau.concat(['capacite', 'niveauSportif', 'encadrant', 'lieu', 'recurring', 'eligibilite', 'time']),
-            update: creneauExistant.concat(['niveauSportif', 'encadrant', 'lieu', 'eligibilite', 'time'])
+            new: nouveauCreneau.concat(['capacite', 'niveauSportif', 'encadrant', 'lieu', 'recurring', 'eligibilite', 'frequence', 'time']),
+            update: creneauExistant.concat(['niveauSportif', 'encadrant', 'lieu', 'eligibilite', 'frequence', 'time'])
         };
     } else if (scheduler.data.item.type == "reservation") {
         scheduler.config.lightbox.toDisplay = {

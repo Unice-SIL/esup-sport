@@ -23,7 +23,7 @@ class SelectionProfilTest extends WebTestCase
         $container = static::getContainer();
 
         $translator = new Translator('fr');
-        $dir = 'C:\\wamp64\\www\\Uca';
+        $dir = dirname(__DIR__, 3);
         $router = $container->get(RouterInterface::class);
 
         $this->selectionProfil = new SelectionProfil($dir, $router, $translator);

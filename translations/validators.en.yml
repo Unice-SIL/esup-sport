@@ -27,6 +27,7 @@ contact.email.invalide: This is not a valid email address
 contact.email.notblank: An email address is required
 contact.message.notblank: A message is required
 contact.objet.notblank: A mail object is required
+email.invalidplaceholder: The "%placeholder%" key is not available for this template
 etablissement.adresse.notblank: The campus address is required
 etablissement.code.notblank: The campus code is required
 etablissement.codePostal.invalide: The campus postal code is invalid, it must contain 5 digits
@@ -53,6 +54,7 @@ formatactivite.image.format: 'The format picture is not in the right format. (Ex
 formatactivite.image.notnull: A picture must be selected
 formatactivite.libelle.notblank: The format label is required
 formatactivite.lieu.notnull: The place is required
+formatactivite.niveausportif.detail.notblank: Please detail the expectations for this sporting level
 formatactivite.reservation.ressource.notnull: Please select at least one resource
 formatactivite.uniqueentity: An activity format already exists with this label
 groupe.name.notnull: Group name is required
@@ -71,6 +73,8 @@ lieu.codepostal.invalide: The post code is invalid, it must contain 5 digits
 lieu.codepostal.notblank: The place's postal code is required
 lieu.libelle.notblank: The place's label is required
 lieu.ville.notblank: The place's city is required
+logoparametrable.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
+logoparametrable.image.notnull: A picture must be selected
 logopartenaire.image.format: "The picture's format is wrong . (Expected : PNG|JPEG|TIFF)"
 logopartenaire.image.notnull: A picture must be selected
 logopartenaire.nom.notBlank: The name is required
@@ -88,6 +92,8 @@ message.parametrage.timercb.timerpaybox: The payment time by credit card must be
 message.parametrage.timerpaybox.timercb: The Paybox time payment must be longer than the payment time by credit card
 message.typeinvalide.double: The value {{ value }} is not a valid number
 message.typeinvalide.entier: The value {{ value }} is not a valid integer
+niveausportif.libelle.notblank: The sporting level label is required
+niveauspotif.uniqueentity: A sport level already exists with this label
 parametrage.adressefacturation.notblank: A billing adress is required
 parametrage.anneeuniversitaire.greaterthan: The value must be greater than 2019
 parametrage.anneeuniversitaire.notblank: The academic year is required
@@ -109,6 +115,9 @@ parametrage.timerpanierapresvalidation.notblank: Basket timer after validation i
 parametrage.timerpartenaire.notblank: Basket timer with partner is required
 parametrage.timerpaybox.notblank: Paybox timer is required
 parametrage.youtube.notblank: A Youtube link is required
+periodefermeture.datedeb.notblank: Please enter a start date
+periodefermeture.datefin.notblank: Please enter an end date
+periodefermeture.description.notblank: Please fill in a name / description for this period
 profilutilisateur.libelle.notblank: The user profile label is required
 profilutilisateur.nbMaxinscriptions.notblank: Maximum subscribtions can't be empty
 profilutilisateur.preinscription.notblank: The preRegistration field cannot be empty
@@ -119,6 +128,12 @@ ressource.nbpartenairesmax.minval: Max number of partners should be greater than
 shnurubrique.image.notnull: Picture is required
 shnurubrique.titre.notnull: Title is required
 shnurubrique.type.notnull: Type is required
+style.color.notblank: Color is required
+style.color.notvalid: Color is not valid
+style.hover.notnull: Hover brightness percentage is required.
+style.hover.notinrange: Brightness percentage in hover should be between -100 and 100%.
+style.shadow.notnull: Shadow brightness percentage is required.
+style.shadow.notinrange: Shadow brightness percentage must be between -100 and 100%.
 tarif.libelle.notblank: The price list label is required
 tarif.montant.notnull: Please enter an amount
 tarif.tva.invalid: VAT must be between 0 and 100

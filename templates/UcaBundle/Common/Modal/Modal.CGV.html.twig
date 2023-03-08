@@ -6,7 +6,11 @@
                     {{ 'cgv.modal.titre' | trans | upper }}
                 </h2>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <div class="image-presentation image-remove" aria-hidden="true"></div>
+                    <div class="image-presentation" aria-hidden="true">
+                        <svg width="41" height="41">
+                            <use href="{{ asset('images/remove.svg') ~ '#remove' }}" ></use>
+                        </svg>
+                    </div>
                 </button>
             </div>
             <div class="modal-body">

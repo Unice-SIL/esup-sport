@@ -65,11 +65,11 @@ class InscriptionController extends AbstractController
         if ('disponible' != $inscriptionInformations['statut']) {
             $result['itemId'] = $item->getId();
             $result['statut'] = '-1';
-            $result['html'] = $this->render(
+            $result['html'] = $this->renderView(
                 'UcaBundle/UcaWeb/Inscription/Modal.Error.html.twig',
                 ['title' => 'modal.error', 'message' => 'modal.error.'.$inscriptionInformations['statut']]
             );
-
+            
             return new JsonResponse($result);
         }
 
@@ -123,7 +123,7 @@ class InscriptionController extends AbstractController
 
             $em->persist($inscription);
             $articles = $inscriptionService->ajoutPanier();
-            $result = $inscriptionService->getComfirmationPanier($articles);
+            $result = $inscriptionService->getConfirmationPanier($articles);
             $em->flush();
             if (null != $request->get('partenaires') && sizeof($request->get('partenaires')) > 0) {
                 $inscriptionService->setPartenaires($request->get('partenaires'));

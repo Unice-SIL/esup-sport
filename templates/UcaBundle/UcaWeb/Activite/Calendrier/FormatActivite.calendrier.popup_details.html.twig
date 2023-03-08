@@ -1,5 +1,19 @@
 {% if typeFormat == "FormatAvecCreneau" %}
 
+{# Forte Fréquentation #}
+  {% if event.forteFrequence == true %}
+    <div class="info-container">
+      <div class="image-presentation-container">
+        <div class="image-presentation">
+          <span title="{{ "common.forteFrequence"|trans }}" style="color: red;"><i class="fas fa-exclamation mr-1"></i></span>
+        </div>
+      </div>
+      <span class="font-tall">
+        {{ 'common.forteFrequence'|trans }}
+      </span>
+    </div>
+  {% endif %}
+
   {# Eligibilité bonus #}
   {% if event.eligibleBonus == true %}
     <div class="info-container">
@@ -18,14 +32,21 @@
   {% if creneau.niveauxSportifs|length > 0 %}
     <div class="info-container">
       <div class="image-presentation-container">
-        <div class="image-presentation color-blue fs-30"><i class="fas fa-running"></i></div>
+        <div class="image-presentation color-primary fs-30"><i class="fas fa-running"></i></div>
       </div>
       <div class="d-grid">
         <span class="font-medium label">{{ 'common.niveauSportif'|trans }}</span>
-        {% for niveau in creneau.niveauxSportifs %}
-          <span class="font-normal">
-            {{ niveau.libelle }}
-          </span>
+        {% for niveau in creneau.formatActivite.niveauxSportifs %}
+          {% if niveau.niveauSportif in creneau.niveauxSportifs %}
+            <div class="d-flex flex-column mt-2">
+              <span class="font-weight-bold align-content-start">
+                {{ niveau.niveauSportif.libelle }} 
+              </span>
+              <span class="font-normal align-content-end">
+                {{ niveau.detail }}
+              </span>
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
@@ -34,7 +55,11 @@
   {# Lieu #}
   <div class="info-container">
     <div class="image-presentation-container">
-      <div class="image-presentation image-localization"></div>
+      <div class="image-presentation">
+        <svg width="15" height="30">
+          <use href="{{ asset('images/localization.svg') ~ '#localization' }}"></use>
+        </svg>
+      </div>
     </div>
     <span class="font-tall">
       {% if creneau.lieu is not null and creneau.lieu.etablissement is not null %}
@@ -50,7 +75,11 @@
   {# Tarif #}
   <div class="info-container">
     <div class="image-presentation-container">
-      <div class="image-presentation image-shopping"></div>
+      <div class="image-presentation">
+        <svg width="30" height="30">
+          <use href="{{ asset('images/shopping-cart.svg') ~ '#shopping-cart' }}"></use>
+        </svg>
+      </div>
     </div>
     <div class="d-grid">
       <span class="font-tall label">{{ 'common.tarif'|trans }} :</span>
@@ -66,35 +95,50 @@
   {% if creneau.encadrants|length > 0 %}
     <div class="info-container">
       <div class="image-presentation-container">
-        <div class="image-presentation image-user"></div>
+        <div class="image-presentation">
+          <svg width="25" height="30">
+            <use href="{{ asset('images/user.svg') ~ '#user' }}"></use>
+          </svg>
+        </div>
       </div>
       <div class="d-grid">
         <span class="font-medium label">{{ 'common.encadrant.s'|trans }}</span>
         {% for encadrant in creneau.encadrants %}
-          {% set id = "contactEncadrant" ~ event.id ~ encadrant.id %}
-          <a class="contact" data-toggle="collapse" href="#{{id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
-            {{ encadrant.nom }} {{ encadrant.prenom }}<div class="image-presentation image-mail"></div>          
-          </a>
-          <div class="collapse" id="{{ id }}">
-            <div class="card card-body text-dark color-dark-gray">
-                <div class="form-group">
-                  <label for="text{{ id }}">Votre message :</label>
-                  <textarea class="form-control" id="text{{ id }}" rows="5"></textarea>
-                </div>
-                <div class="d-flex justify-content-end">
-                  {% if inscriptionInformations.statut in ['nonconnecte'] %}                
-                    <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
-                      {{ 'common.indisponible' | trans | upper }}
-                      <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}" aria-label="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}">
-                        <i class="fas fa-question-circle"></i>
-                      </span>
-                    </p>
-                  {% else %}
-                    <button onclick="_uca.mail.sendMailEncadrant({{event.id}}, {{encadrant.id}})" class="btn btn-primary" id="btn{{ id }}">Envoyer</button>
-                  {% endif %}
-                </div>
+          {% if creneau.formatActivite.contactEncadrant is same as(true) %}
+            {% set id = "contactEncadrant" ~ event.id ~ encadrant.id %}
+            <a class="contact" data-toggle="collapse" href="#{{id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+              {{ encadrant.nom }} {{ encadrant.prenom }}
+              <span class="image-presentation">
+                <svg width="11" height="11">
+                  <use href="{{ asset('images/mail.svg') ~ '#mail' }}"></use>
+                </svg>
+              </span>          
+            </a>
+            <div class="collapse" id="{{ id }}">
+              <div class="card card-body text-dark color-dark-gray">
+                  <div class="form-group">
+                    <label for="text{{ id }}">Votre message :</label>
+                    <textarea class="form-control" id="text{{ id }}" rows="5"></textarea>
+                  </div>
+                  <div class="d-flex justify-content-end">
+                    {% if inscriptionInformations.statut in ['nonconnecte'] %}                
+                      <p class="m-0 fs-14 fw-500 text-uppercase color-taupe-gray text-center">
+                        {{ 'common.indisponible' | trans | upper }}
+                        <span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}" aria-label="{{ 'bouton.indisponible.statut.nonconnecte.envoimail' | trans }}">
+                          <i class="fas fa-question-circle"></i>
+                        </span>
+                      </p>
+                    {% else %}
+                      <button onclick="_uca.mail.sendMailEncadrant({{event.id}}, {{encadrant.id}})" class="btn btn-primary" id="btn{{ id }}">Envoyer</button>
+                    {% endif %}
+                  </div>
+              </div>
             </div>
-          </div>
+          {% else %}
+            <p class="contact">
+              {{ encadrant.nom }} {{ encadrant.prenom }}        
+            </p>
+          {% endif %}
         {% endfor %}
       </div>
     </div>
@@ -104,7 +148,11 @@
   {% if event.informations is defined and event.informations is not null and event.informations != '0' %}
     <div class="info-container">
       <div class="image-presentation-container">
-        <div class="image-presentation image-infos"></div>
+        <div class="image-presentation">
+          <svg width="30" height="30">
+            <use href="{{ asset('images/infos.svg') ~ '#infos' }}"></use>
+          </svg>
+        </div>
       </div>
       <div class="d-grid">
         <span class="font-medium label">
@@ -121,7 +169,7 @@
   {% if formatActivite.niveauxSportifs|length > 0 %}
     <div class="info-container">
       <div class="image-presentation-container">
-        <div class="image-presentation color-blue fs-30"><i class="fas fa-running"></i></div>
+        <div class="image-presentation color-primary fs-30"><i class="fas fa-running"></i></div>
       </div>
       <div class="d-grid">
         <span class="font-medium label">{{ 'common.niveauSportif'|trans }}</span>
@@ -142,7 +190,11 @@
   {% if ressource.etablissement is not null %}
     <div class="info-container">
       <div class="image-presentation-container">
-        <div class="image-presentation image-localization"></div>
+        <div class="image-presentation">
+          <svg width="15" height="30">
+            <use href="{{ asset('images/localization.svg') ~ '#localization' }}"></use>
+          </svg>
+        </div>
       </div>
       <span class="font-tall">
         {{ ressource.etablissement.libelle ~ ' - ' ~ ressource.libelle }}
@@ -153,7 +205,11 @@
   {# Infos ressource #}
   <div class="info-container">
     <div class="image-presentation-container">
-      <div class="image-presentation image-infos"></div>
+      <div class="image-presentation">
+        <svg width="30" height="30">
+          <use href="{{ asset('images/infos.svg') ~ '#infos' }}"></use>
+        </svg>
+      </div>
     </div>
     <div class="d-grid">
         <span class="font-medium label">
@@ -166,7 +222,11 @@
   {# Tarif #}
   <div class="info-container">
     <div class="image-presentation-container">
-      <div class="image-presentation image-shopping"></div>
+      <div class="image-presentation">
+        <svg width="30" height="30">
+          <use href="{{ asset('images/shopping-cart.svg') ~ '#shopping-cart' }}"></use>
+        </svg>
+      </div>
     </div>
     <div class="d-grid">
       <span class="font-tall label">{{ 'common.tarif'|trans }} :</span>

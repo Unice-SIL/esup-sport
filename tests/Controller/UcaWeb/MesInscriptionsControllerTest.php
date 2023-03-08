@@ -19,6 +19,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class MesInscriptionsControllerTest extends WebTestCase
@@ -191,40 +192,6 @@ class MesInscriptionsControllerTest extends WebTestCase
         $this->ids['groupe_user_non_gestion'] = $groupe_user_non_gestion->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $inscription = $this->em->getRepository(Inscription::class)->find($this->ids['inscription']);
-        $commandes_details = $inscription->getCommandeDetails();
-        foreach ($commandes_details as $cd) {
-            $this->em->remove($cd);
-        }
-        $commande = $this->em->getRepository(Commande::class)->findOneByInscription($inscription->getId());
-        if (null !== $commande) {
-            $this->em->remove($commande);
-        }
-        $this->em->remove($inscription);
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscriptionValide']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscriptionAttentePaiement']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscriptionAttenteValidationGestionnaire']));
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscriptionAttenteValidationEncadrant']));
-        $this->em->remove($this->em->getRepository(FormatSimple::class)->find($this->ids['formatSimple']));
-        $this->em->remove($this->em->getRepository(Lieu::class)->find($this->ids['lieu']));
-        $this->em->remove($this->em->getRepository(Activite::class)->find($this->ids['activite']));
-        $this->em->remove($this->em->getRepository(ClasseActivite::class)->find($this->ids['classeActivite']));
-        $this->em->remove($this->em->getRepository(TypeActivite::class)->find($this->ids['typeActivite']));
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_gestion']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_suppression_massive_pas_gestion']));
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_user_gestion_inscription']));
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_user_non_gestion']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
      * @dataProvider getInscriptionAnnulerDataProvider
      *
@@ -233,7 +200,7 @@ class MesInscriptionsControllerTest extends WebTestCase
      */
     public function testRouteMesInscriptionsAnnuler($userKey, $expectedRedirectionName): void
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         $route = $this->router->generate('UcaWeb_MesInscriptionsAnnuler', ['id' => $this->ids['inscription']]);
         $this->client->request('GET', $route);
 
@@ -249,7 +216,7 @@ class MesInscriptionsControllerTest extends WebTestCase
      */
     public function testRouteMesInscriptionsAjoutPanier($userKey, $expectedRedirectionName): void
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         $route = $this->router->generate('UcaWeb_MesInscriptionsAjoutPanier', ['id' => $this->ids['inscription']]);
         $this->client->request('GET', $route);
 
@@ -265,7 +232,7 @@ class MesInscriptionsControllerTest extends WebTestCase
      */
     public function testRouteMesInscriptionSeDesinscrire($userKey, $expectedRedirectionName): void
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         $route = $this->router->generate('UcaWeb_MesInscriptionsSeDesinscrire', ['id' => $this->ids['inscription']]);
         $this->client->request('GET', $route);
 
@@ -285,7 +252,7 @@ class MesInscriptionsControllerTest extends WebTestCase
      */
     public function testLister($userKey, $routeName, $expectedStatusCode, $routeParams = [], $isAjax = false)
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids[$userKey]), 'app');
         $route = $this->router->generate($routeName, $routeParams);
         if ($isAjax) {
             $this->client->xmlHttpRequest('GET', $route);
@@ -297,7 +264,7 @@ class MesInscriptionsControllerTest extends WebTestCase
 
     public function testListerRedirection()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_lambda']), 'app');
         $route = $this->router->generate('UcaGest_GestionInscription');
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaWeb_MesInscriptions');
@@ -306,7 +273,7 @@ class MesInscriptionsControllerTest extends WebTestCase
 
     public function testDesinscriptionMassivePasBonRole()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_suppression_massive_pas_gestion']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_suppression_massive_pas_gestion']), 'app');
         $route = $this->router->generate('UcaGest_GestionInscription_DesincriptionMassive', [
             'nom' => 'null',
             'prenom' => 'null',
@@ -332,7 +299,7 @@ class MesInscriptionsControllerTest extends WebTestCase
      */
     public function testDesinscriptionMassiveNoAjax($filtres)
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']), 'app');
         $route = $this->router->generate('UcaGest_GestionInscription_DesincriptionMassive', $filtres);
         $this->client->request('GET', $route);
         $expectedRedirection = $this->router->generate('UcaGest_GestionInscription');
@@ -341,7 +308,7 @@ class MesInscriptionsControllerTest extends WebTestCase
 
     public function testDesinscriptionMassiveAjaxNoFiltre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']), 'app');
         $route = $this->router->generate('UcaGest_GestionInscription_DesincriptionMassive', [
             'nom' => 'null',
             'prenom' => 'null',
@@ -369,7 +336,7 @@ class MesInscriptionsControllerTest extends WebTestCase
 
     public function testDesinscriptionMassiveAjaxWithFiltre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestion_inscription']), 'app');
         $route = $this->router->generate('UcaGest_GestionInscription_DesincriptionMassive', [
             'nom' => 'null',
             'prenom' => 'null',

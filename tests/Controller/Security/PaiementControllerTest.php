@@ -225,77 +225,6 @@ class PaiementControllerTest extends WebTestCase
         $this->ids['credit2'] = $credit2->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $credit = $this->em->getRepository(UtilisateurCreditHistorique::class)->find($this->ids['credit1']);
-        $this->em->remove($credit);
-
-        $credit = $this->em->getRepository(UtilisateurCreditHistorique::class)->find($this->ids['credit2']);
-        $this->em->remove($credit);
-
-
-        $commandeDetail = $this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail11']);
-        if ($commandeDetail) {
-            $this->em->remove($commandeDetail);
-        }
-
-        $commandeDetail = $this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail12']);
-        if ($commandeDetail) {
-            $this->em->remove($commandeDetail);
-        }
-
-        $commandeDetail = $this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail21']);
-        if ($commandeDetail) {
-            $this->em->remove($commandeDetail);
-        }
-
-        $commandeDetail = $this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail22']);
-        if ($commandeDetail) {
-            $this->em->remove($commandeDetail);
-        }
-
-        $inscription = $this->em->getRepository(Inscription::class)->find($this->ids['inscription1']);
-        $this->em->remove($inscription);
-
-        $inscription = $this->em->getRepository(Inscription::class)->find($this->ids['inscription2']);
-        $this->em->remove($inscription);
-
-        $commande = $this->em->getRepository(Commande::class)->find($this->ids['commande1']);
-        if ($commande) {
-            $this->em->remove($commande);
-        }
-
-        $commande = $this->em->getRepository(Commande::class)->find($this->ids['commande2']);
-        if ($commande) {
-            $this->em->remove($commande);
-        }
-
-        $commande = $this->em->getRepository(Commande::class)->find($this->ids['commande3']);
-        if ($commande) {
-            $this->em->remove($commande);
-        }
-
-        $commande = $this->em->getRepository(Commande::class)->find($this->ids['commande4']);
-        if ($commande) {
-            $this->em->remove($commande);
-        }
-
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneau']));
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serie']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActivite']));
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_empty_panier']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_not_empty_panier_with_not_enough_credit']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_not_empty_panier_with_credit']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']));
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_user_non_admin']));
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_gestionnaire']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
      * @covers App\Controller\Security\PaiementController::paiementRecapitulatifAction
      */
@@ -411,7 +340,7 @@ class PaiementControllerTest extends WebTestCase
             ]
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request('GET', $route);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $response = json_decode($this->client->getResponse()->getContent());
@@ -438,7 +367,7 @@ class PaiementControllerTest extends WebTestCase
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']);
         //$token = static::getContainer()->get('security.csrf.token_manager')->getToken('ucabundle_numeroCheque')->getValue(); // Actuellement pas de csrf_protection sur ce form
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request(
             'POST',
             $route,
@@ -476,7 +405,7 @@ class PaiementControllerTest extends WebTestCase
             ]
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request('GET', $route);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertStringContainsStringIgnoringCase($this->translator->trans('paiement.confirmation.success', [], null, 'fr'), $this->client->getResponse()->getContent());
@@ -497,7 +426,7 @@ class PaiementControllerTest extends WebTestCase
             ]
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request('GET', $route);
         $redirectionExpected = $this->router->generate('UcaGest_ReportingCommandeDetails', ['id' => $this->ids['commande3']]);
         $this->assertResponseRedirects($redirectionExpected);
@@ -518,7 +447,7 @@ class PaiementControllerTest extends WebTestCase
             ]
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_empty_panier']);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request('GET', $route);
         $redirectionExpected = $this->router->generate('UcaWeb_MesCommandesVoir', ['id' => $this->ids['commande3']]);
         $this->assertResponseRedirects($redirectionExpected);
@@ -539,7 +468,7 @@ class PaiementControllerTest extends WebTestCase
             ]
         );
         $user = $this->em->getRepository(Utilisateur::class)->find($this->ids['user_gestionnaire']);
-        $this->client->loginUser($user);
+        $this->client->loginUser($user, 'app');
         $this->client->request('GET', $route);
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $this->assertStringContainsStringIgnoringCase($this->translator->trans('paiement.confirmation.canceled', [], null, 'fr'), $this->client->getResponse()->getContent());

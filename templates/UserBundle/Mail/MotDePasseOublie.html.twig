@@ -2,7 +2,7 @@
 {% block main %}
 	<div>
         <p>
-            {{ 'utilisateur.password_forgotten.mail.message'|trans({ '%resetPasswordUrl%': app.request.schemeAndHttpHost ~ path('security_change_password', { 'id': user.id, 'token' : user.confirmationToken })})|nl2br }}
+            {{ 'utilisateur.password_forgotten.mail.message'|trans({ '%resetPasswordUrl%': app.request != null ? app.request.schemeAndHttpHost ~ path('security_change_password', { 'id': user.id, 'token' : user.confirmationToken })})|nl2br }}
         </p>
     </div>
 {% endblock %}

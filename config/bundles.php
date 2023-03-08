@@ -25,4 +25,6 @@ return [
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     UniceSIL\ShibbolethBundle\UniceSILShibbolethBundle::class => ['all' => true],
     Lexik\Bundle\PayboxBundle\LexikPayboxBundle::class => ['all' => true],
+    Lexik\Bundle\TranslationBundle\LexikTranslationBundle::class => ['all' => true],
+    DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
 ];

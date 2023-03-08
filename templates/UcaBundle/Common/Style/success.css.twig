@@ -1,0 +1,12 @@
+{% set color = style().successColor %}
+{% set colorHover = style().successColorHover %}
+{% set colorShadow = style().successColorShadow %}
+
+.btn-success {
+    background-color: {{ color | raw }} !important;
+    box-shadow: 0 3px 0 {{ colorShadow | raw }} !important;
+}
+
+.btn-success:hover {
+    background-color: {{ colorHover | raw }} !important;
+}

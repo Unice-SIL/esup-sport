@@ -47,6 +47,11 @@ var Evenement = {
         } else {
             this.eligible_bonus = data.eligibleBonus = data.eligible_bonus;
         }
+        if (data.forteFrequence != undefined) {
+            this.forte_frequence = data.forteFrequence;
+        } else {
+            this.forte_frequence = data.forteFrequence = data.forte_frequence;
+        }
         this.event_pid = null;
         if (data.description != null) {
             this.text = data.description;

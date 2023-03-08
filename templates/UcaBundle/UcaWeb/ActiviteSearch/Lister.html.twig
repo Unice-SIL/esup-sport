@@ -1,0 +1,127 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaWeb.html.twig" %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{# {% import 'UcaBundle/Macros/Inscription.html.twig' as Inscription %} #}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ ImageAsset.imageFondCssWithEmplacement('Evenements') }}
+{% endblock %}
+
+{% block main %}
+
+    <h1 class="h1-light">{{ 'activite.rechercher'|trans }}</h1>
+
+    <section class="container mb-5">
+        <div class="well mb-5" id="form-search">
+            {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+            <div class="row p-4">
+                <div class="col col-12 col-sm-6 col-xl-8 mb-4 mb-xl-0 col-border">
+                    <div class="row justify-content-between">
+                            {{ form_row(form.weekday) }}
+                            {{ form_row(form.etablissement) }}
+                    </div>
+                    <hr class="border-white">
+                    <div class="row justify-content-between">
+                        {{ form_row(form.interval_time_start) }}
+                        {{ form_row(form.interval_time_end) }}
+                    </div>
+                </div>
+                <div class="col col-12 col-xl-4 d-flex flex-column flex-sm-row align-items-center justify-content-center justify-content-xl-start">
+                    <button type="submit" class="btn btn-primary mb-4 mb-sm-0" id="searchBtn">
+                        <div aria-hidden="true"></div>
+                        {{ 'common.rechercher' | trans }}
+                    </button>
+                    <button type="button" class="ml-sm-3" id="resetForm">
+                        <div aria-hidden="true"></div>
+                        <span>{{ 'bouton.reinitialiser' | trans }}</span>
+                    </button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+        {% for activite in activites %}
+            <div class="accordion" id={{ "accordionActivite" ~ activite.id }}>
+                <div class="card card-install mb-4 bg-transparent">
+                    <div class="card-header bg-white">
+                        <a data-target="{{ '#formats-activite-container-' ~ activite.id }}" data-toggle="collapse" class="col-12 collapsed">
+                            <div class="row text-left d-flex flex-wrap">
+                                <h2 class="mb-0 col-11 text-dark text-uppercase">{{ activite.libelle }}</h2>
+                                <p class="m-0 p-0 pr-3 col-1 text-right"><i class="fas fa-chevron-down"></i></p>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="card-body collapse" data-parent={{ "#accordionActivite" ~ activite.id }} id="{{ 'formats-activite-container-' ~ activite.id }}">
+                        <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                            {% for dataItem in formatsActivite[activite.id] %}
+                                {% set hasCreneau = true %}
+                                {% if dataItem.format == 'FormatAvecCreneau' %}
+                                    {% if dataItem.creneaux|length == 0 %}
+                                        {% set hasCreneau = false %}
+                                    {% endif %}
+                                    {% set iconFormat = 'fas fa-calendar-alt' %}
+                                {% elseif dataItem.format == 'FormatAvecReservation' %}
+                                    {% set iconFormat = 'fas fa-table-tennis' %}
+                                {% elseif dataItem.format == 'FormatAchatCarte' %}
+                                    {% set iconFormat = 'fas fa-credit-card' %}
+                                {% else %}
+                                    {% set iconFormat = 'fas fa-ticket-alt' %}
+                                {% endif %}
+                                {% if hasCreneau %}
+                                    {% set params = {idCa: activite.classeActivite.id, idA: activite.id} %}
+                                    {% set ctaButtonFormat = dataItem.format~'.button' %}
+                                    <div class="format-type d-flex align-item-center align-content-center justify-content-center flex-wrap mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('/upload/public/image/' ~ dataItem.image) | imagine_filter('thumb_large_small') }}') no-repeat center center;background-size: cover;">
+                                        <div class="align-self-center text-center w-100 mb-0">
+                                            <i class="{{ iconFormat }} text-white mb-2"></i>
+                                            <p class="text-white text-uppercase font-weight-bold mb-0">{{ dataItem.libelle }}</p>
+                                        </div>
+                                        <a class="btn btn-primary btn-fit-content m-0 mt-3" href="{{ path('UcaWeb_FormatActiviteDetail', params | merge( {id: dataItem.id} )) }}">{{ ctaButtonFormat|trans }}</a>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {# {% include "UcaBundle/Common/Pagination/Pagination.html.twig" %} #}
+    </section>
+    <div class="d-none" id="js-text-inscrit-clone">
+        <div class="color-primary">
+            <i class="fas fa-check-circle"></i>
+            <span>{{ "creneau.list.inscrit"|trans|upper }}</span>
+        </div>
+    </div>
+    {# {{ Inscription.HtmlModal }} #}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('#resetForm').on('click', function() {
+                $('#ucabundle_recherchedhtmlxevenement_weekday').val(0).trigger("change");
+                $('#ucabundle_recherchedhtmlxevenement_etablissement').val(0).trigger("change");
+                $('form').submit();
+            });
+            $('#ucabundle_recherchedhtmlxevenement_weekday').select2({ width: 'resolve' });  
+            $('#ucabundle_recherchedhtmlxevenement_etablissement').select2({ width: 'resolve' });     
+            $('#ucabundle_recherchedhtmlxevenement_weekday, #ucabundle_recherchedhtmlxevenement_etablissement').on("select2:open", function(e) {
+                const select2Dropdown = $('.select2-dropdown');
+                select2Dropdown.css({
+                    background: '#000',
+                    color: '#c9c9c9',
+                    border: 'none'
+                });
+                select2Dropdown.find('.select2-search__field').css({
+                    background: '#000',
+                    color: '#c9c9c9',
+                    'border-color': '#c9c9c9'
+                });
+            });
+
+            $('.xdsoft_datetimepicker').addClass('xdsoft_dark');
+
+        });        
+    </script>
+{% endblock %}

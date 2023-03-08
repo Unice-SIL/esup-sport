@@ -80,17 +80,26 @@ class RegistrationHandlerTest extends KernelTestCase
     {
         $registrationHandler = static::getContainer()->get(RegistrationHandler::class);
         $em = static::getContainer()->get(EntityManagerInterface::class);
-        $userRepo = static::getContainer()->get(UtilisateurRepository::class);
-
-        $user = $userRepo->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setPassword('password')
+            ->setEnabled(true)
+        ;
         $user->setEnabled(false)->setConfirmationToken('token');
-
+        $em->persist($user);
         $em->flush();
 
         $registrationHandler->validateAcount($user);
 
         $this->assertTrue($user->isEnabled());
         $this->assertNull($user->getConfirmationToken());
+
+        $em->remove($user);
+        $em->flush();
     }
 
     /**
@@ -99,14 +108,27 @@ class RegistrationHandlerTest extends KernelTestCase
     public function testIsValidateToken(): void
     {
         $registrationHandler = static::getContainer()->get(RegistrationHandler::class);
-        $userRepo = static::getContainer()->get(UtilisateurRepository::class);
+        $em = static::getContainer()->get(EntityManagerInterface::class);
 
         $token = '123456789abcdefg';
 
-        $user = $userRepo->findOneByUsername('admin');
-        $user->setConfirmationToken($token);
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+            ->setPassword('password')
+            ->setConfirmationToken($token)
+        ;
+        $em->persist($user);
+        $em->flush();
 
         $this->assertTrue($registrationHandler->isValidateToken($user, $token));
+
+        $em->remove($user);
+        $em->flush();
     }
 
     /**
@@ -115,13 +137,26 @@ class RegistrationHandlerTest extends KernelTestCase
     public function testHandleBadTokenValidation(): void
     {
         $registrationHandler = static::getContainer()->get(RegistrationHandler::class);
-        $userRepo = static::getContainer()->get(UtilisateurRepository::class);
-
-        $user = $userRepo->findOneByUsername('admin');
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setPassword('password')
+            ->setEnabled(true)
+        ;
+        $em->persist($user);
+        $em->flush();
 
         $response = $registrationHandler->handleBadTokenValidation($user);
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
+
+        $em->remove($user);
+        $em->flush();
     }
 
     /**
@@ -153,12 +188,26 @@ class RegistrationHandlerTest extends KernelTestCase
     public function testConfirmAccount(): void
     {
         $registrationHandler = static::getContainer()->get(RegistrationHandler::class);
-        $userRepo = static::getContainer()->get(UtilisateurRepository::class);
-        $user = ($userRepo->findOneByUsername('admin'))->setConfirmationToken('token')->setEnabled(false);
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('register')
+            ->setPassword('password')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setConfirmationToken('token')
+            ->setEnabled(false)
+        ;
+        $em->persist($user);
+        $em->flush();
 
         $registrationHandler->confirmAccount(new Request(), $user);
 
         $this->assertNull($user->getConfirmationToken());
         $this->assertTrue($user->isEnabled());
+
+        $em->remove($user);
+        $em->flush();
     }
 }

@@ -13,6 +13,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class SportHautNiveauControllerTest extends WebTestCase
@@ -45,7 +46,7 @@ class SportHautNiveauControllerTest extends WebTestCase
      */
     public function testAccesRoutes($userEmail, $method, $routeName, $httpResponse, $urlParameters = [], $idType = 1): void
     {
-        $client = static::createClient();
+        $this->client = static::createClient();
         $em = static::getContainer()->get(EntityManagerInterface::class);
 
         // Creation des donnees
@@ -64,13 +65,13 @@ class SportHautNiveauControllerTest extends WebTestCase
 
         if (null != $userEmail) {
             $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail($userEmail);
-            $client->loginUser($userTest);
+            $this->client->loginUser($userTest, 'app');
         }
         $route = $router->generate($routeName, $urlParameters);
         $route = str_replace('id_highlight', $highlight->getId(), $route);
         $route = str_replace('id_rubrique', $rubrique->getId(), $route);
-
-        $client->request($method, $route);
+        
+        $this->client->request($method, $route);
         $this->assertResponseStatusCodeSame($httpResponse);
 
         $em->remove($rubrique);

@@ -27,6 +27,7 @@ contact.email.invalide: Il ne s'agit pas d'une adresse email valide
 contact.email.notblank: Une adresse email doit être renseignée
 contact.message.notblank: Un message doit être renseigné
 contact.objet.notblank: Un object de mail doit être renseigné
+email.invalidplaceholder: La clé "%placeholder%" n'est pas disponible pour ce template
 etablissement.adresse.notblank: L'adresse du campus est obligatoire
 etablissement.code.notblank: Le code du campus est obligatoire
 etablissement.codePostal.invalide: Le code postal est invalide, il doit contenir 5 chiffres
@@ -53,6 +54,7 @@ formatactivite.image.format: 'L''image du format n''est pas au bon format. (Atte
 formatactivite.image.notnull: Une image doit être sélectionnée
 formatactivite.libelle.notblank: Le libellé du format est obligatoire
 formatactivite.lieu.notnull: Le lieu est obligatoire
+formatactivite.niveausportif.detail.notblank: Veuillez détaillez les attendus pour ce niveau sportif
 formatactivite.reservation.ressource.notnull: Veuillez sélectionner au moins une ressource
 formatactivite.uniqueentity: Un format d'activité existe déjà avec ce libellé
 groupe.name.notnull: Le nom du groupe est obligatoire
@@ -71,6 +73,8 @@ lieu.codepostal.invalide: Le code postal est invalide, il doit contenir 5 chiffr
 lieu.codepostal.notblank: Le code postal du lieu est obligatoire
 lieu.libelle.notblank: Le libellé du lieu est obligatoire
 lieu.ville.notblank: La ville du lieu est obligatoire
+logoparametrable.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
+logoparametrable.image.notnull: Une image doit être sélectionnée
 logopartenaire.image.format: "L'image n'est pas au bon format. (Attendu : PNG|JPEG|TIFF)"
 logopartenaire.image.notnull: Une image doit être sélectionnée
 logopartenaire.nom.notBlank: Le nom est obligatoire
@@ -88,6 +92,8 @@ message.parametrage.timercb.timerpaybox: Le délai de paiement par CB doit être
 message.parametrage.timerpaybox.timercb: Le délai de paiement Paybox doit être inférieur au délai de paiement par CB
 message.typeinvalide.double: La valeur {{ value }} n'est pas un nombre valide
 message.typeinvalide.entier: La valeur {{ value }} n'est pas un entier valide
+niveauspotif.libelle.notblank: Le libellé du niveau sportif est obligatoire
+niveauspotif.uniqueentity: Un niveau sportif existe déjà avec ce libellé
 parametrage.adressefacturation.notblank: L'adresse de facturation doit être renseignée
 parametrage.anneeuniversitaire.greaterthan: Cette valeur doit être supérieure à 2019
 parametrage.anneeuniversitaire.notblank: L'année universitaire est obligatoire
@@ -109,6 +115,9 @@ parametrage.timerpanierapresvalidation.notblank: Le délai de mise au panier apr
 parametrage.timerpartenaire.notblank: Le délai de paiement avec partenaire doit être renseigné
 parametrage.timerpaybox.notblank: Le délai de paiement Paybox doit être renseigné
 parametrage.youtube.notblank: Un lien Youtube doit être renseigné
+periodefermeture.datedeb.notblank: Veuillez renseigner une date de début
+periodefermeture.datefin.notblank: Veuillez renseigner une date de fin
+periodefermeture.description.notblank: Veuillez renseigner un nom / description à cette période
 profilutilisateur.libelle.notblank: Le libellé du profil utilisateur est obligatoire
 profilutilisateur.nbMaxinscriptions.notblank: Le nombre maximum d'inscriptions du profil utilisateur est obligatoire
 profilutilisateur.preinscription.notblank: La pré-inscription ne doit pas être vide
@@ -119,6 +128,12 @@ ressource.nbpartenairesmax.minval: Le nombre max de partenaires doit être supé
 shnurubrique.image.notnull: L'image est obligatoire
 shnurubrique.titre.notnull: Le titre est obligatoire
 shnurubrique.type.notnull: Le type est obligatoire
+style.color.notblank: La couleur est obligatoire
+style.color.notvalid: La couleur n'est pas valide
+style.hover.notnull: Le pourcenatge de luminosité en hover est obligatoire.
+style.hover.notinrange: La luminosité en hover doit être comprise entre -100 et 100 %.
+style.shadow.notnull: Le pourcenatge de luminosité de l'ommbre est obligatoire.
+style.shadow.notinrange: La luminosité de l'ombre doit être comprise entre -100 et 100 %.
 tarif.libelle.notblank: Le libellé du tarif est obligatoire
 tarif.montant.notnull: Veuillez saisir un montant
 tarif.tva.invalid: La TVA est comprise entre 0 et 100

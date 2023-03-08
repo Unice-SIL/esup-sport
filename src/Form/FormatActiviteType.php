@@ -22,6 +22,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormBuilderInterface;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -128,18 +129,15 @@ class FormatActiviteType extends AbstractType
                     'mapped' => false,
                 ])
             )
+            ->add(
+                $builder->create('niveaux', FormatActiviteNiveauSportifType::class, [
+                    'constraints' => new Assert\Valid(),
+                    'mapped' => false,
+                ])
+            )
         ;
 
         // ComplémentTYpe (code a déplacer)
-        $builder
-            ->add('niveauxSportifs', EntityType::class, [
-                'class' => NiveauSportif::class,
-                'choice_label' => 'libelle',
-                'label_format' => 'format.niveau.sportif',
-                'multiple' => true,
-                'expanded' => true,
-            ])
-        ;
         $autorisationsOptions = [
             'class' => TypeAutorisation::class,
             'choice_label' => 'libelle',
@@ -202,6 +200,13 @@ class FormatActiviteType extends AbstractType
                     'class' => 'encadreToShow nonEncadreToHide',
                 ],
             ])
+            ->add('contactEncadrant', CheckboxType::class, [
+                'label_format' => 'format.contactEncadrant',
+                'attr' => [
+                    'class' => 'encadreToShow nonEncadreToHide',
+                ],
+            ])
+
             ->add('estPayant', ChoiceType::class, [
                 'label_format' => 'format.payant',
                 'choices' => [

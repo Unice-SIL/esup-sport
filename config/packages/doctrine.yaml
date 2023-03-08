@@ -33,7 +33,13 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Entity/Uca'
                         prefix: 'App\Entity\Uca'
                         alias: Uca
+                    LexikTranslationBundle: ~
                 dql:
+                    datetime_functions:
+                        date: DoctrineExtensions\Query\Mysql\Date
+                        hour: DoctrineExtensions\Query\Mysql\Hour
+                        time: DoctrineExtensions\Query\Mysql\Time
+                        dayofweek: DoctrineExtensions\Query\Mysql\DayOfWeek
                     string_functions:
                         GROUP_CONCAT: DoctrineExtensions\Query\Mysql\GroupConcat
             statistique:

@@ -21,6 +21,7 @@ use App\Entity\Uca\FormatAvecReservation;
 use App\Entity\Uca\Groupe;
 use App\Entity\Uca\Inscription;
 use App\Entity\Uca\Lieu;
+use App\Entity\Uca\LogoParametrable;
 use App\Entity\Uca\TypeActivite;
 use App\Entity\Uca\Utilisateur;
 use App\Form\GestionExtractionType;
@@ -109,7 +110,7 @@ class ExtractionController extends AbstractController
             $sheet = new Worksheet();
             $sheet->setTitle('Encadrants');
 
-            $this->createExcelHeader($spreadsheet, $sheet, $titleColumn);
+            $this->createExcelHeader($spreadsheet, $sheet, $titleColumn, $em->getRepository(LogoParametrable::class));
 
             $idCol = 8;
 
@@ -184,7 +185,7 @@ class ExtractionController extends AbstractController
 
         $idCol = 8; //On commencera à écrire les lignes à partir de cette colonne
 
-        $this->createExcelHeader($spreadsheet, $sheet, $titleColumn);
+        $this->createExcelHeader($spreadsheet, $sheet, $titleColumn, $em->getRepository(LogoParametrable::class));
 
         //On récupère tous les enregistrements suivant paramétres choisi
         $lignes = [];
@@ -387,14 +388,14 @@ class ExtractionController extends AbstractController
     }
 
     //Function permettant la création du fichier Excel
-    private function createExcelHeader($spreadsheet, $sheet, $titleColumn)
+    private function createExcelHeader($spreadsheet, $sheet, $titleColumn, $logoRepo)
     {
         $styleArray = $this->setStyleArrayForExcel(true, 10);
 
         //En-tête du fichier excel
         $logo = new Drawing();
         $logo->setName('Logo');
-        $logo->setPath('build/images/logo-UCA-large-transp.png');
+        $logo->setPath('upload/public/images/logos/'.$logoRepo->findOneBy(['emplacement' => 'Exports Excel'])->getImage());
         $logo->setCoordinates('A1');
         $logo->setWorksheet($sheet, true);
 

@@ -18,6 +18,6 @@ class ErreurController extends AbstractController
      */
     public function erreur500Action()
     {
-        return $this->render('bundles/TwigBundle/Exception/error500.html.twig');
+        return $this->render('TwigBundle/views/Exception/error500.html.twig');
     }
 }

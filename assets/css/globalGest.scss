@@ -1,5 +1,6 @@
 @import "uca-font-apex.scss";
 @import "uca-font-awesome.scss";
+@import "bs-glyphicons.scss";
 // 1. On charge la charte graphique
 @import "uca-charte-graphique.scss";
 // 2. On configure bootstrap avec ce qu'on a défini dans la charte graphique (prendre exemple sur bs-variables.scss)
@@ -10,9 +11,14 @@
 @import "bs-daterangepicker.scss";
 // 4. Si besoin on surcharge les éléments de bootstrap
 @import "bs-surcharge.scss";
+@import "bs3-to-bs4.scss";
 // 5. DHTMLX
 @import "../libs/dhtmlxScheduler-5.1.6/dhtmlxscheduler_flat.css";
 // 6. DHTMLX  Customisation
 @import "dhtmlx-custom.scss";
-// 7. Code technique afin de traiter certaines problématiques
+// 7. import styles from lexik translations bundles
+@import "../bundles/lexiktranslation/ng-table/ng-table.min.css";
+@import "../bundles/lexiktranslation/css/translation.css";
+@import "lexiktranslation-custom.scss";
+// 8. Code technique afin de traiter certaines problématiques
 @import "tricks.scss";

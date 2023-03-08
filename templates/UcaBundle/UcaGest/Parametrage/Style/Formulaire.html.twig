@@ -1,0 +1,138 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+
+{% block main %}
+
+    {% include "UcaBundle/Common/Component/Bouton.Retour.html.twig" %}
+    <h1>{{ 'style.modifier.title' | trans }}</h1>
+
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger" role="alert" sr-only="">
+            {{ 'erreur.formulaire.champ.incorrect' | trans }}
+        </div>
+    {% endif %}
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate', 'class': 'row' }}) }}
+    <div class="col-11" id="primaryColor">
+        {{ form_row(form.primaryColor) }}
+    </div>
+    <div class="col-1 align-items-center" id="primaryColor">
+        <br>Code Hexa :<span class="js-rgb-hex"></span>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.primaryHover) }}
+    </div>
+    <div class="col-3 row" id="primaryHover">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.primaryShadow) }}
+    </div>
+    <div class="col-3 row" id="primaryShadow">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <hr>
+    <div class="col-11">
+        {{ form_row(form.secondaryColor) }}
+    </div>
+    <div class="col-1" id="secondaryColor">
+        Code Hexa :<br><span class="js-rgb-hex"></span>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.secondaryHover) }}
+    </div>
+    <div class="col-3 row" id="secondaryHover">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.secondaryShadow) }}
+    </div>
+    <div class="col-3 row" id="secondaryShadow">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <hr>
+    <div class="col-11">
+        {{ form_row(form.successColor) }}
+    </div>
+    <div class="col-1" id="successColor">
+        Code Hexa :<br><span class="js-rgb-hex"></span>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.successHover) }}
+    </div>
+    <div class="col-3 row" id="successHover">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.successShadow) }}
+    </div>
+    <div class="col-3 row" id="successShadow">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <hr>
+    <div class="col-11">
+        {{ form_row(form.warningColor) }}
+    </div>
+    <div class="col-1" id="warningColor">
+        Code Hexa :<br><span class="js-rgb-hex"></span>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.warningHover) }}
+    </div>
+    <div class="col-3 row" id="warningHover">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.warningShadow) }}
+    </div>
+    <div class="col-3 row" id="warningShadow">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <hr>
+    <div class="col-11">
+        {{ form_row(form.dangerColor) }}
+    </div>
+    <div class="col-1" id="dangerColor">
+        Code Hexa :<br><span class="js-rgb-hex"></span>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.dangerHover) }}
+    </div>
+    <div class="col-3 row" id="dangerHover">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <div class="col-3">
+        {{ form_row(form.dangerShadow) }}
+    </div>
+    <div class="col-3 row" id="dangerShadow">
+        <div class="js-bg col-4"></div>
+        <p class="col-8"><br>Code Hexa :<span class="js-rgb-hex"></span></p>
+    </div>
+    <hr>
+    <div class="col-4">
+        {{ form_row(form.navbarBackgroundColor) }}
+    </div>
+    <div class="col-2" id="navbarBackgroundColor">
+        Code Hexa :<br><div class="js-bg"><span class="js-fg js-rgb-hex"></span></div>
+    </div>
+    <div class="col-4">
+        {{ form_row(form.navbarForegroundColor) }}
+    </div>
+    <div class="col-2" id="navbarForegroundColor">
+        Code Hexa :<br><div class="js-bg"><span class="js-fg js-rgb-hex"></span></div>
+    </div>
+    {{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('style_form') }}
+{% endblock %}

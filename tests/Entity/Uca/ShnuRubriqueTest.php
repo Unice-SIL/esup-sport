@@ -18,7 +18,7 @@ class ShnuRubriqueTest extends TestCase
      */
     public function testSetImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $rubrique = (new ShnuRubrique())->setImageFile($file);
 
         $this->assertInstanceOf(File::class, $rubrique->getImageFile());

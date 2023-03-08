@@ -14,6 +14,42 @@ liip_imagine:
             web_path : ~
     filter_sets :
         cache : ~
+
+        header:
+            filters:
+                relative_resize:
+                    heighten: 100
+        
+        home_carousel:
+            filters:
+                resize:
+                    size: [300, 50]
+        
+        login_screen:
+            filters:
+                resize:
+                    size: [300, 100]
+                
+        favicon:
+            filters:
+                resize:
+                    size: [128, 128]
+        
+        mail_signature:
+            filters:
+                resize:
+                    size: [250, 100]
+        
+        logo_pdf:
+            filters:
+                remove_alpha: ~
+                resize:
+                    size: [250, 100]
+        
+        footer:
+            filters:
+                relative_resize:
+                    heighten: 60
         
         thumb_small:
             filters:
@@ -38,6 +74,12 @@ liip_imagine:
                 thumbnail:
                     size: [200,200]
                     mode: inset
+
+        thumb_logo_dt:
+            filters:
+                thumbnail:
+                    size: [250,100]
+                    mode: outbound
 
         thumb_large_small:
             filters:

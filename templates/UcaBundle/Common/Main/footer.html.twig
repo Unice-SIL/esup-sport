@@ -1,7 +1,10 @@
 <footer>
     <nav class="navbar-footer">
         <a class="footer-logo-uca" href="http://univ-cotedazur.fr/">
-            <img class="img-fluid rounded mb-3" alt="image_activite" src="{{ asset('images/logo-uca.png') }}">
+            {% set image = logo('Pied de page') %}
+            {% if image.actif %}
+                <img class="img-fluid rounded" alt="image_activite" src="{{ asset('/upload/public/images/logos/' ~ image.image ) | imagine_filter('footer') }}">
+            {% endif %}
         </a>
         <ul class="d-flex justify-content-between align-items-center">
             <li class="">

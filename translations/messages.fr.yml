@@ -36,6 +36,10 @@ activite.list.title: Activités
 activite.modifier.succes: "Activité modifiée avec succès"
 activite.modifier.title: Modifier une activite
 activite.not.found: Cette activité n'existe pas
+activite.rechercher: Rechercher des activités
+activite.recherche.option.dayofweek: Choisissez un jour de la semaine
+activite.recherche.option.time.start: De
+activite.recherche.option.time.end: à
 activite.recherche.option.lieu:  Choisissez un campus
 activite.recherche.option.typeactivite:  Choisissez une activité
 activite.reservation.ajouter: "Ajouter Activité avec Réservation"
@@ -91,6 +95,7 @@ bouton.indisponible.autorisationinvalide: "Ce créneau nécessite l'autorisation
 bouton.indisponible.inscriptionsterminees: inscriptions fermées
 bouton.indisponible.statut.cgvnonacceptees: "Veuillez accepter les conditions générales de vente afin de pouvoir vous inscrire à une activité"
 bouton.indisponible.statut.desinscriptionadministrative: Vous avez été désinscrit par l'administration
+bouton.indisponible.statut.fortefrequence: Vous êtes déjà inscrit à un créneau à forte fréquentation
 bouton.indisponible.statut.inscriptionsterminees: Les inscriptions sont terminées
 bouton.indisponible.statut.montantincorrect: "Le tarif de cette activité n'est pas encore défini, merci de contacter le bureau des sports"
 bouton.indisponible.statut.nbcreneaumaxatteint: "Vous êtes déjà inscrit à %maxCreneau% créneaux. Vous avez atteint le nombre maximum d'inscriptions pour les créneaux"
@@ -124,17 +129,17 @@ cgv.modal.titre: Conditions générales de vente
 cgv.refusees: Vous devez cocher la case afin d'accepter les conditions générales de vente
 cgv.validation: J’ai pris connaissance et j’accepte les conditions générales de vente
 classeActivite.list.title: "Liste des classes d'Activité"
-classeactivite.ajouter.succes: "Classe d'activité ajoutée avec succès"
-classeactivite.ajouter.title: Ajouter une classe d'activite
-classeactivite.gestion: "Gestion des classes d'activité"
-classeactivite.image.libelle: "Sélectionner une image"
-classeactivite.libelle: "Classe d'activité"
-classeactivite.list.title: "Gestion des classes d'activité"
-classeactivite.modifier.succes: "Classe d'activité modifiée avec succès"
-classeactivite.modifier.title: Modifier une classe d'activite
-classeactivite.supprimer.erreur: Impossible de supprimer cette classe, des activités y sont affectées
-classeactivite.supprimer.succes: "Classe d'activité supprimée avec succès"
-classeactivite.typeactivite.placeholder: "- Sélectionner un type d'activité -"
+classeActivite.ajouter.succes: "Classe d'activité ajoutée avec succès"
+gestclasseactivite.ajouter.title: Ajouter une classe d'activite
+gestclasseactivite.gestion: "Gestion des classes d'activité"
+gestclasseactivite.image.libelle: "Sélectionner une image"
+gestclasseactivite.libelle: "Classe d'activité"
+gestclasseactivite.list.title: "Gestion des classes d'activité"
+classeActivite.modifier.succes: "Classe d'activité modifiée avec succès"
+gestclasseactivite.modifier.title: Modifier une classe d'activite
+classeActivite.supprimer.erreur: Impossible de supprimer cette classe, des activités y sont affectées
+classeActivite.supprimer.succes: "Classe d'activité supprimée avec succès"
+gestclasseactivite.typeactivite.placeholder: "- Sélectionner un type d'activité -"
 column.champ: Champ
 column.ckeditor: "Champ Enrichi"
 column.entite: Entité
@@ -227,6 +232,7 @@ common.datedesinscription: Date de désinscription
 common.dateinscription: Date d'inscription
 common.datepaiement: Date de paiement
 common.datevalidation: Date de validation
+common.dayofweek: Jour de la semaine
 common.december: Décembre
 common.deconnexion: "Vous avez été deconnecté de l'application. Merci de fermer votre navigateur pour fermer totalement la session."
 common.description: Description
@@ -250,6 +256,7 @@ common.facture: Facture
 common.february: Février
 common.fermer: "Fermer"
 common.format.activite.details: Détail des formats d'activités
+common.forteFrequence: Créneau à forte fréquentation
 common.friday: Vendredi
 common.groups: Groupes
 common.horaires.ouverture: "Horaires d'ouverture"
@@ -329,6 +336,7 @@ common.saturday: Samedi
 common.select.emptyValue: "- Sélectionner une valeur -"
 common.september: Septembre
 common.statut: Statut
+common.subject: Sujet
 common.suivant: Suivant
 common.sunday: Dimanche
 common.tarif.gratuit: Gratuit
@@ -389,11 +397,15 @@ creneau.list.preinscrit: "Pré-inscrit"
 creneau.list.prochainCours: "Prochain cours"
 creneau.list.reserver: "S'inscrire"
 creneau.liste.titre: "Liste des créneaux"
+creneau.notCreated: "Les créneaux suivants n'ont pas été crées car ils se trouvent dans une période de fermeture :"
 creneau.week.indisponible: Aucun créneau n'est disponible aujourd'hui
 detail.inscription.commentaireannulation: Commentaire
 detail.inscription.motifannulation: Motif de l'annulation
 detailscommande.list.title: Détails de commande
 email.base_email.notification_destination_for: Cette notification de TEST était à destination de
+email.list.title: Liste des emails
+email.modifier.succes: "Email modifié avec succès"
+email.modifier.title: Modifier email
 email.politesse: Bonjour,
 email.preinscription.confirmationDemande: Votre demande de pré-inscription a bien été prise en compte.
 emailing.list.title: Gestion des e-mails
@@ -441,6 +453,7 @@ format.achat.carte.autorisation: Sélectionner la carte à acheter
 format.achat.carte.libelle: Achat d'une carte
 format.autorisations.placeholder: "- Aucune autorisation sélectionnée -"
 format.autorisations: Autorisations requises
+format.contactEncadrant: "Les encadrants peuvent être contactés"
 format.date.debut: "Activité du"
 format.date.effective.debut: Date de début effective
 format.date.effective.fin: Date de fin effective
@@ -458,6 +471,7 @@ format.inscription.date.fin: au
 format.lieu.placeholder: "- Sélectionner un lieu -"
 format.lieu: Lieu
 format.niveau.sportif: Niveau sportif requis
+format.niveau.sportif.detail: Détail du niveau sportif
 format.payant: Ce format est-il payant ?
 format.profils.utilisateur.capacite: Nombre de places
 format.profils.utilisateur: Profils d'utilisateurs autorisés
@@ -587,6 +601,12 @@ lieu.supprimer.succes: "Lieu supprimé avec succès"
 lieu.visitevirtuelle.libelle: Visite virtuelle
 log.libelle: Log
 log.list.title: "Gestion des logs"
+logoparametrable.actif.libelle: "Activer le logo"
+logoparametrable.emplacement: "Emplacement du logo"
+logoparametrable.image.libelle: Image
+logoparametrable.list.title: Logo
+logoparametrable.modifier.succes: "Logo modifié avec succès"
+logoparametrable.modifier.title: Modifier un Logo
 logopartenaire.ajouter.succes: "Le partenaire ajouté avec succès"
 logopartenaire.ajouter.title: Ajouter un partenaire
 logopartenaire.lien: Lien vers partenaire
@@ -687,6 +707,15 @@ monPlanning.more.mail.titre: "Besoin d'envoyer un mail aux participants ?"
 monplanning.list.title: Mon planning
 monplanning.more.appel.empty: Aucun inscrit pour cette activité
 monplanning.more.mail.sucess: Mail envoyé avec succès
+niveausportif.ajouter.succes: Niveau sportif ajouté
+niveausportif.ajouter.title: Ajouter un niveau sportif
+niveausportif.list.title: Niveaux sportif
+niveausportif.modifier.succes: Niveau sportif modifié
+niveausportif.modifier.title: Modifier un niveau sportif
+niveausportif.supprimer.erreur: Impossible de supprimer le niveau sportif
+niveausportif.supprimer.erreur.creneaux: Le niveau sportif est lié à des créneaux
+niveausportif.supprimer.erreur.formatsactivite: Le niveau sportif est lié à des formats d'activité
+niveausportif.supprimer.succes: Niveau sportif supprimé
 outils.libelle: Outils
 paiement.bouton.commandes: "Voir ma commande"
 paiement.cb.validation: Payer par carte
@@ -708,15 +737,19 @@ paiement.validation.denied: Votre paiement de %montant% € a été refusé. Ret
 paiement.validation.success: Votre paiement de %montant% € a été validé.
 panier.libelle: Panier
 panier.vide: Votre panier est vide
+parcourir: Parcourir
 parametrage.adressefacturation: Adresse de facturation
 parametrage.anneeUniversitaire: Année universitaire
 parametrage.facebook: Lien Facebook
 parametrage.facturation: Informations de facturation
 parametrage.instagram: Lien Instagram
 parametrage.libelleadresse: Libelle de l'adresse
+parametrage.mail: Paramètres liés aux mails
 parametrage.mailcontact: Email de contact
 parametrage.modifier.succes: Le paramétrage a été modifié avec succès
 parametrage.modifier.title: Modifier le paramétrage
+parametrage.prefixmail: Préfix Email
+parametrage.signaturemail: Signature Email
 parametrage.reseauxsociaux: Réseaux sociaux
 parametrage.timerbds: Délai pour aller régler une commande au bureau des sports (en heures)
 parametrage.timercb: Délai pour payer une commande par carte bancaire depuis Uca Sport (en minutes)
@@ -747,6 +780,15 @@ paybox.error.00033: "Code pays de l’adresse IP du navigateur de l’acheteur n
 paybox.error.00040: "Opération sans authentification 3-DSecure, bloquée par le filtre."
 paybox.error.001xx: "Paiement refusé par le centre d’autorisation"
 paybox.error.99999: "Opération en attente de validation par l’émetteur du moyen de paiement."
+periodefermeture.ajouter.succes: Période de fermeture ajoutée
+periodefermeture.ajouter.title: Ajouter une période de fermeture
+periodefermeture.list.title: Périodes de fermeture
+periodefermeture.modifier.succes: Période de fermeture modifiée
+periodefermeture.modifier.title: Modifier une période de fermeture
+periodefermeture.datedeb: Date de début de la période
+periodefermeture.datefin: Date de fin de la période
+periodefermeture.description: Description
+periodefermeture.supprimer.succes: Période de fermeture supprimée
 preinscription.confirmation.message: Votre demande de pré-inscription est bien enregistrée, un mail de confirmation va vous être en envoyé. Votre demande sera traitée par notre équipe dans les plus brefs délais.
 preinscription.confirmation.titre: Demande d'inscription confirmée
 preinscription.demande.validation.message: Une demande de pré-inscription a été faite par l'utilisateur suivant
@@ -896,6 +938,8 @@ security.roles.ROLE_GESTION_HIGHLIGHT_LECTURE: Gestion des highlights (lecture s
 security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Gestion des images de fond (lecture/écriture)
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Gestion des images de fond (lecture seule)
 security.roles.ROLE_GESTION_INSCRIPTION: Gestion des inscriptions
+security.roles.ROLE_GESTION_NIVEAUSPORTIF_ECRITURE: Gestion des niveaux sprotifs (lecture/écriture)
+security.roles.ROLE_GESTION_NIVEAUSPORTIF_LECTURE: Gestion des niveaux sportifs (lecture seule)
 security.roles.ROLE_GESTION_LOGOPARTENAIRE_ECRITURE: Gestion des partenaires (lecture/écriture)
 security.roles.ROLE_GESTION_LOGOPARTENAIRE_LECTURE: Gestion des partenaires (lecture seule)
 security.roles.ROLE_GESTION_LOG_LECTURE: Gestion des logs (lecture seule)
@@ -961,6 +1005,7 @@ sitemap.connexion: Connexion
 sitemap.detailsAvoir.libelle: Détail de l'avoir
 sitemap.detailscommande.informationscarte.modifiier: Modifier la carte
 sitemap.detailscommande.libelle: Détails de commande
+sitemap.email.libelle: Emails
 sitemap.emailing.libelle: Emailing
 sitemap.en: Translate to english
 sitemap.etablissement.libelle: Campus
@@ -987,6 +1032,7 @@ sitemap.listeinscriptionavalider.libelle: Liste des inscriptions à valider
 sitemap.listeinscriptionavaliderencadrant.libelle: Mes validations d'encadrant
 sitemap.listeinscriptionavalidergestionnaire.libelle: Mes validations de gestionnaire
 sitemap.log.libelle: Logs
+sitemap.logoparametrable.libelle: Logos
 sitemap.logopartenaire.libelle: Partenaire
 sitemap.menu: Menu
 sitemap.mescommandes.libelle: Mes commandes
@@ -997,10 +1043,12 @@ sitemap.moncompte.changermotdepasse: Modifier mot de passe
 sitemap.moncompte.libelle: Mon Compte
 sitemap.moncompte.modifier.libelle: Modifier
 sitemap.monplanning.libelle: Mon planning
+sitemap.niveausportif.libelle: Niveaux Sportif
 sitemap.outils.libelle: Outils
 sitemap.panier.libelle: Panier
 sitemap.parametrage.libelle: Paramétrage
 sitemap.parametrage: Paramétrage
+sitemap.periodefermeture.libelle: Périodes de fermeture
 sitemap.preInscription.libelle: "Faire une demande de création de compte"
 sitemap.preInscription_confirmation: Confirmation
 sitemap.profilutilisateur.libelle: Profils d'utilisateurs
@@ -1019,9 +1067,13 @@ sitemap.shnu.highlight.libelle: SHNU - Highlight
 sitemap.shnu.rubrique.libelle: SHNU - Rubrique
 sitemap.sporthautniveau.libelle: Sport de haut niveau
 sitemap.statistique.KPI.libelle: KPI
+sitemap.style.libelle: Style
+sitemap.style.preview: Aperçu
 sitemap.supprimer: Supprimer
 sitemap.tarif.libelle: Tarifs
 sitemap.texte.libelle: Textes
+sitemap.traduction.entite.libelle: Traductions d'entités
+sitemap.traduction.grille: Grille
 sitemap.traduction.libelle: Traductions
 sitemap.typeactivite.libelle: Types d'activités
 sitemap.typeautorisation.libelle: Types d'autorisations
@@ -1094,6 +1146,51 @@ statistique.utilisateur.homme: Homme
 statistique.utilisateur.nonboursier: Non Boursier
 statistique.utilisateur.nonshnu: Non SHNU
 statistique.utilisateur.shnu: SHNU
+style.background: Couleur de fond
+style.color.danger: Couleur Danger
+style.color.navbar: Couleurs de la navbar et du pied de page
+style.color.primary: Couleur Primaire
+style.color.secondary: Couleur Secondaire
+style.color.success: Couleur Succès
+style.color.warning: Couleur Avertissement
+style.demo: Démonstration
+style.demo.buttons: Boutons
+style.demo.modals: Pop-ups
+style.demo.modals.activite: Pop-ups spécifiques aux activités
+style.demo.modals.activite.chargement: Pop-up de chargement
+style.demo.modals.bascule: Pop-up de bascule en cours
+style.demo.modals.commande: Pop-ups spécifiques aux commandes
+style.demo.modals.commande.annulation: Pop-up d'annulation
+style.demo.modals.confirm: Pop-up de confirmation
+style.demo.modals.common: Pop-ups communs
+style.demo.modals.delete: Pop-up de suppresion
+style.demo.modals.detailevent: Pop-up de détail
+style.demo.modals.desinscription: Pop-up de désinscription
+style.demo.modals.divers: Pop-ups divers
+style.demo.modals.evenement: Pop-ups spécifiques aux evenements
+style.demo.modals.inscription: Pop-ups spécifiques aux inscriptions
+style.demo.modals.inscription.ajoutpanier: Pop-ups spécifiques à l'ajout au panier
+style.demo.modals.inscription.annulation: Pop-up d'annulation
+style.demo.modals.inscription.confirmationajoutpanier: Pop-up d'ajout au panier standard
+style.demo.modals.inscription.confirmationajoutpanier.case: Pop-up d'ajout au panier avec case à cocher
+style.demo.modals.inscription.confirmationajoutpanier.reservabilite: Pop-up d'ajout au panier d'une reservabilité
+style.demo.modals.inscription.chargement: Pop-up de chargement
+style.demo.modals.inscription.error: Pop-up d'erreur
+style.demo.modals.inscription.validation: Pop-ups liés aux validations
+style.demo.modals.inscription.validation.article: Pop-up validation d'ajout au panier
+style.demo.modals.inscription.validation.encadrant: Pop-up attente de validation par un encadrant
+style.demo.modals.inscription.validation.gestionnaire: Pop-up attente de validation par un gestionnaire
+style.demo.modals.inscription.validation.panier: Pop-up finale confirmant l'ajout au panier
+style.demo.modals.map: Pop-up avec carte
+style.demo.titles: Titres
+style.foreground: Couleur du texte
+style.hover: Luminosité et couleur en hover
+style.hover.help: Pourcetage de luminosité supplémentaire déterminant la couleur
+style.modifier.title: Modifier le style
+style.preview.title: Aperçu
+style.shadow: Luminosité et couleur d'ombrage
+style.shadow.help: Pourcetage de luminosité supplémentaire déterminant la couleur
+style.title: Style
 tarif.ajouter.succes: "Tarif ajouté avec succès"
 tarif.ajouter.title: Ajouter un tarif
 tarif.gestion: "Gestion des tarifs"
@@ -1128,6 +1225,7 @@ traduction.list.title: "Traductions"
 traduction.modifier.title: "Modifier une traduction"
 traduction.pas.encore.traduit: "Sans traduction"
 traduction.tous: "Tout"
+traductionentite.list.title: "Traductions d'entités"
 translation.modifier.succes: "Traduction modifiée avec succès"
 typeactivite.ajouter.succes: "Type d'activité ajouté avec succès"
 typeactivite.ajouter.title: Ajouter un type d'activite

@@ -73,6 +73,10 @@ class SecurityController extends AbstractController
      */
     public function passwordForgotten(Request $request, UtilisateurResetPassword $resetPassword)
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('UcaWeb_Accueil');
+        }
+
         $form = $this->createForm(IdentifiantType::class);
         $form->handleRequest($request);
 
@@ -90,6 +94,10 @@ class SecurityController extends AbstractController
      */
     public function confirmAccount(Request $request, Utilisateur $user, string $token, RegistrationHandler $registrationHandler)
     {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('UcaWeb_Accueil');
+        }
+
         if (null === $this->getUser() && $user->getConfirmationToken() === $token) {
             $registrationHandler->confirmAccount($request, $user);
 

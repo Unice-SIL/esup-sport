@@ -251,16 +251,12 @@ class UtilisateurResetPassword
             $usr->setConfirmationToken($token);
             $this->getEntityManager()->flush();
 
-            if ('test' !== $_ENV['APP_ENV']) {
-                // @codeCoverageIgnoreStart
-                $this->getMailer()->sendMailWithTemplate(
-                    $this->getTranslator()->trans('utilisateur.password_forgotten.mail.subject'),
-                    $usr->getEmail(),
-                    'UserBundle/Mail/MotDePasseOublie.html.twig',
-                    ['user' => $usr]
-                );
-                // @codeCoverageIgnoreEnd
-            }
+            $this->getMailer()->sendMailWithTemplate(
+                $this->getTranslator()->trans('utilisateur.password_forgotten.mail.subject'),
+                $usr->getEmail(),
+                'UserBundle/Mail/MotDePasseOublie.html.twig',
+                ['user' => $usr]
+            );
 
             $this->getFlashBag()->add('success', 'utilisateur.password_forgotten.mail.sent');
         } else {

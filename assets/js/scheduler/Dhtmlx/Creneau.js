@@ -38,6 +38,12 @@ var Creneau = {
             this.eligible_bonus = data.eligible_bonus;
         }
 
+        if (data.forteFrequence != undefined) {
+            this.forte_frequence = data.forteFrequence;
+        } else {
+            this.forte_frequence = data.forte_frequence;
+        }
+
         this.capacite = data.capacite;
 
         //if action is insert, creneau don't have serie parent yet 
@@ -69,6 +75,7 @@ var Creneau = {
                 this.encadrant_ids = this.encadrant_ids.join(",");
 
                 this.eligible_bonus = data.eligibleBonus;
+                this.forte_frequence = data.forteFrequence;
             } else {
                 this.encadrant_ids = "";
             }
@@ -121,6 +128,7 @@ var Creneau = {
         this.evenement.infos = this.infos;
         this.dependanceSerie = false;
         this.evenement.eligible_bonus = this.eligible_bonus;
+        this.evenement.forte_frequence = this.forte_frequence;
 
         this.save("update");
     },

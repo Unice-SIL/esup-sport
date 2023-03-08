@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @Route("UcaWeb")
@@ -32,7 +33,7 @@ class UtilisateurController extends AbstractController
     /**
      * @Route("/DemandeInscription",name="UcaWeb_preInscription", methods={"GET","POST"})
      */
-    public function preInscriptionAction(Request $request, MailService $mailer, EntityManagerInterface $em, StatutUtilisateurRepository $statuRepo, UtilisateurRepository $utilisateurRepository, UserPasswordHasherInterface $encoder)
+    public function preInscriptionAction(Request $request, MailService $mailer, EntityManagerInterface $em, StatutUtilisateurRepository $statuRepo, UtilisateurRepository $utilisateurRepository, UserPasswordHasherInterface $encoder, RouterInterface $router)
     {
         $usr = new Utilisateur();
         $form = $this->createForm(UtilisateurType::class, $usr, ['action_type' => 'preInscription']);
@@ -44,9 +45,9 @@ class UtilisateurController extends AbstractController
             $em->flush();
 
             $mailer->sendMailWithTemplate(
-                'Confirmation demande d\'inscription',
+                null,
                 $usr->getEmail(),
-                'UcaBundle/Email/PreInscription/PreInscriptionEmail.html.twig',
+                'PreInscriptionEmail',
                 ['nom' => $usr->getNom(), 'prenom' => $usr->getPrenom()]
             );
 
@@ -55,11 +56,13 @@ class UtilisateurController extends AbstractController
                 $setTo[] = new Address($user['email'], ucfirst($user['prenom']).' '.ucfirst($user['nom']));
             }
 
+            $lienUtilisateur = $router->generate('UcaGest_UtilisateurVoir', ['id' => $usr->getId()]);
+
             $mailer->sendMailWithTemplate(
-                'Demande de validation',
+                null,
                 $setTo,
-                'UcaBundle/Email/PreInscription/DemandeValidationEmail.html.twig',
-                ['id' => $usr->getId(), 'nom' => $usr->getNom(), 'prenom' => $usr->getPrenom()]
+                'DemandeValidationEmail',
+                ['id' => $usr->getId(), 'nom' => $usr->getNom(), 'prenom' => $usr->getPrenom(), 'lienUtilisateur' => $request->getScheme().'://'.$request->getHttpHost().$lienUtilisateur]
             );
 
             return $this->redirectToRoute('UcaWeb_preInscription_confirmation');

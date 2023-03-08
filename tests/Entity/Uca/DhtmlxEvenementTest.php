@@ -30,6 +30,15 @@ class DhtmlxEvenementTest extends TestCase
     }
 
     /**
+     * @covers \App\Entity\Uca\DhtmlxEvenement::__clone
+     */
+    public function testClone()
+    {
+        $clonedEvent = clone $this->event;
+        $this->assertEqualsCanonicalizing($this->event->jsonSerializeProperties(), $clonedEvent->jsonSerializeProperties());
+    }
+
+    /**
      * @covers \App\Entity\Uca\DhtmlxEvenement::jsonSerializeProperties
      */
     public function testJsonSerializeProperties(): void
@@ -212,5 +221,17 @@ class DhtmlxEvenementTest extends TestCase
     public function testActiviteLibelle(): void
     {
         $this->assertEquals('', $this->event->getActiviteLibelle());
+    }
+
+    public function testForteFrequence(): void
+    {
+        $this->event->setForteFrequence(true);
+        $this->assertEquals(true, $this->event->getForteFrequence());
+    }
+
+    public function testNotForteFrequence(): void
+    {
+        $this->event->setForteFrequence(false);
+        $this->assertEquals(false, $this->event->getForteFrequence());
     }
 }

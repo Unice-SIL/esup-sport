@@ -138,14 +138,14 @@ class ValidationInscriptionEncadrantControllerTest extends WebTestCase
 
         $user_admin_encadrant->addInscriptionsAValider($inscription);
 
-        if (!file_exists(__DIR__.'/../../../public/upload/private')) {
-            mkdir(__DIR__.'/../../../public/upload/private');
+        if (!file_exists(dirname(__DIR__, 3).'/public/upload/private')) {
+            mkdir(dirname(__DIR__, 3).'/public/upload/private');
         }
-        if (!file_exists(__DIR__.'/../../../public/upload/private/fichiers')) {
-            mkdir(__DIR__.'/../../../public/upload/private/fichiers');
+        if (!file_exists(dirname(__DIR__, 3).'/public/upload/private/fichiers')) {
+            mkdir(dirname(__DIR__, 3).'/public/upload/private/fichiers');
         }
 
-        copy(__DIR__.'\\..\\..\\fixtures\\test.pdf', __DIR__.'/../../../public/upload/private/fichiers/test.pdf');
+        copy(dirname(__DIR__, 2).'/fixtures/test.pdf', dirname(__DIR__, 3).'/public/upload/private/fichiers/test.pdf');
 
         $autorisation = (new Autorisation($inscription, $typeAutorisation))
             ->setJustificatif("test.pdf")
@@ -177,7 +177,7 @@ class ValidationInscriptionEncadrantControllerTest extends WebTestCase
         $this->em->remove($this->em->getRepository(TypeAutorisation::class)->find($this->ids['typeAutorisation']));
         $this->em->remove($this->em->getRepository(ComportementAutorisation::class)->find($this->ids['comportementAutorisation']));
 
-        unlink(__DIR__.'/../../../public/upload/private/fichiers/test.pdf');
+        unlink(dirname(__DIR__, 3).'/public/upload/private/fichiers/test.pdf');
 
         $inscription = $this->em->getRepository(Inscription::class)->find($this->ids['inscription']);
         $this->em->remove($inscription);
@@ -196,6 +196,7 @@ class ValidationInscriptionEncadrantControllerTest extends WebTestCase
 
         $this->em->flush();
 
+        parent::tearDown();
         static::ensureKernelShutdown();
     }
 
@@ -297,7 +298,7 @@ class ValidationInscriptionEncadrantControllerTest extends WebTestCase
     {
         if (null != $userEmail) {
             $userTest = $this->em->getRepository(Utilisateur::class)->findOneByEmail($userEmail);
-            $this->client->loginUser($userTest);
+            $this->client->loginUser($userTest, 'app');
         }
         $route = $this->router->generate($routeName, $urlParameters);
         $route = str_replace('id_inscription', $this->ids['inscription'], $route);

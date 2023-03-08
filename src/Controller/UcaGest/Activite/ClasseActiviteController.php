@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ClasseActiviteController extends AbstractController
 {
     /**
-     * @Route("/", name="UcaGest_ClasseActiviteLister")
+     * @Route("/", name="UcaGest_gestClasseActiviteLister")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_LECTURE")
      */
     public function listerAction(Request $request, DatatableFactory $datatableFactory, DatatableResponse $datatableResponse)
@@ -52,13 +52,13 @@ class ClasseActiviteController extends AbstractController
             $twigConfig['noAddButton'] = true;
         }
 
-        $twigConfig['codeListe'] = 'ClasseActivite';
+        $twigConfig['codeListe'] = 'gestClasseActivite';
 
         return $this->render('UcaBundle/Common/Liste/Datatable.html.twig', $twigConfig);
     }
 
     /**
-     * @Route("/Ajouter", name="UcaGest_ClasseActiviteAjouter")
+     * @Route("/Ajouter", name="UcaGest_gestClasseActiviteAjouter")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
      */
     public function ajouterAction(Request $request, FlashBag $flashBag, EntityManagerInterface $em)
@@ -70,7 +70,7 @@ class ClasseActiviteController extends AbstractController
             $em->flush();
             $flashBag->addActionFlashBag($item, 'Ajouter');
 
-            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_gestClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -79,7 +79,7 @@ class ClasseActiviteController extends AbstractController
     }
 
     /**
-     * @Route("/Modifier/{id}", name="UcaGest_ClasseActiviteModifier")
+     * @Route("/Modifier/{id}", name="UcaGest_gestClasseActiviteModifier")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
      */
     public function modifierAction(Request $request, ClasseActivite $item, FlashBag $flashBag, EntityManagerInterface $em)
@@ -89,7 +89,7 @@ class ClasseActiviteController extends AbstractController
             $em->flush();
             $flashBag->addActionFlashBag($item, 'Modifier');
 
-            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_gestClasseActiviteLister');
         }
         $twigConfig['item'] = $item;
         $twigConfig['form'] = $form->createView();
@@ -98,7 +98,7 @@ class ClasseActiviteController extends AbstractController
     }
 
     /**
-     * @Route("/Supprimer/{id}", name="UcaGest_ClasseActiviteSupprimer")
+     * @Route("/Supprimer/{id}", name="UcaGest_gestClasseActiviteSupprimer")
      * @Isgranted("ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE")
      */
     public function supprimerAction(Request $request, ClasseActivite $item, FlashBag $flashBag, EntityManagerInterface $em)
@@ -106,12 +106,12 @@ class ClasseActiviteController extends AbstractController
         if (!$item->getActivites()->isEmpty()) {
             $flashBag->addActionErrorFlashBag($item, 'Supprimer');
 
-            return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
+            return $this->redirectToRoute('UcaGest_gestClasseActiviteLister');
         }
         $em->remove($item);
         $em->flush();
         $flashBag->addActionFlashBag($item, 'Supprimer');
 
-        return $this->redirectToRoute('UcaGest_ClasseActiviteLister');
+        return $this->redirectToRoute('UcaGest_gestClasseActiviteLister');
     }
 }

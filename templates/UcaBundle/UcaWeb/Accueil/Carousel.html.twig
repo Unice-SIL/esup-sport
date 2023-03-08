@@ -26,7 +26,10 @@
                     </a>
                 </div>
             </div>
-            <img class="img-fluid carousel-logo-uca" alt="UCA Sports" src="{{ asset('images/logo-uca.png') }}">
+            {% set image = logo('Caroussel Accueil') %}
+            {% if image.actif %}
+                <img class="img-fluid carousel-logo-uca" alt="UCA Sports" src="{{ asset('/upload/public/images/logos/' ~ image.image ) | imagine_filter('home_carousel')  }}">
+            {% endif %}
             <div class="pb-10 carousel-inner" role="listbox">
                 {% for item in item_actualite %}
                     <div class="carousel-item {% if loop.first %} active {% endif %}" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.thumb(item.image, 'thumb_background') }}') no-repeat center center;background-size: cover;">

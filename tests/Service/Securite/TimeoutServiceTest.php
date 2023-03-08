@@ -53,11 +53,6 @@ class TimeoutServiceTest extends WebTestCase
         $param->onKernelRequest($event);
     }
 
-    protected function tearDown(): void
-    {
-        static::ensureKernelShutdown();
-    }
-
     /**
      * Data provider pour le nettoyage de commande.
      */

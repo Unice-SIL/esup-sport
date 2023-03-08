@@ -51,7 +51,6 @@ class DhtmlxController extends AbstractController
             if (!$user) {
                 return $this->redirectToRoute('security_login');
             }
-
             // $id = $user->getId();
 
             $InscriptionsCreneaux = $eventRepo->findDhtmlxCreneauByUser($user);
@@ -98,7 +97,7 @@ class DhtmlxController extends AbstractController
         $mailer->sendMailWithTemplate(
             $objet,// Préciser dans le sujet, le titre de l'inscription
             $emailToSend,
-            'UcaBundle/Email/PreInscription/MailPourTousLesInscripts.html.twig',// Préciser dans le contenu, le titre de l'inscription
+            'MailPourTousLesInscripts',// Préciser dans le contenu, le titre de l'inscription
             ['message' => $text]
         );
 
@@ -140,32 +139,37 @@ class DhtmlxController extends AbstractController
             $em->flush();
         } elseif ('extend' == $ev['action']) {
             $newCreneau = [];
+            $creneauNotCreated = [];
+            $res = [];
             $modelCreneau = $em->getRepository(DhtmlxEvenement::class)->findOneById($ev['id']);
+            $heureDebutCreneau = date('H:i', strtotime($ev['dateDebut']));
+            $heureFinCreneau = date('H:i', strtotime($ev['dateFin']));
             $modelReservabilite = $modelCreneau->getReservabilite();
             for ($i = 0; $i < $ev['nbRepetition']; ++$i) {
-                $creneau = new DhtmlxEvenement();
-                $creneau = clone $modelCreneau;
-                if ($modelReservabilite) {
-                    $reservabilite = clone $modelReservabilite;
-                    $em->persist($reservabilite);
-                    $creneau->setReservabilite($reservabilite);
-                }
-                $numberWeek = 0;
                 $numberWeek = ($i > 0 ? $i : 0);
                 $dateRepetition = date('Y-m-d', strtotime('+'.$numberWeek.' week ', strtotime($ev['dateDebutRepetition'])));
 
-                $heureDebutCreneau = date('H:i', strtotime($ev['dateDebut']));
-                $heureFinCreneau = date('H:i', strtotime($ev['dateFin']));
+                if (!$c->isInPeriodeFermeture(['dateDebut' => $dateRepetition])) {
+                    $creneau = clone $modelCreneau;
+                    $creneau->setDateDebut(new \DateTime($dateRepetition.' '.$heureDebutCreneau));
+                    $creneau->setDateFin(new \DateTime($dateRepetition.' '.$heureFinCreneau));
 
-                $creneau->setDateDebut(new \DateTime($dateRepetition.' '.$heureDebutCreneau));
-                $creneau->setDateFin(new \DateTime($dateRepetition.' '.$heureFinCreneau));
-                $em->persist($creneau);
-                $newCreneau[] = $creneau;
+                    if ($modelReservabilite) {
+                        $reservabilite = clone $modelReservabilite;
+                        $em->persist($reservabilite);
+                        $creneau->setReservabilite($reservabilite);
+                    }
+
+                    $em->persist($creneau);
+                    $newCreneau[] = $creneau;
+                } else {
+                    $creneauNotCreated[] = $dateRepetition;
+                }
             }
             $em->flush();
 
-            $res = $creneau->jsonSerialize();
-
+            $res['evenements'] = $newCreneau;
+            $res['notCreated'] = $creneauNotCreated;
         // return $this->redirectToRoute('DhtmlxApi', ['activite' => $ev['itemId'], 'type' => $ev['typeA']]);
         } else {
             $c = new DhtmlxCommand();

@@ -48,7 +48,7 @@
           {% if inscriptionInformations.statut in ['previsualisation'] %}
             <button class="btn btn-primary disabled">{{ 'bouton.panier.ajouter' | trans | upper }}</button>
           {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
-            <p class="m-0 fs-14 fw-500 color-blue w-100 text-center">
+            <p class="m-0 fs-14 fw-500 color-primary w-100 text-center">
               <i class="fas fa-check-circle"></i>
               {{ ('formatCarte.list.' ~ inscriptionInformations.statut) | trans | upper }}
             </p>
@@ -89,7 +89,7 @@
   </section>
   {{ Inscription.HtmlModal }}
   <div class="d-none" id="js-text-inscrit-clone">
-    <div class="offset-4 color-blue col-4 text-center">
+    <div class="offset-4 color-primary col-4 text-center">
       <i class="fas fa-check-circle"></i>
       <span>{{ "formatCarte.list.preinscrit"|trans|upper }}</span>
     </div>

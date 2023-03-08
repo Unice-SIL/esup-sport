@@ -1,0 +1,566 @@
+{% extends "UcaBundle/Common/Main/Structure.UcaGest.html.twig" %}
+{% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
+{% import 'UcaBundle/Macros/ImageAsset.html.twig' as ImageAsset %}
+{% import "UcaBundle/Macros/OpenLayersMap.html.twig" as OpenLayersMap %}
+
+{% block main %}
+    <h1>
+        {{ 'style.preview.title' | trans }}
+    </h1>
+    {{ flashBag.showAll }}
+    <a class="btn btn-primary" href="{{ path('UcaGest_StyleModifier') }}">
+        {{'bouton.modifier'|trans}}
+    </a>
+
+    {% set style = style().style %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-6">
+                {% set color = style().primaryColor %}
+                <h2 class="hide-border-title">{{'style.color.primary'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().primaryColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.primaryHover >= 0 ? '+ ' : '') ~ style.primaryHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().primaryColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.primaryShadow >= 0 ? '+ ' : '') ~ style.primaryShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-6">
+                {% set color = style().secondaryColor %}
+                <h2 class="hide-border-title">{{'style.color.secondary'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().secondaryColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.secondaryHover >= 0 ? '+ ' : '') ~ style.secondaryHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().secondaryColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.secondaryShadow >= 0 ? '+ ' : '') ~ style.secondaryShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().successColor %}
+                <h2 class="hide-border-title">{{'style.color.success'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().successColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.successHover >= 0 ? '+ ' : '') ~ style.successHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().successColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.successShadow >= 0 ? '+ ' : '') ~ style.successShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().warningColor %}
+                <h2 class="hide-border-title">{{'style.color.warning'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().warningColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.warningHover >= 0 ? '+ ' : '') ~ style.warningHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().warningColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.warningShadow >= 0 ? '+ ' : '') ~ style.warningShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-4">
+                {% set color = style().dangerColor %}
+                <h2 class="hide-border-title">{{'style.color.danger'|trans}}</h2>
+                <p><span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().dangerColorHover %}
+                <h3 class="hide-border-title">{{'style.hover'|trans}}</h3>
+                <p>{{ (style.dangerHover >= 0 ? '+ ' : '') ~ style.dangerHover * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+                {% set color = style().dangerColorShadow %}
+                <h3 class="hide-border-title">{{'style.shadow'|trans}}</h3>
+                <p>{{ (style.dangerShadow >= 0 ? '+ ' : '') ~ style.dangerShadow * 100 }} %<span style="background-color: {{ color }}; color: {{ color }};">___</span>{{ color.toColor.RGB.toHexString }}</p>
+            </div>
+            <div class="col-12">
+                <h2 class="hide-border-title">{{'style.color.navbar'|trans}}</h2>
+                {% set color = style().navbarColors %}
+                <div class="row">
+                    <div class="col-6">
+                        <h3 class="hide-border-title">{{'style.background'|trans}}</h3>
+                        <p><span style="background-color: {{ color['background'] }}; color: {{ color['background'] }};">___</span>{{ color['background'] }}</p>
+                    </div>
+                    <div class="col-6">
+                        <h3 class="hide-border-title">{{'style.foreground'|trans}}</h3>
+                        <p style="background-color: {{ color['background'] }}; color: {{ color['foreground'] }};">{{ color['foreground'] }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <hr>
+        <h2 class="hide-border-title">{{'style.demo'|trans}}</h2>
+        <h3>{{'style.demo.titles'|trans}}</h3>
+
+        <h1>Lorem ipsum dolor</h1>
+        <h1 class="hide-border-title">Lorem ipsum dolor</h1>
+        <h2>Lorem ipsum dolor</h2>
+        <h2 class="hide-border-title">Lorem ipsum dolor</h2>
+        <h3>Lorem ipsum dolor</h3>
+        <h4>Lorem ipsum dolor</h4>
+        <h5>Lorem ipsum dolor</h5>
+        <h6>Lorem ipsum dolor</h6>
+
+        <hr>
+        <h3>{{'style.demo.buttons'|trans}}</h3>
+        <button type="button" class="btn btn-primary" href="#">Lorem ipsum</button>
+        <button type="button" class="btn btn-outline-primary" href="#">Lorem ipsum</button>
+        <button type="button" class="btn btn-secondary" href="#">Lorem ipsum</button>
+        <button type="button" class="btn btn-outline-secondary" href="#">Lorem ipsum</button>
+        <button type="button" href="#" class="btn btn-warning">Warning</button>
+        <button type="button" href="#" class="btn btn-danger">Danger</button>
+        <button type="button" href="#" class="btn btn-success">Success</button>
+
+
+        <hr>
+        <h3>{{'style.demo.modals'|trans}}</h3>
+
+        <h4>{{'style.demo.modals.common'|trans}}</h4>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalSuppression" data-toggle="modal">{{'style.demo.modals.delete'|trans}}</a>
+        {% include "UcaBundle/Common/Modal/Modal.Suppression.html.twig" %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalConfirmation" data-toggle="modal">{{'style.demo.modals.confirm'|trans}}</a>
+        {% include "UcaBundle/Common/Modal/Modal.Confirmation.html.twig" %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalLoader" data-toggle="modal">{{'style.demo.modals.bascule'|trans}}</a>
+        {% include "UcaBundle/Common/Modal/Modal.Loader.html.twig" %}
+
+        <h4>{{'style.demo.modals.activite'|trans}}</h4>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalActiviteChargement" data-toggle="modal">{{'style.demo.modals.activite.chargement'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Activite/Modal.Chargement.html.twig" %}
+            {% block modalId %}modalActiviteChargement{% endblock %}
+        {% endembed %}
+
+        <h4>{{'style.demo.modals.evenement'|trans}}</h4>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalEvenementDetail" data-toggle="modal">{{'style.demo.modals.detailevent'|trans}}</a>
+        {% include "UcaBundle/UcaWeb/Activite/Modal.EvenementDetails.html.twig" with {'idModalDetailsEvent':'modalEvenementDetail', 'details': 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, enim possimus expedita autem laudantium hic sed assumenda maxime! Libero sequi deleniti obcaecati in, culpa praesentium reprehenderit eum laboriosam expedita itaque.'} %}
+
+        <h4>{{'style.demo.modals.commande'|trans}}</h4>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalAnnulationCommande" data-toggle="modal">{{'style.demo.modals.commande.annulation'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Commande/Modal.Annulation.html.twig" %}
+            {% block modalId %}modalAnnulationCommande{% endblock %}
+        {% endembed %}
+
+        <h4>{{'style.demo.modals.inscription'|trans}}</h4>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalAnnulationInscription" data-toggle="modal">{{'style.demo.modals.inscription.annulation'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.Annulation.html.twig" %}
+            {% block modalId %}modalAnnulationInscription{% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalChargementInscription" data-toggle="modal">{{'style.demo.modals.inscription.chargement'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.Chargement.html.twig" %}
+            {% block modalId %}modalChargementInscription{% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalDesinscription" data-toggle="modal">{{'style.demo.modals.desinscription'|trans}}</a>
+        {% include "UcaBundle/UcaWeb/Inscription/Modal.Desinscription.html.twig" %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalErrorInscription" data-toggle="modal">{{'style.demo.modals.inscription.error'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.Error.html.twig" %}
+            {% block modalId %}modalErrorInscription{% endblock %}
+            {% block modalTitle %}Lorem ipsum Error{% endblock %}
+            {% block modalBody %}Lorem ipsum dolor sit amet consectetur, adipisicing elit. Saepe nihil odit quidem magni deleniti eveniet tenetur suscipit explicabo adipisci, non veritatis nemo fuga dicta laborum delectus numquam maxime eum ipsum?{% endblock %}
+        {% endembed %}
+        
+        <h5>{{'style.demo.modals.inscription.ajoutpanier'|trans}}</h5>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalConfirmationAjoutPanierReservabiliteInscription" data-toggle="modal">{{'style.demo.modals.inscription.confirmationajoutpanier.reservabilite'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig" with {'reservabilite': true, 'item': {'ressource': {'nbPartenaires': 3, 'nbPartenairesMax': 3}}}%}
+            {% block modalId %}modalConfirmationAjoutPanierReservabiliteInscription{% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalConfirmationAjoutPanierInscription" data-toggle="modal">{{'style.demo.modals.inscription.confirmationajoutpanier'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig" with {'articles':articles}%}
+            {% block modalId %}modalConfirmationAjoutPanierInscription{% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalConfirmationAjoutPanierCaseInscription" data-toggle="modal">{{'style.demo.modals.inscription.confirmationajoutpanier.case'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ConfirmationAjoutPanier.html.twig" with {'articles':articles, 'autorisation_case':{'0':{'typeAutorisation':{'libelle':'Lorem Ipsum Check Autorisation','informationsComplementaires':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, enim possimus expedita autem laudantium hic sed assumenda maxime! Libero sequi deleniti obcaecati in, culpa praesentium reprehenderit eum laboriosam expedita itaque.'}}}}%}
+            {% block modalId %}modalConfirmationAjoutPanierCaseInscription{% endblock %}
+        {% endembed %}
+        <h5>{{'style.demo.modals.inscription.validation'|trans}}</h5>
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalValidationArticleInscription" data-toggle="modal">{{'style.demo.modals.inscription.validation.article'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ValidationArticle.html.twig" with {'articles':articles}%}
+            {% block modalId %}modalValidationArticleInscription{% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalValidationEncadrantInscription" data-toggle="modal">{{'style.demo.modals.inscription.validation.encadrant'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ValidationInscription.html.twig" with {'item':{'statut':'attentevalidationencadrant','autorisations':{'0':{'typeAutorisation':{'comportement':{'codeComportement':'validationencadrant'}}, 'informationsComplementaires':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, enim possimus expedita autem laudantium hic sed assumenda maxime! Libero sequi deleniti obcaecati in, culpa praesentium reprehenderit eum laboriosam expedita itaque.'}}}} %}
+            {% block modalId %}modalValidationEncadrantInscription{% endblock %}
+            {% block modalFooter %}
+                <button class="btn btn-outline-primary" data-dismiss="modal" type="button">
+                    {{'modalinscription.continuer' | trans }}
+                </button>
+                <a class="btn btn-primary" href="#" data-dismiss="modal" type="button">
+                    {{'mesinscriptions.list.title' | trans }}
+                </a>
+            {% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalValidationGestionnaireInscription" data-toggle="modal">{{'style.demo.modals.inscription.validation.gestionnaire'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ValidationInscription.html.twig" with {'item':{'statut':'attentevalidationgestionnaire','autorisations':{'0':{'typeAutorisation':{'comportement':{'codeComportement':'validationgestionnaire'}}, 'informationsComplementaires':'Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo, enim possimus expedita autem laudantium hic sed assumenda maxime! Libero sequi deleniti obcaecati in, culpa praesentium reprehenderit eum laboriosam expedita itaque.'}}}} %}
+            {% block modalId %}modalValidationGestionnaireInscription{% endblock %}
+            {% block modalFooter %}
+                <button class="btn btn-outline-primary" data-dismiss="modal" type="button">
+                    {{'modalinscription.continuer' | trans }}
+                </button>
+                <a class="btn btn-primary" href="#" data-dismiss="modal" type="button">
+                    {{'mesinscriptions.list.title' | trans }}
+                </a>
+            {% endblock %}
+        {% endembed %}
+        <a href="#" class="btn btn-primary" role="button" data-target="#modalValidationPanierInscription" data-toggle="modal">{{'style.demo.modals.inscription.validation.panier'|trans}}</a>
+        {% embed "UcaBundle/UcaWeb/Inscription/Modal.ValidationPanier.html.twig" with {'articles':articles}%}
+            {% block modalId %}modalValidationPanierInscription{% endblock %}
+            {% block modalFooter %}
+                <button class="btn btn-outline-primary" data-dismiss="modal" type="button">
+                    {{'modalinscription.continuer' | trans }}
+                </button>
+                <a class="btn btn-primary" href="#" data-dismiss="modal" type="button">
+                    {{'modalinscription.panier.voir' | trans }}
+                </a>
+            {% endblock %}
+        {% endembed %}
+        
+        <h4>{{'style.demo.modals.divers'|trans}}</h4>
+        <button class="btn btn-outline-primary js-openlayersmap" data-toggle="modal" data-target="#modalOpenLayersMap" data-libelle="Salle ATIMIC" data-pmr="" data-adresse="55 Boulevard de Châteaudun" data-villecp="45000 / Orléans" data-campus="Complexe Acatus Informatique" data-latitude="47.9084697" data-longitude="1.889334" type="button">
+            {{'style.demo.modals.map'|trans}}
+        </button>
+
+
+    </div>
+    
+    <hr>
+{% endblock %}
+
+{% block outsideMain %}
+    <hr>
+    <section style="background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('{{ ImageAsset.imageFond('Accueil - Activités') }}') no-repeat center center;background-size: cover;">
+        <div class="container mb-5" >
+            <div class="row d-block">
+                <h2 class="text-center h2-light">{{ "accueil.classeActivite.title"|trans }}</h2>
+            </div>
+            <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+                <div class="activity-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                    <a class="align-self-center text-center" href="#">Lorem ipsum dolor</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 150%) fixed, url('{{ ImageAsset.imageFond('Défaut') }}'), no-repeat center center fixed">
+        <section class="container container-style bg-white mb-5">
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur, pariatur non nemo deserunt tempore eum nesciunt ipsum placeat sequi mollitia id beatae, delectus natus ea reiciendis consequuntur! Quae, tenetur eos. Lorem ipsum dolor sit amet consectetur adipisicing elit. Est aut inventore recusandae deserunt sit, ipsam harum repellat possimus qui, ex nam accusantium incidunt libero, molestias soluta numquam ipsum. Nemo, qui.
+        </section>
+        {% include "UcaBundle/UcaWeb/Activite/BlocTarif.html.twig" with {format: format} %}
+
+        <section id="sectionCalendrier">
+            {% include "UcaBundle/UcaWeb/Activite/Calendrier/FormatActivite.calendrier.html.twig" with {
+                init: true,
+                typeVisualisation: 'mois',
+                typeFormat: 'FormatAvecCreneau',
+                formatActivite: format,
+                itemId: 0,
+                idRessource: 0,
+            } %}
+        </section>
+
+        <section class="section-home py-5 bg-bloc-reservation">
+            <div class="container pageFormatActivity pt-3">
+                <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "activite.autreReservation"|trans }}</p>
+                <div class="row mb-5 d-flex flex-wrap justify-content-around">
+                    <div class="format-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center">
+                            <i class="fas fa-calendar-alt text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold">Lorem ipsum dolor sit</p>
+                            <a class="btn btn-primary d-block" href="#">Lorem ipsum dolor sit</a>
+                        </div>
+                    </div>
+                    <div class="format-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center">
+                            <i class="fas fa-table-tennis text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold">Lorem ipsum dolor sit</p>
+                            <a class="btn btn-primary d-block" href="#">Lorem ipsum dolor sit</a>
+                        </div>
+                    </div>
+                    <div class="format-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center">
+                            <i class="fas fa-credit-card text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold">Lorem ipsum dolor sit</p>
+                            <a class="btn btn-primary d-block" href="#">Lorem ipsum dolor sit</a>
+                        </div>
+                    </div>
+                    <div class="format-type d-flex align-item-center justify-content-center mb-3" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)) no-repeat center center;background-size: cover;">
+                        <div class="align-self-center text-center">
+                            <i class="fas fa-ticket-alt text-white mb-2"></i>
+                            <p class="text-white text-uppercase font-weight-bold">Lorem ipsum dolor sit</p>
+                            <a class="btn btn-primary d-block" href="#">Lorem ipsum dolor sit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 150%) fixed, url('{{ ImageAsset.imageFond('Accueil - Inscription') }}') no-repeat center center fixed">
+        <h2 class="h2-light">{{'activite.libelle'|trans}}</h2>
+        <section class="container container-style bg-white mb-5">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nihil, doloremque repellat, natus, quaerat a soluta temporibus eaque distinctio nisi voluptas nemo magnam est exercitationem ullam consectetur ipsum fugiat qui voluptates. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti commodi, aut mollitia deserunt, nostrum maiores repellat id velit recusandae voluptatum labore consequatur tenetur unde ut aperiam nemo eligendi ab. Optio!
+        </section>
+        <section class="container pageFormatActivity pt-3 mb-5">
+            {% if etablissements is not empty %}
+                <p class="text-white text-uppercase font-weight-bold titleSectionFormat">{{ "formatactivite.etablissements.title"|trans }}</p>
+            {% endif %}
+            {% for etablissement in etablissements %}
+                <div class="accordion" id="accordionEtablissements-{{ loop.index }}">
+                    <div class="card card-install bg-white mb-4">
+                        <div class="card-header" id="">
+                            <a aria-controls="collapse-{{ loop.index }}" aria-expanded="true" class="col-12 collapsed" data-target="#collapse-{{ loop.index }}" data-toggle="collapse">
+                                <div class="row text-left d-flex flex-wrap">
+                                    <h2 class="mb-0 col-11 text-dark text-uppercase">{{ etablissement.libelle }}</h2>
+                                    <p class="m-0 p-0 pr-3 col-1 text-right">
+                                        <i class="fas fa-chevron-down"></i>
+                                    </p>
+                                </div>
+                            </a>
+                        </div>
+                        <div aria-labelledby="heading1" class="card-body collapse show" data-parent="#accordionEtablissements-{{ loop.index }}" id="collapse-{{ loop.index }}">
+                            <div class="row">
+                                <div class="text-center text-sm-left col-sm-8 col-md-4 install-picture">
+                                    <img class="img-fluid img-rounded" src="{{ ImageAsset.thumb(etablissement.image, 'thumb_large_small') }}">
+                                </div>
+                                <div class="m-0 p-0 p-md-0 pl-3 pl-md-4 pt-3 col-12 col-sm-6 col-md-4 card-section">
+                                    <h3 class="text-uppercase">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ "installationssportives.coordonnees.title"|trans }}</h3>
+                                    <p>
+                                        {{ etablissement.libelle }}
+                                        <br/>{{ etablissement.adresse }}
+                                        <br/>{{ etablissement.codePostal }}
+                                        {{ etablissement.ville }}
+                                    </p>
+                                    <p>
+                                        <i class="fas fa-phone mr-2"></i>
+                                        {{ etablissement.telephone }}
+                                        <br/><i class="fas fa-envelope mr-2"></i>
+                                        {{ etablissement.email }}
+                                    </p>
+                                </div>
+                                <div class="m-0 p-0 p-md-0 pl-3 pt-3 col-12 col-sm-6 col-md-4 card-section">
+                                    <h3 class="text-uppercase">
+                                        <i class="far fa-clock"></i>
+                                        {{ "installationssportives.horaireouverture.title"|trans }}</h3>
+                                    <pre class="ff-apex fs-16 fw-400 color-dark-gray">{{ etablissement.horairesOuverture }}</pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    </section>
+
+    <section style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 150%) fixed, url('{{ ImageAsset.imageFond('Défaut') }}') no-repeat center center fixed">
+        <h2 class="h2-light">{{'highlight.list.title'|trans}}</h2>
+        <div class="container mb-5">
+            <div class="mt-4 d-flex flex-wrap justify-content-around">
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec Acatus Informatique</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3 mb-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec ATIMIC</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec Acatus Informatique</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3 mb-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec ATIMIC</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec Acatus Informatique</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3 mb-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="d-flex align-item-center img-rounded card-video mb-3 bg-dark" href="#" style="background: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)) no-repeat center center;background-size: cover;">
+                    <a class="d-flex p-3 w-100 card_autre_video" href="#">
+                        <i class="mt-auto far fa-play-circle fa-3x color-blanc bg-transparent play_hors_hover" alt="jouer" style=""></i>
+                        <i class="mt-auto fa fa-play-circle fa-3x play_on_hover hidden" alt="jouer" style="display: none;"></i>
+                        <div class="mt-auto ml-3">
+                            <span class="font-weight-bold text-uppercase color-blanc" style="">Lorem ipsum dolor sit</span>
+                            <br/>
+                            <span class="color-blanc">avec ATIMIC</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: linear-gradient(to bottom, rgba(0, 0, 0, 0.75) 0%, rgba(42, 42, 42, 0.5) 25%, rgba(255, 255, 255, 1) 150%) fixed, url('{{ ImageAsset.imageFond('Evenements') }}') no-repeat center center fixed">
+        <h2 class="h2-light">{{ 'evenements.title' | trans }}</h2>
+        <div class="container mb-5">
+            {% include "UcaBundle/UcaWeb/Activite/CarteEvenement.html.twig" with {
+                item: formatSimple
+            }%}
+            {% include "UcaBundle/UcaWeb/Activite/CarteEvenement.html.twig" with {
+                item: formatSimple
+            }%}
+            {% include "UcaBundle/UcaWeb/Activite/CarteEvenement.html.twig" with {
+                item: formatSimple
+            }%}
+        </div>
+    </section>
+
+    <hr>
+
+    {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    <div id="modal_container"></div>
+    {{ OpenLayersMap.HtmlModal }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ OpenLayersMap.Js }}
+    {{ encore_entry_script_tags('creneau') }}
+  
+    <script type='text/javascript'>
+        'use_strict';
+
+        const USER_MAIL = "{{ app.user ? app.user.email : '' }}";
+
+        var lastWindowWidth;
+
+        $(window).resize(function(){
+        var currentWidth = window.innerWidth;
+        // Utilisation des break points de CalendrierService
+        if((lastWindowWidth >= 1350 && currentWidth < 1350) || 
+            ((lastWindowWidth >= 580 && lastWindowWidth < 1350 && (currentWidth < 580 || currentWidth >= 1350) )) ||
+            (lastWindowWidth < 580 && currentWidth >= 580)
+        ){
+            $('.modal').modal('hide');
+            _uca.calendrier.loadData(true);
+        }
+        lastWindowWidth = currentWidth;
+        });
+        
+        $(document).ready(function () {
+        //_uca.openlayersmap.createMap();
+        _uca.bootstrap.tooltip.display();
+        lastWindowWidth = window.innerWidth;
+        _uca.calendrier.loadData(true);
+        });
+
+        _uca.evenement.limitChar();
+
+        $(".card_autre_video").hover(
+            function() {
+                $(this).find(".play_hors_hover").hide();
+                $(this).find(".play_on_hover").show();
+            }, function() {
+                $(this).find(".play_hors_hover").show();
+                $(this).find(".play_on_hover").hide();
+            }
+        );
+
+        const calendarObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.addedNodes.length > 0) {
+                    $(`[onclick^="_uca.calendrier.changeTypeVisualisation("]`).each(function () {
+                        $(this).attr('onclick', $(this).attr('onclick').replace(")",", true)"));
+                    });
+                    $(`[onclick^="_uca.calendrier.changePeriode("]`).each(function () {
+                        $(this).attr('onclick', $(this).attr('onclick').replace(")",", true)"));
+                    });
+                }
+            }
+        });
+        calendarObserver.observe(document.querySelector('#sectionCalendrier'), {childList: true});
+
+        const modalObserver = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.addedNodes.length > 0) {
+                    $('[id^=btncontactEncadrant]').removeAttr('onclick');
+                }
+            }
+        });
+        modalObserver.observe(document.querySelector('#modal_container'), {childList: true});
+
+        $('.js-inscription').off('click');
+    </script>
+{% endblock %}

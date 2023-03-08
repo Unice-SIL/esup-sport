@@ -8,6 +8,7 @@
 
 namespace App\Form;
 
+use FOS\CKEditorBundle\Form\Type\CKEditorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -61,6 +62,16 @@ class ParametrageType extends AbstractType
         ]);
         $builder->add('siret', IntegerType::class, [
             'label_format' => 'SIRET',
+        ]);
+        $builder->add('prefixMail', TextType::class, [
+            'label_format' => 'parametrage.prefixmail',
+        ]);
+        $builder->add('signatureMail', CKEditorType::class, [
+            'label_format' => 'parametrage.signaturemail',
+            'config' => [
+                'placeholder_select' => [],
+                'class' => 'ckeditor',
+            ],
         ]);
         $builder->add('save', SubmitType::class, [
             'label_format' => 'bouton.save',

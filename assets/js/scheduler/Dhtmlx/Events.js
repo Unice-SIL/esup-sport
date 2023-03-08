@@ -1,7 +1,7 @@
 import { Creneau } from "./Creneau";
 import { Reservation } from "./Reservation";
 import { Evenement } from "./Evenement";
-import { dateToStr } from "./Date";
+import { dateToStr, isInPeriodeFermeture } from "./Date";
 import { Serie } from "./Serie";
 
 scheduler.attachEvent("onEventPasted", function(isCopy, pasted_ev, original_ev) {
@@ -269,7 +269,11 @@ scheduler.attachEvent("onBeforeEventDelete", function(id, ev) {
 
 scheduler.attachEvent("onBeforeLightbox", function(id) {
     if (scheduler.isNewEvent(id)) {
-
+        if (isInPeriodeFermeture(scheduler._events[id].start_date)) {
+            delete scheduler._events[id];
+            scheduler.updateView();
+            return false;
+        }
         scheduler._events[id].text = scheduler.data.item.description;
         scheduler._events[id].infos = scheduler.data.item.informations;
         scheduler.config.lightbox.init(scheduler.config.lightbox.toDisplay.new, id);

@@ -4,6 +4,7 @@ namespace App\Tests\Service\Securite;
 
 use Twig\Environment;
 use App\Entity\Uca\Commande;
+use App\Entity\Uca\Utilisateur;
 use App\Service\Securite\Paybox;
 use App\Service\Common\Parametrage;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +14,7 @@ use Symfony\Component\Routing\RouterInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\PayboxBundle\Paybox\System\Base\Request;
 
 /**
@@ -42,21 +44,34 @@ class PayboxTest extends WebTestCase
      */
     private $em;
 
+    private $user;
+
     /**
      * Fonction qui s'exécute avant chaque test.
      */
     protected function setUp(): void
     {
-
         $client = static::createClient();
         $client->request('GET', '/');
 
         $container = static::getContainer();
+        $hasher = static::getContainer()->get(UserPasswordHasherInterface::class);
         $this->em = $container->get(EntityManagerInterface::class);
-        $user = $container->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $this->user = (new Utilisateur())
+            ->setNom('box')
+            ->setPrenom('pay')
+            ->setUsername('paybox-test')
+            ->setSexe('M')
+            ->setEmail('paybox@test.fr')
+            ->setEnabled(true)
+        ;
+        $this->user->setPassword($hasher->hashPassword($this->user, $_ENV['ADMIN_PWD']))
+        ;
+        $this->em->persist($this->user);
+        $this->em->flush();
 
         // Création de la commande
-        $this->commande = (new Commande($user))
+        $this->commande = (new Commande($this->user))
             ->setMontantPaybox('100')
             ->setMontantTotal('100')
             ->setNumeroCommande('123');
@@ -120,21 +135,6 @@ class PayboxTest extends WebTestCase
     }
 
     /**
-     * Fonction qui s'exécute avant chaque test.
-     */
-    protected function tearDown(): void
-    {
-        $this->paybox = null;
-        if ($this->commande) {
-            $this->em->remove($this->commande);
-            $this->em->flush();
-            $this->commande = null;
-        }
-        $this->requestPaybox = null;
-        static::ensureKernelShutdown();
-    }
-
-    /**
      * @covers \App\Service\Securite\Paybox::__construct
      */
     public function testConstructor(): void
@@ -160,11 +160,11 @@ class PayboxTest extends WebTestCase
         $this->assertEquals($this->commande->getUtilisateur()->getEmail(), $payboxParams['PBX_PORTEUR']);
 
         $this->assertTrue(isset($payboxParams['PBX_RETOUR']));
-        $this->assertEquals('Mt:M;Ref:R;Auto:A;Erreur:E', $payboxParams['PBX_RETOUR']);
+        $this->assertEquals('Mt:M;Ref:R;Auto:A;Erreur:E;Sign:K', $payboxParams['PBX_RETOUR']);
 
         $this->assertTrue(isset($payboxParams['PBX_TOTAL']));
         $this->assertEquals(round($this->commande->getMontantAPayer() * 100), $payboxParams['PBX_TOTAL']);
-        $this->assertIsInt($payboxParams['PBX_TOTAL']);
+        $this->assertIsFloat($payboxParams['PBX_TOTAL']);
 
         $this->assertTrue(isset($payboxParams['PBX_TYPEPAIEMENT']));
         $this->assertEquals('CARTE', $payboxParams['PBX_TYPEPAIEMENT']);

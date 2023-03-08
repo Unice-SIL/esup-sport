@@ -21,6 +21,9 @@ use App\Entity\Uca\Tarif;
 use App\Entity\Uca\Traits\Article;
 use App\Entity\Uca\TypeAutorisation;
 use App\Entity\Uca\Utilisateur;
+use App\Service\Common\Previsualisation;
+use DateInterval;
+use DateTime;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -64,17 +67,16 @@ class ArticleTest extends TestCase
             ->addUtilisateur($this->utilisateur)
         ;
 
-        $tarif = (new Tarif())
-        ;
+        $this->tarif = (new Tarif());
 
-        $tarif->addMontant(new MontantTarifProfilUtilisateur($tarif, $this->profil, 10));
-        $tarif->setPourcentageTva(20);
+        $this->tarif->addMontant(new MontantTarifProfilUtilisateur($this->tarif, $this->profil, 10));
+        $this->tarif->setPourcentageTva(20);
 
-        $this->format->setTarif($tarif);
+        $this->format->setTarif($this->tarif);
 
         $this->utilisateur->setProfil($this->profil);
 
-        $this->formatActiviteProfil = new FormatActiviteProfilUtilisateur($this->format, $this->profil, 1);
+        $this->formatActiviteProfil = new FormatActiviteProfilUtilisateur($this->format, $this->profil, 10);
 
         $this->formatActiviteProfil->setNbInscrits(2);
 
@@ -86,7 +88,7 @@ class ArticleTest extends TestCase
 
         $this->inscription = new Inscription($this->format, $this->utilisateur, []);
 
-        $this->format->getCarte()->setTarif($tarif);
+        $this->format->getCarte()->setTarif($this->tarif);
     }
 
     /**
@@ -110,7 +112,7 @@ class ArticleTest extends TestCase
      */
     public function testGetArticleTva(): void
     {
-        $this->assertEquals($this->format->getArticleTva($this->utilisateur), 1.6666666666667);
+        $this->assertEquals($this->format->getArticleTva($this->utilisateur), 2);
     }
 
     /**
@@ -147,6 +149,17 @@ class ArticleTest extends TestCase
         $this->formatActiviteProfil->setNbInscrits(0);
 
         $this->assertFalse($this->format->isNotFull($this->utilisateur, $this->formatReserv));
+        
+        
+        $formatFull = (new FormatAchatCarte())
+            ->setCarte(
+                $this->typeAutorisationFormat
+            )
+        ;
+        $formatActiviteProfilFull = new FormatActiviteProfilUtilisateur($formatFull, $this->profil, 10);
+        $formatActiviteProfilFull->setNbInscrits(10);
+        $formatFull->addProfilsUtilisateur($formatActiviteProfilFull);
+        $this->assertFalse($formatFull->isNotFull($this->utilisateur, $formatFull));
     }
 
     /**
@@ -167,7 +180,7 @@ class ArticleTest extends TestCase
             (new Lieu())
                 ->setLibelle('lieu1')
                 ->setTarif(new Tarif())
-            ;
+        ;
 
         $reservabilite->setRessource($ressource);
 
@@ -188,65 +201,172 @@ class ArticleTest extends TestCase
     }
 
     /**
-     * @covers \App\Entity\Uca\Traits\Article::getInscriptionInformations
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
      */
-    public function testGetInscriptionInformations(): void
+    public function testGetInscriptionInformationsCGVNonAcceptees(): void
     {
-        $this->assertEquals($this->format->getInscriptionInformations($this->utilisateur), [
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals($result, [
             'montant' => [
                 'article' => -1,
                 'total' => -1,
             ],
             'statut' => 'cgvnonacceptees',
         ]);
-        $this->assertEquals($this->format->getInscriptionInformations(null), [
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsNonConnecte(): void
+    {
+        $result = $this->format->getInscriptionInformations(null);
+        $this->assertEquals($result, [
             'montant' => [
                 'article' => -1,
                 'total' => -1,
             ],
             'statut' => 'nonconnecte',
         ]);
+    }
 
-        $reservabilite = new Reservabilite();
-
-        $reservabilite->getInscriptionInformations($this->utilisateur);
-        $reservabilite->getInscriptionInformations(null);
-        $reservabilite->getInscriptionInformations(null, $this->format);
-
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscritFormatCarteAvecAutorisation(): void
+    {
         $this->utilisateur->setCgvAcceptees(true);
-        $this->assertEquals($this->format->getInscriptionInformations($this->utilisateur), [
+        $this->utilisateur->addAutorisation($this->format->getCarte());
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
             'montant' => [
-                'total' => 10,
+                'total' => 0,
                 'article' => 0,
-                'autorisations' => 10,
-                'format' => 0,
-            ],
-            'statut' => 'preinscrit',
-        ]);
-
-        $this->utilisateur->getInscriptions()->first()->setStatut('valide');
-        $this->assertEquals($this->format->getInscriptionInformations($this->utilisateur), [
-            'montant' => [
-                'total' => 10,
-                'article' => 0,
-                'autorisations' => 10,
+                'autorisations' => 0,
                 'format' => 0,
             ],
             'statut' => 'inscrit',
-        ]);
+        ], $result);
+    }
 
-        $this->utilisateur->removeInscription($this->inscription);
-        $this->assertEquals($this->format->getInscriptionInformations($this->utilisateur), [
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsProfilInvalide(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->formatActiviteProfil->setCapaciteProfil(0);
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
             'montant' => [
-                'total' => 10,
+                'total' => -1,
+                'article' => -1,
+            ],
+            'statut' => 'profilinvalide',
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscritFormatReserv(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->formatReserv
+            ->setCapacite(10)
+            ->setDateDebutInscription((new DateTime())->sub(new DateInterval('P1D')))
+            ->setDateFinInscription((new DateTime())->add(new DateInterval('P1D')))
+        ;
+        $inscription = new Inscription($this->formatReserv, $this->utilisateur, []);
+        $this->utilisateur->removeInscription($this->inscription);
+        $this->utilisateur->addInscription($inscription);
+        $this->utilisateur->getInscriptions()->first()->setStatut('valide');
+        $result = $this->formatReserv->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 0,
                 'article' => 0,
-                'autorisations' => 10,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'inscrit',
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsPreinscritFormatReserv(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->formatReserv
+            ->setCapacite(10)
+            ->setDateDebutInscription((new DateTime())->sub(new DateInterval('P1D')))
+            ->setDateFinInscription((new DateTime())->add(new DateInterval('P1D')))
+        ;
+        $inscription = new Inscription($this->formatReserv, $this->utilisateur, []);
+        $result = $this->formatReserv->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 0,
+                'article' => 0,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'preinscrit',
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsComplet(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->formatReserv->setCapacite(1);
+        $result = $this->formatReserv->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 0,
+                'article' => 0,
+                'autorisations' => 0,
                 'format' => 0,
             ],
             'statut' => 'complet',
-        ]);
+        ], $result);
+    }
 
-        $this->format->setCapacite(100);
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsPrevisualisation(): void
+    {
+        Previsualisation::$IS_ACTIVE = true;
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->formatReserv->setCapacite(1);
+        $result = $this->formatReserv->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 0,
+                'article' => 0,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'previsualisation',
+        ], $result);
+        Previsualisation::$IS_ACTIVE = false;
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsMaxCreneau(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $formatCreneau = (new FormatAvecCreneau())
+            ->setLibelle('FormatAvecCreneau')
+        ;
 
         $creneau = (new Creneau())
             ->setCapacite(10)
@@ -255,25 +375,24 @@ class ArticleTest extends TestCase
         $creneauProfil = new CreneauProfilUtilisateur($creneau, $this->profil, 1);
         $creneau->addProfilsUtilisateur($creneauProfil);
 
-        $date = new \Datetime();
+        $creneau->setFormatActivite($formatCreneau);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
         $serie = new DhtmlxSerie();
         $evenement =
             (new DhtmlxEvenement())
                 ->setSerie($serie)
                 ->setDependanceSerie(true)
                 ->setDescription('evenement Test')
-                ->setDateDebut($date)
-                ->setDateFin($date)
-            ;
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateFin)
+        ;
 
         $creneau->setSerie($serie->addEvenement($evenement));
 
-        $creneau->setFormatActivite(
-            (new FormatAvecCreneau())
-                ->setLibelle('FormatAvecCreneau')
-        );
-
-        $this->assertEquals($creneau->getInscriptionInformations($this->utilisateur, $creneau, 0), [
+        $result = $creneau->getInscriptionInformations($this->utilisateur, $creneau, 0);
+        $this->assertEquals([
             'montant' => [
                 'total' => -1,
                 'article' => -1,
@@ -281,25 +400,190 @@ class ArticleTest extends TestCase
                 'format' => -1,
             ],
             'statut' => 'nbcreneaumaxatteint',
-        ]);
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsCreneauForteFrequence(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $formatCreneau = (new FormatAvecCreneau())
+            ->setLibelle('FormatAvecCreneau')
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->setTarif($this->tarif)
+        ;
+
+        $creneauFF = (new Creneau())
+            ->setCapacite(10)
+            ->setTarif($this->tarif)
+        ;
+
+        $creneau = (new Creneau())
+            ->setCapacite(10)
+            ->setTarif($this->tarif)
+        ;
+
+        $creneauProfil = new CreneauProfilUtilisateur($creneau, $this->profil, 10);
+        $creneau->addProfilsUtilisateur($creneauProfil);
+        $creneauFFProfil = new CreneauProfilUtilisateur($creneauFF, $this->profil, 10);
+        $creneauFF->addProfilsUtilisateur($creneauFFProfil);
+
+        $creneau->setFormatActivite($formatCreneau);
+        $creneauFF->setFormatActivite($formatCreneau);
+
+        $formatCreneau->addCreneaux($creneau);
+        $formatCreneau->addCreneaux($creneauFF);
+
+        $serieFF = new DhtmlxSerie();
+        $evenementForteFrequence =
+            (new DhtmlxEvenement())
+                ->setSerie($serieFF)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setForteFrequence(true)
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateFin)
+        ;
+
+        $creneauFF->setSerie($serieFF->addEvenement($evenementForteFrequence));
+        $inscription = new Inscription($creneauFF, $this->utilisateur, []);
+
+        $serie = new DhtmlxSerie();
+        $evenement =
+            (new DhtmlxEvenement())
+                ->setSerie($serie)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setForteFrequence(true)
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateFin)
+        ;
+
+        $creneau->setSerie($serie->addEvenement($evenement));
+
+
+        $result = $creneau->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 10,
+                'article' => 10,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'fortefrequence',
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsCreneauForteFrequenceDisponible(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $formatCreneau = (new FormatAvecCreneau())
+            ->setLibelle('FormatAvecCreneau')
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->setTarif($this->tarif)
+        ;
+
+        $creneau = (new Creneau())
+            ->setCapacite(10)
+            ->setTarif($this->tarif)
+        ;
+
+        $creneauProfil = new CreneauProfilUtilisateur($creneau, $this->profil, 10);
+        $creneau->addProfilsUtilisateur($creneauProfil);
+
+        $creneau->setFormatActivite($formatCreneau);
+
+        $formatCreneau->addCreneaux($creneau);
+
+        $serie = new DhtmlxSerie();
+        $evenement =
+            (new DhtmlxEvenement())
+                ->setSerie($serie)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setForteFrequence(true)
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateFin)
+        ;
+
+        $creneau->setSerie($serie->addEvenement($evenement));
+
+
+        $result = $creneau->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 10,
+                'article' => 10,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'disponible',
+        ], $result);
+    }
+
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsMaxRessource(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $formatAvecReservation = new FormatAvecReservation();
+        $formatAvecReservation
+            ->setLibelle("Format avec Reservation")
+            ->setCapacite(10)
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->addEncadrant($this->utilisateur)
+        ;
+
+        $serie = new DhtmlxSerie();
+        $evenement =
+            (new DhtmlxEvenement())
+                ->setSerie($serie)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateFin)
+        ;
+        $serie->addEvenement($evenement);
 
         $ressource =
             (new Lieu())
                 ->setLibelle('lieu')
                 ->setTarif(new Tarif())
-            ;
+        ;
 
-        $reservabilite->setCapacite(10);
-        $reservabilite->setEvenement($evenement);
-        $reservabilite->setRessource($ressource);
-        $reservabilite->setFormatActivite(
-            $this->format
-        );
+        $reservabilite = new Reservabilite();
+        $reservabilite
+            ->setFormatActivite($formatAvecReservation)
+            ->setRessource($ressource)
+            ->setCapacite(10)
+            ->setEvenement($evenement)
+        ;
+
+        $ressource->addReservabilite($reservabilite);
 
         $reservabiliteProfil = new ReservabiliteProfilUtilisateur($reservabilite, $this->profil, 1);
         $reservabilite->addProfilsUtilisateur($reservabiliteProfil);
-
-        $this->inscription->setReservabilite($reservabilite);
 
         $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur, $reservabilite), [
             'montant' => [
@@ -310,10 +594,59 @@ class ArticleTest extends TestCase
             ],
             'statut' => 'nbressourcemaxatteint',
         ]);
+    }
 
-        $reservabilite->setEvenement($evenement);
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscriptionTermineesResa(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->profil->setNbMaxInscriptionsRessource(100);
 
-        $this->assertEquals($creneau->getInscriptionInformations($this->utilisateur, $creneau), [
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $formatAvecReservation = new FormatAvecReservation();
+        $formatAvecReservation
+            ->setLibelle("Format avec Reservation")
+            ->setCapacite(10)
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->addEncadrant($this->utilisateur)
+        ;
+
+        $serie = new DhtmlxSerie();
+        $evenement =
+            (new DhtmlxEvenement())
+                ->setSerie($serie)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setDateDebut($dateDeb)
+                ->setDateFin($dateDeb)
+        ;
+        $serie->addEvenement($evenement);
+
+        $ressource =
+            (new Lieu())
+                ->setLibelle('lieu')
+                ->setTarif(new Tarif())
+        ;
+
+        $reservabilite = new Reservabilite();
+        $reservabilite
+            ->setFormatActivite($formatAvecReservation)
+            ->setRessource($ressource)
+            ->setCapacite(100)
+            ->setEvenement($evenement)
+        ;
+
+        $ressource->addReservabilite($reservabilite);
+
+        $reservabiliteProfil = new ReservabiliteProfilUtilisateur($reservabilite, $this->profil, 100);
+        $reservabilite->addProfilsUtilisateur($reservabiliteProfil);
+
+        $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur, $reservabilite, 100, $evenement), [
             'montant' => [
                 'total' => -1,
                 'article' => -1,
@@ -322,15 +655,113 @@ class ArticleTest extends TestCase
             ],
             'statut' => 'inscriptionsterminees',
         ]);
+    }
 
-        $this->format
-            ->setCapacite(100)
-            ->setDateDebutInscription(new \DateTime('tomorrow'))
-            ->setDateFinInscription(new \DateTime('tomorrow'))
+    /**
+     * @covers App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsMontantIncorrect(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+        $this->profil->setNbMaxInscriptionsRessource(100);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $formatAvecReservation = new FormatAvecReservation();
+        $formatAvecReservation
+            ->setLibelle("Format avec Reservation")
+            ->setCapacite(10)
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->addEncadrant($this->utilisateur)
         ;
 
-        $this->formatActiviteProfil->setNbInscrits(0);
-        $this->assertEquals($this->format->getInscriptionInformations($this->utilisateur, $this->format), [
+        $serie = new DhtmlxSerie();
+        $evenement =
+            (new DhtmlxEvenement())
+                ->setSerie($serie)
+                ->setDependanceSerie(true)
+                ->setDescription('evenement Test')
+                ->setDateDebut($dateFin)
+                ->setDateFin($dateFin)
+        ;
+        $serie->addEvenement($evenement);
+
+        $ressource =
+            (new Lieu())
+                ->setLibelle('lieu')
+                ->setTarif(new Tarif())
+        ;
+
+        $reservabilite = new Reservabilite();
+        $reservabilite
+            ->setFormatActivite($formatAvecReservation)
+            ->setRessource($ressource)
+            ->setCapacite(100)
+            ->setEvenement($evenement)
+        ;
+
+        $ressource->addReservabilite($reservabilite);
+
+        $reservabiliteProfil = new ReservabiliteProfilUtilisateur($reservabilite, $this->profil, 100);
+        $reservabilite->addProfilsUtilisateur($reservabiliteProfil);
+
+        $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur, null, 100, $evenement), [
+            'montant' => [
+                'total' => -1,
+                'article' => -1,
+                'autorisations' => 0,
+                'format' => 0,
+            ],
+            'statut' => 'montantincorrect',
+        ]);
+    }
+
+    /**
+     * @covers \App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscriptionTermineesFormat(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $date = (new \Datetime())->sub(new DateInterval('P1D'));
+
+        $this->format
+            ->setDateDebutInscription($date)
+            ->setDateFinInscription($date)
+            ->setCapacite(10)
+        ;
+
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 10,
+                'article' => 0,
+                'autorisations' => 10,
+                'format' => 0,
+            ],
+            'statut' => 'inscriptionsterminees',
+        ], $result);
+    }
+
+    /**
+     * @covers \App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscriptionAVenirFormat(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $date = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $this->format
+            ->setDateDebutInscription($date)
+            ->setDateFinInscription($date)
+            ->setCapacite(10)
+        ;
+
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
             'montant' => [
                 'total' => 10,
                 'article' => 0,
@@ -338,38 +769,36 @@ class ArticleTest extends TestCase
                 'format' => 0,
             ],
             'statut' => 'inscriptionsavenir',
-        ]);
-        $this->utilisateur->getProfil()->setNbMaxInscriptionsRessource(10);
+        ], $result);
+    }
+
+    /**
+     * @covers \App\Entity\Uca\Traits\Article::getInscriptionInformations
+     */
+    public function testGetInscriptionInformationsInscriptionDisponible(): void
+    {
+        $this->utilisateur->setCgvAcceptees(true);
+
+        $dateDeb = (new \Datetime())->sub(new DateInterval('P1D'));
+        $dateFin = (new \Datetime())->add(new DateInterval('P1D'));
+
+        $this->format
+            ->setDateDebutInscription($dateDeb)
+            ->setDateFinInscription($dateFin)
+            ->setCapacite(10)
+        ;
+
         $this->utilisateur->removeInscription($this->inscription);
-        $this->format->setDateDebutInscription(new \Datetime());
-        // $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur, null, null, $evenement), [
-        //     'montant' => [
-        //         'total' => -1,
-        //         'article' => -1,
-        //         'autorisations' => 10,
-        //         'format' => 0,
-        //     ],
-        //     'statut' => 'inscriptionsterminees',
-        // ]);
-        // $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur), [
-        //     'montant' => [
-        //         'total' => -1,
-        //         'article' => -1,
-        //         'autorisations' => 10,
-        //         'format' => 0,
-        //     ],
-        //     'statut' => 'montantincorrect',
-        // ]);
-        $reservabilite->getRessource()->setTarif($this->format->getTarif());
-        // $this->assertEquals($reservabilite->getInscriptionInformations($this->utilisateur), [
-        //     'montant' => [
-        //         'total' => 20,
-        //         'article' => 10,
-        //         'autorisations' => 10,
-        //         'format' => 0,
-        //     ],
-        //     'statut' => 'disponible',
-        // ]);
+        $result = $this->format->getInscriptionInformations($this->utilisateur);
+        $this->assertEquals([
+            'montant' => [
+                'total' => 10,
+                'article' => 0,
+                'autorisations' => 10,
+                'format' => 0,
+            ],
+            'statut' => 'disponible',
+        ], $result);
     }
 
     /**
@@ -403,7 +832,7 @@ class ArticleTest extends TestCase
             (new Lieu())
                 ->setLibelle('lieu1')
                 ->setTarif(new Tarif())
-            ;
+        ;
 
         $reservabilite->setRessource($ressource);
         $this->assertEquals($reservabilite->getArticleArrayMontant($this->utilisateur, $this->format), [

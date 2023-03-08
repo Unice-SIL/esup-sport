@@ -40,6 +40,7 @@ var Serie = {
         this.dateDebut = data.dateDebut;
         this.dateFin = data.dateFin;
         this.eligible_bonus = data.eligibleBonus;
+        this.forte_frequence = data.forteFrequence;
 
         this.event_pid = null;
     },
@@ -108,6 +109,7 @@ var Serie = {
                     ev.text = data.text;
                     ev.infos = data.infos;
                     ev.eligible_bonus = data.eligible_bonus;
+                    ev.forte_frequence = data.forte_frequence;
 
                     ev.niveau_sportif_ids = data.niveau_sportif_ids;
 
@@ -193,6 +195,26 @@ var Serie = {
     //call after saveDb return 
     saveCallback: function(data) {
         loadData(data);
+        if(data.notCreated !== undefined && data.notCreated !== null) {
+            if (data.notCreated.length > 0) {
+                let date;
+                let msg = Translator.trans('creneau.notCreated');
+                msg += '<ul>';
+                for (const creneau of data.notCreated) {
+                    date = creneau.split(' ')[0].split('-').reverse().join('/');
+                    msg += `<li>${date}</li>`;
+                }
+                msg += '</ul>';
+                dhtmlx.modalbox({
+                    text: msg,
+                    width: "500px",
+                    position: "middle",
+                    buttons: [
+                        "Ok",
+                    ],
+                });
+            }
+        }
         Load.stop();
         changeColor(data.enfants[0].id);
         scheduler.updateView();

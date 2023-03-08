@@ -36,6 +36,10 @@ activite.list.title: Activities
 activite.modifier.succes: Activity successfully modified 
 activite.modifier.title: Edit an activity
 activite.not.found: This activity does not exists
+activite.rechercher: Search for activities
+activite.recherche.option.dayofweek: Choose a day of week
+activite.recherche.option.time.start: from
+activite.recherche.option.time.end: to
 activite.recherche.option.lieu: Choose a campus
 activite.recherche.option.typeactivite: Choose an activity
 activite.reservation.ajouter: Add activity with reservation
@@ -91,6 +95,7 @@ bouton.indisponible.autorisationinvalide: "This time slot requires authorization
 bouton.indisponible.inscriptionsterminees: Registration closed
 bouton.indisponible.statut.cgvnonacceptees: "Please accept general terms and conditions of sale to register to any activity."
 bouton.indisponible.statut.desinscriptionadministrative: You have been unsubscribed by the administration
+bouton.indisponible.statut.fortefrequence: You are already registered for another high frequentation time slot
 bouton.indisponible.statut.inscriptionsterminees: Registrations are closed
 bouton.indisponible.statut.montantincorrect: "The price for this activity is not defined yet, please contact the Sport's office for more details."
 bouton.indisponible.statut.nbcreneaumaxatteint: "You have already registered to %maxCreneau% time slots. You have reached the maximum number of registration for these time slots."
@@ -124,17 +129,17 @@ cgv.modal.titre: General terms and conditions of sale
 cgv.refusees: You must tick the box in order to accept the general terms and conditions of sale 
 cgv.validation: I accept the general terms and conditions of sale 
 classeActivite.list.title: List of activity classes
-classeactivite.ajouter.succes: Activity class successfully added
-classeactivite.ajouter.title: Add an activity class
-classeactivite.gestion: Activity class management
-classeactivite.image.libelle: Select a picture
-classeactivite.libelle: Activity class
-classeactivite.list.title: Activity class management
-classeactivite.modifier.succes: Activity class successfully modified
-classeactivite.modifier.title: Edit an activity class
-classeactivite.supprimer.erreur: Cannot delete activity class, activities are assigned
-classeactivite.supprimer.succes: Activity class successfully deleted
-classeactivite.typeactivite.placeholder: '- Select an activity type -'
+classeActivite.ajouter.succes: Activity class successfully added
+gestClasseActivite.ajouter.title: Add an activity class
+gestClasseActivite.gestion: Activity class management
+gestClasseActivite.image.libelle: Select a picture
+gestClasseActivite.libelle: Activity class
+gestClasseActivite.list.title: Activity class management
+classeActivite.modifier.succes: Activity class successfully modified
+gestClasseActivite.modifier.title: Edit an activity class
+classeActivite.supprimer.erreur: Cannot delete activity class, activities are assigned
+classeActivite.supprimer.succes: Activity class successfully deleted
+gestClasseActivite.typeactivite.placeholder: '- Select an activity type -'
 column.champ: Field
 column.ckeditor: Rich text
 column.entite: Entity
@@ -227,6 +232,7 @@ common.datedesinscription: Unsubscribe date
 common.dateinscription: Registration date
 common.datepaiement: Payment date
 common.datevalidation: Validation date
+common.dayofweek: Day of week
 common.december: December
 common.deconnexion: 'You have been disconnected from the app. Please close your browser to completely close the session.'
 common.description: Description
@@ -250,6 +256,7 @@ common.facture: Invoice
 common.february: February
 common.fermer: "Close"
 common.format.activite.details: Activity format details
+common.forteFrequence: Time slot with high frequentation
 common.friday: Friday
 common.groups: Groups
 common.horaires.ouverture: Opening hours
@@ -329,6 +336,7 @@ common.saturday: Saturday
 common.select.emptyValue: "- Select a value -"
 common.september: September
 common.statut: Status
+common.subject: Subject
 common.suivant: Next
 common.sunday: Sunday
 common.tarif.gratuit: Free
@@ -389,11 +397,14 @@ creneau.list.preinscrit: Pending registration
 creneau.list.prochainCours: "Next lesson"
 creneau.list.reserver: "Subscribe"
 creneau.liste.titre: List of time slots
+creneau.notCreated: "The following time slots have not been created because they are in a closing period:"
 creneau.week.indisponible: No lessons are available today
 detail.inscription.commentaireannulation: Comment
 detail.inscription.motifannulation: Cancelation's reason
 detailscommande.list.title: Order details
 email.base_email.notification_destination_for: This TEST notification was for
+email.list.title: List of e-mails
+email.modifier.title: Edit email
 email.politesse: Hello,
 email.preinscription.confirmationDemande: Your pre-registration request has been taken into account.
 emailing.list.title: Manage e-mails
@@ -441,6 +452,7 @@ format.achat.carte.autorisation: Select the card to buy
 format.achat.carte.libelle: Card's Purchase
 format.autorisations.placeholder: '- No authorization selected -'
 format.autorisations: Required authorizations
+format.contactEncadrant: "Supervisors can be contacted"
 format.date.debut: Activity from
 format.date.effective.debut: Actual start date
 format.date.effective.fin: Actual end date
@@ -458,6 +470,7 @@ format.inscription.date.fin: to
 format.lieu.placeholder: '- Select a place -'
 format.lieu: Place
 format.niveau.sportif: Sporting level required
+format.niveau.sportif.detail: Sporting level detail
 format.payant: Is this activity a fee-based activity?
 format.profils.utilisateur.capacite: Number of places
 format.profils.utilisateur: Authorized users profiles
@@ -480,7 +493,7 @@ formatachatcarte.ajouter.succes: Card purchase format successfully added
 formatachatcarte.carte.placeholder: '- Choose a card -'
 formatachatcarte.modalites: Modality
 formatachatcarte.modifier.succes: Card purchase format successfully modified 
-formatachatcarte.supprimer.erreur: Impossible to delete this activity. There'are still link times slots to delte before
+formatachatcarte.supprimer.erreur: Impossible to delete this activity. There'are still link times slots to delete before
 formatachatcarte.supprimer.succes: Card purchase format successfully deleted
 formatachatcarte.title: Card Purchase
 formatachatcarte.validite: Valid until
@@ -587,6 +600,12 @@ lieu.supprimer.succes: Location successfully deleted
 lieu.visitevirtuelle.libelle: Virtual visit
 log.libelle: Log
 log.list.title: Log Management
+logoparametrable.actif.libelle: "Activate logo"
+logoparametrable.emplacement: "Logo placement"
+logoparametrable.image.libelle: Image
+logoparametrable.list.title: Logo
+logoparametrable.modifier.succes: "Logo successfully modified"
+logoparametrable.modifier.title: Modify a logo
 logopartenaire.ajouter.succes: "Partner successfully added"
 logopartenaire.ajouter.title: Add a partner
 logopartenaire.lien: Partner link
@@ -687,6 +706,15 @@ monPlanning.more.mail.titre: "Need to send a mail to the subscribers ?"
 monplanning.list.title: My schedule
 monplanning.more.appel.empty: No subscribers for this activity
 monplanning.more.mail.sucess: Mail send
+niveausportif.ajouter.succes: Sporting level added
+niveausportif.ajouter.title: Add a sporting level
+niveausportif.list.title: Sporting levels
+niveausportif.modifier.succes: Sporting level edited
+niveausportif.modifier.title: Edit a sporting level
+niveausportif.supprimer.erreur: Cannot deleter this sporting level
+niveausportif.supprimer.erreur.creneaux: The sporting level is related to time slots
+niveausportif.supprimer.erreur.formatsactivite: The sporting level is related to activity formats
+niveausportif.supprimer.succes: Sporitng level deleted successfully.
 outils.libelle: Tools
 paiement.bouton.commandes: 'See my order'
 paiement.cb.validation: Pay by card
@@ -708,15 +736,19 @@ paiement.validation.denied: Your payment of %montant% € has been refused. Find
 paiement.validation.success: Your payment of %montant% € has been validated.
 panier.libelle: Shopping Basket
 panier.vide: You cart is empty
+parcourir: Browse
 parametrage.adressefacturation: Billing adress
 parametrage.anneeUniversitaire: Academic year
 parametrage.facebook: Facebook link
 parametrage.facturation: Billing informations
 parametrage.instagram: Instagram link
 parametrage.libelleadresse: Adress label
+parametrage.mail: Mail Settings
 parametrage.mailcontact: Contact email
 parametrage.modifier.succes: Settings successfully modified 
 parametrage.modifier.title: Modifiy Settings
+parametrage.prefixmail: Email Perfix
+parametrage.signaturemail: Email Signature
 parametrage.reseauxsociaux: Social Networks
 parametrage.timerbds: Timer to pay for an order on Sports office (in hours)
 parametrage.timercb: Timer to pay for an order by card on Uca Sport (in minutes)
@@ -747,6 +779,15 @@ paybox.error.00033: "Country code of the IP address of the unauthorized buyer."
 paybox.error.00040: "Operation without 3-DSecure authentication, blocked by filter."
 paybox.error.001xx: "Payment refused by the authorization center."
 paybox.error.99999: "Operation pending validation by the issuer of the payment method."
+periodefermeture.ajouter.succes: Closing period added
+periodefermeture.ajouter.title: Add a closing period
+periodefermeture.list.title: Closing periods
+periodefermeture.modifier.succes: Closing period updated
+periodefermeture.modifier.title: Modify a closing period
+periodefermeture.datedeb: Period start date
+periodefermeture.datefin: Period end date
+periodefermeture.description: Description
+periodefermeture.supprimer.succes: Closing period removed
 preinscription.confirmation.message: Your registration demand was successfull, a confirmation email has been sent to you. Our team will treat you demand shortly.
 preinscription.confirmation.titre: Registration's Demand confirm
 preinscription.demande.validation.message: A pre-registration request was made by the following user
@@ -896,6 +937,8 @@ security.roles.ROLE_GESTION_HIGHLIGHT_LECTURE: Manage highlights (read only)
 security.roles.ROLE_GESTION_IMAGEFOND_ECRITURE: Manage Background pictures (read/write)
 security.roles.ROLE_GESTION_IMAGEFOND_LECTURE: Manage Background pictures (read only)
 security.roles.ROLE_GESTION_INSCRIPTION: Manage registrations
+security.roles.ROLE_GESTION_NIVEAUSPORTIF_ECRITURE: Manage sport levels (read/write)
+security.roles.ROLE_GESTION_NIVEAUSPORTIF_LECTURE: Manage sport levels (read only)
 security.roles.ROLE_GESTION_LOGOPARTENAIRE_ECRITURE: Manage partner (read/write)
 security.roles.ROLE_GESTION_LOGOPARTENAIRE_LECTURE: Manage partner (read only)
 security.roles.ROLE_GESTION_LOG_LECTURE: Manage Logs (read only)
@@ -961,6 +1004,7 @@ sitemap.connexion: Login
 sitemap.detailsAvoir.libelle: Credit note's details
 sitemap.detailscommande.informationscarte.modifiier: Edit card
 sitemap.detailscommande.libelle: Order details
+sitemap.email.libelle: Emails
 sitemap.emailing.libelle: Emailing
 sitemap.en: Translate to english
 sitemap.etablissement.libelle: Campus
@@ -987,6 +1031,7 @@ sitemap.listeinscriptionavalider.libelle: List of registrations to validate
 sitemap.listeinscriptionavaliderencadrant.libelle: My supervisor validations
 sitemap.listeinscriptionavalidergestionnaire.libelle: My manager validations
 sitemap.log.libelle: Logs
+sitemap.logoparametrable.libelle: Logos
 sitemap.logopartenaire.libelle: Partner 
 sitemap.menu: Menu
 sitemap.mescommandes.libelle: My orders
@@ -997,10 +1042,12 @@ sitemap.moncompte.changermotdepasse: Change password
 sitemap.moncompte.libelle: My Account
 sitemap.moncompte.modifier.libelle: Edit
 sitemap.monplanning.libelle: My schedule
+sitemap.niveausportif.libelle: Sporting levels
 sitemap.outils.libelle: Tools
 sitemap.panier.libelle: Basket
 sitemap.parametrage.libelle: Settings
 sitemap.parametrage: Settings
+sitemap.periodefermeture.libelle: Closing periods
 sitemap.preInscription.libelle: Make an account creation request
 sitemap.preInscription_confirmation: Confirmation
 sitemap.profilutilisateur.libelle: User profiles
@@ -1019,9 +1066,13 @@ sitemap.shnu.highlight.libelle: UHLS - Highlight
 sitemap.shnu.rubrique.libelle: UHLS - Headings
 sitemap.sporthautniveau.libelle: High-level sport
 sitemap.statistique.KPI.libelle: KPI
+sitemap.style.libelle: Style
+sitemap.style.preview: Preview
 sitemap.supprimer: Delete
 sitemap.tarif.libelle: Prices
 sitemap.texte.libelle: Texts
+sitemap.traduction.entite.libelle: Entity translations
+sitemap.traduction.grille: Grid
 sitemap.traduction.libelle: Translations
 sitemap.typeactivite.libelle: Types of activities
 sitemap.typeautorisation.libelle: Types of authorizations
@@ -1094,6 +1145,51 @@ statistique.utilisateur.homme: Man
 statistique.utilisateur.nonboursier: No-scolarship
 statistique.utilisateur.nonshnu: No SHNU
 statistique.utilisateur.shnu: SHNU
+style.background: Background Color
+style.color.danger: Danger Color
+style.color.navbar: Navbar and footer colors
+style.color.primary: Primary Color
+style.color.secondary: Secondary Color
+style.color.success: Success Color
+style.color.warning: Warning Color
+style.demo: Demo
+style.demo.buttons: Buttons
+style.demo.modals: Pop-ups
+style.demo.modals.activite: Activity-specific pop-ups
+style.demo.modals.activite.chargement: Loading pop-up
+style.demo.modals.bascule: Popup toggle in progress
+style.demo.modals.commande: Command-specific pop-ups
+style.demo.modals.commande.annulation: Cancel pop-up
+style.demo.modals.confirm: Confirmation pop-up
+style.demo.modals.common: Common pop-ups
+style.demo.modals.delete: Delete pop-up
+style.demo.modals.detailevent: Detail pop-up
+style.demo.modals.desinscription: Unsubscribe pop-up
+style.demo.modals.divers: Miscellaneous pop-ups
+style.demo.modals.evenement: Event-specific pop-ups
+style.demo.modals.inscription: Pop-ups specific to inscriptions
+style.demo.modals.inscription.ajoutpanier: Pop-ups specific to adding to cart
+style.demo.modals.inscription.annulation: Cancellation pop-up
+style.demo.modals.inscription.confirmationajoutpanier: Standard add to cart pop-up
+style.demo.modals.inscription.confirmationajoutpanier.case: Add to cart pop-up with checkbox
+style.demo.modals.inscription.confirmationajoutpanier.reservabilite: Pop-up for adding a reservability to the cart
+style.demo.modals.inscription.chargement: Pop-up loading
+style.demo.modals.inscription.error: Error popup
+style.demo.modals.inscription.validation: Pop-ups related to validations
+style.demo.modals.inscription.validation.article: Add to cart validation pop-up
+style.demo.modals.inscription.validation.encadrant: Pop-up waiting for validation by a supervisor
+style.demo.modals.inscription.validation.gestionnaire: Pop-up waiting for validation by a manager
+style.demo.modals.inscription.validation.panier: Final pop-up confirming the addition to cart
+style.demo.modals.map: Pop-up with map
+style.demo.titles: Titles
+style.foreground: Foreground Color
+style.hover: Lightness and color in hover
+style.hover.help: Percentage of additional lightness determining the color
+style.modifier.title: Edit Style
+style.preview.title: Preview
+style.shadow: Lightness and shadow color
+style.shadow.help: Percentage of additional liightness determining the color
+style.title: Style
 tarif.ajouter.succes: Price successfully added
 tarif.ajouter.title: Add a price
 tarif.gestion: Prices management
@@ -1129,6 +1225,7 @@ traduction.modifier.title: 'Edit an translation'
 traduction.pas.encore.traduit: Without translation
 traduction.tous: All
 translation.modifier.succes: Translation successfully modified
+traductionentite.list.title: "Entity translations"
 typeactivite.ajouter.succes: Type of activity successfully added
 typeactivite.ajouter.title: Add a type of activity
 typeactivite.gestion: Activity type management

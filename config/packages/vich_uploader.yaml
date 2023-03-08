@@ -8,6 +8,14 @@ vich_uploader:
             namer: vich_uploader.namer_uniqid
             # inject_on_load: false
             delete_on_update: true
+            delete_on_remove: true
+        
+        map_logo:
+            uri_prefix:         /upload/public/images/logos
+            upload_destination: '%kernel.project_dir%/public/upload/public/images/logos' 
+            namer: vich_uploader.namer_uniqid
+            # inject_on_load: false
+            delete_on_update: true
             delete_on_remove: true  
         
         utilisateur_document:

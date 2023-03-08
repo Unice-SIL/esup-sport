@@ -79,6 +79,15 @@ class ReservabiliteTest extends TestCase
     }
 
     /**
+     * @covers \App\Entity\Uca\Reservabilite::__clone
+     */
+    public function testClone()
+    {
+        $clonedReservabilite = clone $this->reservabilite;
+        $this->assertEqualsCanonicalizing($this->reservabilite->jsonSerializeProperties(), $clonedReservabilite->jsonSerializeProperties());
+    }
+
+    /**
      * @covers \App\Entity\Uca\Reservabilite::jsonSerializeProperties
      */
     public function testJsonSerializeProperties(): void

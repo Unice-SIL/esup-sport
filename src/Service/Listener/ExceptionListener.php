@@ -15,8 +15,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ExceptionListener
 {
@@ -45,7 +47,7 @@ class ExceptionListener
             $event->setResponse(new RedirectResponse($this->router->generate('security_login')));
         } elseif ($exception instanceof NotFoundHttpException && false !== strpos($exception->getMessage(), '/login')) {
             $event->setResponse(new RedirectResponse($this->router->generate('security_login')));
-        } elseif (!$exception instanceof NotFoundHttpException) {
+        } elseif (!$exception instanceof NotFoundHttpException && !$exception instanceof AccessDeniedHttpException) {
             if (!empty($this->exceptionReceiver)) {
                 // On clear les objets qui sont éventuellement persistés dans l'entité manager (pour éviter de les sauvegarder avec les logs)
                 $this->em->clear();

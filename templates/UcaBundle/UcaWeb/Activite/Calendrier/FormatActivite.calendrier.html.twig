@@ -64,7 +64,7 @@
 
 							{% for event in oneCaseData["data"] %}
 								<a tabindex="0" data-toggle="modal" class="cursor-pointer detail_creneau" data-target="#content_popover_{{ event.id }}" data-id="{{ event.id }}" data-format="{{ typeFormat }}" data-idformat="{{ formatActivite ? formatActivite.id : null }}">
-									<div class="{{event.serie is null ? '' : (event.serie.creneau.getInscriptionInformations(app.user).statut in ['complet'] ? 'bg-opacity-40' : '')}} bg-white mb-1 mt-1 p-1" 
+									<div class="{{event.serie is null or event.serie.creneau is null ? '' : (event.serie.creneau.getInscriptionInformations(app.user).statut in ['complet', 'profilinvalide', 'fortefrequence'] ? 'bg-opacity-40' : '')}} bg-white mb-1 mt-1 p-1" 
 									style="border-radius: 5px;">
 										<span class="color-dark-gray">
 											{{ event.dateDebut|date('H:i') }}

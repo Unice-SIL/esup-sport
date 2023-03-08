@@ -30,21 +30,6 @@ class ShnuRubriqueListenerTest extends WebTestCase
         $this->ordre = $em->getRepository(ShnuRubrique::class)->max('ordre');
     }
 
-    protected function tearDown(): void
-    {
-        $container = static::getContainer();
-        $em = $container->get(EntityManagerInterface::class);
-
-        $criteria = new Criteria();
-        $criteria->where(Criteria::expr()->gt('ordre', $this->ordre));
-
-        $listeRubriques = $em->getRepository(ShnuRubrique::class)->matching($criteria);
-        foreach ($listeRubriques as $rubrique) {
-            $em->remove($rubrique);
-        }
-        $em->flush();
-    }
-
     /**
      * @covers \App\Service\Listener\Entity\ShnuRubriqueListener::preFlush
      */

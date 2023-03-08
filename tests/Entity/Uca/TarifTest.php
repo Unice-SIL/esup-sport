@@ -4,14 +4,14 @@ namespace App\Tests\Entity\Uca;
 
 use App\Entity\Uca\MontantTarifProfilUtilisateur;
 use App\Entity\Uca\Tarif;
-use App\Repository\UtilisateurRepository;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use App\Entity\Uca\Utilisateur;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
  * @coversNothing
  */
-class TarifTest extends KernelTestCase
+class TarifTest extends TestCase
 {
     /**
      * @var Tarif
@@ -63,7 +63,14 @@ class TarifTest extends KernelTestCase
      */
     public function testGetMontantUtilisateur(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+        ;
 
         $montant = new MontantTarifProfilUtilisateur(
             $this->tarif,
@@ -84,7 +91,14 @@ class TarifTest extends KernelTestCase
      */
     public function testGetMontantUtilisateurEmpty(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+        ;
 
         $montantUtilisateur = $this->tarif->getMontantUtilisateur($user);
 
@@ -97,7 +111,14 @@ class TarifTest extends KernelTestCase
      */
     public function testGetTvaUtilisateur(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+        ;
 
         $montant = new MontantTarifProfilUtilisateur(
             $this->tarif,
@@ -106,7 +127,7 @@ class TarifTest extends KernelTestCase
         );
 
         // Pourcentage TVA qui permet d'obtenir 1.0 avec un montant de 10
-        $this->tarif->setTva(true)->setPourcentageTVA(11.11111111);
+        $this->tarif->setTva(true)->setPourcentageTVA(10);
         $this->tarif->addMontant($montant);
 
         $tvaUtilisateur = $this->tarif->getTvaUtilisateur($user);
@@ -120,7 +141,14 @@ class TarifTest extends KernelTestCase
      */
     public function testGetTvaUtilisateurEmpty(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('admin');
+        $user = (new Utilisateur())
+            ->setNom('admin')
+            ->setPrenom('admin')
+            ->setUsername('admin')
+            ->setSexe('M')
+            ->setEmail('admin@test.fr')
+            ->setEnabled(true)
+        ;
 
         $tvaUtilisateur = $this->tarif->getTvaUtilisateur($user);
 

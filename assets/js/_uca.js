@@ -81,7 +81,7 @@ _uca.calendrier = {};
  * Modifie la période de calendrier
  * @param: forNextPeriode, nbDays
  */
-_uca.calendrier.changePeriode = function(forNextPeriode, nbDays) {
+_uca.calendrier.changePeriode = function(forNextPeriode, nbDays, preview = false) {
     var date = new Date(currentDate.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$2/$1/$3"));
     var facteur = forNextPeriode ? 1 : -1;
 
@@ -102,20 +102,21 @@ _uca.calendrier.changePeriode = function(forNextPeriode, nbDays) {
     var options = { day: '2-digit', year: 'numeric', month: '2-digit' };
     currentDate = date.toLocaleDateString("fr-FR", options);
 
-    _uca.calendrier.loadData();
+    _uca.calendrier.loadData(preview);
 };
 
 /**
  * Function: loadData()
  * Charge les donnée du calendrier
  */
-_uca.calendrier.loadData = function() {
+_uca.calendrier.loadData = function(preview = false) {
     let api_url = Routing.generate('api_activite_creneau');
     let valueHeightDiv = [];
     let widthWindow = $(window).width();
     _uca.ajax.showLoader();
     $.post(api_url, {
         data: {
+            preview: preview,
             itemId: itemId,
             typeVisualisation: typeVisualisation,
             currentDate: currentDate,
@@ -156,9 +157,9 @@ _uca.calendrier.loadData = function() {
  * Change l'affichage du calendrier
  * @param: type
  */
-_uca.calendrier.changeTypeVisualisation = function(newTypeVisualisation) {
+_uca.calendrier.changeTypeVisualisation = function(newTypeVisualisation, preview = false) {
     typeVisualisation = newTypeVisualisation;
-    _uca.calendrier.loadData();
+    _uca.calendrier.loadData(preview);
 };
 
 
@@ -167,7 +168,7 @@ _uca.calendrier.listenClickBtnGetModalDetailCreneau = function() {
         $('#modal_container').empty('');
         const id = $(this).data('id');
         const typeFormat = $(this).data('format');
-        const idFormat = $(this).data('idformat');
+        const idFormat = $(this).data('idformat') ? $(this).data('idformat') : 0;
         const target = $(this).data('target');
         _uca.ajax.showLoader();
         $.ajax({

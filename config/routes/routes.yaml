@@ -32,7 +32,19 @@ bazinga_jstranslation:
 lexik_paybox:
     resource: '@LexikPayboxBundle/Resources/config/routing.yml'
     prefix: /{_locale}/
+    requirements:
+        _locale: '%lang.all%'
+    defaults:
+        _locale: '%lang.default%'
 
 gregwar_captcha_routing:
     resource: "@GregwarCaptchaBundle/Resources/config/routing/routing.yml"
     prefix: /_gcb
+
+lexik_translation_edition:
+    resource: "@LexikTranslationBundle/Resources/config/routing.yml"
+    prefix:   /{_locale}/UcaGest/Traduction/
+    requirements:
+        _locale: '%lang.all%'
+    defaults:
+        _locale: '%lang.default%'

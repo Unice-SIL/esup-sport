@@ -147,6 +147,18 @@ class Parametrage
      * @Assert\GreaterThan(value="0", message="parametrage.timer.zero")
      */
     private $timerPartenaire;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="string")
+     */
+    private $prefixMail;
+
+    /**
+     * @Gedmo\Versioned
+     * @ORM\Column(type="text")
+     */
+    private $signatureMail;
     //endregion
 
     //region Méthodes
@@ -525,5 +537,49 @@ class Parametrage
     public function getTimerPartenaire()
     {
         return $this->timerPartenaire;
+    }
+
+    /**
+     * Get the value of prefixMail
+     * @codeCoverageIgnore
+     */ 
+    public function getPrefixMail()
+    {
+        return $this->prefixMail;
+    }
+
+    /**
+     * Set the value of prefixMail
+     *
+     * @return  self
+     * @codeCoverageIgnore
+     */ 
+    public function setPrefixMail($prefixMail)
+    {
+        $this->prefixMail = $prefixMail;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of signatureMail
+     * @codeCoverageIgnore
+     */ 
+    public function getSignatureMail()
+    {
+        return $this->signatureMail;
+    }
+
+    /**
+     * Set the value of signatureMail
+     *
+     * @return  self
+     * @codeCoverageIgnore
+     */ 
+    public function setSignatureMail($signatureMail)
+    {
+        $this->signatureMail = $signatureMail;
+
+        return $this;
     }
 }

@@ -1,6 +1,9 @@
 <nav class="navbar navbar-expand-xl fixed-top navbar-dark bg-primary main-nav" role="navigation">
     <a class="navbar-brand" href="{{path('UcaWeb_Accueil')}}">
-        <img class="img-fluid rounded mb-3" alt="image_activite" src="{{ asset('images/logo.png') }}">
+        {% set image = logo('Entete') %}
+        {% if image.actif %}
+            <img class="img-fluid rounded mb-3" alt="image_activite" src="{{ asset('/upload/public/images/logos/' ~ image.image ) |  imagine_filter('header') }}">
+        {% endif %}
     </a>
     <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
         <span class="color-blanc menu_responsive">Menu</span>

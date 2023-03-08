@@ -538,7 +538,7 @@ a.dropdown-item:hover {
 }
 
 .dropdown-menu a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1) !important;
     border-radius: 5px;
 }
 
@@ -770,7 +770,7 @@ nav[aria-label="breadcrumb"] ol {
 .breadcrumb,
 .breadcrumb a {
     text-transform: uppercase;
-    color: $blanc;
+    color: $blanc !important;
     font-weight: 400;
     font-size: 0.75rem;
 }
@@ -863,7 +863,7 @@ nav[aria-label="breadcrumb"] ol {
     box-sizing: content-box;
     flex: 0 1 auto;
     font-size: 3rem;
-    color: $blanc;
+    color: $blanc !important;
     margin-right: 15px;
     margin-left: 15px;
     padding: 10px;
@@ -1058,6 +1058,7 @@ nav[aria-label="breadcrumb"] ol {
 }
 
 .activity-type a:hover {
+    color: $blanc;
     text-decoration: none;
     background: rgba(70, 174, 216, 0);
 }
@@ -1386,7 +1387,7 @@ select#selectDays {
 }
 
 .card-install .card-header a .fa-chevron-down {
-    color: $eerie-black;
+    color: $eerie-black !important;
     transform: rotateZ(-180deg);
     transition: 0.15s ease-in;
 }
@@ -1856,4 +1857,32 @@ legend {
 
 li[aria-disabled="true"] {
     display: none!important;
+}
+
+.bg-opacity-10{
+    opacity: 10%;
+}
+
+.bg-opacity-20{
+    opacity: 20%;
+}
+
+.bg-opacity-30{
+    opacity: 30%;
+}
+
+.bg-opacity-40{
+    opacity: 40%;
+}
+
+.bg-opacity-50{
+    opacity: 50%;
+}
+
+.bg-opacity-75{
+    opacity: 75%;
+}
+
+.bg-opacity-100{
+    opacity: 100%;
 }

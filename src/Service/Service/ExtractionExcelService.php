@@ -8,6 +8,7 @@
 namespace App\Service\Service;
 
 use App\Entity\Uca\DhtmlxEvenement;
+use App\Repository\LogoParametrableRepository;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
@@ -19,15 +20,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ExtractionExcelService
 {
+    private $logoRepo;
     private $spreadsheet;
     private $translator;
     private $writer;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(TranslatorInterface $translator, LogoParametrableRepository $logoRepo)
     {
         $this->spreadsheet = new Spreadsheet();
         $this->writer = new Xlsx($this->getSpreadsheet());
         $this->translator = $translator;
+        $this->logoRepo = $logoRepo;
     }
 
     public function setWorksheets(array $worksheetsList, $dateDebut, $dateFin)
@@ -41,13 +44,29 @@ class ExtractionExcelService
                 ->setTitle($title)
                 ->setCellValue('E3', 'DVU Sport')
             ;
-            $logo = new Drawing();
-            $logo
-                ->setName('Logo')
-                ->setPath('build/images/logo-UCA-large-transp.png')
-                ->setCoordinates('A1')
-                ->setWorksheet($worksheet, true)
-            ;
+
+            $gdImage = imagecreatetruecolor(1, 1);
+            try {
+                $logoImg = $this->logoRepo->findOneBy(['emplacement' => 'Exports Excel']);
+                if ($logoImg->getActif()) {
+                    $gdImage = imagecreatefrompng('upload/public/images/logos/'.$logoImg->getImage());
+                    imagesavealpha($gdImage, true);
+                }
+            } catch (\Exception $e) {
+            }
+
+            //En-tête du fichier excel
+            // $logo = new Drawing();
+            $logo = new MemoryDrawing();
+            $logo->setName('Logo');
+            $logo->setDescription('Logo');
+            // $logo->setPath('upload/public/images/logos/'.$this->logoRepo->findOneBy(['emplacement' => 'Exports Excel']));
+            $logo->setImageResource($gdImage);
+            $logo->setMimeType(MemoryDrawing::MIMETYPE_PNG);
+            $logo->setRenderingFunction(MemoryDrawing::RENDERING_PNG);
+            $logo->setCoordinates('A1');
+            $logo->setWorksheet($worksheet, true);
+
             $this->spreadsheet->addSheet($worksheet);
             if (null != $dateDebut and null != $dateFin) {
                 $worksheet->setCellValue('A6', $title.' du '.$dateDebut->format('d/m/Y').' au '.$dateFin->format('d/m/Y'));
@@ -162,20 +181,20 @@ class ExtractionExcelService
                     switch ($cmdDetail->getCommande()->getMoyenPaiement()) {
                         case 'cb': $cmd[11] = $montant;
 
-                        break;
+                            break;
 
                         case 'espece': $cmd[12] = $montant;
 
-                        break;
+                            break;
 
                         case 'cheque':
                             $cmd[13] = $montant;
                             $cmd[14] = $cmdDetail->getCommande()->getNumeroCheque();
 
-                        break;
+                            break;
 
                         case null:
-                        break;
+                            break;
                     }
                 } elseif ('PAYBOX' == $cmdDetail->getCommande()->getTypePaiement()) {
                     $cmd[9] = $montant;
@@ -221,7 +240,8 @@ class ExtractionExcelService
         return $this->spreadsheet;
     }
 
-    public function getExtractionListeInscription(DhtmlxEvenement $dhtmlxEvenement) {
+    public function getExtractionListeInscription(DhtmlxEvenement $dhtmlxEvenement)
+    {
         $inscriptions = [];
         $eventName = '';
 
@@ -280,17 +300,21 @@ class ExtractionExcelService
     {
         $styleArray = $this->setStyleArrayForExcel(true, 10);
 
-        $gdImage = imagecreatetruecolor(1,1);
+        $gdImage = imagecreatetruecolor(1, 1);
         try {
-            $gdImage = imagecreatefrompng('build/images/logo-UCA-large-transp.png');
-            imagesavealpha($gdImage,true);
-        } catch (\Exception $e) {}
+            $logoImg = $this->logoRepo->findOneBy(['emplacement' => 'Exports Excel']);
+            if ($logoImg->getActif()) {
+                $gdImage = imagecreatefrompng('upload/public/images/logos/'.$logoImg->getImage());
+                imagesavealpha($gdImage, true);
+            }
+        } catch (\Exception $e) {
+        }
         //En-tête du fichier excel
         // $logo = new Drawing();
         $logo = new MemoryDrawing();
         $logo->setName('Logo');
         $logo->setDescription('Logo');
-        // $logo->setPath('build/images/logo-UCA-large-transp.png');
+        // $logo->setPath('upload/public/images/logos/'.$this->logoRepo->findOneBy(['emplacement' => 'Exports Excel']));
         $logo->setImageResource($gdImage);
         $logo->setMimeType(MemoryDrawing::MIMETYPE_PNG);
         $logo->setRenderingFunction(MemoryDrawing::RENDERING_PNG);

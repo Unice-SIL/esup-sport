@@ -16,6 +16,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class RubriqueShnuControllerTest extends WebTestCase
@@ -119,6 +120,7 @@ class RubriqueShnuControllerTest extends WebTestCase
 
         $em->flush();
 
+        parent::tearDown();
         static::ensureKernelShutdown();
     }
 
@@ -183,7 +185,7 @@ class RubriqueShnuControllerTest extends WebTestCase
 
         if (null != $userEmail) {
             $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail($userEmail);
-            $this->client->loginUser($userTest);
+            $this->client->loginUser($userTest, 'app');
         }
         $route = str_replace('id_rubrique', $this->rubriqueShnuId + 1, $router->generate($route, $urlParameters));
         $this->client->request($method, $route);
@@ -195,8 +197,8 @@ class RubriqueShnuControllerTest extends WebTestCase
      */
     public function formulaireCreationDataProvider()
     {
-        $f_pdf = new UploadedFile(__DIR__.'../../../../fixtures/test.pdf', 'test.pdf');
-        $f_jpg = new UploadedFile(__DIR__.'../../../../fixtures/logo_atimic.jpg', 'logo_atimic.jpg');
+        $f_pdf = new UploadedFile(dirname(__DIR__, 3).'/fixtures/test.pdf', 'test.pdf');
+        $f_jpg = new UploadedFile(dirname(__DIR__, 3).'/fixtures/logo_atimic.jpg', 'logo_atimic.jpg');
 
         return [
             // Cas vide
@@ -230,7 +232,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('ucabundle_rubriqueshnu');
         $this->client->request(
@@ -251,7 +253,7 @@ class RubriqueShnuControllerTest extends WebTestCase
 
         if (null != $file && Response::HTTP_FOUND == $httpResponse) {
             $rubriqueASupprimer = static::getContainer()->get(ShnuRubriqueRepository::class)->findBy([], ['id' => 'DESC'], 1, 0)[0];
-            copy(__DIR__.'../../../../fixtures/image/'.$rubriqueASupprimer->getImage(), $file->getPathname());
+            copy(dirname(__DIR__, 3).'/fixtures/image/'.$rubriqueASupprimer->getImage(), $file->getPathname());
             $em = static::getContainer()->get(EntityManagerInterface::class);
             $em->remove($rubriqueASupprimer);
             $em->flush();
@@ -269,7 +271,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueSupprimer', ['id' => null]);
         $this->client->request('GET', $route);
@@ -290,7 +292,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueSupprimer', ['id' => 0]);
         $this->client->request('GET', $route);
@@ -326,7 +328,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueSupprimer', ['id' => $this->rubriqueShnuId]);
         $this->client->request('GET', $route);
@@ -366,7 +368,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueSupprimer', ['id' => $this->rubriqueShnuId + 2]);
         $this->client->request('GET', $route);
@@ -394,7 +396,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueSupprimer', ['id' => $this->rubriqueShnuId + 1]);
         $this->client->request('GET', $route);
@@ -414,8 +416,8 @@ class RubriqueShnuControllerTest extends WebTestCase
      */
     public function formulaireEditionDataProvider()
     {
-        $f_pdf = new UploadedFile(__DIR__.'../../../../fixtures/test.pdf', 'test.pdf');
-        $f_jpg = new UploadedFile(__DIR__.'../../../../fixtures/logo_atimic.jpg', 'logo_atimic.jpg');
+        $f_pdf = new UploadedFile(dirname(__DIR__, 3).'/fixtures/test.pdf', 'test.pdf');
+        $f_jpg = new UploadedFile(dirname(__DIR__, 3).'/fixtures/logo_atimic.jpg', 'logo_atimic.jpg');
 
         return [
             // Cas vide
@@ -452,7 +454,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $csrfToken = $this->client->getContainer()->get('security.csrf.token_manager')->getToken('ucabundle_rubriqueshnu');
         $this->client->request(
@@ -476,7 +478,7 @@ class RubriqueShnuControllerTest extends WebTestCase
             $this->assertEquals($rubriqueModifie->getLien(), $data['lien']);
 
             if (null != $file) {
-                copy(__DIR__.'../../../../fixtures/image/'.$rubriqueModifie->getImage(), $file->getPathname());
+                copy(dirname(__DIR__, 3).'/fixtures/image/'.$rubriqueModifie->getImage(), $file->getPathname());
             }
         }
     }
@@ -489,7 +491,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueModifierOrdre', ['id' => null, 'action' => 'monter']);
         $this->client->request('GET', $route);
@@ -504,7 +506,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $router = static::getContainer()->get(RouterInterface::class);
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $route = $router->generate('UcaGest_ShnuRubriqueModifierOrdre', ['id' => 0, 'action' => 'monter']);
         $this->client->request('GET', $route);
@@ -521,7 +523,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $idOrdre2 = $rubriqueRepo->findOneByOrdre(2)->getId();
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $router = static::getContainer()->get(RouterInterface::class);
         $route = $router->generate('UcaGest_ShnuRubriqueModifierOrdre', ['id' => $idOrdre1, 'action' => 'descendre']);
@@ -542,7 +544,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $idOrdre2 = $rubriqueRepo->findOneByOrdre(2)->getId();
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $router = static::getContainer()->get(RouterInterface::class);
         $route = $router->generate('UcaGest_ShnuRubriqueModifierOrdre', ['id' => $idOrdre1, 'action' => 'monter']);
@@ -562,7 +564,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $ordreMax = $rubriqueRepo->max('ordre');
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 1)->getOrdre(), $ordreMax - 1);
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 2)->getOrdre(), $ordreMax);
@@ -585,7 +587,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $ordreMax = $rubriqueRepo->max('ordre');
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 1)->getOrdre(), $ordreMax - 1);
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 2)->getOrdre(), $ordreMax);
@@ -608,7 +610,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $ordreMax = $rubriqueRepo->max('ordre');
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId)->getOrdre(), $ordreMax - 2);
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 1)->getOrdre(), $ordreMax - 1);
@@ -633,7 +635,7 @@ class RubriqueShnuControllerTest extends WebTestCase
         $ordreMax = $rubriqueRepo->max('ordre');
 
         $userTest = static::getContainer()->get(UtilisateurRepository::class)->findOneByEmail('user_admin_complet@test.fr');
-        $this->client->loginUser($userTest);
+        $this->client->loginUser($userTest, 'app');
 
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId)->getOrdre(), $ordreMax - 2);
         $this->assertEquals($rubriqueRepo->findOneById($this->rubriqueShnuId + 1)->getOrdre(), $ordreMax - 1);

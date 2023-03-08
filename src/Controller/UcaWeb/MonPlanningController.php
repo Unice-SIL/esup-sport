@@ -134,6 +134,7 @@ class MonPlanningController extends AbstractController
             $inscriptions = $dhtmlxEvenement->getFormatSimple()->getAllInscriptions();
         }
         $destinataires = [];
+        $translator = $this->get('translator');
         foreach ($inscriptions as $key => $inscription) {
             $user = $inscription->getUtilisateur();
             if ($user->getEmail()) {
@@ -149,16 +150,15 @@ class MonPlanningController extends AbstractController
         $validation = $formMail->isSubmitted() && $formMail->isValid();
         if ($request->isMethod('POST') && $validation) {
             $message = $formMail->getData()['mail'];
-            $objet = $dhtmlxEvenement->getFormatActiviteLibelle().' : '.date_format($dhtmlxEvenement->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($dhtmlxEvenement->getDateFin(), 'Y/m/d H:i:s');
-            $objet .= ' '.$formMail->getData()['objet'];
+            $objet = $formMail->getData()['objet'];
             $setTo = $formMail->getData()['destinataires'];
             $copie = $this->getUser()->getEmail();
 
             $mailer->sendMailWithTemplate(
-                $objet,
+                null,
                 $setTo,
-                'UcaBundle/Email/Calendrier/MailPourTousLesInscripts.html.twig',
-                ['message' => $message],
+                'MailPourTousLesInscripts',
+                ['objet' => $objet, 'message' => $message, 'formatActivite' => $dhtmlxEvenement->getFormatActiviteLibelle(), 'dateDebut' => date_format($dhtmlxEvenement->getDateDebut(), 'Y/m/d H:i:s'), 'dateFin' => date_format($dhtmlxEvenement->getDateFin(), 'Y/m/d H:i:s')],
                 $copie
             );
 

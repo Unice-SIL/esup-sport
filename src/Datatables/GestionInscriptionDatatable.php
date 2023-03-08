@@ -129,7 +129,7 @@ class GestionInscriptionDatatable extends AbstractTranslatedDatatable
                     ->leftJoin('i2.commandeDetails', 'comd')
                     ->leftJoin('comd.commande', 'com')
                     ->andWhere('i2.id = inscription.id')
-                    ->andWhere('com.statut = \'annule\'')
+                    ->andWhere('com.statut = \'termine\'')
                     ->getDQL()
                 .')',
                 'visible' => false,

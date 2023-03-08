@@ -118,10 +118,10 @@ class EmailingController extends AbstractController
                 $setTo[] = $destinataire;
             }
             $mailer->sendMailWithTemplate(
-                $objet,
+                null,
                 $setTo,
-                'UcaBundle/Email/Contact/ContactEmailing.html.twig',
-                ['message' => $message]
+                'ContactEmailing',
+                ['message' => $message, 'objet' => $objet]
             );
 
             return new JsonResponse([

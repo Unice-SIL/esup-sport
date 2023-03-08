@@ -27,7 +27,7 @@ class HighlightTest extends WebTestCase
      */
     public function testSetImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $highlight = (new Highlight())->setImageFile($file);
 
         $this->assertInstanceOf(File::class, $highlight->getImageFile());

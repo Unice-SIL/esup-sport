@@ -75,7 +75,10 @@
 {% set array = [] %}
 
 <page backbottom="10mm" backleft="10mm" backright="10mm" backtop="10mm">
-	<img alt="image_activite" src="{{ app.request.schemeAndHttpHost ~ app.request.baseUrl ~ '/build/images/logo_black.png'}}" style="align:left;"/>
+	{% set image = logo('PDF Générés') %}
+	{% if image.actif %}
+		<img alt="image_activite" src="{{ asset('/upload/public/images/logos/' ~ image.image) | imagine_filter('logo_pdf') }}" style="align:left;"/>
+	{% endif %}
 	
 	<table style="vertical-align:top;width:100%;margin-top:70px;">
 		<tr>

@@ -2,9 +2,13 @@ fos_ck_editor:
     configs:
         my_config:
             toolbar: 'my_toolbar_1'
+            extraPlugins: 'placeholder_select'
+            placeholder_select: 
+                placeholders: ['Firstname', 'LastName']
     toolbars:
         configs:
             # my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Image", "Table" ], "/", [ "Format", "-", "Maximize" ] ]
-            my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Table" ], "/", [ "Format", "-", "Maximize" ] ]
+            my_toolbar_1: [ [ "Source", "-", "Cut", "Copy", "Paste", "-", "SelectAll" ], "/", [ "Bold", "Italic", "Subscript",  "-", "RemoveFormat", "-", "NumberedList", "BulletedList", "-", "Outdent", "Indent", "-", "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-", "Link", "Unlink", "Anchor", "-", "Table" ], "/", [ "Format", "-", "Maximize", "-", "placeholder_select" ]  ]
+            subject_mail: [ [ "Cut", "Copy", "Paste", "-", "SelectAll", "-", "placeholder_select" ] ]
     base_path: "ckeditor/"
     js_path:   "ckeditor/ckeditor.js"

@@ -26,7 +26,7 @@
                                     </p>
                                 {% endif %}
                                 {% if not autorisations is empty %}
-                                    <h3 class="text-uppercase fs-16 color-blue">{{ 'formatactivite.fraiscomplementaires.cotisationscartesrequises' | trans }}</h3>
+                                    <h3 class="text-uppercase fs-16 color-primary">{{ 'formatactivite.fraiscomplementaires.cotisationscartesrequises' | trans }}</h3>
                                     {% for autorisation in autorisations %}
                                         {% set codeComportement = autorisation.comportement.codeComportement %}
                                         {% if codeComportement == 'carte' or codeComportement == 'cotisation' %}

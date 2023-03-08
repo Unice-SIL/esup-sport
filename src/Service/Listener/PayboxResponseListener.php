@@ -55,9 +55,9 @@ class PayboxResponseListener
                 if ('test' !== $_ENV['APP_ENV']) {
                     // @codeCoverageIgnoreStart
                     $this->mailer->sendMailWithTemplate(
-                        'Erreur retour paiement PAYBOX',
+                        null,
                         Parametrage::getMailContact(),
-                        '@Uca/Email/Commande/ErreurMontantPaybox.html.twig',
+                        'ErreurMontantPaybox',
                         ['montantPaybox' => ($montant / 100), 'commande' => $commande]
                     );
                     // @codeCoverageIgnoreEnd

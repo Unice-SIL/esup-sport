@@ -73,10 +73,10 @@ class TimeoutService
                 $this->logger->info('TIMEOUT FAILED - Inscription, La commande liée à l\'inscription est terminée impossible d\'annuler l\'inscription. Info inscription : id => '.$inscription->getId().', statut => '.$inscription->getStatut());
 
                 $this->mailer->sendMailWithTemplate(
-                    'TIMEOUT : erreur annulation inscription',
+                    null,
                     Parametrage::getMailContact(),
-                    '@Uca/Email/Commande/ErreurAnnulationInscription.html.twig',
-                    ['inscription' => $inscription]
+                    'ErreurAnnulationInscription',
+                    ['id_inscription' => $inscription->getId()]
                 );
             // @codeCoverageIgnoreEnd
             } else {

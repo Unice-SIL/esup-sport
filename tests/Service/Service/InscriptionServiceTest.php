@@ -28,16 +28,23 @@ use App\Entity\Uca\Utilisateur;
 use App\Form\InscriptionType;
 use App\Repository\ComportementAutorisationRepository;
 use App\Repository\GroupeRepository;
+use App\Repository\ParametrageRepository;
+use App\Repository\ProfilUtilisateurRepository;
 use App\Repository\UtilisateurRepository;
+use App\Service\Common\Parametrage;
 use App\Service\Service\InscriptionService;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Repository\ProfilUtilisateurRepository;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class InscriptionServiceTest extends WebTestCase
@@ -51,8 +58,19 @@ class InscriptionServiceTest extends WebTestCase
     {
         $client = static::createClient();
         $container = static::getContainer();
+        $session = static::getContainer()->get('session.factory')->createSession();
+        $request = new Request();
+        $request->setSession($session);
+        static::getContainer()->get(RequestStack::class)->push($request);
         $this->em = $container->get(EntityManagerInterface::class);
 
+        $event = new RequestEvent(
+            static::getContainer()->get(HttpKernelInterface::class),
+            $request,
+            null
+        );
+        $param = new Parametrage($container->get(ParametrageRepository::class));
+        $param->onKernelRequest($event);
         $this->utilisateur = (new Utilisateur())
             ->setPrenom('user')
             ->setNom('name')
@@ -96,7 +114,7 @@ class InscriptionServiceTest extends WebTestCase
         $statut = new StatutUtilisateur();
         $this->utilisateur->setStatut($statut);
 
-        $client->loginUser($this->utilisateur);
+        $client->loginUser($this->utilisateur, 'app');
 
         $this->inscriptionService = $container->get(InscriptionService::class);
         $this->inscriptionService->setInscription($this->inscription);
@@ -111,7 +129,7 @@ class InscriptionServiceTest extends WebTestCase
             ->setImage('vide')
         ;
         $this->activite = (new Activite())
-            ->setLibelle(('Activite tests'))
+            ->setLibelle('Activite tests')
             ->setClasseActivite($this->classeActivite)
             ->setImage('vide')
             ->setDescription('Test')
@@ -251,19 +269,6 @@ class InscriptionServiceTest extends WebTestCase
         $this->em->flush();
     }
 
-    protected function tearDown(): void
-    {
-        $this->em->clear();
-
-        $container = static::getContainer();
-        $this->em->remove($container->get(UtilisateurRepository::class)->find($this->utilisateurGestionnaire->getId()));
-        $this->em->remove($container->get(GroupeRepository::class)->find($this->goupeGestionnaire->getId()));
-        $this->em->remove($container->get(ProfilUtilisateurRepository::class)->find($this->utilisateurGestionnaire->getProfil()->getId()));
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
      * @covers \App\Service\Service\InscriptionService::getFormulaire
      */
@@ -296,9 +301,9 @@ class InscriptionServiceTest extends WebTestCase
     }
 
     /**
-     * @covers \App\Service\Service\InscriptionService::getComfirmationPanier
+     * @covers \App\Service\Service\InscriptionService::getConfirmationPanier
      */
-    public function testGetComfirmationPanier(): void
+    public function testGetConfirmationPanier(): void
     {
         $commande = new Commande($this->utilisateur);
         $commandeDetail = new CommandeDetail($commande, 'inscription', $this->inscription);
@@ -306,10 +311,10 @@ class InscriptionServiceTest extends WebTestCase
         $arrayAttendu = [
             'itemId' => null,
             'statut' => '0',
-            'html' => '<divaria-hidden="true"class="modalz-index-topfade"id="modalInscription"role="dialog"tabindex="-1"><divclass="modal-dialog"role="document"><divclass="modal-content"><divclass="modal-headerd-flexjustify-content-centertext-center"><h2aria-labelledby="modalInscription"class="modal-titlefs-24hide-border-titlemt-5mt-md-0">ADDTOTHEBASKET</h2><buttontype="button"class="close"data-dismiss="modal"aria-label="Close"><divclass="image-presentationimage-remove"aria-hidden="true"></div></button></div><divclass="modal-body"><div><h3></h3><p></p><p>0&nbsp;€</p></div></div><divclass="modal-footer"><buttonclass="btnbtn-outline-primary"data-dismiss="modal"type="button">Continueonthewebsite</button><aclass="btnbtn-primary"href="/fr/UcaWeb/Panier"type="button">Seebasket</a></div></div></div></div>',
+            'html' => '<divaria-hidden="true"class="modalz-index-topfade"id="modalInscription"role="dialog"tabindex="-1"><divclass="modal-dialog"role="document"><divclass="modal-content"><divclass="modal-headerd-flexjustify-content-centertext-center"><h2aria-labelledby="modalInscription"class="modal-titlefs-24hide-border-titlemt-5mt-md-0">ADDTOTHEBASKET</h2><buttontype="button"class="close"data-dismiss="modal"aria-label="Close"><divclass="image-presentation"aria-hidden="true"><svgwidth="41"height="41"><usehref="/build/images/remove.svg#remove"></use></svg></div></button></div><divclass="modal-body"><div><h3></h3><p></p><p>0&nbsp;€</p></div></div><divclass="modal-footer"><buttonclass="btnbtn-outline-primary"data-dismiss="modal"type="button">Continueonthewebsite</button><aclass="btnbtn-primary"href="/fr/UcaWeb/Panier"type="button">Seebasket</a></div></div></div></div>',
             'maxCreneauAtteint' => false,
         ];
-        $array = $this->inscriptionService->getComfirmationPanier([$commandeDetail]);
+        $array = $this->inscriptionService->getConfirmationPanier([$commandeDetail]);
         $array['html'] = str_replace([' ', "\n"], '', $array['html']);
 
         $this->assertEquals($arrayAttendu, $array);

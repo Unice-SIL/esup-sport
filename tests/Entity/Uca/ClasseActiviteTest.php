@@ -71,7 +71,7 @@ class ClasseActiviteTest extends TestCase
      */
     public function testSetImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $this->classeActivite->setImageFile($file);
 
         $this->assertEquals($file, $this->classeActivite->getImageFile());

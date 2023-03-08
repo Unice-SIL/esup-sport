@@ -29,6 +29,7 @@ Encore
     .addEntry('scheduler', './assets/js/scheduler/scheduler.js')
     .addEntry('creneau', './assets/js/creneau/main.js')
     .addEntry('calendar', './assets/js/calendar/main.js')
+    .addEntry('style_form', './assets/js/style/form.js')
 
 .addEntry('cssGest', './assets/css/globalGest.scss')
     .addEntry('cssWeb', './assets/css/globalWeb.scss')
@@ -88,7 +89,7 @@ Encore
 .copyFiles([{
         from: './assets/images',
         to: 'images/[path][name].[ext]',
-        pattern: /\.(ico|png|jpg|jpeg|gif)$/
+        pattern: /\.(ico|png|jpg|jpeg|gif|svg)$/
     },
     { from: './vendor/friendsofsymfony/ckeditor-bundle/src/Resources/public', to: 'ckeditor/[path][name].[ext]', pattern: /\.(js|css)$/, includeSubdirectories: false },
     { from: './vendor/friendsofsymfony/ckeditor-bundle/src/Resources/public/adapters', to: 'ckeditor/adapters/[path][name].[ext]' },

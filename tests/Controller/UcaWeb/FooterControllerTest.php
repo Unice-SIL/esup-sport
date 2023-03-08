@@ -6,12 +6,12 @@ use App\Entity\Uca\Groupe;
 use App\Entity\Uca\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class FooterControllerTest extends WebTestCase
@@ -54,17 +54,6 @@ class FooterControllerTest extends WebTestCase
         $this->em->flush();
     }
 
-    protected function tearDown(): void
-    {
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_acceptees@test.fr'));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_refusees@test.fr'));
-        $this->em->remove($this->em->getRepository(Groupe::class)->findOneByLibelle('goupe_user_non_admin'));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
      * @covers \App\Controller\UcaWeb\FooterController::DonneesPersonnellesAction
      */
@@ -104,7 +93,7 @@ class FooterControllerTest extends WebTestCase
 
         // User connecté avec CGV acceptée
         $user_accepted = $this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_acceptees@test.fr');
-        $this->client->loginUser($user_accepted);
+        $this->client->loginUser($user_accepted, 'app');
         $route = $this->router->generate('UcaWeb_CGV');
         $crawler = $this->client->request('GET', $route);
 
@@ -116,7 +105,7 @@ class FooterControllerTest extends WebTestCase
 
         // // User connecté avec CGV refusée
         $user_refused = $this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_refusees@test.fr');
-        $this->client->loginUser($user_refused);
+        $this->client->loginUser($user_refused, 'app');
         $route = $this->router->generate('UcaWeb_CGV');
         $crawler = $this->client->request('GET', $route);
         $checkboxCgv = $crawler->filter('label:contains("J’ai pris connaissance et j’accepte les conditions générales de vente")');
@@ -129,7 +118,7 @@ class FooterControllerTest extends WebTestCase
     public function testPostRouteCGVRefusees()
     {
         $user_refused = $this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_refusees@test.fr');
-        $this->client->loginUser($user_refused);
+        $this->client->loginUser($user_refused, 'app');
         $route = $this->router->generate('UcaWeb_CGV');
         $this->client->request('POST', $route, ['UtilisateurCgvType' => ['save' => '', '_token' => static::getContainer()->get('security.csrf.token_manager')->getToken('UtilisateurCgvType')->getValue()]]);
         $response = $this->client->getResponse()->getContent();
@@ -144,7 +133,7 @@ class FooterControllerTest extends WebTestCase
     {
         $route = $this->router->generate('UcaWeb_CGV');
         $user_accepted = $this->em->getRepository(Utilisateur::class)->findOneByEmail('user_cgv_refusees@test.fr');
-        $this->client->loginUser($user_accepted);
+        $this->client->loginUser($user_accepted, 'app');
         $this->client->request('POST', $route, ['UtilisateurCgvType' => ['cgvAcceptees' => true, 'save' => '', '_token' => static::getContainer()->get('security.csrf.token_manager')->getToken('UtilisateurCgvType')->getValue()]]);
         $response = $this->client->getResponse()->getContent();
         $this->assertResponseIsSuccessful();

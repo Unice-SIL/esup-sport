@@ -2,7 +2,10 @@
 	<div class="col-12 col-md-6">
 		<div class="text-center py-3">
 			<div class="w-100">
-				<img class="img-fluid rounded mb-3" alt="logo UCA" src="{{ asset('images/logo-UCA-large-transp.png') }}">
+				{% set image = logo('Ecran de connexion') %}
+				{% if image.actif %}
+					<img class="img-fluid rounded mb-3" alt="logo UCA" src="{{ asset('/upload/public/images/logos/' ~ image.image ) | imagine_filter('login_screen') }}">
+				{% endif %}
 			</div>
 		</div>
 		{% if error %}

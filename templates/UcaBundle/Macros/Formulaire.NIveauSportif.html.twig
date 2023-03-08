@@ -1,0 +1,14 @@
+{% macro afficherDetailNiveauSportif(form, profilName ) %}
+	{% if profilName == null %}
+		{% set profilName = "nouvelleLigne" %}
+	{% endif %}
+	<div class="row mb-2" id="{{ profilName }}">
+		<div class="col-sm-2 col-lg-2 mt-2">
+				{{ form_label(form, profilName) }}
+		</div>
+		<div class="col-sm-10 col-lg-10">
+			{{ form_widget(form) }}
+		</div>
+	</div>
+	
+{% endmacro %}

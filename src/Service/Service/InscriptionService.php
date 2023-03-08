@@ -16,8 +16,11 @@ use App\Repository\CommandeDetailRepository;
 use App\Repository\EntityRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\Common\MailService;
+use App\Service\Common\Parametrage;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 
@@ -29,19 +32,22 @@ class InscriptionService
     private $inscription;
     private $mailer;
     private $utilisateurRepository;
-    private $commandeDetailRepository;
+    private $request;
+    private $router;
 
     /**
      * @codeCoverageIgnore
      */
-    public function __construct(EntityManagerInterface $em, Environment $twig, Security $security, MailService $mailer, UtilisateurRepository $utilisateurRepository, CommandeDetailRepository $commandeDetailRepository)
+    public function __construct(EntityManagerInterface $em, Environment $twig, Security $security, MailService $mailer, 
+    UtilisateurRepository $utilisateurRepository, RequestStack $request, RouterInterface $router)
     {
         $this->em = $em;
         $this->twig = $twig;
         $this->user = $security->getUser();
         $this->mailer = $mailer;
         $this->utilisateurRepository = $utilisateurRepository;
-        $this->commandeDetailRepository = $commandeDetailRepository;
+        $this->request = $request;
+        $this->router = $router;
     }
 
     /**
@@ -130,7 +136,7 @@ class InscriptionService
         return $articles;
     }
 
-    public function getComfirmationPanier($articles)
+    public function getConfirmationPanier($articles)
     {
         $maxCreneauAtteint = $this->user->nbCreneauMaximumAtteint();
         $twigConfig['articles'] = $articles;
@@ -147,45 +153,63 @@ class InscriptionService
     public function envoyerMailInscriptionNecessitantValidation()
     {
         if (in_array($this->inscription->getStatut(), ['attentevalidationencadrant', 'attentevalidationgestionnaire'])) {
+            $listeEncadrants = '';
+            if($this->inscription->getStatut() == 'attentevalidationencadrant'){
+                foreach($this->inscription->getItem()->getEncadrants() as $encadrant){
+                    $listeEncadrants .= '</br><span>'.
+                    $encadrant->getPrenom().' '.$encadrant->getNom().' '.($encadrant->getEmail())
+                    .'</span>';
+                }
+            }
             $this->mailer->sendMailWithTemplate(
-                'Inscription',
+                null,
                 $this->inscription->getUtilisateur()->getEmail(),
-                'UcaBundle/Email/Inscription/InscriptionAvecValidation.html.twig',
-                ['inscription' => $this->inscription]
+                'InscriptionAvecValidation',
+                ['inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription]), 
+                'date' => $this->inscription->getDate()->format(date("d/m/Y à H:i")), 'listeEncadrants' => $listeEncadrants]
             );
 
             $destinataires = [];
             if ('attentevalidationencadrant' == $this->inscription->getStatut()) {
+                $statut = 'qu\'encadrant.';
                 $listUser = $this->inscription->getItem()->getEncadrants();
                 foreach ($listUser as $user) {
                     $destinataires[] = $user->getEmail();
                 }
             } elseif ('attentevalidationgestionnaire' == $this->inscription->getStatut()) {
+                $statut = 'que gestionnaire.';
                 $listUser = $this->utilisateurRepository->findByRole('ROLE_GESTIONNAIRE_VALIDEUR_INSCRIPTION');
                 foreach ($listUser as $user) {
                     $destinataires[] = $user['email'];
                 }
             }
-
+            $lienInscription = $this->router->generate('UcaWeb_InscriptionAValiderVoir', ['id' => $this->inscription->getId()]);
             $this->mailer->sendMailWithTemplate(
-                'Demande d\'inscription',
+                null,
                 $destinataires,
-                'UcaBundle/Email/Inscription/InscriptionDemandeValidation.html.twig',
-                ['inscription' => $this->inscription]
+                'InscriptionDemandeValidation',
+                ['date' => $this->inscription->getDate()->format(date("d/m/Y à H:i")), 'inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription]),
+                'prenom' => $this->inscription->getUtilisateur()->getPrenom(),'nom' => $this->inscription->getUtilisateur()->getNom(),'mail' => $this->inscription->getUtilisateur()->getEmail(),
+                'lienInscription' => $this->request->getCurrentRequest()->getSchemeAndHttpHost().$lienInscription,
+                'statut' => $statut]
             );
         } elseif ('attenteajoutpanier' == $this->inscription->getStatut()) {
+            $lienMesInscriptions = $this->router->generate('UcaWeb_MesInscriptions');
             $this->mailer->sendMailWithTemplate(
-                'Demande d\'inscription validée',
+                null,
                 $this->inscription->getUtilisateur()->getEmail(),
-                'UcaBundle/Email/Inscription/InscriptionValidee.html.twig',
-                ['inscription' => $this->inscription]
+                'InscriptionValidee',
+                ['date' => $this->inscription->getDate()->format(date("d/m/Y à H:i")), 'inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription]),
+                'lienInscription' => $this->request->getCurrentRequest()->getSchemeAndHttpHost().$lienMesInscriptions,
+                'timerPanierApresValidation' => Parametrage::getTimerPanierApresValidation() ,'timerPanier' => Parametrage::getTimerPanier()]
             );
         } elseif ('annule' == $this->inscription->getStatut()) {
             $this->mailer->sendMailWithTemplate(
-                'Demande d\'inscription refusée',
+                null,
                 $this->inscription->getUtilisateur()->getEmail(),
-                'UcaBundle/Email/Inscription/InscriptionRefusee.html.twig',
-                ['inscription' => $this->inscription]
+                'InscriptionRefusee',
+                ['date' => $this->inscription->getDate()->format(date("d/m/Y à H:i")), 'inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription]),
+                'commentaireAnnulation' => $this->inscription->getCommentaireAnnulation() , 'motifAnnulation' => $this->inscription->getMotifAnnulation()]
             );
         }
     }
@@ -193,10 +217,10 @@ class InscriptionService
     public function mailDesinscription()
     {
         $this->mailer->sendMailWithTemplate(
-            'Désinscription',
+            null,
             $this->inscription->getUtilisateur()->getEmail(),
-            'UcaBundle/Email/Inscription/Desinscription.html.twig',
-            ['inscription' => $this->inscription]
+            'Desinscription',
+            ['inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription])]
         );
     }
 
@@ -208,10 +232,17 @@ class InscriptionService
             foreach ($partenaires as $partenaire) {
                 $utilisateur = $utilisateurRepository->findOneByEmail($partenaire);
                 $this->mailer->sendMailWithTemplate(
-                    'Inscription avec partenaire',
+                    null,
                     $partenaire,
-                    'UcaBundle/Email/Inscription/InscriptionPartenaire.html.twig',
-                    ['inscription' => $this->inscription, 'utilisateur' => $utilisateur]
+                    'InscriptionPartenaire',
+                    [
+                    'inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $this->inscription]),
+                    'prenom' => $this->inscription->getUtilisateur()->getPrenom(), 'nom' => $this->inscription->getUtilisateur()->getNom(),
+                    'formatActivite' => $this->inscription->getFormatActivite()->getLibelle(), 'dateDebut' => $this->inscription->getReservabilite()->getEvenement()->getDateDebut()->format(date("H:i")), 
+                    'dateFin' => $this->inscription->getReservabilite()->getEvenement()->getDateFin()->format(date("H:i")),
+                    'etablissement' => $this->inscription->getReservabilite()->getRessource()->getEtablissementLibelle(), 'ressource' => $this->inscription->getReservabilite()->getRessource()->getLibelle(), 
+                    'evenement' => $this->inscription->getReservabilite()->getEvenement()->getDateDebut()->format(date("d/m/Y")),
+                    'lienInscription' => $this->request->getCurrentRequest()->getSchemeAndHttpHost().$this->router->generate('UcaWeb_InscriptionAvecPartenaire', ['id' => $this->inscription->getId()])]
                 );
             }
             $this->em->flush();
@@ -282,10 +313,10 @@ class InscriptionService
             foreach ($commandePartenaires as $commandePartenaire) {
                 $commandePartenaire->changeStatut('annule', ['motifAnnulation' => 'annulationpartenaire', 'commentaireAnnulation' => null, 'em' => $this->em]);
                 $this->mailer->sendMailWithTemplate(
-                    'Désinscription partenaire',
+                    null,
                     $commandePartenaire->getUtilisateur()->getEmail(),
-                    'UcaBundle/Email/Inscription/DesinscriptionPartenaire.html.twig',
-                    ['commande' => $commandePartenaire, 'inscription' => $inscription]
+                    'DesinscriptionPartenaire',
+                    ['inscription' => $this->twig->render('UcaBundle/Datatables/Column/InscriptionDataColumn.html.twig', ['row' => $inscription])]
                 );
             }
         } elseif ($inscription->getEstPartenaire()) { // sinon on remet les inscriptions au statut attentepartenaire

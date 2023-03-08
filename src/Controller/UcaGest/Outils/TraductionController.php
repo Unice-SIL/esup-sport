@@ -21,7 +21,7 @@ use Sg\DatatablesBundle\Datatable\DatatableFactory;
 use Sg\DatatablesBundle\Response\DatatableResponse;
 
 /**
- * @Route("UcaGest/Traduction")
+ * @Route("UcaGest/TraductionEntite")
  * @Isgranted("ROLE_GESTION_TRADUCTION_LECTURE")
  */
 class TraductionController extends AbstractController
@@ -46,7 +46,7 @@ class TraductionController extends AbstractController
 
             return $responseService->getResponse(true, false, false);
         }
-        $twigConfig['codeListe'] = 'Traduction';
+        $twigConfig['codeListe'] = 'TraductionEntite';
         $twigConfig['noAddButton'] = true;
 
         return $this->render('UcaBundle/Common/Liste/Datatable.html.twig', $twigConfig);

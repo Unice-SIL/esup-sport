@@ -8,6 +8,8 @@ use App\Repository\UtilisateurRepository;
 use App\Service\Securite\GestionnaireUtilisateurShibboleth;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
@@ -22,6 +24,10 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
 
     protected function setUp(): void
     {
+        $session = static::getContainer()->get('session.factory')->createSession();
+        $request = new Request();
+        $request->setSession($session);
+        static::getContainer()->get(RequestStack::class)->push($request);
         $this->gestionnaire = static::getContainer()->get(GestionnaireUtilisateurShibboleth::class);
     }
 
@@ -34,7 +40,8 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
 
         $gestionnaire = new GestionnaireUtilisateurShibboleth(
             $container->get(EntityManagerInterface::class),
-            $container->get(UtilisateurRepository::class)
+            $container->get(UtilisateurRepository::class),
+            $container->get(RequestStack::class)
         );
 
         $this->assertInstanceOf(GestionnaireUtilisateurShibboleth::class, $gestionnaire);
@@ -64,7 +71,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
     {
         return [
             [[
-                'eppn' => '1234',
+                'eppn' => 'test-1234',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'student',
                 'uid' => '1234',
@@ -74,7 +81,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
                 'ptdrouv' => '0',
             ]],
             [[
-                'eppn' => '1234',
+                'eppn' => 'test-1234',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'student',
                 'uid' => '1234',
@@ -84,7 +91,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
                 'ptdrouv' => '0',
             ]],
             [[
-                'eppn' => '4321',
+                'eppn' => 'test-4321',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'employee',
                 'uid' => '4321',
@@ -116,7 +123,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
     {
         return [
             [[
-                'eppn' => '4321',
+                'eppn' => 'test-4321',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'student;employee;researcher;member',
                 'uid' => '4321',
@@ -126,7 +133,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
                 'ptdrouv' => '0',
             ]],
             [[
-                'eppn' => '4321',
+                'eppn' => 'test-4321',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'student',
                 'uid' => '4321',
@@ -136,7 +143,7 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
                 'ptdrouv' => '1',
             ]],
             [[
-                'eppn' => '4321',
+                'eppn' => 'test-4321',
                 'mail' => 'user1234@test.fr',
                 'eduPersonAffiliation' => 'plop',
                 'uid' => '4321',
@@ -166,14 +173,19 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
      */
     public function testLoadUserExceptionUserDisabled(): void
     {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('4321');
-        $user->setEnabled(false);
+        $user = (new Utilisateur())
+            ->setEnabled(false)
+            ->setUsername('test-4321')
+            ->setEmail('user1234@test.fr')
+            ->setPassword('paassword')
+        ;
+        static::getContainer()->get(EntityManagerInterface::class)->persist($user);
         static::getContainer()->get(EntityManagerInterface::class)->flush();
 
         $this->expectException(ShibbolethException::class);
 
         $credentials = [
-            'eppn' => '4321',
+            'eppn' => 'test-4321',
             'mail' => 'user1234@test.fr',
             'eduPersonAffiliation' => 'employee',
             'uid' => '4321',
@@ -186,13 +198,4 @@ class GestionnaireUtilisateurShibbolethTest extends KernelTestCase
         $user = $this->gestionnaire->loadUser($credentials);
     }
 
-    public function testSuppressionUtilisateur(): void
-    {
-        $user = static::getContainer()->get(UtilisateurRepository::class)->findOneByUsername('4321');
-        $em = static::getContainer()->get(EntityManagerInterface::class);
-        $em->remove($user);
-        $em->flush();
-
-        $this->assertTrue(true);
-    }
 }

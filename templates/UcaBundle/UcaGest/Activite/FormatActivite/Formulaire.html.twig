@@ -2,6 +2,7 @@
 {% import 'UcaBundle/Macros/FlashBag.html.twig' as flashBag %}
 {% import 'UcaBundle/Macros/ImagePreview.html.twig' as ImagePreview %}
 {% import 'UcaBundle/Macros/Formulaire.CapaciteProfil.html.twig' as formMacro %}
+{% import 'UcaBundle/Macros/Formulaire.NiveauSportif.html.twig' as formNSMacro %}
 
 
 {% if FormatClassName == 'App\\Entity\\Uca\\FormatAvecCreneau' %}
@@ -106,16 +107,30 @@
 		</div>
 		<div class='row'>
 			<div class='col-sm-4'>
-				{{ form_row(form.formatActivite.niveauxSportifs) }}
-			</div>
-			<div class='col-sm-4'>
 				{{ form_row(form.formatActivite.estEncadre) }}
 			</div>
 			<div class='col-sm-4'>
 				<fieldset class="form-group" style="display: none;">
 					{{ form_label(form.formatActivite.encadrants) }}
 					{{ form_widget(form.formatActivite.encadrants) }}
+					{{ form_label(form.formatActivite.contactEncadrant) }}
+					{{ form_widget(form.formatActivite.contactEncadrant) }}
 				</fieldset>
+			</div>
+		</div>
+		<div class="row" id="wrapperNiveauSportifDetail" data-prototype="{{ formNSMacro.afficherDetailNiveauSportif(form.formatActivite.niveaux.detail.vars.prototype) | e('html_attr') }}">
+			<div id="divNiveauxSportifs" class='col-sm-4'>
+				{{ form_row(form.formatActivite.niveaux.niveauSportif) }}
+			</div>
+			<div class="col-sm-8" id="divDetailNiveauSportif">
+				{{ form_label(form.formatActivite.niveaux.detail) }}
+				{% for formatNiveau in form.formatActivite.niveaux.detail %}
+					{% if niveauxExistants is defined %}
+						{{ formNSMacro.afficherDetailNiveauSportif(formatNiveau, niveauxExistants[loop.index0] ) }}
+					{% else %}
+						{{ formNSMacro.afficherDetailNiveauSportif(formatNiveau, null ) }}
+					{% endif %}
+				{% endfor %}
 			</div>
 		</div>
 		<div class='row' id='wrapperCapaciteProfilUtilisateur' data-prototype="{{ formMacro.afficherCapacite(form.formatActivite.profils.capaciteProfil.vars.prototype) | e('html_attr') }}">
@@ -156,7 +171,9 @@
 		$( "#ucabundle_format_activite_{{ CodeHtml }}_formatActivite_estEncadre input[type=radio]" ).change( _uca.showEncadrants ).trigger( 'change' );
 		$( "#ucabundle_format_activite_{{ CodeHtml }}_formatActivite_estPayant input[type=radio]" ).change( _uca.showTarifs ).trigger( 'change' );
 		let tousProfils = {{ tousProfils | json_encode() | raw }};
+		let tousNiveaux = {{ tousNiveaux | json_encode() | raw }};
 		_uca.capaciteProfils.gestionCapaciteProfil(tousProfils);
+		_uca.niveauxSportif.gestionNiveauSportif(tousNiveaux);
         _uca.vichImageStyle();
 	</script>
 {% endblock %}

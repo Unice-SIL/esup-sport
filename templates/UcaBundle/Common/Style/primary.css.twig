@@ -1,0 +1,93 @@
+{% set primaryColor = style().primaryColor %}
+{% set primaryColorHover = style().primaryColorHover %}
+{% set primaryColorShadow = style().primaryColorShadow %}
+
+h1::after,
+h2::after,
+.btn-primary,
+.page-item.active .page-link,
+.detail_creneau:hover div,
+nav#nav-infosPratiques,
+.btn-outline-primary:active,
+.badge-primary
+{
+    background-color: {{ primaryColor | raw }} !important;
+}
+
+h2:not(.h2-light):not(.text-dark):not(.color-blanc),
+.card-body,
+.card-install .card-section svg,
+.card-install .card-header p svg,
+#collapseBlocTarif > div > div > h3,
+.card-event .event-location h3, 
+.card-event .event-price h3,
+.card-event .event-supervisor h3,
+.card-event .event-time h3,
+.custom-card .card-body h3,
+.pagination-link span.active,
+.today,
+.curentSelectionTypeVisualisation,
+.modal .image-presentation,
+nav#nav-infosPratiques a.active,
+.bg-dark-color-blue,
+.color-primary
+{
+    color: {{ primaryColor | raw }} !important;
+}
+
+a:hover,
+a,
+.btn-outline-primary,
+.btn-link
+{
+    color: {{ primaryColor | raw }};
+}
+
+.btn-link:hover,
+.btn-outline-primary:hover
+{
+    color: {{ primaryColorHover | raw }} !important;
+}
+
+.btn-outline-primary:focus
+{
+    box-shadow: 0 0 0 0.2rem {{ style().primaryColorWithAlpha(0.5) | raw }} !important;
+}
+
+.btn-primary
+{
+    box-shadow: 0 3px 0 {{ primaryColorShadow | raw }} !important;
+}
+
+.btn-primary:hover
+{
+    background-color: {{ primaryColorHover | raw }} !important;
+}
+
+.btn-outline-primary,
+.page-item.active .page-link
+{
+    border-color: {{ primaryColor | raw }} !important;
+}
+
+.activity-type:hover::before
+{
+    background-color: {{ (style().primaryColorWithAlpha(0.5) ) | raw }} !important;
+}
+
+.navbar-dark .navbar-nav li .nav-link-border:hover,
+.navbar-dark .navbar-nav li .nav-link-border.active,
+.menu_responsive
+{
+    border-bottom-color: {{ primaryColor | raw }} !important;
+}
+
+.curentSelectionTypeVisualisation
+{
+    text-decoration-color: {{ primaryColor | raw }} !important;
+}
+
+.card
+{
+    border-color: {{ primaryColor | raw }};
+}

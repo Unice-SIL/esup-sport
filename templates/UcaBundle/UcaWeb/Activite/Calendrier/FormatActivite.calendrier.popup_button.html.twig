@@ -2,7 +2,7 @@
 {% if inscriptionInformations.statut in ['previsualisation'] %}
   <button class="btn btn-primary disabled">{{ 'common.inscrire' | trans }}</button>
 {% elseif inscriptionInformations.statut in ['inscrit', 'preinscrit'] %}
-  <p class="m-0 fs-14 fw-500 color-blue">
+  <p class="m-0 fs-14 fw-500 color-primary">
     <i class="fas fa-check-circle"></i>
     {{ ('formatCreneau.list.' ~ inscriptionInformations.statut) | trans | upper }}
   </p>
@@ -30,7 +30,7 @@
   {% endif %}
 
   
-{% elseif inscriptionInformations.statut in ['nbcreneaumaxatteint', 'nbressourcemaxatteint', 'profilinvalide', 'nonconnecte', 'montantincorrect', 'cgvnonacceptees'] %}
+{% elseif inscriptionInformations.statut in ['fortefrequence', 'nbcreneaumaxatteint', 'nbressourcemaxatteint', 'profilinvalide', 'nonconnecte', 'montantincorrect', 'cgvnonacceptees'] %}
   {% if inscriptionInformations.statut == 'nbcreneaumaxatteint' %}
     {% set tooltipMessage = (('bouton.indisponible.statut.' ~ inscriptionInformations.statut) | trans({'%maxCreneau%': app.user.profil.nbMaxInscriptions})) %}
   {% elseif inscriptionInformations.statut == 'nbressourcemaxatteint' %}

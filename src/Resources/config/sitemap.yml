@@ -48,6 +48,8 @@
           params: { id: id }
     - titre: "trans('sitemap.infospratiques.libelle')"
       route: UcaWeb_InfosPratiques
+    - titre: "icon('fas fa-search')"
+      route: UcaWeb_ActiviteSearch
       
 # Partie sans menu (ajout du paramètre : menu: 0)
     - titre: "trans('sitemap.connexion')"
@@ -214,15 +216,15 @@
               route: UcaGest_TypeActiviteModifier
   
         - titre: "trans('sitemap.classeactivite.libelle')"
-          route: UcaGest_ClasseActiviteLister
+          route: UcaGest_gestClasseActiviteLister
 
           droit: ROLE_GESTION_CLASSE_ACTIVITE_LECTURE
           items:
             - titre: "trans('sitemap.ajouter')"
-              route: UcaGest_ClasseActiviteAjouter
+              route: UcaGest_gestClasseActiviteAjouter
 
             - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getLibelle()"
-              route: UcaGest_ClasseActiviteModifier
+              route: UcaGest_gestClasseActiviteModifier
 
         - titre: "trans('sitemap.activite.libelle')"
           route: UcaGest_ActiviteLister
@@ -267,15 +269,23 @@
       items:
         - titre: "trans('sitemap.log.libelle')"
           route: UcaGest_LogLister
-
           droit: ROLE_GESTION_LOG_LECTURE
-        - titre: "trans('sitemap.traduction.libelle')"
-          route: UcaGest_TraductionLister
 
+        - titre: "trans('sitemap.traduction.entite.libelle')"
+          route: UcaGest_TraductionLister
           droit: ROLE_GESTION_TRADUCTION_LECTURE
           items:
             - titre: "trans('sitemap.modifier')"
               route: UcaGest_TraductionModifier
+          
+        - titre: "trans('sitemap.traduction.libelle')"
+          route: lexik_translation_overview
+          droit: ROLE_GESTION_TRADUCTION_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: lexik_translation_new
+            - titre: "trans('sitemap.traduction.grille')"
+              route: lexik_translation_grid
           
         - titre: "trans('sitemap.bascule.semestre.libelle')"
           route: UcaGest_BasculeAccueil
@@ -422,6 +432,16 @@
 
             - titre: "trans('sitemap.modifier') ~ ' ' ~ item.getNom()"
               route: UcaGest_LogoPartenaireModifier
+        
+        - titre: "trans('sitemap.niveausportif.libelle')"
+          route: UcaGest_NiveauSportifLister
+          droit: ROLE_GESTION_NIVEAUSPORTIF_LECTURE
+          items:
+            - titre: "trans('sitemap.ajouter')"
+              route: UcaGest_NiveauSportifAjouter
+
+            - titre: "trans('sitemap.modifier')"
+              route: UcaGest_NiveauSportifModifier
 
     - titre: "trans('sitemap.securite.libelle')"
       route: null
@@ -508,6 +528,40 @@
           items:
             - titre: "trans('sitemap.modifier')"
               route: UcaGest_ParametrageModifier
+              droit: ROLE_GESTION_PARAMETRAGE
+        - titre: "trans('sitemap.logoparametrable.libelle')"
+          route: UcaGest_LogoParametrableLister
+          droit: ROLE_GESTION_PARAMETRAGE
+          items:
+            - titre: "trans('sitemap.modifier')"
+              route: UcaGest_LogoParametrableModifier
+              droit: ROLE_GESTION_PARAMETRAGE
+        - titre: "trans('sitemap.style.libelle')"
+          route: UcaGest_StyleIndex
+          droit: ROLE_GESTION_PARAMETRAGE
+          items:
+            - titre: "trans('sitemap.modifier')"
+              route: UcaGest_StyleModifier
+              droit: ROLE_GESTION_PARAMETRAGE
+            - titre: "trans('sitemap.style.preview')"
+              route: UcaGest_StylePreview
+              droit: ROLE_GESTION_PARAMETRAGE
+        - titre: "trans('sitemap.periodefermeture.libelle')"
+          route: UcaGest_PeriodeFermetureLister
+          droit: ROLE_GESTION_PARAMETRAGE
+          items:
+            - titre: "trans('sitemap.modifier')"
+              route: UcaGest_PeriodeFermetureModifier
+              droit: ROLE_GESTION_PARAMETRAGE
+            - titre: "trans('sitemap.ajouter')"
+              route: UcaGest_PeriodeFermetureAjouter
+              droit: ROLE_GESTION_PARAMETRAGE
+        - titre: "trans('sitemap.email.libelle')"
+          route: UcaGest_EmailLister
+          droit: ROLE_GESTION_PARAMETRAGE
+          items:
+            - titre: "trans('sitemap.modifier')"
+              route: UcaGest_EmailModifier
               droit: ROLE_GESTION_PARAMETRAGE
 
           

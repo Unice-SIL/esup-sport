@@ -9,12 +9,11 @@
 
 namespace App\Controller\Api;
 
-use App\Entity\Uca\Activite;
-use App\Entity\Uca\DhtmlxEvenement;
 use App\Repository\DhtmlxEvenementRepository;
 use App\Repository\UtilisateurRepository;
 use App\Service\Common\MailService;
 use App\Service\Service\CalendrierService;
+use App\Service\Service\StylePreviewService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,8 +32,14 @@ class ActiviteController extends AbstractController
     /**
      * @Route("/Api/Activite/GetModalDetailCreneau/{id}/{typeFormat}/{idFormat}", methods={"GET"}, name="api_detail_creneau", options={"expose"=true})
      */
-    public function DetailCreneau(Request $request, DhtmlxEvenement $dhtmlxEvenement, string $typeFormat, string $idFormat, CalendrierService $calendrierService)
+    public function DetailCreneau(Request $request, string $id, string $typeFormat, string $idFormat, CalendrierService $calendrierService, StylePreviewService $previewService, DhtmlxEvenementRepository $eventRepo)
     {
+        if ($idFormat === '0') { // si on est preview du  style alors on utilise le service de preview stle
+            $previewService->setUtilisateur($this->getUser());
+            $dhtmlxEvenement = $previewService->getEvent($id);
+        } else {
+            $dhtmlxEvenement = $eventRepo->find($id);
+        }
         return $calendrierService->getModalDetailCreneau($dhtmlxEvenement, $typeFormat, $idFormat);
     }
 
@@ -48,13 +53,11 @@ class ActiviteController extends AbstractController
             $encadrant = $userRepo->find($request->get('encadrant'));
             $event = $eventRepo->find($request->get('event'));
 
-            $objet = $event->getFormatActiviteLibelle().' : '.date_format($event->getDateDebut(), 'Y/m/d H:i:s').' - '.date_format($event->getDateFin(), 'Y/m/d H:i:s');
-
             $mailer->sendMailWithTemplate(
-                $objet,
+                null,
                 $encadrant->getEmail(),
-                'UcaBundle/Email/Contact/ContactEmail.html.twig',
-                ['objet' => $objet, 'message' => $request->get('message'), 'contact_from' => $this->getUser()->getEmail()],
+                'ContactEncadrantEmail',
+                ['message' => $request->get('message'), 'contact_from' => $this->getUser()->getEmail(), 'event_date' => date_format($event->getDateDebut(), 'd/m/Y'), 'event_start_hour' => date_format($event->getDateDebut(), 'H:i'), 'event_end_hour' => date_format($event->getDateFin(), 'H:i'), 'format_activite' => $event->getFormatActiviteLibelle()],
                 null
             );
 

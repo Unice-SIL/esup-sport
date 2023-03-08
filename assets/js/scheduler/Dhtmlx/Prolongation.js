@@ -72,13 +72,34 @@ function initLoadData(data){
     //     data.series.forEach(loadData);
     // }
 
-    // if(data.evenements != null){
-    //     data.evenements.forEach(loadData);
-    // }
-    // loadData(data);
-    // scheduler.updateView();
-    // Load.stop();
-    document.location.reload(true);
+    if(data.evenements != null){
+        data.evenements.forEach(loadData);
+    }
+
+    if(data.notCreated !== undefined && data.notCreated !== null) {
+        if (data.notCreated.length > 0) {
+            let date;
+            let msg = Translator.trans('creneau.notCreated');
+            msg += '<ul>';
+            for (const creneau of data.notCreated) {
+                date = creneau.split(' ')[0].split('-').reverse().join('/');
+                msg += `<li>${date}</li>`;
+            }
+            msg += '</ul>';
+            dhtmlx.modalbox({
+                text: msg,
+                width: "500px",
+                position: "middle",
+                buttons: [
+                    "Ok",
+                ],
+            });
+        }
+    }
+    //loadData(data);
+    scheduler.updateView();
+    Load.stop();
+    //document.location.reload(true);
 }
 
 //Prolongation

@@ -45,6 +45,9 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
     /** @ORM\Column(type="boolean", options={"default" : false}) */
     private $eligibleBonus;
 
+    /** @ORM\Column(type="boolean", options={"default" : false}) */
+    private $forteFrequence;
+
     /**
      * Constructor.
      *
@@ -61,13 +64,23 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
         $this->appels = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    /**
+     * @codeCoverageIgnore
+     */
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     // endregion
 
     // region Méthodes
 
     public function jsonSerializeProperties()
     {
-        return ['dateDebut', 'dateFin', 'dependanceSerie', 'formatSimple', 'description', 'oldId', 'action', 'serie', 'eligibleBonus', 'reservabilite', 'informations'];
+        return ['dateDebut', 'dateFin', 'dependanceSerie', 'formatSimple', 'description', 'oldId', 'action', 'serie', 'eligibleBonus', 'forteFrequence', 'reservabilite', 'informations'];
     }
 
     // endregion
@@ -258,6 +271,32 @@ class DhtmlxEvenement extends DhtmlxDate implements \App\Entity\Uca\Interfaces\J
     public function getEligibleBonus()
     {
         return $this->eligibleBonus;
+    }
+
+    /**
+     * Set forteFrequence.
+     *
+     * @param bool $forteFrequence
+     *
+     * @return DhtmlxEvenement
+     * @codeCoverageIgnore
+     */
+    public function setForteFrequence($forteFrequence)
+    {
+        $this->forteFrequence = $forteFrequence;
+
+        return $this;
+    }
+
+    /**
+     * Get forteFrequence.
+     *
+     * @return bool
+     * @codeCoverageIgnore
+     */
+    public function getForteFrequence()
+    {
+        return $this->forteFrequence;
     }
 
     /**

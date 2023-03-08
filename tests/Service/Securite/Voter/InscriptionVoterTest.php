@@ -43,18 +43,6 @@ class InscriptionVoterTest extends KernelTestCase
         $em->flush();
     }
 
-    protected function tearDown(): void
-    {
-        $container = static::getContainer();
-        $em = $container->get(EntityManagerInterface::class);
-
-        $em->remove($container->get(UtilisateurRepository::class)->findOneByUsername('InscriptionVoterTest'));
-
-        $em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
      * @covers \App\Service\Securite\Voter\InscriptionVoter::__construct
      */

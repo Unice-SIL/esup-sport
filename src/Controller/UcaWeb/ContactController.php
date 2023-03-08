@@ -31,9 +31,9 @@ class ContactController extends AbstractController
         $form = $this->createForm(ContactType::class, $item);
         if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
             $mailer->sendMailWithTemplate(
-                $item->getObjet(),
+                null,
                 Parametrage::get()->getMailContact(),
-                'UcaBundle/Email/Contact/ContactEmail.html.twig',
+                'ContactEmail',
                 ['objet' => $item->getObjet(), 'message' => $item->getMessage(), 'contact_from' => $item->getEmail()],
                 $form->getData()->getEmail()
             );

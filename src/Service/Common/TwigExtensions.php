@@ -22,6 +22,7 @@ use App\Entity\Uca\FormatAvecCreneau;
 use App\Entity\Uca\FormatAvecReservation;
 use App\Entity\Uca\Reservabilite;
 use App\Repository\ImageFondRepository;
+use App\Repository\LogoParametrableRepository;
 use App\Repository\TexteRepository;
 use Twig\Extension\AbstractExtension;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,13 +32,17 @@ class TwigExtensions extends AbstractExtension
 {
     private $texteRepository;
     private $imageFondRepository;
+    private $logoParametrableRepository;
+    private $styleService;
 
-    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, TexteRepository $texteRepository, ImageFondRepository $imageFondRepository)
+    public function __construct(EntityManagerInterface $em, RequestStack $requestStack, TexteRepository $texteRepository, ImageFondRepository $imageFondRepository, LogoParametrableRepository $logoParametrableRepository, Style $styleService)
     {
         $this->em = $em;
         $this->requestStack = $requestStack;
         $this->texteRepository = $texteRepository;
         $this->imageFondRepository = $imageFondRepository;
+        $this->logoParametrableRepository = $logoParametrableRepository;
+        $this->styleService = $styleService;
     }
 
     public function getFunctions()
@@ -47,6 +52,8 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('emplacementImageFond', [$this, 'getImageFond']),
             new TwigFunction('isPrevisualisation', [$this, 'isPrevisualisation']),
             new TwigFunction('parametrage', [$this, 'getParametrage']),
+            new TwigFunction('style', [$this, 'getStyle']),
+            new TwigFunction('logo', [$this, 'getLogo']),
             new TwigFunction('serverPathToWeb', [$this, 'serverPathToWeb']),
             new TwigFunction('urlRetourPrevisualisation', [$this, 'urlRetourPrevisualisation']),
             new TwigFunction('isValideAutorisation', [$this, 'getValiditeAutorisation']),
@@ -57,6 +64,14 @@ class TwigExtensions extends AbstractExtension
             new TwigFunction('getAdresseComplete', [$this, 'getAdresseComplete']),
             new TwigFunction('instanceOf', [$this, 'instanceOf'])
         ];
+    }
+
+    public function getStyle() {
+        return $this->styleService;
+    }
+
+    public function getLogo($emplacement) {
+        return $this->logoParametrableRepository->findOneBy(['emplacement' => $emplacement]);
     }
 
     public function getFilters()

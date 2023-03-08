@@ -16,6 +16,7 @@
         <div class="container container-style bg-white">
             {% block main %}{% endblock %}
         </div>
+        {% block outsideMain %}{% endblock %}
         {% include ('UcaBundle/Common/Modal/Modal.Loader.html.twig') %}
     </div>
 {% endblock %}

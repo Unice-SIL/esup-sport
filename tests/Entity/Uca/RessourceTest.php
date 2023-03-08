@@ -81,7 +81,7 @@ class RessourceTest extends KernelTestCase
      */
     public function testSetImageFile(): void
     {
-        $file = new File(__DIR__.'../../../fixtures/test.pdf');
+        $file = new File(dirname(__DIR__, 2).'/fixtures/test.pdf');
         $ressource = (new Materiel())->setImageFile($file);
 
         $this->assertInstanceOf(File::class, $ressource->getImageFile());

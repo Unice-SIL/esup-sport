@@ -71,12 +71,12 @@ class InscriptionRepository extends ServiceEntityRepository
     public function findInscriptionCreneauxBascule($listeActivite)
     {
         $qb = $this->createQueryBuilder('i')
-            // ->innerJoin('App\Entity\Uca\FormatActivite', 'formAct', 'WITH', 'i.formatActivite = formAct.id')
+            ->innerJoin('App\Entity\Uca\FormatActivite', 'formAct', 'WITH', 'i.formatActivite = formAct.id')
             ->where('i.creneau IS NOT NULL')
             ->andWhere('i.statut NOT IN (:listeStatut)')
-            // ->andWhere('formAct.activite IN (:listeActivite)')
+            ->andWhere('formAct.activite IN (:listeActivite)')
             ->setParameter('listeStatut', ['desinscrit', 'annule', 'ancienneinscription', 'desinscriptionadministrative'])
-            // ->setParameter('listeActivite', $listeActivite)
+            ->setParameter('listeActivite', $listeActivite)
         ;
 
         return $qb->getQuery()->getResult();

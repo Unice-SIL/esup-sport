@@ -2,35 +2,39 @@
 
 namespace App\Tests\Controller\UcaWeb;
 
-use App\Entity\Uca\Tarif;
-use App\Entity\Uca\Creneau;
-use App\Entity\Uca\DhtmlxSerie;
-use App\Entity\Uca\Inscription;
-use App\Entity\Uca\Utilisateur;
-use App\Entity\Uca\FormatActivite;
-use App\Entity\Uca\FormatAvecCreneau;
-use App\Entity\Uca\ProfilUtilisateur;
-use Doctrine\ORM\EntityManagerInterface;
-use App\Entity\Uca\CreneauProfilUtilisateur;
-use Symfony\Component\Routing\RouterInterface;
-use App\Entity\Uca\MontantTarifProfilUtilisateur;
-use App\Entity\Uca\FormatActiviteProfilUtilisateur;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use App\Entity\Uca\TypeAutorisation;
-use App\Entity\Uca\ComportementAutorisation;
+use App\Entity\Uca\Activite;
 use App\Entity\Uca\Autorisation;
-use App\Entity\Uca\CommandeDetail;
+use App\Entity\Uca\ClasseActivite;
 use App\Entity\Uca\Commande;
-use App\Entity\Uca\FormatAvecReservation;
-use App\Entity\Uca\Lieu;
-use App\Entity\Uca\Etablissement;
-use App\Entity\Uca\Ressource;
-use App\Entity\Uca\Reservabilite;
+use App\Entity\Uca\CommandeDetail;
+use App\Entity\Uca\ComportementAutorisation;
+use App\Entity\Uca\Creneau;
+use App\Entity\Uca\CreneauProfilUtilisateur;
 use App\Entity\Uca\DhtmlxEvenement;
+use App\Entity\Uca\DhtmlxSerie;
+use App\Entity\Uca\Etablissement;
+use App\Entity\Uca\FormatActivite;
+use App\Entity\Uca\FormatActiviteProfilUtilisateur;
+use App\Entity\Uca\FormatAvecCreneau;
+use App\Entity\Uca\FormatAvecReservation;
+use App\Entity\Uca\Inscription;
+use App\Entity\Uca\Lieu;
+use App\Entity\Uca\MontantTarifProfilUtilisateur;
+use App\Entity\Uca\ProfilUtilisateur;
+use App\Entity\Uca\Reservabilite;
 use App\Entity\Uca\ReservabiliteProfilUtilisateur;
+use App\Entity\Uca\Ressource;
+use App\Entity\Uca\Tarif;
+use App\Entity\Uca\TypeActivite;
+use App\Entity\Uca\TypeAutorisation;
+use App\Entity\Uca\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class InscriptionControllerTest extends WebTestCase
@@ -79,101 +83,131 @@ class InscriptionControllerTest extends WebTestCase
         ;
         $this->em->persist($userCGVFalse);
 
+        $typeActivite = (new TypeActivite())
+            ->setLibelle('type activite')
+        ;
+        $this->em->persist($typeActivite);
+
+        $classeActivite = (new ClasseActivite())
+            ->setLibelle('classe activite')
+            ->setTypeActivite($typeActivite)
+            ->setImage('')
+        ;
+        $this->em->persist($classeActivite);
+        $typeActivite->addClasseActivite($classeActivite);
+
+        $activite = (new Activite())
+            ->setLibelle('activite')
+            ->setClasseActivite($classeActivite)
+            ->setImage('')
+            ->setDescription('test')
+        ;
+        $this->em->persist($activite);
+        $classeActivite->addActivite($activite);
+
         $formatActiviteAvecCreneauJustificatif = (new FormatAvecCreneau())
+            ->setActivite($activite)
             ->setLibelle('FormatAvecCreneau')
             ->setCapacite(1)
-            ->setDescription("test")
+            ->setDescription('test')
             ->setDateDebutEffective(new \DateTime())
             ->setDateDebutInscription(new \DateTime())
             ->setDateDebutPublication(new \DateTime())
             ->setDateFinEffective((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinInscription((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinPublication((new \DateTime())->add(new \DateInterval('P1D')))
-            ->setImage("test")
+            ->setImage('test')
             ->setStatut(1)
-            ->setTarifLibelle("Tarif")
-            ->setListeLieux("[]")
-            ->setListeAutorisations("[]")
-            ->setListeNiveauxSportifs("[]")
-            ->setListeProfils("[]")
-            ->setListeEncadrants("[]")
+            ->setTarifLibelle('Tarif')
+            ->setListeLieux('[]')
+            ->setListeAutorisations('[]')
+            ->setListeNiveauxSportifs('[]')
+            ->setListeProfils('[]')
+            ->setListeEncadrants('[]')
             ->setPromouvoir(false)
             ->setEstPayant(false)
             ->setEstEncadre(true)
         ;
         $this->em->persist($formatActiviteAvecCreneauJustificatif);
+        $activite->addFormatsActivite($formatActiviteAvecCreneauJustificatif);
 
         $formatActiviteAvecCreneauEncadre = (new FormatAvecCreneau())
+            ->setActivite($activite)
             ->setLibelle('FormatAvecCreneau')
             ->setCapacite(1)
-            ->setDescription("test")
+            ->setDescription('test')
             ->setDateDebutEffective(new \DateTime())
             ->setDateDebutInscription(new \DateTime())
             ->setDateDebutPublication(new \DateTime())
             ->setDateFinEffective((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinInscription((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinPublication((new \DateTime())->add(new \DateInterval('P1D')))
-            ->setImage("test")
+            ->setImage('test')
             ->setStatut(1)
-            ->setTarifLibelle("Tarif")
-            ->setListeLieux("[]")
-            ->setListeAutorisations("[]")
-            ->setListeNiveauxSportifs("[]")
-            ->setListeProfils("[]")
-            ->setListeEncadrants("[]")
+            ->setTarifLibelle('Tarif')
+            ->setListeLieux('[]')
+            ->setListeAutorisations('[]')
+            ->setListeNiveauxSportifs('[]')
+            ->setListeProfils('[]')
+            ->setListeEncadrants('[]')
             ->setPromouvoir(false)
             ->setEstPayant(false)
             ->setEstEncadre(true)
         ;
         $this->em->persist($formatActiviteAvecCreneauEncadre);
+        $activite->addFormatsActivite($formatActiviteAvecCreneauEncadre);
 
         $formatActiviteAvecCreneauNonEncadre = (new FormatAvecCreneau())
+            ->setActivite($activite)
             ->setLibelle('FormatAvecCreneau')
             ->setCapacite(1)
-            ->setDescription("test")
+            ->setDescription('test')
             ->setDateDebutEffective(new \DateTime())
             ->setDateDebutInscription(new \DateTime())
             ->setDateDebutPublication(new \DateTime())
             ->setDateFinEffective((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinInscription((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinPublication((new \DateTime())->add(new \DateInterval('P1D')))
-            ->setImage("test")
+            ->setImage('test')
             ->setStatut(1)
-            ->setTarifLibelle("Tarif")
-            ->setListeLieux("[]")
-            ->setListeAutorisations("[]")
-            ->setListeNiveauxSportifs("[]")
-            ->setListeProfils("[]")
-            ->setListeEncadrants("[]")
+            ->setTarifLibelle('Tarif')
+            ->setListeLieux('[]')
+            ->setListeAutorisations('[]')
+            ->setListeNiveauxSportifs('[]')
+            ->setListeProfils('[]')
+            ->setListeEncadrants('[]')
             ->setPromouvoir(false)
             ->setEstPayant(false)
             ->setEstEncadre(false)
         ;
         $this->em->persist($formatActiviteAvecCreneauNonEncadre);
+        $activite->addFormatsActivite($formatActiviteAvecCreneauNonEncadre);
 
         $formatActiviteAvecReservationNonEncadre = (new FormatAvecReservation())
+            ->setActivite($activite)
             ->setLibelle('FormatAvecCreneau')
             ->setCapacite(1)
-            ->setDescription("test")
+            ->setDescription('test')
             ->setDateDebutEffective(new \DateTime())
             ->setDateDebutInscription(new \DateTime())
             ->setDateDebutPublication(new \DateTime())
             ->setDateFinEffective((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinInscription((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinPublication((new \DateTime())->add(new \DateInterval('P1D')))
-            ->setImage("test")
+            ->setImage('test')
             ->setStatut(1)
-            ->setTarifLibelle("Tarif")
-            ->setListeLieux("[]")
-            ->setListeAutorisations("[]")
-            ->setListeNiveauxSportifs("[]")
-            ->setListeProfils("[]")
-            ->setListeEncadrants("[]")
+            ->setTarifLibelle('Tarif')
+            ->setListeLieux('[]')
+            ->setListeAutorisations('[]')
+            ->setListeNiveauxSportifs('[]')
+            ->setListeProfils('[]')
+            ->setListeEncadrants('[]')
             ->setPromouvoir(false)
             ->setEstPayant(false)
             ->setEstEncadre(false)
         ;
         $this->em->persist($formatActiviteAvecReservationNonEncadre);
+        $activite->addFormatsActivite($formatActiviteAvecReservationNonEncadre);
 
         $etablissement = (new Etablissement())
             ->setCode('IUTSD')
@@ -186,7 +220,7 @@ class InscriptionControllerTest extends WebTestCase
         $this->em->persist($etablissement);
 
         $ressourceLieu = (new Lieu());
-        $ressourceLieu->setLibelle("Ressource Lieu Test");
+        $ressourceLieu->setLibelle('Ressource Lieu Test');
         $ressourceLieu->setImage('test.jpg');
         $ressourceLieu->setNbPartenaires(1);
         $ressourceLieu->setNbPartenairesMax(5);
@@ -240,6 +274,9 @@ class InscriptionControllerTest extends WebTestCase
             ->setDateDebut(new \DateTime())
             ->setDateFin((new \DateTime())->add(new \DateInterval('P1D')))
         ;
+        $serie->addEvenement($evenement);
+        $evenement->setSerie($serie)
+            ->setDependanceSerie(true);
         $this->em->persist($serie);
 
         $creneauNonEncadre = (new Creneau())
@@ -277,7 +314,7 @@ class InscriptionControllerTest extends WebTestCase
         $creneauJustificatif->addProfilsUtilisateur($creneauJustificatifProfil);
 
         $creneauTarif = new Tarif();
-        $creneauTarif->setLibelle("Test Tarif Creneau");
+        $creneauTarif->setLibelle('Test Tarif Creneau');
         $creneauTarif->setTva(true);
         $creneauTarif->setPourcentageTVA(20);
         $creneauTarif->setModificationMontants(0);
@@ -306,14 +343,14 @@ class InscriptionControllerTest extends WebTestCase
 
         $typeAutorisationEncadre = new TypeAutorisation();
         $typeAutorisationEncadre->setComportement($this->em->getRepository(ComportementAutorisation::class)->find(5));
-        $typeAutorisationEncadre->setComportementLibelle("Test");
-        $typeAutorisationEncadre->setLibelle("Test");
+        $typeAutorisationEncadre->setComportementLibelle('Test');
+        $typeAutorisationEncadre->setLibelle('Test');
         $this->em->persist($typeAutorisationEncadre);
 
         $typeAutorisationJustificatif = new TypeAutorisation();
         $typeAutorisationJustificatif->setComportement($this->em->getRepository(ComportementAutorisation::class)->find(2));
-        $typeAutorisationJustificatif->setComportementLibelle("Test");
-        $typeAutorisationJustificatif->setLibelle("Test");
+        $typeAutorisationJustificatif->setComportementLibelle('Test');
+        $typeAutorisationJustificatif->setLibelle('Test');
         $this->em->persist($typeAutorisationJustificatif);
 
         $formatActiviteAvecCreneauEncadre->addAutorisation($typeAutorisationEncadre);
@@ -328,6 +365,10 @@ class InscriptionControllerTest extends WebTestCase
         $this->em->persist($inscriptionAvecPartenaires);
 
         $this->em->flush();
+
+        $this->ids['classeActivite'] = $classeActivite->getId();
+        $this->ids['typeActivite'] = $typeActivite->getId();
+        $this->ids['activite'] = $activite->getId();
 
         $this->ids['inscriptionSansPartenaires'] = $inscriptionSansPartenaires->getId();
         $this->ids['inscriptionAvecPartenaires'] = $inscriptionAvecPartenaires->getId();
@@ -362,120 +403,59 @@ class InscriptionControllerTest extends WebTestCase
         $this->ids['montantProfil'] = $montantProfilUtilisateur->getId();
     }
 
-    protected function tearDown(): void
-    {
-        $commandes = $this->em->getRepository(Commande::class)->findBy([], ['id'=>'desc']);
-        foreach ($commandes as $commande) {
-            $this->em->remove($commande);
-        }
-
-        $commande_details = $this->em->getRepository(CommandeDetail::class)->findBy([], ['id'=>'desc']);
-        foreach ($commande_details as $commande_detail) {
-            $this->em->remove($commande_detail);
-        }
-
-        $inscriptions = $this->em->getRepository(Inscription::class)->findBy([], ['id'=>'desc']);
-        foreach ($inscriptions as $inscription) {
-            $this->em->remove($inscription);
-        }
-
-        $autorisations = $this->em->getRepository(Autorisation::class)->findBy([], ['id'=>'desc']);
-        foreach ($autorisations as $autorisation) {
-            $this->em->remove($autorisation);
-        }
-
-        $this->em->remove($this->em->getRepository(TypeAutorisation::class)->find($this->ids['typeAutorisationJustificatif']));
-        $this->em->remove($this->em->getRepository(TypeAutorisation::class)->find($this->ids['typeAutorisationEncadre']));
-        $this->em->remove($this->em->getRepository(Tarif::class)->find($this->ids['creneauTarif']));
-        $this->em->remove($this->em->getRepository(MontantTarifProfilUtilisateur::class)->find($this->ids['montantProfil']));
-        $this->em->remove($this->em->getRepository(FormatActiviteProfilUtilisateur::class)->find($this->ids['formatActiviteEncadreProfil']));
-        $this->em->remove($this->em->getRepository(FormatActiviteProfilUtilisateur::class)->find($this->ids['formatActiviteNonEncadreProfil']));
-        $this->em->remove($this->em->getRepository(FormatActiviteProfilUtilisateur::class)->find($this->ids['formatActiviteJustificatifProfil']));
-        $this->em->remove($this->em->getRepository(FormatActiviteProfilUtilisateur::class)->find($this->ids['formatActiviteReservationProfil']));
-        $this->em->remove($this->em->getRepository(CreneauProfilUtilisateur::class)->find($this->ids['creneauNonEncadreProfil']));
-        $this->em->remove($this->em->getRepository(CreneauProfilUtilisateur::class)->find($this->ids['creneauEncadreProfil']));
-        $this->em->remove($this->em->getRepository(CreneauProfilUtilisateur::class)->find($this->ids['creneauJustificatifProfil']));
-        $this->em->remove($this->em->getRepository(ReservabiliteProfilUtilisateur::class)->find($this->ids['reservabiliteProfil']));
-
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneauNonEncadre']));
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneauEncadre']));
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneauJustificatif']));
-        $this->em->remove($this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite1']));
-        $this->em->remove($this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite2']));
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serie']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActiviteAvecReservationNonEncadre']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActiviteAvecCreneauEncadre']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActiviteAvecCreneauNonEncadre']));
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActiviteAvecCreneauJustificatif']));
-
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['userCGVFalse']));
-
-        $this->em->remove($this->em->getRepository(ProfilUtilisateur::class)->find($this->ids['profil']));
-
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement']));
-        $this->em->remove($this->em->getRepository(Ressource::class)->find($this->ids['lieu']));
-        $this->em->remove($this->em->getRepository(Etablissement::class)->find($this->ids['etablissement']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testInscriptionCGVNonAcceptees()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['userCGVFalse']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['userCGVFalse']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'confirmation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauNonEncadre']
+            'id' => $this->ids['creneauNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('itemId', $response);
         $this->assertEquals($this->ids['creneauNonEncadre'], $response->itemId);
         $this->assertObjectHasAttribute('statut', $response);
-        $this->assertEquals("-1", $response->statut);
+        $this->assertEquals('-1', $response->statut);
         $this->assertObjectHasAttribute('html', $response);
-        $this->assertIsObject($response->html);
+        $this->assertIsString($response->html);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testConfirmationInscriptionNonEncadre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'confirmation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauNonEncadre']
+            'id' => $this->ids['creneauNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsString($response);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionNonEncadre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'validation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauNonEncadre']
+            'id' => $this->ids['creneauNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('itemId', $response);
         $this->assertEquals($this->ids['creneauNonEncadre'], $response->itemId);
         $this->assertObjectHasAttribute('statut', $response);
-        $this->assertEquals("0", $response->statut);
+        $this->assertEquals('0', $response->statut);
         $this->assertObjectHasAttribute('html', $response);
         $this->assertIsString($response->html);
         $this->assertObjectHasAttribute('maxCreneauAtteint', $response);
@@ -483,19 +463,19 @@ class InscriptionControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionNonEncadreAvecParternairesDoublon()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'partenaires' => [
                 'test@test.fr',
-                'test@test.fr'
+                'test@test.fr',
             ],
             'statut' => 'validation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauNonEncadre']
+            'id' => $this->ids['creneauNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
@@ -504,19 +484,19 @@ class InscriptionControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionNonEncadreAvecParternairesEmailUser()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'partenaires' => [
                 'test@test.fr',
-                'userr@test.fr'
+                'userr@test.fr',
             ],
             'statut' => 'validation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauNonEncadre']
+            'id' => $this->ids['creneauNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
@@ -525,24 +505,24 @@ class InscriptionControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionNonEncadreAvecPartenaires()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'partenaires' => ['test@test.fr'],
             'statut' => 'validation',
             'type' => 'Reservabilite',
             'id' => $this->ids['reservabilite1'],
-            'idFormat' => $this->ids['formatActiviteAvecReservationNonEncadre']
+            'idFormat' => $this->ids['formatActiviteAvecReservationNonEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('itemId', $response);
         $this->assertEquals($this->ids['reservabilite1'], $response->itemId);
         $this->assertObjectHasAttribute('statut', $response);
-        $this->assertEquals("0", $response->statut);
+        $this->assertEquals('0', $response->statut);
         $this->assertObjectHasAttribute('html', $response);
         $this->assertIsString($response->html);
         $this->assertObjectHasAttribute('maxCreneauAtteint', $response);
@@ -550,37 +530,37 @@ class InscriptionControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testConfirmationInscriptionEncadre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'confirmation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauEncadre']
+            'id' => $this->ids['creneauEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsString($response);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionEncadre()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'validation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauEncadre']
+            'id' => $this->ids['creneauEncadre'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('itemId', $response);
         $this->assertEquals($this->ids['creneauEncadre'], $response->itemId);
         $this->assertObjectHasAttribute('statut', $response);
-        $this->assertEquals("0", $response->statut);
+        $this->assertEquals('0', $response->statut);
         $this->assertObjectHasAttribute('html', $response);
         $this->assertIsString($response->html);
         $this->assertObjectHasAttribute('maxCreneauAtteint', $response);
@@ -588,59 +568,59 @@ class InscriptionControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testConfirmationInscriptionJustificatif()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'confirmation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauJustificatif']
+            'id' => $this->ids['creneauJustificatif'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsString($response);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAction
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAction
      */
     public function testValidationInscriptionJustificatif()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
         $this->client->xmlHttpRequest('POST', $this->router->generate('UcaWeb_Inscription'), [
             'statut' => 'validation',
             'type' => 'Creneau',
-            'id' => $this->ids['creneauJustificatif']
+            'id' => $this->ids['creneauJustificatif'],
         ]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('itemId', $response);
         $this->assertEquals($this->ids['creneauJustificatif'], $response->itemId);
         $this->assertObjectHasAttribute('statut', $response);
-        $this->assertEquals("1", $response->statut);
+        $this->assertEquals('1', $response->statut);
         $this->assertObjectHasAttribute('html', $response);
         $this->assertIsString($response->html);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAvecPartenaire
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAvecPartenaire
      */
     public function testInscriptionAvecPartenairesInscriptionSansPartenaires()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
-        $this->client->request('GET', $this->router->generate('UcaWeb_InscriptionAvecPartenaire', ['id'=>$this->ids['inscriptionSansPartenaires']]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
+        $this->client->request('GET', $this->router->generate('UcaWeb_InscriptionAvecPartenaire', ['id' => $this->ids['inscriptionSansPartenaires']]));
         $expectedRedirection = $this->router->generate('UcaWeb_Accueil');
         $this->assertResponseRedirects($expectedRedirection);
     }
 
     /**
-     * @covers App\Controller\UcaWeb\InscriptionController::inscriptionAvecPartenaire
+     * @covers \App\Controller\UcaWeb\InscriptionController::inscriptionAvecPartenaire
      */
     public function testInscriptionAvecPartenairesInscriptionAvecPartenaires()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']));
-        $this->client->request('GET', $this->router->generate('UcaWeb_InscriptionAvecPartenaire', ['id'=>$this->ids['inscriptionAvecPartenaires']]));
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user']), 'app');
+        $this->client->request('GET', $this->router->generate('UcaWeb_InscriptionAvecPartenaire', ['id' => $this->ids['inscriptionAvecPartenaires']]));
         $expectedRedirection = $this->router->generate('UcaWeb_Panier');
         $this->assertResponseRedirects($expectedRedirection);
     }

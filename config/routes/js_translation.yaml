@@ -1,2 +1,5 @@
 bazinga_js_translation:
     resource: "@BazingaJsTranslationBundle/Resources/config/routing/routing.yml"
+
+lexik_translation_edition:
+    resource: "@LexikTranslationBundle/Resources/config/routing.yml"

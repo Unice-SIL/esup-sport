@@ -5,10 +5,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
         <title>{% block title %}Uca Sport{% endblock %}</title>
-        <link rel="icon" href="{{ asset('images/favicon.ico') }}" />
-        <link rel="apple-touch-icon" href="{{ asset('images/favicon.ico') }}" />
+        {% set image = logo('favicon') %}
+        {% if image.actif %}
+            <link rel="icon" href="{{ asset('/upload/public/images/logos/' ~ image.image) | imagine_filter('favicon') }}" />
+            <link rel="apple-touch-icon" href="{{ asset('/upload/public/images/logos/' ~ image.image ) | imagine_filter('favicon') }}" />
+        {% endif %}
         {{ encore_entry_link_tags('uca') }}
         {% block stylesheets %}{% endblock %}
+        <style>{% include "UcaBundle/Common/Style/style.css.twig" %}</style>
     </head>
     <body>
         {% block body %}{% endblock %}

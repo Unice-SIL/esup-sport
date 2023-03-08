@@ -9,6 +9,9 @@ use App\Service\Listener\Entity\CommandeListener;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
@@ -32,8 +35,9 @@ class CommandeListenerTest extends WebTestCase
         $this->commande = new Commande($this->utilisateur);
 
         $mailerService = static::getContainer()->get(MailService::class);
-
-        $this->commandeListener = new CommandeListener($mailerService);
+        $request = static::getContainer()->get(RequestStack::class);
+        $router = static::getContainer()->get(RouterInterface::class);
+        $this->commandeListener = new CommandeListener($mailerService, $request, $router);
     }
 
     /**
@@ -43,32 +47,35 @@ class CommandeListenerTest extends WebTestCase
     {
         $container = static::getContainer();
 
+        $maxNumCommande = $container->get(EntityManagerInterface::class)->getRepository(Commande::class)->max('numeroCommande');
+        $maxNumRecu = $container->get(EntityManagerInterface::class)->getRepository(Commande::class)->max('numeroRecu');
+
         $a = ['statut' => ['panier', 'apayer'], 'typePaiement' => ['', 'BDS']];
 
         $event = new PreUpdateEventArgs($this->commande, $container->get(EntityManagerInterface::class), $a);
         $this->assertEquals($this->commande->getNumeroCommande(), null);
         $this->commandeListener->preUpdate($this->commande, $event);
-        $this->assertEquals($this->commande->getNumeroCommande(), 1);
+        $this->assertEquals($this->commande->getNumeroCommande(), $maxNumCommande + 1);
 
         $a = ['statut' => ['annule', 'termine']];
         $event = new PreUpdateEventArgs($this->commande, $container->get(EntityManagerInterface::class), $a);
         $this->assertEquals($this->commande->getNumeroRecu(), null);
         $this->commandeListener->preUpdate($this->commande, $event);
-        $this->assertEquals($this->commande->getNumeroRecu(), 1);
+        $this->assertEquals($this->commande->getNumeroRecu(), $maxNumRecu + 1);
 
         $this->commande = new Commande($this->utilisateur);
         $a = ['statut' => ['panier', 'termine'], 'montantTotal' => [1, 1]];
         $event = new PreUpdateEventArgs($this->commande, $container->get(EntityManagerInterface::class), $a);
         $this->assertEquals($this->commande->getNumeroRecu(), null);
         $this->commandeListener->preUpdate($this->commande, $event);
-        $this->assertEquals($this->commande->getNumeroRecu(), 1);
+        $this->assertEquals($this->commande->getNumeroRecu(), $maxNumRecu + 1);
 
         $this->commande = new Commande($this->utilisateur);
         $a = ['statut' => ['panier', 'termine'], 'montantTotal' => [1, 0]];
         $event = new PreUpdateEventArgs($this->commande, $container->get(EntityManagerInterface::class), $a);
         $this->assertEquals($this->commande->getNumeroCommande(), null);
         $this->commandeListener->preUpdate($this->commande, $event);
-        $this->assertEquals($this->commande->getNumeroCommande(), 1);
+        $this->assertEquals($this->commande->getNumeroCommande(), $maxNumCommande + 1);
 
         $a = ['statut' => ['panier', 'termine'], 'montantTotal' => [1, 0]];
         $event = new PreUpdateEventArgs($this->commande, $container->get(EntityManagerInterface::class), $a);

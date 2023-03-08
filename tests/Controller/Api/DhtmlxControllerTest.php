@@ -2,25 +2,26 @@
 
 namespace App\Tests\Controller\Api;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Entity\Uca\Commande;
+use App\Entity\Uca\CommandeDetail;
 use App\Entity\Uca\Creneau;
+use App\Entity\Uca\DhtmlxEvenement;
 use App\Entity\Uca\DhtmlxSerie;
+use App\Entity\Uca\FormatActivite;
 use App\Entity\Uca\FormatAvecCreneau;
 use App\Entity\Uca\Groupe;
 use App\Entity\Uca\Inscription;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Routing\RouterInterface;
-use App\Entity\Uca\DhtmlxEvenement;
-use App\Entity\Uca\Utilisateur;
-use App\Entity\Uca\FormatActivite;
-use App\Entity\Uca\CommandeDetail;
-use App\Entity\Uca\Commande;
-use App\Entity\Uca\Ressource;
 use App\Entity\Uca\Lieu;
 use App\Entity\Uca\Reservabilite;
+use App\Entity\Uca\Ressource;
+use App\Entity\Uca\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Routing\RouterInterface;
 
 /**
  * @internal
+ *
  * @coversNothing
  */
 class DhtmlxControllerTest extends WebTestCase
@@ -92,7 +93,6 @@ class DhtmlxControllerTest extends WebTestCase
         ;
         $this->em->persist($evenement4);
 
-
         $goupe_user_non_admin = (new Groupe('test_controleur_goupe_user_non_admin', []))
             ->setLibelle('test_controleur_goupe_user_non_admin')
         ;
@@ -112,21 +112,21 @@ class DhtmlxControllerTest extends WebTestCase
         $formatactivite = (new FormatAvecCreneau())
             ->setLibelle('FormatAvecCreneau')
             ->setCapacite(1)
-            ->setDescription("test")
+            ->setDescription('test')
             ->setDateDebutEffective(new \DateTime())
             ->setDateDebutInscription(new \DateTime())
             ->setDateDebutPublication(new \DateTime())
             ->setDateFinEffective((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinInscription((new \DateTime())->add(new \DateInterval('P1D')))
             ->setDateFinPublication((new \DateTime())->add(new \DateInterval('P1D')))
-            ->setImage("test")
+            ->setImage('test')
             ->setStatut(1)
-            ->setTarifLibelle("Tarif")
-            ->setListeLieux("[]")
-            ->setListeAutorisations("[]")
-            ->setListeNiveauxSportifs("[]")
-            ->setListeProfils("[]")
-            ->setListeEncadrants("[]")
+            ->setTarifLibelle('Tarif')
+            ->setListeLieux('[]')
+            ->setListeAutorisations('[]')
+            ->setListeNiveauxSportifs('[]')
+            ->setListeProfils('[]')
+            ->setListeEncadrants('[]')
             ->setPromouvoir(false)
             ->setEstPayant(true)
             ->setEstEncadre(false)
@@ -151,7 +151,7 @@ class DhtmlxControllerTest extends WebTestCase
         $this->em->persist($inscriptionAttente);
 
         $commande = new Commande($user_not_empty_panier);
-        $commande->setDatePanier((new \DateTime())->add(new \DateInterval('P1D')))->setMontantTotal("1€")->setNumeroCommande(126875);
+        $commande->setDatePanier((new \DateTime())->add(new \DateInterval('P1D')))->setMontantTotal('1€')->setNumeroCommande(126875);
         $this->em->persist($commande);
         $user_not_empty_panier->addCommande($commande);
 
@@ -161,7 +161,7 @@ class DhtmlxControllerTest extends WebTestCase
         $this->em->persist($commandeDetail);
 
         $ressourceLieu = (new Lieu());
-        $ressourceLieu->setLibelle("Ressource Lieu Test");
+        $ressourceLieu->setLibelle('Ressource Lieu Test');
         $ressourceLieu->setImage('test.jpg');
         $ressourceLieu->setNbPartenaires(1);
         $ressourceLieu->setNbPartenairesMax(5);
@@ -200,138 +200,65 @@ class DhtmlxControllerTest extends WebTestCase
         $this->repetitions = false;
     }
 
-    protected function tearDown(): void
-    {
-        $reservabilite = $this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite']);
-        if ($reservabilite !== null) {
-            $this->em->remove($reservabilite);
-        }
-        if ($this->repetitions) {
-            for ($i = 1; $i <= 3; $i++) {
-                $reservabilite = $this->em->getRepository(Reservabilite::class)->find($this->ids['reservabilite'] + $i);
-                if ($reservabilite !== null) {
-                    $this->em->remove($reservabilite);
-                }
-            }
-        }
-
-        $this->em->remove($this->em->getRepository(Ressource::class)->find($this->ids['ressource']));
-
-        $commandeDetail = $this->em->getRepository(CommandeDetail::class)->find($this->ids['commandeDetail']);
-        if ($commandeDetail !== null) {
-            $this->em->remove($commandeDetail);
-        }
-
-        $commande = $this->em->getRepository(Commande::class)->find($this->ids['commande']);
-        if ($commande !== null) {
-            $this->em->remove($commande);
-        }
-
-        $this->em->remove($this->em->getRepository(Inscription::class)->find($this->ids['inscriptionAttente']));
-
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serieCreneau']));
-
-        $this->em->remove($this->em->getRepository(Creneau::class)->find($this->ids['creneau']));
-
-        $this->em->remove($this->em->getRepository(FormatActivite::class)->find($this->ids['formatActviteAvecCreneau']));
-
-        $event = $this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement4']);
-        if ($event !== null) {
-            $this->em->remove($event);
-        }
-        if ($this->repetitions) {
-            for ($i = 1; $i <= 3; $i++) {
-                $event = $this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement4'] + $i);
-                if ($event !== null) {
-                    $this->em->remove($event);
-                }
-            }
-        }
-
-        $event = $this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement3']);
-        if ($event !== null) {
-            $this->em->remove($event);
-        }
-
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement2']));
-        $this->em->remove($this->em->getRepository(DhtmlxEvenement::class)->find($this->ids['evenement1']));
-
-        $serie = $this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serieBase3']);
-        if ($serie !== null) {
-            $this->em->remove($serie);
-        }
-
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serieBase2']));
-        $this->em->remove($this->em->getRepository(DhtmlxSerie::class)->find($this->ids['serieBase1']));
-
-        $this->em->remove($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_empty_panier']));
-        $this->em->remove($this->em->getRepository(Groupe::class)->find($this->ids['groupe_user_non_admin']));
-
-        $this->em->flush();
-
-        static::ensureKernelShutdown();
-    }
-
-
     /**
-     * @covers App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
+     * @covers \App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
      */
     public function testDhtmlxNbOccurrenceDependanceIsLessThanOne()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId'=>$this->ids['serieCreneau']]);
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId' => $this->ids['serieCreneau']]);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === true);
+        $this->assertTrue(true === $response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
+     * @covers \App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
      */
     public function testDhtmlxNbOccurrenceDependanceIsOne()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId'=>$this->ids['serieBase1']]);
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId' => $this->ids['serieBase1']]);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === true);
+        $this->assertTrue(true === $response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
+     * @covers \App\Controller\Api\DhtmlxController::isSeuleOccurrenceDependance
      */
     public function testDhtmlxNbOccurrenceDependanceIsGreaterThanOne()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId'=>$this->ids['serieBase2']]);
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxNbOccurrenceDependance'), ['serieId' => $this->ids['serieBase2']]);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === false);
+        $this->assertTrue(false === $response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::isInscritForSerie
+     * @covers \App\Controller\Api\DhtmlxController::isInscritForSerie
      */
     public function testDhtmlxSerieInscritInscriptionEnAttente()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxSerieInscrit'), ['id'=>$this->ids['serieCreneau'],'statut'=>'attente']);
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxSerieInscrit'), ['id' => $this->ids['serieCreneau'], 'statut' => 'attente']);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === true);
+        $this->assertTrue(true === $response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::isInscritForSerie
+     * @covers \App\Controller\Api\DhtmlxController::isInscritForSerie
      */
     public function testDhtmlxSerieInscritPasInscriptionValide()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxSerieInscrit'), ['id'=>$this->ids['serieCreneau'],'statut'=>'valide']);
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxSerieInscrit'), ['id' => $this->ids['serieCreneau'], 'statut' => 'valide']);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === false);
+        $this->assertTrue(false === $response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::annulerInscription
+     * @covers \App\Controller\Api\DhtmlxController::annulerInscription
      */
     public function testDhtmlxAnnulerInscription()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_empty_panier']));
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxAnnulerInscription'), ['id'=>$this->ids['serieCreneau']]);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_empty_panier']), 'app');
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxAnnulerInscription'), ['id' => $this->ids['serieCreneau']]);
         $response = json_decode($this->client->getResponse()->getContent());
-        $this->assertTrue($response === 200);
+        $this->assertTrue(200 === $response);
         $inscription = $this->em->getRepository(Inscription::class)->find($this->ids['inscriptionAttente']);
         $this->assertNotNull($inscription);
         $this->assertEqualsIgnoringCase('annule', $inscription->getStatut());
@@ -342,11 +269,11 @@ class DhtmlxControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::getEventAction
+     * @covers \App\Controller\Api\DhtmlxController::getEventAction
      */
     public function testGetDhtmlxApiCaseRessource()
     {
-        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['activite'=>$this->ids['ressource'],'type'=>'ressource']);
+        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['activite' => $this->ids['ressource'], 'type' => 'ressource']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('evenements', $response);
@@ -358,11 +285,11 @@ class DhtmlxControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::getEventAction
+     * @covers \App\Controller\Api\DhtmlxController::getEventAction
      */
     public function testGetDhtmlxApiCaseFormatActivite()
     {
-        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['activite'=>$this->ids['formatActviteAvecCreneau'],'type'=>'FormatActivite']);
+        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['activite' => $this->ids['formatActviteAvecCreneau'], 'type' => 'FormatActivite']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('evenements', $response);
@@ -374,12 +301,12 @@ class DhtmlxControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::getEventAction
+     * @covers \App\Controller\Api\DhtmlxController::getEventAction
      */
     public function testGetDhtmlxApiCaseEncadrantOrUser()
     {
-        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_empty_panier']));
-        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['type'=>'user']);
+        $this->client->loginUser($this->em->getRepository(Utilisateur::class)->find($this->ids['user_non_empty_panier']), 'app');
+        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['type' => 'user']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
         $this->assertObjectHasAttribute('evenements', $response);
@@ -391,21 +318,21 @@ class DhtmlxControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::getEventAction
+     * @covers \App\Controller\Api\DhtmlxController::getEventAction
      */
     public function testGetDhtmlxApiCaseEncadrantOrUserWithoutLogin()
     {
-        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['type'=>'user']);
+        $this->client->xmlHttpRequest('GET', $this->router->generate('DhtmlxApi'), ['type' => 'user']);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertNull($response);
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::DhtmlxApiPostAction
+     * @covers \App\Controller\Api\DhtmlxController::DhtmlxApiPostAction
      */
     public function testPostDhtmlxApiDeleteAction()
     {
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxApi'), ['evenement'=>[
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxApi'), ['evenement' => [
             'evenementType' => 'ressource',
             'action' => 'delete',
             'id' => $this->ids['evenement4'],
@@ -416,15 +343,15 @@ class DhtmlxControllerTest extends WebTestCase
     }
 
     /**
-     * @covers App\Controller\Api\DhtmlxController::DhtmlxApiPostAction
+     * @covers \App\Controller\Api\DhtmlxController::DhtmlxApiPostAction
      */
     public function testPostDhtmlxApiExtendAction()
     {
         $this->repetitions = true;
-        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxApi'), ['evenement'=>[
-            'evenementType' => 'ressource',
+        $this->client->xmlHttpRequest('POST', $this->router->generate('DhtmlxApi'), ['evenement' => [
+            'evenementType' => 'serie',
             'action' => 'extend',
-            'id' => $this->ids['evenement4'],
+            'id' => $this->ids['evenement1'],
             'nbRepetition' => 3,
             'dateDebutRepetition' => (new \DateTime())->add(new \DateInterval('P5D'))->format('Y-M-D H:i:s'),
             'dateDebut' => (new \DateTime())->add(new \DateInterval('PT5M'))->format('Y-M-D H:i:s'),
@@ -432,6 +359,8 @@ class DhtmlxControllerTest extends WebTestCase
         ]]);
         $response = json_decode($this->client->getResponse()->getContent());
         $this->assertIsObject($response);
-        $this->assertEquals($this->ids['evenement4'] + 3, $response->id);
+        $this->assertObjectHasAttribute('evenements', $response);
+        $this->assertObjectHasAttribute('notCreated', $response);
+        $this->assertEquals($this->ids['evenement4'] + 3, $response->evenements[2]->id);
     }
 }

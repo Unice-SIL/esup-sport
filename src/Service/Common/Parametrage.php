@@ -19,6 +19,7 @@ class Parametrage
     public function __construct(ParametrageRepository $parametrageRepository)
     {
         $this->parametrageRepository = $parametrageRepository;
+        self::$object = $this->parametrageRepository->find(1);
     }
 
     public function onKernelRequest(RequestEvent $event)
@@ -56,6 +57,16 @@ class Parametrage
         return self::timeoutToDateLimit(self::$object->getTimerPanierApresValidation() * 60);
     }
 
+    public static function getTimerPanierApresValidation()
+    {
+        return self::$object->getTimerPanierApresValidation();
+    }
+
+    public static function getTimerPanier()
+    {
+        return self::$object->getTimerPanier();
+    }
+
     public static function getDateDebutInscriptionPartenaires()
     {
         return (new \DateTime())->sub(new \DateInterval('PT'.self::$object->getTimerPartenaire().'H'));
@@ -64,5 +75,10 @@ class Parametrage
     public static function getMailContact()
     {
         return self::$object->getMailContact();
+    }
+
+    public static function getTimerBds()
+    {
+        return self::$object->getTimerBds();
     }
 }
