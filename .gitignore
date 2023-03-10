@@ -42,3 +42,5 @@ yarn-error.log
 /symfony.lock
 ### SITEMAP.YML ###
 /src/Resources/config/sitemap.yml
+
+/assets/libs/dhtmlxScheduler-5.1.6
