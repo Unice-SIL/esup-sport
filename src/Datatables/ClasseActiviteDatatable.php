@@ -35,8 +35,8 @@ class ClasseActiviteDatatable extends AbstractTranslatedDatatable
             ->add(null, ActionColumn::class, [
                 'title' => $this->translator->trans('sg.datatables.actions.title'),
                 'actions' => [
-                    (new ModifierButton($this, 'UcaGest_gestClasseActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
-                    (new SupprimerButton($this, 'UcaGest_gestClasseActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new ModifierButton($this, 'UcaGest_ClasseActiviteModifier', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
+                    (new SupprimerButton($this, 'UcaGest_ClasseActiviteSupprimer', ['id' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
                     (new LogButton($this, 'UcaGest_LogLister', ['objectClass' => 'ClasseActivite', 'objectId' => 'id'], 'ROLE_GESTION_CLASSE_ACTIVITE_ECRITURE'))->getConfig(),
                 ],
             ])
