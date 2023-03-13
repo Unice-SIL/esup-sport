@@ -52,7 +52,7 @@ class ClasseActiviteController extends AbstractController
             $twigConfig['noAddButton'] = true;
         }
 
-        $twigConfig['codeListe'] = 'gestClasseActivite';
+        $twigConfig['codeListe'] = 'ClasseActivite';
 
         return $this->render('UcaBundle/Common/Liste/Datatable.html.twig', $twigConfig);
     }
